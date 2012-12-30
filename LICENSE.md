@@ -1,4 +1,4 @@
-Upcaste Performance Libraries is provided under the MIT License:
+Upcaste is provided under the MIT License:
 
 > Copyright (C) 2012 Jesse W. Towner
 >
