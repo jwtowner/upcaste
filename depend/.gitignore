@@ -1,0 +1,3 @@
+# Allow OpenCL Installable Client Driver binaries
+!bin
+!lib
