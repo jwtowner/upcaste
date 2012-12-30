@@ -7,7 +7,7 @@
 Upcaste is a collection of optimized source libraries that provide a foundation for graphical,
 visual, and heterogeneous computing using OpenCL. Upcaste is released under the MIT License,
 with additional restrictions for certain included components
-(see [`LICENSE.md`](https://github.com/upcaste/upcaste/blob/master/README.md)).
+(see [`LICENSE.md`](https://github.com/upcaste/upcaste/blob/master/LICENSE.md)).
 
 ### Design
 
