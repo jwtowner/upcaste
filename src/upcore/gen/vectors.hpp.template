@@ -1,0 +1,361 @@
+﻿{%- import "math.template" as math -%}
+{%- include "math_header.template" %}
+#ifndef UP_MATH_VECTORS_HPP
+#define UP_MATH_VECTORS_HPP
+
+#include <up/math/mathfwd.hpp>
+
+#if !defined(UP_NO_SIMD) && defined(UP_SIMD_NEON)
+#   include <up/math/neon/vectors.inl>
+#elif !defined(UP_NO_SIMD) && defined(UP_SIMD_SSE_2)
+#   include <up/math/sse/vectors.inl>
+#else
+#   include <up/math/generic/vectors.inl>
+#endif
+
+namespace up { namespace math
+{
+    //
+    // Type Traits
+    //
+{% for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI as_floating_point<{{element_type}}{{dim}}> { typedef {{math.as_real_type[element_type]}}{{dim}} type; };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI as_signed<{{element_type}}{{dim}}> { typedef {{math.as_sint_type[element_type]}}{{dim}} type; };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI as_unsigned<{{element_type}}{{dim}}> { typedef {{math.as_uint_type[element_type]}}{{dim}} type; };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI make_scalar<{{element_type}}{{dim}}> { typedef {{math.as_actual_type[element_type]}} type; };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI make_vector<{{math.as_actual_type[element_type]}},{{dim}}> { typedef {{element_type}}{{dim}} type; };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI vector_step<{{element_type}}{{dim}}> : std::integral_constant<size_t, {{dim}}> { };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI matrix_column_step<{{element_type}}{{dim}}> : std::integral_constant<size_t, {{dim}}> { };
+{%- endfor %}
+{%- for (element_type, dim) in all_vector_types %}
+    template <> struct LIBUPCOREAPI is_vector<{{element_type}}{{dim}}> : std::true_type { };
+{%- endfor %}
+
+    //
+    // Uniforms
+    //
+{% for (element_type, dim) in vector_types %}
+{%- set dim2=dim if dim > 4 else 0 %}
+{%- set dim_xyzw=dim if dim <= 4 else 4 %}
+{%- set vector_type="{0}{1}".format(element_type, dim) %}
+{%- set uniform_default="uniform_constant<{0}, {1}>".format(vector_type, math.as_actual_type[element_type]) %}
+{%- set uniform_default_uint="uniform_constant<{0}, {1}>".format(vector_type, math.as_actual_type[math.as_uint_type[element_type]]) %}
+{%- set uniform_real_real="uniform_constant<{0}{1}, {2}>".format(math.as_real_type[element_type], dim, math.as_actual_type[math.as_real_type[element_type]]) %}
+{%- set uniform_real_uint="uniform_constant<{0}{1}, {2}>".format(math.as_real_type[element_type], dim, math.as_actual_type[math.as_uint_type[element_type]]) %}
+    template <>
+    struct LIBUPCOREAPI uniform<{{vector_type}}>
+    {
+{%- if element_type in math.signed_types %}
+        static {{uniform_default}} const min;
+{%- endif %}
+        static {{uniform_default}} const max;
+{%- if element_type in math.real_types %}
+        static {{uniform_real_real}} const epsilon;
+        static {{uniform_real_uint}} const one_plus_epsilon;
+        static {{uniform_real_uint}} const half_plus_epsilon;
+        static {{uniform_real_uint}} const one_minus_epsilon;
+        static {{uniform_real_uint}} const half_minus_epsilon;
+        static {{uniform_real_uint}} const infinity;
+        static {{uniform_real_uint}} const quiet_nan;
+        static {{uniform_real_real}} const signed_min;
+        static {{uniform_real_real}} const signed_max;
+        static {{uniform_real_real}} const unsigned_max;
+        static {{uniform_real_real}} const degrees;
+        static {{uniform_real_real}} const radians;
+        static {{uniform_real_real}} const pi;
+        static {{uniform_real_real}} const half_pi;
+        static {{uniform_real_real}} const two_pi;
+        static {{uniform_real_real}} const negative_pi;
+        static {{uniform_real_real}} const negative_half_pi;
+        static {{uniform_real_real}} const negative_two_pi;
+        static {{uniform_real_real}} const reciprocal_pi;
+        static {{uniform_real_real}} const reciprocal_half_pi;
+        static {{uniform_real_real}} const reciprocal_two_pi;
+        static {{uniform_real_real}} const sincos_range_constants;
+        static {{uniform_real_real}} const tan_range_constants;
+{%- if element_type=='float' %}
+        static {{uniform_real_real}} const native_acos_coefficients;
+        static {{uniform_real_real}} const native_atan_coefficients;
+        static {{uniform_real_real}} const native_cos_coefficients;
+        static {{uniform_real_real}} const native_sin_coefficients;
+        static {{uniform_real_real}} const native_tan_coefficients0;
+        static {{uniform_real_real}} const native_tan_coefficients1;
+        static {{uniform_real_real}} const acos_coefficients0;
+        static {{uniform_real_real}} const acos_coefficients1;
+        static {{uniform_real_real}} const atan_coefficients0;
+        static {{uniform_real_real}} const atan_coefficients1;
+        static {{uniform_real_real}} const cos_coefficients0;
+        static {{uniform_real_real}} const cos_coefficients1;
+        static {{uniform_real_real}} const sin_coefficients0;
+        static {{uniform_real_real}} const sin_coefficients1;
+        static {{uniform_real_real}} const tan_coefficients0;
+        static {{uniform_real_real}} const tan_coefficients1;
+        static {{uniform_real_real}} const tan_coefficients2;
+        static {{uniform_real_real}} const tan_coefficients3;
+{%- elif element_type=='double' %}
+        static {{uniform_real_real}} const acos_coefficients0;
+        static {{uniform_real_real}} const acos_coefficients1;
+        static {{uniform_real_real}} const acos_coefficients2;
+        static {{uniform_real_real}} const acos_coefficients3;
+        static {{uniform_real_real}} const acos_coefficients4;
+        static {{uniform_real_real}} const atan_coefficients0;
+        static {{uniform_real_real}} const atan_coefficients1;
+        static {{uniform_real_real}} const atan_coefficients2;
+        static {{uniform_real_real}} const cos_coefficients0;
+        static {{uniform_real_real}} const cos_coefficients1;
+        static {{uniform_real_real}} const cos_coefficients2;
+        static {{uniform_real_real}} const sin_coefficients0;
+        static {{uniform_real_real}} const sin_coefficients1;
+        static {{uniform_real_real}} const sin_coefficients2;
+        static {{uniform_real_real}} const tan_coefficients0;
+        static {{uniform_real_real}} const tan_coefficients1;
+        static {{uniform_real_real}} const tan_coefficients2;
+        static {{uniform_real_real}} const tan_coefficients3;
+        static {{uniform_real_real}} const tan_coefficients4;
+        static {{uniform_real_real}} const tan_coefficients5;
+{%- endif %}
+        static {{uniform_real_real}} const hermite_coefficients;
+{%- endif %}
+        static {{uniform_default}} const zero;
+        static {{uniform_default}} const one;
+{%- for i in [2,3] if i < dim %}
+        static {{uniform_default}} const one_{{math.vector_ordered_subset(i)}};
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+        static {{uniform_default}} const one_{{math.vector_ordered_subset2(i)}};
+{%- endfor %}
+{%- if element_type in math.signed_types %}
+        static {{uniform_default}} const negative_one;
+{%- for i in [2,3] if i < dim %}
+        static {{uniform_default}} const negative_one_{{math.vector_ordered_subset(i)}};
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+        static {{uniform_default}} const negative_one_{{math.vector_ordered_subset2(i)}};
+{%- endfor %}
+{%- endif %}
+{%- if element_type in math.real_types %}
+        static {{uniform_real_real}} const half;
+{%- for i in [2,3] if i < dim %}
+        static {{uniform_real_real}} const half_{{math.vector_ordered_subset(i)}};
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+        static {{uniform_real_real}} const half_{{math.vector_ordered_subset2(i)}};
+{%- endfor %}
+        static {{uniform_real_real}} const negative_half;
+{%- for i in [2,3] if i < dim %}
+        static {{uniform_real_real}} const negative_half_{{math.vector_ordered_subset(i)}};
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+        static {{uniform_real_real}} const negative_half_{{math.vector_ordered_subset2(i)}};
+{%- endfor %}
+        static {{uniform_real_uint}} const negative_zero;
+{%- for i in [2,3] if i < dim %}
+        static {{uniform_real_uint}} const negative_zero_{{math.vector_ordered_subset(i)}};
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+        static {{uniform_real_uint}} const negative_zero_{{math.vector_ordered_subset2(i)}};
+{%- endfor %}
+{%- endif %}
+{%- for i in range(0, dim_xyzw) %}
+        static {{uniform_default}} const identity_{{math.vector_element(i)}};
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+        static {{uniform_default}} const identity_{{math.vector_element2(i)}};
+{%- endfor %}
+{%- if element_type in math.signed_types %}
+{%- for i in range(0, dim_xyzw) %}
+        static {{uniform_default}} const negative_identity_{{math.vector_element(i)}};
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+        static {{uniform_default}} const negative_identity_{{math.vector_element2(i)}};
+{%- endfor %}
+{%- endif %}
+{%- if element_type in math.real_types %}
+        static {{uniform_real_uint}} const absolute_mask;
+        static {{uniform_real_uint}} const fraction_mask;
+{%- endif %}
+{%- for i in range(0, dim_xyzw) %}
+        static {{uniform_default_uint}} const mask_{{math.vector_element(i)}};
+{%- endfor %}
+{%- for i in [2,3,4] if i <= dim %}
+        static {{uniform_default_uint}} const mask_{{math.vector_ordered_subset(i)}};
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+        static {{uniform_default_uint}} const mask_{{math.vector_element2(i)}};
+{%- endfor %}
+{%- for i in [2,3,4,8,16] if i <= dim2 %}
+        static {{uniform_default_uint}} const mask_{{math.vector_ordered_subset2(i)}};
+{%- endfor %}
+{%- if element_type in math.int_types %}
+        static {{uniform_default}} const rotate_max;
+{%- endif %}
+    };
+{% endfor %}
+    //
+    // Initialization Functions
+    //
+    
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector broadcast(typename up::math::detail::constructors<Vector>::element_type x) noexcept {
+        return ::up::math::detail::constructors<Vector>::broadcast(x);
+    }
+{% for n in [2, 4, 8] %}
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector broadcast{{n}}(typename up::math::detail::constructors<Vector>::vector{{n}}_type p) noexcept {
+        return ::up::math::detail::constructors<Vector>::broadcast{{n}}(p);
+    }
+{% endfor %}
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector make(
+        typename up::math::detail::constructors<Vector>::element_type x
+    )
+    noexcept {
+        return ::up::math::detail::constructors<Vector>::make(x);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector make(
+        typename up::math::detail::constructors<Vector>::element_type x,
+        typename up::math::detail::constructors<Vector>::element_type y
+    )
+    noexcept {
+        return ::up::math::detail::constructors<Vector>::make(x, y);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector make(
+        typename up::math::detail::constructors<Vector>::element_type x,
+        typename up::math::detail::constructors<Vector>::element_type y,
+        typename up::math::detail::constructors<Vector>::element_type z
+    )
+    noexcept {
+        return ::up::math::detail::constructors<Vector>::make(x, y, z);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector make(
+        typename up::math::detail::constructors<Vector>::element_type x,
+        typename up::math::detail::constructors<Vector>::element_type y,
+        typename up::math::detail::constructors<Vector>::element_type z,
+        typename up::math::detail::constructors<Vector>::element_type w
+    )
+    noexcept {
+        return ::up::math::detail::constructors<Vector>::make(x, y, z, w);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE UPPURE
+    Vector zero() noexcept {
+        return ::up::math::detail::constructors<Vector>::zero();
+    }
+
+    //
+    // Load Functions
+    //
+
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loadbroadcast(typename up::math::detail::constructors<Vector>::element_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::loadbroadcast(p);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loadbroadcast(size_t offset, typename up::math::detail::constructors<Vector>::element_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::loadbroadcast(offset, p);
+    }
+{% for n in [2, 4, 8] %}
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loadbroadcast{{n}}(typename up::math::detail::constructors<Vector>::vector{{n}}_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::loadbroadcast{{n}}(p);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loadbroadcast{{n}}(size_t offset, typename up::math::detail::constructors<Vector>::vector{{n}}_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::loadbroadcast{{n}}(offset, p);
+    }
+{%- endfor %}
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loadscalar(typename up::math::detail::constructors<Vector>::element_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::vloadscalar(p);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loadscalar(size_t offset, typename up::math::detail::constructors<Vector>::element_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::vloadscalar(offset, p);
+    }
+{% for n in [2, 3, 4, 8, 16] %}
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector load{{n}}(typename up::math::detail::constructors<Vector>::vector{{n}}_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::load{{n}}(p);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector load{{n}}(size_t offset, typename up::math::detail::constructors<Vector>::vector{{n}}_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::load{{n}}(offset, p);
+    }
+{% endfor -%}
+{% for n in [2, 3, 4, 8, 16] %}
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loada{{n}}(typename up::math::detail::constructors<Vector>::vector{{n}}_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::loada{{n}}(p);
+    }
+
+    template <class Vector>
+    inline UPALWAYSINLINE
+    Vector loada{{n}}(size_t offset, typename up::math::detail::constructors<Vector>::vector{{n}}_pointer p) noexcept {
+        return ::up::math::detail::constructors<Vector>::loada{{n}}(offset, p);
+    }
+{% endfor -%}
+}}
+
+namespace up { namespace math { namespace detail
+{
+{%- for suffix in ['','_rte','_rtz','_rtn','_rtp','_sat','_sat_rte','_sat_rtz','_sat_rtn','_sat_rtp'] %}
+    template <class To, class From, size_t N>
+    struct generic_convert{{suffix}}_impl<To, From, N, 1>
+    {
+        static UPALWAYSINLINE UPPURE
+        To convert(From const& v) noexcept {
+            To r;
+            for (size_t i = 0; i < N; ++i) {
+                r.s[i] = ::up::math::convert{{suffix}}<typename make_scalar<To>::type>(v.s[i]);
+            }
+            return r;
+        }
+    };
+{% endfor -%}
+}}}
+
+#if !defined(UP_NO_SIMD) && defined(UP_SIMD_NEON)
+#   include <up/math/neon/vector_conversions.inl>
+#elif !defined(UP_NO_SIMD) && defined(UP_SIMD_SSE_2)
+#   include <up/math/sse/vector_conversions.inl>
+#endif
+
+#endif

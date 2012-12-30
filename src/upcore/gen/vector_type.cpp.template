@@ -1,0 +1,41 @@
+﻿{% include "math_header.template" %}
+{%- set vector_type="{0}{1}".format(element_type.lower(), dim) %}
+{%- set vector_param_type="{0}_cval_t".format(vector_type) %}
+#include <up/math/{{vector_type}}.hpp>
+
+namespace up { namespace math
+{
+    extern LIBUPCOREAPI {{vector_type}} acos({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} acosh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} acospi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} asin({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} asinh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} asinpi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} atan({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} atanh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} atanpi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} cbrt({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} cos({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} cosh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} cospi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} erfc({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} erf({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} exp({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} exp2({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} exp10({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} expm1({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log2({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log10({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log1p({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} logb({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} pow({{vector_param_type}} v1, {{vector_param_type}} v2) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} pown({{vector_param_type}} v, int n) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} sin({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} sincos({{vector_param_type}} v, {{vector_type}}* cosval) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} sinh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} sinpi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} tan({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} tanh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} tanpi({{vector_param_type}} v) noexcept;
+}}

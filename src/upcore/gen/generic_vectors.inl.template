@@ -1,0 +1,13 @@
+﻿{% include "math_header.template" %}
+#ifndef UP_MATH_GENERIC_VECTORS_INL
+#define UP_MATH_GENERIC_VECTORS_INL
+
+#ifndef UP_MATH_VECTORS_HPP
+#   error "Do not include this file directly! Instead include <up/math/vectors.hpp>"
+#endif
+
+{% for (element_type, dim) in vector_types %}
+#include <up/math/generic/{{element_type}}{{dim}}_type.inl>
+{%- endfor %}
+
+#endif

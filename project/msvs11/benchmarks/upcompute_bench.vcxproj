@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared-Debug|Win32">
+      <Configuration>Shared-Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Debug|x64">
+      <Configuration>Shared-Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Release|Win32">
+      <Configuration>Shared-Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Release|x64">
+      <Configuration>Shared-Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Silver|Win32">
+      <Configuration>Shared-Silver</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Silver|x64">
+      <Configuration>Shared-Silver</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Gold|Win32">
+      <Configuration>Shared-Gold</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Gold|x64">
+      <Configuration>Shared-Gold</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Platinum|Win32">
+      <Configuration>Shared-Platinum</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared-Platinum|x64">
+      <Configuration>Shared-Platinum</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Debug|Win32">
+      <Configuration>Static-Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Debug|x64">
+      <Configuration>Static-Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Release|Win32">
+      <Configuration>Static-Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Release|x64">
+      <Configuration>Static-Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Silver|Win32">
+      <Configuration>Static-Silver</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Silver|x64">
+      <Configuration>Static-Silver</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Gold|Win32">
+      <Configuration>Static-Gold</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Gold|x64">
+      <Configuration>Static-Gold</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Platinum|Win32">
+      <Configuration>Static-Platinum</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static-Platinum|x64">
+      <Configuration>Static-Platinum</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0ab4f6f2-510e-11e2-86da-000c2978b81b}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>upcompute_bench</RootNamespace>
+    <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)'=='Shared-Debug'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>true</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared-Release'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared-Silver'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared-Gold'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Shared-Platinum'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static-Debug'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>true</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static-Release'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static-Silver'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static-Gold'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Static-Platinum'" Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <LinkIncremental>false</LinkIncremental>
+    <PlatformToolset>v110</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)'=='Shared-Debug'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Debug.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Shared.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Shared-Release'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Release.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Shared.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Shared-Silver'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Silver.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Shared.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Shared-Gold'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Gold.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Shared.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Shared-Platinum'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Platinum.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Shared.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Static-Debug'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Debug.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Static.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Static-Release'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Release.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Static.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Static-Silver'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Silver.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Static.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Static-Gold'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Gold.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Static.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)'=='Static-Platinum'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Common.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Configuration.Platinum.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Linkage.Static.props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Platform.$(Platform).props" />
+    <Import Project="$(SolutionDir)\Upcaste.Cpp.Target.Console.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Debug'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Release'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Silver'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Gold'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Platinum'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Debug'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Release'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Silver'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Gold'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Platinum'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\uptest;$(UpcasteRootDir)include\upcompute;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>upcore.lib;uptest.lib;upcompute.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp" />
+    <ClCompile Include="..\..\..\src\upcompute\bench\create_buffer.cpp" >
+        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcompute\bench\device_enumerator.cpp" >
+        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    </ClCompile>
+    <None Include="..\..\..\src\upcompute\bench\device_enumerator.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

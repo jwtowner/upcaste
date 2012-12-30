@@ -1,0 +1,47 @@
+﻿{%- import "math.template" as math -%}
+{% include "math_header.template" %}
+{%- set vector_type="{0}{1}".format(element_type, dim) %}
+{%- set include_guard_name="UP_MATH_GENERIC_{0}{1}_TYPE_INL".format(element_type.upper(), dim) %}
+#ifndef {{include_guard_name}}
+#define {{include_guard_name}}
+
+#ifndef UP_MATH_VECTORS_HPP
+#   error "Do not include this file directly! Instead include <up/math/vectors.hpp>"
+#endif
+
+namespace up { namespace math
+{
+#if UP_COMPILER == UP_COMPILER_MSVC
+#   pragma warning(push)
+#   pragma warning(disable:4201) // nonstandard extension used : nameless struct/union
+#endif
+
+    union LIBUPCOREAPI {{vector_type}}
+    {
+        {{math.as_actual_type[element_type]}} s[{{dim}}];
+        struct
+        {
+        {%- for i in range(0, dim) %}
+            {{math.as_actual_type[element_type]}} {{math.vector_element2(i)}};
+        {%- endfor %}
+        };
+        struct
+        {
+        {%- for i in range(0, dim if dim <= 4 else 4) %}
+            {{math.as_actual_type[element_type]}} {{math.vector_element(i)}};
+        {%- endfor %}
+        };
+    };
+
+#if UP_COMPILER == UP_COMPILER_MSVC
+#   pragma warning(pop)
+#endif
+
+    typedef {{vector_type}} const& {{vector_type}}_cval_t;
+    typedef {{vector_type}}_cval_t {{vector_type}}_cval1_t;
+    typedef {{vector_type}}_cval_t {{vector_type}}_cval2_t;
+    typedef {{vector_type}}_cval_t {{vector_type}}_cval3_t;
+    typedef {{vector_type}}_cval_t {{vector_type}}_cval4_t;
+}}
+
+#endif

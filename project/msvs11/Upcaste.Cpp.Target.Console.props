@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <UpcasteVariant>$(UpcasteCompiler)_$(UpcastePlatform)_$(UpcasteLibrary)_$(UpcasteConfiguration)</UpcasteVariant>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)..\..\bin\$(UpcasteVariant)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\build\$(UpcasteVariant)\$(ProjectName)\</IntDir>
+  </PropertyGroup>  
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(UpcasteVariant);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="UpcasteVariant">
+      <Value>$(UpcasteVariant)</Value>
+    </BuildMacro>    
+  </ItemGroup>
+</Project>

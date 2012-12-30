@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="driver">
+      <UniqueIdentifier>{05cb6bcc-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bench">
+      <UniqueIdentifier>{05cb7004-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp">
+      <Filter>driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\bitwise.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\clocale.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\container.maps.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstdio.printf.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstdlib.strtoint.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstdlib.strtoreal.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf16.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf32.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf8.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\math.float4.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\memory.allocators.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\bench\memory.hash.cpp">
+      <Filter>bench</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

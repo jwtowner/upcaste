@@ -1,0 +1,130 @@
+{% set constant_prefix={'float':'FLT', 'double':'DBL', 'long double':'LDBL'} %}
+{% macro constant(type, name) -%}{{ "{0}_{1}".format(constant_prefix[type], name) }}{%- endmacro %}
+
+{% set literal_postfix={'float':'f', 'double':'', 'long double':'l', 'long long':'ll', 'long':'l'} %}
+{% macro function_postfix(name, type) -%}{{ "{0}{1}".format(name, literal_postfix[type]) }}{%- endmacro %}
+
+{% set real_types=['half', 'float', 'double'] %}
+{% set sint_types=['char', 'short', 'int', 'long'] %}
+{% set uint_types=['uchar', 'ushort', 'uint', 'ulong'] %}
+{% set int_types=sint_types + uint_types %}
+{% set signed_types=real_types + sint_types %}
+{% set all_types=real_types + sint_types + uint_types %}
+
+{% set sizeof_type={
+    'char':1,
+    'uchar':1,
+    'short':2,
+    'ushort':2,
+    'int':4,
+    'uint':4,
+    'long':8,
+    'ulong':8,
+    'half':2,
+    'float':4,
+    'double':8} %}
+
+{% set uniform_prefix={
+    'char':'i',
+    'uchar':'u',
+    'short':'i',
+    'ushort':'u',
+    'int':'i',
+    'uint':'u',
+    'long':'i',
+    'ulong':'u',
+    'float':'f',
+    'double':'f'} %}
+
+{% set literal_suffix={
+    'char':'',
+    'uchar':'',
+    'short':'',
+    'ushort':'',
+    'int':'',
+    'uint':'u',
+    'long':'ll',
+    'ulong':'ull',
+    'float':'f',
+    'double':''} %}
+
+{% set as_actual_type={
+    'char':'int8_t',
+    'uchar':'uint8_t',
+    'short':'int16_t',
+    'ushort':'uint16_t',
+    'int':'int32_t',
+    'uint':'uint32_t',
+    'long':'int64_t',
+    'ulong':'uint64_t',
+    'half':'uint16_t',
+    'float':'float',
+    'double':'double'} %}
+
+{% set as_sint_type={
+    'char':'char',
+    'uchar':'char',
+    'short':'short',
+    'ushort':'short',
+    'int':'int',
+    'uint':'int',
+    'long':'long',
+    'ulong':'long',
+    'half':'short',
+    'float':'int',
+    'double':'long'} %}
+
+{%- set as_uint_type={
+    'char':'uchar',
+    'uchar':'uchar',
+    'short':'ushort',
+    'ushort':'ushort',
+    'int':'uint',
+    'uint':'uint',
+    'long':'ulong',
+    'ulong':'ulong',
+    'half':'ushort',
+    'float':'uint',
+    'double':'ulong'} %}
+
+{% set as_real_type={
+    'short':'half',
+    'ushort':'half',
+    'int':'float',
+    'uint':'float',
+    'long':'double',
+    'ulong':'double',
+    'half':'half',
+    'float':'float',
+    'double':'double'} %}
+
+{% macro vector_element(index) -%}
+{{['x','y','z','w','s4','s5','s6','s7','s8','s9','sa','sb','sc','sd','se','sf'][index]}}
+{%- endmacro %}
+
+{% macro vector_element2(index) -%}
+{{['s0','s1','s2','s3','s4','s5','s6','s7','s8','s9','sa','sb','sc','sd','se','sf'][index]}}
+{%- endmacro %}
+
+{% macro vector_ordered_subset(n) -%}
+{%- for i in range(0, n) -%}{{['x','y','z','w','4','5','6','7','8','9','a','b','c','d','e','f'][i]}}{%- endfor -%}
+{%- endmacro %}
+
+{% macro vector_ordered_subset2(n) -%}
+s{%- for i in range(0, n) -%}{{['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'][i]}}{%- endfor -%}
+{%- endmacro %}
+
+{%- set one_plus_epsilon={'float':'0x3F800004u', 'double':'0x3FF0000000000004ull'} %}
+{%- set half_plus_epsilon={'float':'0x3F000004u', 'double':'0x3FE0000000000004ull'} %}
+{%- set one_minus_epsilon={'float':'0x3F7FFFFBu', 'double':'0x3FEFFFFFFFFFFFFBull'} %}
+{%- set half_minus_epsilon={'float':'0x3EFFFFFBu', 'double':'0x3FDFFFFFFFFFFFFBull'} %}
+{%- set infinity={'float':'0x7F800000u', 'double':'0x7FF0000000000000ull'} %}
+{%- set quiet_nan={'float':'0x7FC00000u', 'double':'0x7FF8000000000000ull'} %}
+{%- set negative_zero={'float':'0x80000000u', 'double':'0x8000000000000000ull'} %}
+{%- set absmask={'float':'0x7FFFFFFFu', 'double':'0x7FFFFFFFFFFFFFFFull'} %}
+{%- set nofraction={'float':'0x4B000000u', 'double':'0x4160000000000000ull'} %}
+{%- set bitmask={'int':'0xFFFFFFFFu', 'uint':'0xFFFFFFFFu', 'long':'0xFFFFFFFFFFFFFFFFull', 'ulong':'0xFFFFFFFFFFFFFFFFull', 'float':'0xFFFFFFFFu', 'double':'0xFFFFFFFFFFFFFFFFull'} %}
+{%- set zeromask={'int':'0x00000000u', 'uint':'0x00000000u', 'long':'0x0000000000000000ull', 'ulong':'0x0000000000000000ull', 'float':'0x00000000u', 'double':'0x0000000000000000ull'} %}
+{%- set maxconstants={'int':'0x7FFFFFFF', 'uint':'0xFFFFFFFFu', 'long':'0x7FFFFFFFFFFFFFFFll', 'ulong':'0xFFFFFFFFFFFFFFFFull'} %}
+{%- set minconstants={'int':'0x80000000', 'uint':'0x00000000u', 'long':'0x8000000000000000ll', 'ulong':'0x0000000000000000ull'} %}
+{%- set rotatemax={'char':'8', 'uchar':'8', 'short':'16', 'ushort':'16', 'int':'32', 'uint':'32', 'long':'64', 'ulong':'64'} %}

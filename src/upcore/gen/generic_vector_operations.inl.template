@@ -1,0 +1,655 @@
+﻿{% include "math_header.template" %}
+{%- set vector_type="{0}{1}".format(element_type.lower(), dim) %}
+{%- set actual_element_type={'float':'float', 'int':'int32_t', 'uint':'uint32_t'}[element_type] %}
+{%- set element_array_name={'float':'f', 'int':'s', 'uint':'u'}[element_type] %}
+{%- set umask = {'float':'0xFFFFFFFFu', 'double':'0xFFFFFFFFFFFFFFFFull' }[element_type] %}
+{%- set umsbmask = {'int':'0x80000000u', 'uint':'0x80000000u', 'float':'0x80000000u', 'double':'0x8000000000000000ull' }[element_type] %}
+{%- set umsbshift = {'int':31, 'uint':31, 'float':31, 'double':63 }[element_type] %}
+{%- macro literal(text) -%}{{ "{0}{1}".format(text, {'int':'', 'uint':'u', 'float':'f', 'double':''}[element_type]) }}{%- endmacro %}
+{%- macro velement(index) -%}{{['x', 'y', 'z', 'w'][index]}}{%- endmacro %}
+{%- macro velements(text, delim="") -%}
+    {%- for i in range(0, dim) -%}
+        {{ text.format(velement(i), i) }}
+        {%- if i != (dim - 1) -%}{{delim}}{% endif -%}
+    {%- endfor %}
+{%- endmacro %}
+{%- set ppmacro_prefix={'float':'FLT', 'double':'DBL'} %}
+{%- macro ppmacro(name) -%}{{ "{0}_{1}".format(ppmacro_prefix[element_type], name) }}{%- endmacro %}
+{%- set include_guard_name="UP_NUMERIC_GENERIC_{0}{1}_OPERATIONS_INL".format(element_type.upper(), dim) %}
+#ifndef {{include_guard_name}}
+#define {{include_guard_name}}
+
+namespace up { namespace math
+{
+    //
+    // Constructor Bindings
+    //
+
+    namespace detail
+    {
+        template< >
+        struct constructors<{{vector_type}}>
+        {
+            static UPALWAYSINLINE
+            {{vector_type}} load({{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = p[{{i}}];
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} load(size_t offset, {{actual_element_type}} const* p) noexcept {
+                {{actual_element_type}} const* q = p + (offset * {{dim}});
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = q[{{i}}];
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} loadunaligned({{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = p[{{i}}];
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} loadunaligned(size_t offset, {{actual_element_type}} const* p) noexcept {
+                {{actual_element_type}} const* q = p + (offset * {{dim}});
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = q[{{i}}];
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} loadreverse({{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = p[{{dim - i - 1}}];
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} loadreverse(size_t offset, {{actual_element_type}} const* p) noexcept {
+                {{actual_element_type}} const* q = p + (offset * {{dim}});
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = q[{{dim - i - 1}}];
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} loadscalar({{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+                result.x = *p; {% for i in range(1, dim) %}result.{{velement(i)}} = {% endfor %}{{literal("0.0")}};
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} loadscalar(size_t offset, {{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+                result.x = *(p + offset); {% for i in range(1, dim) %}result.{{velement(i)}} = {% endfor %}{{literal("0.0")}};
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} make({{actual_element_type}} x) noexcept {
+                {{vector_type}} result;
+                result.x = x; {% for i in range(1, dim) %}result.{{velement(i)}} = {% endfor %}{{literal("0.0")}};
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} make({{velements(actual_element_type + " {0}", ", ")}}) noexcept {
+                {{vector_type}} result;
+            {%- for i in range(0, dim) %}
+                result.{{velement(i)}} = {{velement(i)}};
+            {%- endfor %}
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} replicate({{actual_element_type}} value) noexcept {
+                {{vector_type}} result;
+                {{velements("result.{0}", " = ")}} = value;
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} replicate({{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+                {{velements("result.{0}", " = ")}} = *p;
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} replicate(size_t offset, {{actual_element_type}} const* p) noexcept {
+                {{vector_type}} result;
+                {{velements("result.{0}", " = ")}} = *(p + offset);
+                return result;
+            }
+
+            static UPALWAYSINLINE
+            {{vector_type}} zero() noexcept {
+                {{vector_type}} result;
+                {{velements("result.{0}", " = ")}} = {{literal("0.0")}};
+                return result;
+            }
+        };
+    }
+
+    //
+    // Load / Store Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{vector_type}} load({{vector_type}} const* p) noexcept {
+        return *p;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} load(size_t offset, {{vector_type}} const* p) noexcept {
+        return *(p + offset);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} loadreverse({{vector_type}} const* p) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = p->{{velement(dim - i - 1)}};
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} loadreverse(size_t offset, {{vector_type}} const* p) noexcept {
+        {{vector_type}} const* q = p + offset;
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = q->{{velement(dim - i - 1)}};
+    {%- endfor %}
+        return result;
+    }
+
+    //
+    // Accessor Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{actual_element_type}} get({{vector_type}} const& v, size_t n) noexcept {
+        return v.{{element_array_name}}[n];
+    }
+{% for j in range(0, dim) %}
+    inline UPALWAYSINLINE
+    {{actual_element_type}} get{{velement(j)}}({{vector_type}} const& v) noexcept {
+        return v.{{velement(j)}};
+    }
+{% endfor %}
+    inline UPALWAYSINLINE
+    {{vector_type}} put({{vector_type}} const& v, {{actual_element_type}} value, size_t n) noexcept {
+        {{vector_type}} result = v;
+        result.{{element_array_name}}[n] = value;
+        return result;
+    }
+{% for j in range(0, dim) %}
+    inline UPALWAYSINLINE
+    {{vector_type}} put{{velement(j)}}({{vector_type}} const& v, {{actual_element_type}} {{velement(j)}}) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        {%- if i == j %}
+        result.{{velement(j)}} = {{velement(j)}};
+        {%- else %}
+        result.{{velement(i)}} = v.{{velement(i)}};
+        {%- endif %}
+    {%- endfor %}
+        return result;
+    }
+{% endfor %}
+    inline UPALWAYSINLINE
+    {{vector_type}} splat({{vector_type}} const& v, size_t n) noexcept {
+        {{vector_type}} result;
+
+        switch (n) {
+        {%- for i in range(0, dim) %}
+        case {{i}}: {{velements("result.{0}", " = ")}} = v.{{velement(i)}}; break;
+        {%- endfor %}
+        default: result = uniform<{{vector_type}}>::zero; break;
+        }
+
+        return result;
+    }
+{%- for j in range(0, dim) %}
+
+    inline UPALWAYSINLINE
+    {{vector_type}} splat{{velement(j)}}({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v.{{velement(j)}};
+    {%- endfor %}
+        return result;
+    }
+{%- endfor %}
+
+    //
+    // Relational Functions
+    //
+{% if element_type!="float" and element_type!="double" %}
+    inline UPALWAYSINLINE
+    bool all({{vector_type}} const& v) noexcept {
+        return (({{velements("v.u[{1}]", " & ")}}) & {{umsbmask}}) != 0;
+    }
+
+    inline UPALWAYSINLINE
+    bool all({{vector_type}} const& v, int mask) noexcept {
+        int result;
+    {%- for i in range(0, dim) %}
+        result {% if i > 0 -%}|{%- endif -%}= static_cast<int>((v.u[{{i}}] & {{umsbmask}}) >> {{umsbshift - i}});
+    {%- endfor %}
+        return (result & mask) == mask;
+    }
+
+    inline UPALWAYSINLINE
+    bool any({{vector_type}} const& v) noexcept {
+        return (({{velements("v.u[{1}]", " | ")}}) & {{umsbmask}}) != 0;
+    }
+
+    inline UPALWAYSINLINE
+    bool any({{vector_type}} const& v, int mask) noexcept {
+        int result;
+    {%- for i in range(0, dim) %}
+        result {% if i > 0 -%}|{%- endif -%}= static_cast<int>((v.u[{{i}}] & {{umsbmask}}) >> {{umsbshift - i}});
+    {%- endfor %}
+        return (result & mask) != 0;
+    }
+{%- else %}
+    inline UPALWAYSINLINE
+    {{vector_type}} isequal({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.{{velement(i)}} == v2.{{velement(i)}}) ? {{umask}} : 0;
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} isnotequal({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.{{velement(i)}} != v2.{{velement(i)}}) ? {{umask}} : 0;
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} isgreater({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.{{velement(i)}} > v2.{{velement(i)}}) ? {{umask}} : 0;
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} isgreaterequal({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.{{velement(i)}} >= v2.{{velement(i)}}) ? {{umask}} : 0;
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} isless({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.{{velement(i)}} < v2.{{velement(i)}}) ? {{umask}} : 0;
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} islessequal({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.{{velement(i)}} <= v2.{{velement(i)}}) ? {{umask}} : 0;
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} bitselect({{vector_type}} const& v1, {{vector_type}} const& v2, {{vector_type}} const& v3) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.u[{{i}}] = (v1.u[{{i}}] & v3.u[{{i}}]) | (v2.u[{{i}}] & ~v3.u[{{i}}]);
+    {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} select({{vector_type}} const& v1, {{vector_type}} const& v2, {{vector_type}} const& v3) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{element_array_name}}[{{i}}] = (v3.u[{{i}}] & {{umsbmask}}) ? v1.f[{{i}}] : v2.f[{{i}}];
+    {%- endfor %}
+        return result;
+    }
+{% endif %}
+    //
+    // Relational Operators
+    //
+{%- macro relational_operator(op, join) %}
+    inline UPALWAYSINLINE
+    bool operator{{op}}({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        return {{ velements("(v1.{0} " + op + " v2.{0})", " " + join + " ") }};
+    }
+{%- endmacro %}
+    {{ relational_operator("==", "&&") }}
+    {{ relational_operator("!=", "||") }}
+    {{ relational_operator(">", "&&") }}
+    {{ relational_operator(">=", "&&") }}
+    {{ relational_operator("<", "&&") }}
+    {{ relational_operator("<=", "&&") }}
+
+    //
+    // Arithmetic Functions
+    //
+{%- macro unary_arithmetic_function(name, op) %}
+    inline UPALWAYSINLINE
+    {{vector_type}} {{name}}({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = {{op}}v.{{velement(i)}};
+    {%- endfor %}
+        return result;
+    }
+{%- endmacro %}
+{%- macro scalar_arithmetic_function(name, op, flip=False) %}
+    inline UPALWAYSINLINE
+{%- if flip %}
+    {{vector_type}} {{name}}({{actual_element_type}} s, {{vector_type}} const& v) noexcept {
+{%- else %}    
+    {{vector_type}} {{name}}({{vector_type}} const& v, {{actual_element_type}} s) noexcept {
+{%- endif %}    
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v.{{velement(i)}} {{op}} s;
+    {%- endfor %}
+        return result;
+    }
+{%- endmacro %}
+{%- macro vector_arithmetic_function(name, op) %}
+    inline UPALWAYSINLINE
+    {{vector_type}} {{name}}({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+    {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v1.{{velement(i)}} {{op}} v2.{{velement(i)}};
+    {%- endfor %}
+        return result;
+    }
+{%- endmacro %}
+    {{ vector_arithmetic_function("add", "+") }}
+    {{ scalar_arithmetic_function("div", "/") }}
+    {{ vector_arithmetic_function("div", "/") }}
+    {{ scalar_arithmetic_function("mul", "*") }}
+    {{ vector_arithmetic_function("mul", "*") }}
+    {{ unary_arithmetic_function("neg", "-") }}
+    {{ vector_arithmetic_function("sub", "-") }}
+
+    //
+    // Arithmetic Operators
+    //
+{%- macro unary_arithmetic_operator(op) -%}
+    {{ unary_arithmetic_function("operator" + op, op) }}
+{%- endmacro %}
+{%- macro scalar_arithmetic_operator(op, flip=False) -%}
+    {{ scalar_arithmetic_function("operator" + op, op, flip=flip) }}
+{%- endmacro %}
+{%- macro vector_arithmetic_operator(op) -%}
+    {{ vector_arithmetic_function("operator" + op, op) }}
+{%- endmacro %}
+    {{ unary_arithmetic_operator("+") }}
+    {{ vector_arithmetic_operator("+") }}
+    {{ unary_arithmetic_operator("-") }}
+    {{ vector_arithmetic_operator("-") }}
+    {{ scalar_arithmetic_operator("*") }}
+    {{ scalar_arithmetic_operator("*", flip=True) }}
+    {{ vector_arithmetic_operator("*") }}
+    {{ scalar_arithmetic_operator("/") }}
+    {{ vector_arithmetic_operator("/") }}
+{% if element_type=="float" or element_type=="double" %}
+    //
+    // Common Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{vector_type}} clamp({{vector_type}} const& v, {{vector_type}} const& v_min, {{vector_type}} const& v_max) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = clamp(v.{{velement(i)}}, v_min.{{velement(i)}}, v_max.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} degrees({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v.{{velement(i)}} * {{ppmacro("DEGREES")}};
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} max({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = fmax(v1.{{velement(i)}}, v2.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} min({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = fmin(v1.{{velement(i)}}, v2.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} mix({{vector_type}} const& v1, {{vector_type}} const& v2, {{actual_element_type}} t) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v1.{{velement(i)}} + (t * (v2.{{velement(i)}} - v1.{{velement(i)}}));
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} mix({{vector_type}} const& v1, {{vector_type}} const& v2, {{vector_type}} const& t) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v1.{{velement(i)}} + (t.{{velement(i)}} * (v2.{{velement(i)}} - v1.{{velement(i)}}));
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} radians({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = v.{{velement(i)}} * {{ppmacro("RADIANS")}};
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} saturate({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = saturate(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} sign({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = sign(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} step({{actual_element_type}} edge, {{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = (v.{{velement(i)}} < edge) ? {{literal("0.0")}} : {{literal("1.0")}};
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} step({{vector_type}} const& edge, {{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = (v.{{velement(i)}} < edge.{{velement(i)}}) ? {{literal("0.0")}} : {{literal("1.0")}};
+        {%- endfor %}
+        return result;
+    }
+
+    //
+    // Mathematical Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{vector_type}} ceil({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = ceil(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} fabs({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = fabs(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} fdim({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = fabs(v1.{{velement(i)}} - v2.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} floor({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = floor(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} fmax({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = fmax(v1.{{velement(i)}}, v2.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} fmin({{vector_type}} const& v1, {{vector_type}} const& v2) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = fmin(v1.{{velement(i)}}, v2.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} mad({{vector_type}} const& v1, {{vector_type}} const& v2, {{vector_type}} const& v3) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = (v1.{{velement(i)}} * v2.{{velement(i)}}) + v3.{{velement(i)}};
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} rcp({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = rcp(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} rint({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = rint(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} round({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = round(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} rsqrt({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = rsqrt(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} sqrt({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = sqrt(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} trunc({{vector_type}} const& v) noexcept {
+        {{vector_type}} result;
+        {%- for i in range(0, dim) %}
+        result.{{velement(i)}} = trunc(v.{{velement(i)}});
+        {%- endfor %}
+        return result;
+    }
+{%- endif %}
+}}
+
+#endif

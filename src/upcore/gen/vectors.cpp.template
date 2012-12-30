@@ -1,0 +1,221 @@
+﻿{%- import "math.template" as math -%}
+{% include "math_header.template" %}
+#include <up/math/vectors.hpp>
+
+#if UP_COMPILER == UP_COMPILER_GCC
+#   pragma GCC diagnostic ignored "-Wmissing-braces"
+#endif
+
+namespace up { namespace math
+{
+{%- for (element_type, dim) in vector_types %}
+{%- set dim2=dim if dim > 4 else 0 %}
+{%- set dim_xyzw=dim if dim <= 4 else 4 %}
+{%- set vector_type="{0}{1}".format(element_type, dim) %}
+{%- set uniform_default="uniform_constant<{0}, {1}>".format(vector_type, math.as_actual_type[element_type]) %}
+{%- set uniform_default_uint="uniform_constant<{0}, {1}>".format(vector_type, math.as_actual_type[math.as_uint_type[element_type]]) %}
+{%- set uniform_real_real="uniform_constant<{0}{1}, {2}>".format(math.as_real_type[element_type], dim, math.as_actual_type[math.as_real_type[element_type]]) %}
+{%- set uniform_real_uint="uniform_constant<{0}{1}, {2}>".format(math.as_real_type[element_type], dim, math.as_actual_type[math.as_uint_type[element_type]]) %}
+{%- macro literal(text) -%}{{ "{0}{1}".format(text, math.literal_suffix[element_type]) }}{%- endmacro %}
+{%- macro ppmacro(text) -%}{{ "{0}_{1}".format({'float':'FLT','double':'DBL'}[element_type], text) }}{%- endmacro %}
+{%- macro initsingle(text, delim=", ") -%}{% for i in range(0, dim - 1) %}{{text}}{{delim}}{% endfor %}{{text}}{%- endmacro %}
+{%- macro initarray(a, delim=", ") -%}{%- for i in range(0, dim) -%}{{a[i]}}{%- if i != dim-1 -%}{{delim}}{%- endif -%}{%- endfor %}{%- endmacro %}
+{%- macro initarray_xyzw(a, delim=", ") -%}{%- for i in range(0, dim) -%}{{a[i % 4]}}{%- if i != dim-1 -%}{{delim}}{%- endif -%}{%- endfor %}{%- endmacro %}
+{%- macro initrange(f, l, in_text, out_text, delim=", ") -%}
+    {%- for i in range(0, dim) -%}
+        {%- if f <= i and i < l -%}{{in_text}}{%- else -%}{{out_text}}{%- endif -%}
+        {%- if i != dim - 1 -%}{{delim}}{%- endif -%}
+    {%- endfor -%}
+{%- endmacro %}
+{%- macro initrange_xyzw(f, l, in_text, out_text, delim=", ") -%}
+    {%- for i in range(0, dim) -%}
+        {%- if f <= (i % 4) and (i % 4) < l -%}{{in_text}}{%- else -%}{{out_text}}{%- endif -%}
+        {%- if i != dim - 1 -%}{{delim}}{%- endif -%}
+    {%- endfor -%}
+{%- endmacro %}
+{% if element_type in math.real_types %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::max = { {{initsingle(ppmacro("MAX"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::min = { {{initsingle(ppmacro("MIN"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::epsilon = { {{initsingle(ppmacro("EPSILON"))}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::one_plus_epsilon = { {{initsingle(math.one_plus_epsilon[element_type])}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::half_plus_epsilon = { {{initsingle(math.half_plus_epsilon[element_type])}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::one_minus_epsilon = { {{initsingle(math.one_minus_epsilon[element_type])}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::half_minus_epsilon = { {{initsingle(math.half_minus_epsilon[element_type])}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::infinity = { {{initsingle(math.infinity[element_type])}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::quiet_nan = { {{initsingle(math.quiet_nan[element_type])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::signed_min = { {{initsingle(math.quiet_nan[element_type])}} }; 
+    {{uniform_real_real}} const uniform<{{vector_type}}>::signed_max = { {{initsingle(math.quiet_nan[element_type])}} }; 
+    {{uniform_real_real}} const uniform<{{vector_type}}>::unsigned_max = { {{initsingle(math.quiet_nan[element_type])}} }; 
+    {{uniform_real_real}} const uniform<{{vector_type}}>::degrees = { {{initsingle(ppmacro("DEGREES"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::radians = { {{initsingle(ppmacro("RADIANS"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::pi = { {{initsingle(ppmacro("PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::half_pi = { {{initsingle(ppmacro("PI_2"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::two_pi = { {{initsingle(ppmacro("2PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_pi = { {{initsingle("-" + ppmacro("PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_half_pi = { {{initsingle("-" + ppmacro("PI_2"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_two_pi = { {{initsingle("-" + ppmacro("2PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::reciprocal_pi = { {{initsingle(ppmacro("1_PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::reciprocal_half_pi = { {{initsingle(ppmacro("2_PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::reciprocal_two_pi = { {{initsingle(ppmacro("1_2PI"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::sincos_range_constants = { {{initarray_xyzw([ppmacro("PI_2"), ppmacro("PI"), ppmacro("2PI"), ppmacro("1_2PI")])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_range_constants = { {{initarray_xyzw([ppmacro("PI_4"), ppmacro("PI_2"), ppmacro("PI"), ppmacro("1_PI")])}} };
+{%- if element_type=='float' %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::native_acos_coefficients = { {{initarray_xyzw(["1.00000011921000e-0f","1.685507744550705e-1f","2.732352661783657e-2f","2.5453434640888777e-2f"])}} };
+    /*{{uniform_real_real}} const uniform<{{vector_type}}>::native_atan_coefficients = ;*/
+    {{uniform_real_real}} const uniform<{{vector_type}}>::native_cos_coefficients = { {{initarray_xyzw(["1.0000000000000000e-0f","-4.9986025691032410e-1f","4.1419546120219520e-2f","-1.2521623258135060e-3f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::native_sin_coefficients = { {{initarray_xyzw(["1.0000000000000000e-0f","-1.6665853559970856e-1f","8.3142780907236350e-3f","-1.8542309658727652e-4f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::native_tan_coefficients0 = { {{initarray_xyzw(["1.0000000000000000e-0f","3.3315432071685790e-1f","1.3606520916970538e-1f","4.1398061482748924e-2f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::native_tan_coefficients1 = { {{initarray_xyzw(["4.3089277326655290e-2f","-3.3333304524421690e-1f","-2.2170389989423330e-2f","-2.3377968818477537e-3f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients0 = { {{initarray_xyzw(["1.00000011921000e-0f","1.6666904091835022e-1f","3.7442680577647804e-2f","1.1623952984665986e-2f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients1 = { {{initarray_xyzw(["2.05340039940554e-3f","4.8035793077980530e-3f","-2.8889352595728160e-3f","1.7377158015362438e-3f"])}} };
+    /*{{uniform_real_real}} const uniform<{{vector_type}}>::atan_coefficients0 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::atan_coefficients1 = ;*/
+    {{uniform_real_real}} const uniform<{{vector_type}}>::cos_coefficients0 = { {{initarray_xyzw(["1.0000000000000000e-0f","-5.0000000000000000e-1f","4.1666666666056330e-2f","-1.3888888860984269e-3f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::cos_coefficients1 = { {{initarray_xyzw(["2.4801582421938170e-5f","-2.7556891974788950e-7f","2.0856702467901100e-9f","-1.0986536764839979e-11f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::sin_coefficients0 = { {{initarray_xyzw(["1.0000000000000000e-0f","-1.6666667163372040e-1f","8.3333708144611930e-3f","-1.9850777498822076e-4f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::sin_coefficients1 = { {{initarray_xyzw(["2.8673509297532770e-6f","-9.1621870444937360e-8f","1.9761453001926614e-8f","-2.2636462059494963e-9f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients0 = { {{initarray_xyzw(["1.0000000000000000e-0f","3.3315432071685790e-1f"," 3.3333349e-1f", "-3.3333331e-1f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients1 = { {{initarray_xyzw([" 1.3332675e-1f", "-2.2222834e-2f", " 5.4058798e-2f", "-2.1100920e-3f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients2 = { {{initarray_xyzw([" 2.1286959e-2f", "-2.4164711e-4f", " 1.0825207e-2f", " 5.0940082e-5f"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients3 = { {{initarray_xyzw([" 1.0137548e-4f", "-8.8050190e-5f", " 4.3710317e-3f", " 3.9700077e-5f"])}} };
+{%- elif element_type=='double' %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients0 = { {{initarray_xyzw(["1.0000000000000002e-00","1.6666666666666918e-01","3.7499999999602600e-02","1.1160714307811265e-02"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients1 = { {{initarray_xyzw(["3.7977424288639992e-03","1.3982706234906020e-03","5.4215389168195780e-04","2.1914307563284584e-04"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients2 = { {{initarray_xyzw(["8.4868837527073720e-05","6.1054740863302810e-05","-5.7833039338888570e-05","1.9171215387137617e-04"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients3 = { {{initarray_xyzw(["-3.5104603703133600e-04","5.2522099247856160e-04","-5.9153721183154400e-04","5.0333690914052580e-04"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::acos_coefficients4 = { {{initarray_xyzw(["-3.1135309248006100e-04","1.3319759618651242e-04","-3.5292594918573816e-05","4.4488309637116630e-06"])}} };
+    /*{{uniform_real_real}} const uniform<{{vector_type}}>::atan_coefficients0 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::atan_coefficients1 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::atan_coefficients2 = ;*/
+    {{uniform_real_real}} const uniform<{{vector_type}}>::cos_coefficients0 = { {{initarray_xyzw(["1.0000000000000000e-00","-5.0000000000000000e-01","4.1666666666666664e-02","-1.3888888888888890e-03"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::cos_coefficients1 = { {{initarray_xyzw(["2.4801587301587300e-05","-2.7557319223985710e-07","2.0876756987841530e-09","-1.1470745595224050e-11"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::cos_coefficients2 = { {{initarray_xyzw(["4.7794771764282040e-14","-1.5619143199049570e-16","4.1086675770914360e-19","-8.6512994843471700e-22"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::sin_coefficients0 = { {{initarray_xyzw(["1.0000000000000000e-00","-1.6666666666666666e-01","8.3333333333331560e-03","-1.9841269841152493e-04"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::sin_coefficients1 = { {{initarray_xyzw(["2.7557319185249400e-06","-2.5052101017560582e-08","1.6058175109947732e-10","-7.5815669263036780e-13"])}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::sin_coefficients2 = { {{initarray_xyzw(["-3.6586864533554100e-16","9.4674830124704450e-19","-1.6213346583948200e-21","1.1888871779171205e-23"])}} };
+/*    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients0 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients1 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients2 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients3 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients4 = ;
+    {{uniform_real_real}} const uniform<{{vector_type}}>::tan_coefficients5 = ;*/
+{%- endif %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::hermite_coefficients = { {{initarray_xyzw([literal('0.0'), literal('1.0'), literal('2.0'), literal('3.0')])}} }; 
+    {{uniform_real_real}} const uniform<{{vector_type}}>::zero = { {{initsingle(literal("0.0"))}} };
+    {{uniform_real_real}} const uniform<{{vector_type}}>::one = { {{initsingle(literal("1.0"))}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::one_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, literal("1.0"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::one_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, literal("1.0"), literal("0.0"))}} };
+{%- endfor %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::half = { {{initsingle(literal("0.5"))}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::half_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, literal("0.5"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::half_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, literal("0.5"), literal("0.0"))}} };
+{%- endfor %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::negative_zero = { {{initsingle(math.negative_zero[element_type])}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::negative_zero_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, math.negative_zero[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::negative_zero_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, math.negative_zero[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_one = { {{initsingle(literal("-1.0"))}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_one_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, literal("-1.0"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_one_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, literal("-1.0"), literal("0.0"))}} };
+{%- endfor %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_half = { {{initsingle(literal("-0.5"))}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_half_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, literal("-0.5"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_half_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, literal("-0.5"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in range(0, dim_xyzw) %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::identity_{{math.vector_element(i)}} = { {{initrange_xyzw(i, i + 1, literal("1.0"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::identity_{{math.vector_element2(i)}} = { {{initrange(i, i + 1, literal("1.0"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in range(0, dim_xyzw) %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_identity_{{math.vector_element(i)}} = { {{initrange_xyzw(i, i + 1, literal("-1.0"), literal("0.0"))}} };
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+    {{uniform_real_real}} const uniform<{{vector_type}}>::negative_identity_{{math.vector_element2(i)}} = { {{initrange(i, i + 1, literal("-1.0"), literal("0.0"))}} };
+{%- endfor %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::absolute_mask = { {{initsingle(math.absmask[element_type])}} };
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::fraction_mask = { {{initsingle(math.nofraction[element_type])}} };
+{%- for i in range(0, dim_xyzw) %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_element(i)}} = { {{initrange_xyzw(i, i + 1, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in [2,3,4] if i <= dim %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_element2(i)}} = { {{initrange(i, i + 1, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in [2,3,4,8,16] if i <= dim2 %}
+    {{uniform_real_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- else %}
+    {{uniform_default}} const uniform<{{vector_type}}>::max = { {{initsingle(math.maxconstants[element_type])}} };
+{%- if element_type in math.signed_types %}
+    {{uniform_default}} const uniform<{{vector_type}}>::min = { {{initsingle(math.minconstants[element_type])}} };
+{%- endif %}
+    {{uniform_default}} const uniform<{{vector_type}}>::zero = { {{initsingle(literal("0"))}} };
+    {{uniform_default}} const uniform<{{vector_type}}>::one = { {{initsingle(literal("1"))}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_default}} const uniform<{{vector_type}}>::one_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, literal("1"), literal("0"))}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_default}} const uniform<{{vector_type}}>::one_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, literal("1"), literal("0"))}} };
+{%- endfor %}
+{%- if element in math.signed_types %}
+    {{uniform_default}} const uniform<{{vector_type}}>::negative_one = { {{initsingle(literal("-1"))}} };
+{%- for i in [2,3] if i < dim %}
+    {{uniform_default}} const uniform<{{vector_type}}>::negative_one_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, literal("-1"), literal("0"))}} };
+{%- endfor %}
+{%- for i in [2,3,4,8] if i < dim2 %}
+    {{uniform_default}} const uniform<{{vector_type}}>::negative_one_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, literal("-1"), literal("0"))}} };
+{%- endfor %}
+{%- endif %}
+{%- for i in range(0, dim_xyzw) %}
+    {{uniform_default}} const uniform<{{vector_type}}>::identity_{{math.vector_element(i)}} = { {{initrange_xyzw(i, i + 1, literal("1"), literal("0"))}} };
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+    {{uniform_default}} const uniform<{{vector_type}}>::identity_{{math.vector_element2(i)}} = { {{initrange(i, i + 1, literal("1"), literal("0"))}} };
+{%- endfor %}
+{%- if element in math.signed_types %}
+{%- for i in range(0, dim_xyzw) %}
+    {{uniform_default}} const uniform<{{vector_type}}>::negative_identity_{{math.vector_element(i)}} = { {{initrange_xyzw(i, i + 1, literal("-1"), literal("0"))}} };
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+    {{uniform_default}} const uniform<{{vector_type}}>::negative_identity_{{math.vector_element2(i)}} = { {{initrange(i, i + 1, literal("-1"), literal("0"))}} };
+{%- endfor %}
+{%- endif %}
+{%- for i in range(0, dim_xyzw) %}
+    {{uniform_default_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_element(i)}} = { {{initrange_xyzw(i, i + 1, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in [2,3,4] if i <= dim %}
+    {{uniform_default_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_ordered_subset(i)}} = { {{initrange_xyzw(0, i, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in range(0, dim2) %}
+    {{uniform_default_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_element2(i)}} = { {{initrange(i, i + 1, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+{%- for i in [2,3,4,8,16] if i <= dim2 %}
+    {{uniform_default_uint}} const uniform<{{vector_type}}>::mask_{{math.vector_ordered_subset2(i)}} = { {{initrange(0, i, math.bitmask[element_type], math.zeromask[element_type])}} };
+{%- endfor %}
+#ifdef UP_SIMD_SSE
+    {{uniform_default}} const uniform<{{vector_type}}>::rotate_max = { {{initrange(0, 1, math.rotatemax[element_type], literal("0"))}} };
+#else
+    {{uniform_default}} const uniform<{{vector_type}}>::rotate_max = { {{initsingle(math.rotatemax[element_type])}} };
+#endif
+{%- endif %}
+{%- endfor %}
+}}

@@ -1,0 +1,119 @@
+foo|     Hello|bar
+foo|Hello, wor|bar
+foo|Sound chec|bar
+foo|This strin|bar
+foo|         1|bar
+foo|          |bar
+foo|    (null)|bar
+Hello     
+Hello, wor
+Sound chec
+This strin
+1         
+          
+(null)    
+     Hello
+Hello, wor
+Sound chec
+This strin
+         1
+          
+    (null)
+     Hello
+     Hello
+     Sound
+     This 
+         1
+          
+          
+Hello
+Hello, wor
+Sound chec
+This strin
+    1
+     
+(null)
+         H
+         H
+         S
+         T
+         1
+          
+          
+Hello
+Hello, wor
+Sound chec
+This strin
+1
+ 
+(null)
+          
+          
+          
+          
+          
+          
+          
+Hello
+Hello, wor
+Sound chec
+This strin
+1
+
+(null)
+Hello                                     
+Hello                                     
+Sound                                     
+This                                      
+1                                         
+                                          
+                                          
+  
+  
+  
+  
+  
+  
+  
+Hello
+Hello, wor
+Sound chec
+This strin
+1
+
+(null)
+H
+H
+S
+T
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello
+Hello, world!
+Sound check: One, two, three.
+This string is a little longer than the other strings.
+   1
+    
+(null)
+Hello
+Hello, world!
+Sound check: One, two, three.
+This string is a little longer than the other strings.
+1
+
+(null)

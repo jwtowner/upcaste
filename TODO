@@ -1,0 +1,30 @@
+Check for subnormals and infinity/nan in frexp10 functions.
+Change cstdio.hpp to use our portable version of printf/scanf when in use with MSVC.
+Fix the formatting of floats in printf/fast_printf variants.
+Implement scanf/fast_scanf variants.
+Setup configuration and build system on *nix using autoconf and tundra.
+Double check configuration macros and detection of platform functions on *nix.
+Implement memset_pattern16 and memset_pattern16 and update uninitialized_fill_n.
+Add implementations for wide-character versions of printf/scanf functions.
+Add support for the C floating-point environment and implment cfenv.hpp.
+Optimize and test the s-expression parser/lexer more thoroughly.
+Implement memccpy, stpcpy, stpncpy, and better implement mempcpy.
+Implement wmemccpy, wcpcpy, wcpncpy, and better implement wmempcpy.
+Implement the C11 threads layer for POSIX platforms.
+Implement c16rtomb, c32rtomb, mbrtoc16, and mbrtoc32 functions in cuchar.hpp.
+Implement filesystem copy and copy_directory functions.
+Implement filesystem for POSIX platforms.
+Consider implementing custom version of atomics library that is more optimized for MSVC and GCC.
+Test filesystem more thoroughly on Windows.
+Finish implementing transcedental functions for vector math library.
+Revamp the generic C++ port of the vector math library, and get it working again.
+Add ARM NEON port of the vector math library.
+Implement concurrent_linear_region/concurrent_linear_allocator in region.hpp.
+Add denseset container data type and functions, counterpart to the densemap type.
+Add a denseindex data type, which is like densemap but uses unique integer keys--values might be integer offsets into an array.
+Add perfect hashing library which can auto-generate an optimized C++ hashing function source file for a given key set.
+Add Clang/LLVM compiler support.
+Improve the benchmarking code in uptest to output more useful metrics, and get rid of the useless ones like the iteration/size count--maybe make it customizable via a format string or flags.
+Add a simplified random number library to upcore... no need to go overboard, just fast basic integer and floating point normal distributions.
+Add a command line arguments parsing library to upcore.
+Make sure function attributes in cuchar.hpp match the ones in cstring.hpp.

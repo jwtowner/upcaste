@@ -1,0 +1,1500 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="gen">
+      <UniqueIdentifier>{06dd354a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{06e0fdba-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cerrno">
+      <UniqueIdentifier>{06e72032-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cerrno\windows">
+      <UniqueIdentifier>{06e7df40-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cfloat">
+      <UniqueIdentifier>{06e96e0a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cfloat\msvc">
+      <UniqueIdentifier>{06ea2ad4-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\clocale">
+      <UniqueIdentifier>{06eaf4a0-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\clocale\msvc">
+      <UniqueIdentifier>{06ebb7fa-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cmath">
+      <UniqueIdentifier>{06eebfa4-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstdio">
+      <UniqueIdentifier>{06f2d2b0-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstdio\posix">
+      <UniqueIdentifier>{06f8c5f8-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstdlib">
+      <UniqueIdentifier>{06f9d9f2-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstdlib\msvc">
+      <UniqueIdentifier>{07002456-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstdlib\posix">
+      <UniqueIdentifier>{0701376a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstring">
+      <UniqueIdentifier>{070200a0-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstring\gcc">
+      <UniqueIdentifier>{070a8784-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cstring\msvc">
+      <UniqueIdentifier>{070b5826-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cthreads">
+      <UniqueIdentifier>{070c2cb0-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cthreads\windows">
+      <UniqueIdentifier>{070cd7fa-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ctime">
+      <UniqueIdentifier>{070da8ec-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ctime\macosx">
+      <UniqueIdentifier>{070f19fc-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ctime\windows">
+      <UniqueIdentifier>{07102edc-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cuchar">
+      <UniqueIdentifier>{0711968c-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cuctype">
+      <UniqueIdentifier>{0725164e-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cuctype\posix">
+      <UniqueIdentifier>{07260d74-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cuctype\windows">
+      <UniqueIdentifier>{0726e5aa-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cwchar">
+      <UniqueIdentifier>{0727acd8-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem">
+      <UniqueIdentifier>{072dcd66-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\filepath">
+      <UniqueIdentifier>{072f3340-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\posix">
+      <UniqueIdentifier>{0733791e-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\posix\operations">
+      <UniqueIdentifier>{07365a94-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\posix\woperations">
+      <UniqueIdentifier>{073c5b42-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\wfilepath">
+      <UniqueIdentifier>{07425222-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\windows">
+      <UniqueIdentifier>{07469f4e-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\windows\operations">
+      <UniqueIdentifier>{0748703a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem\windows\woperations">
+      <UniqueIdentifier>{074eb3f0-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\hash">
+      <UniqueIdentifier>{0754e09a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\list">
+      <UniqueIdentifier>{0755dfd6-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\math">
+      <UniqueIdentifier>{0757092e-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\page">
+      <UniqueIdentifier>{0757f884-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\page\posix">
+      <UniqueIdentifier>{075922e0-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\page\windows">
+      <UniqueIdentifier>{0759e52c-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\region">
+      <UniqueIdentifier>{075ab45c-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sexp">
+      <UniqueIdentifier>{07629b90-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\slist">
+      <UniqueIdentifier>{076b96dc-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cinttypes">
+      <UniqueIdentifier>{efcad9a8-1265-4a0c-afdd-eccc4614daa8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\upcore\gen\generatemath.bat">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\generatemath.py">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\generic_scalar_operations.inl.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\generic_vector_operations.inl.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\generic_vector_type.inl.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\generic_vectors.inl.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\math.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\math_header.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\mathfwd.hpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\matrices.hpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\matrix_type.hpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\vector_type.cpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\vector_type.hpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\vectors.cpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\gen\vectors.hpp.template">
+      <Filter>gen</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\allocator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cassert.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdalign.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sparse.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\upcore.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\utility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cerrno\windows\hresult_to_errno.cpp">
+      <Filter>src\cerrno\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cerrno\windows\oserror_to_errno.cpp">
+      <Filter>src\cerrno\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cerrno\windows\set_errno_with_hresult.cpp">
+      <Filter>src\cerrno\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cerrno\windows\set_errno_with_last_oserror.cpp">
+      <Filter>src\cerrno\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cfloat\msvc\inf_nan.cpp">
+      <Filter>src\cfloat\msvc</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\clocale\msvc\clocale_internal.hpp">
+      <Filter>src\clocale\msvc</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\duplocale.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\freelocale.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\global_locale.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\localeconv_l.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\native_locale_name.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\newlocale.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\setlocale.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\clocale\msvc\uselocale.cpp">
+      <Filter>src\clocale\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\fpclassify.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\fpclassifyf.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\fpclassifyl.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\frexp10.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\frexp10f.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\frexp10l.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\nan.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\nanf.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\nanl.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\pow10.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\pow10f.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\pow10l.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\signbit.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\signbitf.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cmath\signbitl.cpp">
+      <Filter>src\cmath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\asprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_asprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_fprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_print_format.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_printf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_snprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_sprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_vasprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_vfprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_vprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_vsnprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\fast_vsprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\print_format.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdio\print_format.inl">
+      <Filter>src\cstdio</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\print_format_flush.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdio\print_format_flush.inl">
+      <Filter>src\cstdio</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\print_format_string.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdio\print_format_string.inl">
+      <Filter>src\cstdio</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\cstdio\printf_internal.hpp">
+      <Filter>src\cstdio</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\snprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\vasprintf.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdio\posix\remove.cpp">
+      <Filter>src\cstdio\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\cstdio\posix\rename.cpp">
+      <Filter>src\cstdio\posix</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_alloc.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_alloc_throw.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_malloc_allocator.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\calloc_throw.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtod.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtof.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtoi32.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtoi64.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtold.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtou32.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtou64.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloc_allocator.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloc_throw.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloca_freea.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\realloc_throw.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\strtod.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\strtof.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdlib\strtoint.inl">
+      <Filter>src\cstdlib</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\strtold.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\strtoll.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdlib\strtoreal.inl">
+      <Filter>src\cstdlib</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\strtoull.cpp">
+      <Filter>src\cstdlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\msvc\force_exit.cpp">
+      <Filter>src\cstdlib\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\msvc\quick_exit.cpp">
+      <Filter>src\cstdlib\msvc</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdlib\posix\aligned_alloc.cpp">
+      <Filter>src\cstdlib\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\cstring\cstring_internal.inl">
+      <Filter>src\cstring</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\fast_strcasecmp.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\fast_strncasecmp.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\memrchr.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\stpcpy.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\stpncpy.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strcchr.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strcpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strdup.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strhash32.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strhash64.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strncchr.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strncpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strncspn.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strndup.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnhash32.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnhash64.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnlen.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnrcchr.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnrcpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnrcspn.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnrpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnrspn.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnspn.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strrcchr.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strrcpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strrcspn.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strrpbrk.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strrspn.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\strtok_r.cpp">
+      <Filter>src\cstring</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstring\gcc\memset_pattern_sse2.cpp">
+      <Filter>src\cstring\gcc</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\msvc\memset_pattern_sse2.cpp">
+      <Filter>src\cstring\msvc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cthreads\windows\thrd_sleep.cpp">
+      <Filter>src\cthreads\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\ctime\timespec_add.cpp">
+      <Filter>src\ctime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\ctime\timespec_subtract.cpp">
+      <Filter>src\ctime</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\ctime\macosx\process_clock.cpp">
+      <Filter>src\ctime\macosx</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\ctime\macosx\thread_clock.cpp">
+      <Filter>src\ctime\macosx</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\ctime\windows\clock_getres.cpp">
+      <Filter>src\ctime\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\ctime\windows\clock_gettime.cpp">
+      <Filter>src\ctime\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\ctime\windows\clock_settime.cpp">
+      <Filter>src\ctime\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\cuchar_internal.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cuchar\cuchar_internal.inl">
+      <Filter>src\cuchar</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16len.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16memchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16memcmp.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16memrchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16nlen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16scat.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16schk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16schr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16scmp.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16scpy.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16scspn.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16shash32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16shash64.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen_u32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen_u8.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sncat.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snchk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snhash32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snhash64.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen_u32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen_u8.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16spbrk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16srchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sspn.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sstr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stok.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stou32s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stou8s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16tou32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32len.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32memchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32memcmp.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32memrchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32nlen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32scat.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32schr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32scmp.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32scpy.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32scspn.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32shash32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32shash64.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen_u16.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen_u8.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sncat.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snhash32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snhash64.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen_u16.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen_u8.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32spbrk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32srchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sspn.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sstr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stok.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stou16s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stou8s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32tou16.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32tou8.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8len.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8nlen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8schk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8schr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8scspn.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8slen_u16.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8slen_u32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snchk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snlen_u16.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snlen_u32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8spbrk.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8srchr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sspn.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stok.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stou16s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stou32s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8tou32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cuctype\posix\cuctype.cpp">
+      <Filter>src\cuctype\posix</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\cuctype\windows\cuctype.cpp">
+      <Filter>src\cuctype\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcscchr.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcscpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsdup.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcshash32.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcshash64.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsncchr.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsncpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsncspn.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsndup.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnhash32.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnhash64.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrcchr.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrcpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrcspn.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrspn.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsrcchr.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsrcpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsrcspn.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsrpbrk.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsrspn.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wmemccpy.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wmemrchr.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\filesystem\filepath\filepath.hpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_basename.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_dirname.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_is_absolute_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_join_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_normalize_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\posix_split_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_basename.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_dirname.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_is_absolute_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_join_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_normalize_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\filepath\windows_split_path.cpp">
+      <Filter>src\filesystem\filepath</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\filesystem_internal.hpp">
+      <Filter>src\filesystem\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\get_space_info.cpp">
+      <Filter>src\filesystem\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\get_status_info.cpp">
+      <Filter>src\filesystem\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\get_status_type.cpp">
+      <Filter>src\filesystem\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\get_transcode_locale.cpp">
+      <Filter>src\filesystem\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\transcode.cpp">
+      <Filter>src\filesystem\posix</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\copy_file.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\copy_symlink.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\create_directories.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\create_directory.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\create_directory_symlink.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\create_hard_link.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\create_symlink.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\current_directory_path.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\equivalent.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\exists.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\read_symlink.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\remove_all.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\resize.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\space.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\status.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\symlink_status.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\temp_directory_path.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\touch.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\user_directory_path.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\copy_file.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\copy_symlink.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\create_directories.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\create_directory.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\create_directory_symlink.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\create_hard_link.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\create_symlink.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\current_directory_path.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\equivalent.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\exists.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\read_symlink.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\remove_all.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\resize.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\space.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\status.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\symlink_status.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\temp_directory_path.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\touch.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\user_directory_path.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_basename.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_dirname.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_is_absolute_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_join_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_normalize_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\posix_split_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\filesystem\wfilepath\wfilepath.hpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_basename.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_dirname.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_is_absolute_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_join_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_normalize_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\wfilepath\windows_split_path.cpp">
+      <Filter>src\filesystem\wfilepath</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\filesystem\windows\filesystem_internal.hpp">
+      <Filter>src\filesystem\windows</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\get_transcode_locale.cpp">
+      <Filter>src\filesystem\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\transcode.cpp">
+      <Filter>src\filesystem\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\absolute_path.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\copy_file.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\copy_symlink.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\create_directories.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\create_directory.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\create_directory_symlink.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\create_hard_link.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\create_symlink.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\current_directory_path.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\equivalent.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\exists.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\read_symlink.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\remove_all.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\resize.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\space.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\status.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\symlink_status.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\temp_directory_path.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\touch.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\operations\user_directory_path.cpp">
+      <Filter>src\filesystem\windows\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\absolute_path.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\copy_file.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\copy_symlink.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\create_directories.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\create_directory.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\create_directory_symlink.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\create_hard_link.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\create_symlink.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\current_directory_path.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\equivalent.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\exists.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\read_symlink.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\remove_all.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\resize.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\space.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\status.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\symlink_status.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\temp_directory_path.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\touch_wchar.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\user_directory_path.cpp">
+      <Filter>src\filesystem\windows\woperations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\hash\accumulate_hash32.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\hash\accumulate_hash64.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\list\list_sort_tree_recursive.cpp">
+      <Filter>src\list</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\list\list_swap.cpp">
+      <Filter>src\list</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\list\list_validate.cpp">
+      <Filter>src\list</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\math\float4.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\math\vectors.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\page\page_allocator.cpp">
+      <Filter>src\page</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\page\posix\page.cpp">
+      <Filter>src\page\posix</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\page\windows\page.cpp">
+      <Filter>src\page\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_allocator.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_add_chunk.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_add_finalizer.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_allocate.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_allocate_tail.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_allocate_zero.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_construct.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_create.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_deallocate.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_destroy.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_destruct.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_get_metrics.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\region\heap_region_internal.hpp">
+      <Filter>src\region</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_rewind.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_shrink.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_suppress_finalizer.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_head_allocator.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_construct.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_head_allocate.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_head_allocate_zero.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_head_position.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_head_rewind.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\region\linear_region_internal.hpp">
+      <Filter>src\region</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_realign.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_rewind.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_space.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_tail_allocate.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_tail_allocate_zero.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_tail_position.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_tail_rewind.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_validate.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_tail_allocator.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\lexer.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_error.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_load_memory.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek_category.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek_type.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read_category.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read_type.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_rewind.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_unload.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_unread.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_warning.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_double.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_float.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_int16.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_int32.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_int64.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_int8.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\sexp\token_parse_integer.inl">
+      <Filter>src\sexp</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_long_double.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\sexp\token_parse_real.inl">
+      <Filter>src\sexp</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_uint16.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_uint32.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_uint64.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_uint8.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_bool.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_int16.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_int32.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_int64.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_int8.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\sexp\token_to_integer.inl">
+      <Filter>src\sexp</Filter>
+    </None>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_uint16.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_uint32.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_uint64.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_uint8.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\slist\slist_validate.cpp">
+      <Filter>src\slist</Filter>
+    </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstdio\getdelim.inl">
+      <Filter>src\cstdio</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\cstdio\getline.inl">
+      <Filter>src\cstdio</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\upcore\src\cinttypes\strtoimax.cpp">
+      <Filter>src\cinttypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cinttypes\strtoumax.cpp">
+      <Filter>src\cinttypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cinttypes\wcstoimax.cpp">
+      <Filter>src\cinttypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cinttypes\wcstoumax.cpp">
+      <Filter>src\cinttypes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\getdelim.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstdio\getline.cpp">
+      <Filter>src\cstdio</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

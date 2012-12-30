@@ -1,0 +1,149 @@
+﻿{% include "math_header.template" %}
+{%- set uint_type={'float':'uint', 'int':'uint', 'uint':'uint', 'double':'ulong', 'long':'ulong', 'ulong':'ulong'}[element_type] %}
+{%- set vector_type="{0}{1}".format(element_type.lower(), cols) %}
+{%- set uint_vector_type="{0}{1}".format(uint_type.lower(), cols) %}
+{%- set matrix_type="{0}x{1}".format(vector_type, rows) %}
+{%- set vector_param_type="{0}_cval_t".format(vector_type) %}
+{%- set matrix_param_type="{0}_cval_t".format(matrix_type) %}
+{%- set include_guard_name="UP_MATH_{0}_HPP".format(matrix_type.upper()) %}
+{%- set row_names=['x', 'y', 'z', 'w'] %}
+#ifndef {{include_guard_name}}
+#define {{include_guard_name}}
+
+#include <up/math/matrices.hpp>
+#if defined(UP_SIMD_NEON)
+#   include <up/math/neon/{{matrix_type}}_operations.inl>
+#elif defined(UP_SIMD_SSE_2)
+#   include <up/math/sse/{{matrix_type}}_operations.inl>
+#else
+#   include <up/math/generic/{{matrix_type}}_operations.inl>
+#endif
+
+namespace up { namespace math
+{
+    //
+    // Constructor Bindings
+    //
+
+    namespace detail
+    {
+        template<>
+        struct constructors<{{matrix_type}}>
+        {
+            static UPALWAYSINLINE
+            {{matrix_type}} broadcast({{vector_param_type}} v) noexcept {
+                return {{matrix_type}}({%- for i in range(0, rows) %}splat{{row_names[i]}}(v){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});
+            }
+            {% for j in range(0, rows) %}
+            static UPALWAYSINLINE
+            {{matrix_type}} broadcast({%- for i in range(0, j+1) %}{{element_type}} {{row_names[i]}}{%- if i != j -%}, {% endif -%}{%- endfor -%}) noexcept {
+                return {{matrix_type}}({%- for i in range(0, rows) %}{%- if i <= j -%}replicate<{{vector_type}}>({{row_names[i]}}){%- else %}zero<{{vector_type}}>(){%- endif -%}{%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});
+            }
+            {% endfor %}
+            static UPALWAYSINLINE
+            {{matrix_type}} zero() noexcept {
+                return {{matrix_type}}({%- for i in range(0, rows) %}zero<{{vector_type}}>(){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});
+            }
+        }
+    }
+
+    //
+    // Accessor Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} get({{matrix_param_type}} m, size_t n) noexcept {
+        return m.v[n];
+    }
+    {% for i in range(0, rows) %}
+    inline UPALWAYSINLINE
+    {{matrix_type}} get{{row_names[i]}}({{matrix_param_type}} m) noexcept {
+        return m.v[{{i}}];
+    }
+    {% endfor %}
+    inline UPALWAYSINLINE
+    {{matrix_type}} put({{matrix_param_type}} m, {{vector_param_type}} v, size_t n) noexcept {
+        {{matrix_type}} result = m
+        result.v[n] = v;
+        return result;
+    }
+    {% for i in range(0, rows) %}
+    inline UPALWAYSINLINE
+    {{matrix_type}} put{{row_names[i]}}({{matrix_param_type}} m, {{vector_param_type}} v) noexcept {
+        return {{matrix_type}}({%- for j in range(0, rows) %}{%- if j != i -%}m.v[{{j}}]{%- else -%}v{%- endif -%}{%- if j != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+    {% endfor %}
+    //
+    // SOA Arithmetic Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} add({{matrix_param_type}} m1, {{matrix_param_type}} m2) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}add(m1.v[{{i}}], m2.v[{{i}}]){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} div({{matrix_param_type}} m, {{element_type}} s) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}div(m.v[{{i}}], s){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+ 
+    inline UPALWAYSINLINE
+    {{matrix_type}} div({{matrix_param_type}} m1, {{matrix_param_type}} m2) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}div(m1.v[{{i}}], m2.v[{{i}}]){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} mul({{matrix_param_type}} m, {{element_type}} s) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}mul(m.v[{{i}}], s){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+ 
+    inline UPALWAYSINLINE
+    {{matrix_type}} mul({{matrix_param_type}} m1, {{matrix_param_type}} m2) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}mul(m1.v[{{i}}], m2.v[{{i}}]){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} neg({{matrix_param_type}} m) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}neg(m.v[{{i}}]){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} sub({{matrix_param_type}} m1, {{matrix_type}} m2) noexcept {
+        return {{matrix_type}}({%- for i in range(0, rows) %}sub(m1.v[{{i}}], m2.v[{{i}}]){%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});  
+    }
+{% if element_type in ['float', 'double'] %}
+{% if rows >= 3 %}
+    //
+    // SOA 3D Geometric Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} normalize3({{matrix_param_type}} m) noexcept {
+        {{vector_type}} a = mul(m.v[0], m.v[0]);
+        {{vector_type}} b = mul(m.v[1], m.v[1]);
+        {{vector_type}} c = mul(m.v[2], m.v[2]);
+        a = add(a, b);
+        a = add(a, c);
+        {{uint_vector_type}} m = isnotequal(a, uniform<{{vector_type}}>::infinity);
+        b = sqrt(a);
+        return {{matrix_type}}(
+        {%- for i in range(0, rows) %}
+            {% if i < 3 -%}as<{{vector_type}}>(and(as<{{uint_vector_type}}>(div(m.v[{{i}}], b)), m)){%- else %}zero<{{vector_type}}>(){%- endif -%}{%- if i != rows-1 -%}, {% endif %}
+        {%- endfor %}
+        );
+    }
+
+    inline UPALWAYSINLINE
+    {{matrix_type}} fast_normalize3({{matrix_param_type}} m) noexcept {
+        {{vector_type}} a = mul(m.v[0], m.v[0]);
+        {{vector_type}} b = mul(m.v[1], m.v[1]);
+        {{vector_type}} c = mul(m.v[2], m.v[2]);
+        a = add(a, b);
+        a = add(a, c);
+        b = rsqrt(a);
+        return {{matrix_type}}({%- for i in range(0, rows) %}{%- if i < 3 -%}mul(m.v[{{i}}], b){%- else %}zero<{{vector_type}}>(){%- endif -%}{%- if i != rows-1 -%}, {% endif -%}{%- endfor -%});
+    }
+{% endif %}
+{%- endif -%}}}
+
+#endif

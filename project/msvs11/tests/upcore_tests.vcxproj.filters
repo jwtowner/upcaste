@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="driver">
+      <UniqueIdentifier>{05a45d8e-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{05a46176-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\filesystem">
+      <UniqueIdentifier>{05a7f93a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\math">
+      <UniqueIdentifier>{05a9e524-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\sexp">
+      <UniqueIdentifier>{05ab111a-5216-11e2-a057-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp">
+      <Filter>driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cctype.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cfloat.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\clocale.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cstdio.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cstdlib.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cstring.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\densemap.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\list.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\slist.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\sparsemap.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\sparseset.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.posix.cpp">
+      <Filter>test\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.windows.cpp">
+      <Filter>test\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.operations.cpp">
+      <Filter>test\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.wfilepath.posix.cpp">
+      <Filter>test\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.wfilepath.windows.cpp">
+      <Filter>test\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.woperations.cpp">
+      <Filter>test\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\math\math.float4.cpp">
+      <Filter>test\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\math\math.int4.cpp">
+      <Filter>test\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\math\math.uint4.cpp">
+      <Filter>test\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.lexer.cpp">
+      <Filter>test\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.parser.cpp">
+      <Filter>test\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.token.cpp">
+      <Filter>test\sexp</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,77 @@
+﻿{% include "math_header.template" %}
+#ifndef UP_MATH_MATRICES_HPP
+#define UP_MATH_MATRICES_HPP
+
+#include <up/math/vectors.hpp>
+
+namespace up { namespace math
+{
+{%- for (element_type, dim) in vector_types %}
+{%- set array_name_table={'float':'f', 'int':'s', 'uint':'u', 'double':'f', 'long':'s', 'ulong':'u'} %}
+{%- set element_size_type={'float':4, 'int':4, 'uint':4, 'double':8, 'long':8, 'ulong':8}[element_type] %}
+{%- set rtype={'float':'float', 'int':'int32_t', 'uint':'uint32_t', 'double':'double', 'long':'int64_t', 'ulong':'uint64_t'}[element_type] %}
+{%- set int_type={'float':'int', 'int':'int', 'uint':'int', 'double':'long', 'long':'long', 'ulong':'long'}[element_type] %}
+{%- set uint_type={'float':'uint', 'int':'uint', 'uint':'uint', 'double':'ulong', 'long':'ulong', 'ulong':'ulong'}[element_type] %}
+{%- set real_type={'float':'float', 'int':'float', 'uint':'float', 'double':'double', 'long':'double', 'ulong':'double'}[element_type] %}
+{%- set vtype="{0}{1}".format(element_type.lower(), dim) %}
+{%- set real_vector_type="{0}{1}".format(real_type.lower(), dim) %}
+{%- set int_vector_type="{0}{1}".format(int_type.lower(), dim) %}
+{%- set uint_vector_type="{0}{1}".format(uint_type.lower(), dim) %}
+{%- for dim2 in range(2, 5) %}
+{%- set mtype="{0}x{1}".format(vtype, dim2) %}
+    union LIBUPCOREAPI {{mtype}}
+    {
+        {{vtype}} v[{{dim2}}];
+        {{rtype}} m[{{dim2}}][{{dim}}];
+
+#ifndef UP_NO_DEFAULTED_FUNCTIONS
+        {{mtype}}() = default;
+        {{mtype}}({{mtype}} const&) = default;
+        {{mtype}}& operator=({{mtype}} const&) = default;
+#else
+        UPALWAYSINLINE {{mtype}}() noexcept { }
+#endif
+
+        UPALWAYSINLINE
+        {{mtype}}({%- for c in range(0, dim2) -%}{{vtype}}_cval{{c}}_t v{{c}}{%- if c != dim2-1 -%}, {% endif -%}{%- endfor -%}) noexcept {
+        {%- for c in range(0, dim2) %}
+            v[{{c}}] = v{{c}};
+        {%- endfor %}
+        }
+        
+        UPALWAYSINLINE
+        {{mtype}}(
+        {%- for c in range(0, dim2) %}
+            {% for r in range(0, dim) -%}{{rtype}} m{{c}}{{r}}{%- if r != dim-1 or c != dim2-1 -%}, {% endif -%}{%- endfor -%}
+        {%- endfor %}
+        )
+        noexcept {
+        {%- for c in range(0, dim2) %}
+        {%- if (dim != 4) and (dim != 8) and (dim != 16) %}
+            {% for r in range(0, dim) -%}m[{{c}}][{{r}}] = m{{c}}{{r}}; {% endfor -%}
+        {%- else %}
+            v[{{c}}] = set<{{vtype}}>({% for r in range(0, dim) -%}x{{c}}{{r}}{%- if r != dim-1 -%}, {% endif -%}{%- endfor -%});
+        {%- endif %}
+        {%- endfor %}
+        }
+
+        UPALWAYSINLINE {{vtype}}_ref_t operator[](size_t column) noexcept { return v[column]; }
+        UPALWAYSINLINE {{vtype}}_cref_t operator[](size_t column) const noexcept { return v[column]; }
+        UPALWAYSINLINE {{rtype}}& operator()(size_t column, size_t row) noexcept { return m[column][row]; }
+        UPALWAYSINLINE {{rtype}} operator()(size_t column, size_t row) const noexcept { return m[column][row]; }
+    };
+{% endfor %}
+{%- endfor -%}
+{%- for (element_type, dim) in vector_types %}
+{%- set rtype={'float':'float', 'int':'int32_t', 'uint':'uint32_t', 'double':'double', 'long':'int64_t', 'ulong':'uint64_t'}[element_type] %}
+{%- set vtype="{0}{1}".format(element_type.lower(), dim) %}
+{%- for dim2 in range(2, 5) %}
+{%- set mtype="{0}x{1}".format(vtype, dim2) %}
+    typedef {{mtype}}& {{mtype}}_ref_t;
+    typedef {{mtype}} const& {{mtype}}_cref_t;
+    typedef {{mtype}} const& {{mtype}}_cval_t;
+{%- endfor %}
+{%- endfor %}
+}}
+
+#endif

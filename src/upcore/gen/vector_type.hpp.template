@@ -1,0 +1,729 @@
+﻿{%- import "math.template" as math -%}
+{% include "math_header.template" %}
+{%- set vector_type="{0}{1}".format(element_type, dim) %}
+{%- set vector_param_type="{0}_cval_t".format(vector_type) %}
+{%- set sint_vector_type="{0}{1}".format(math.as_sint_type[element_type], dim) %}
+{%- set real_type=math.as_real_type[element_type] %}
+{%- set include_guard_name="UP_MATH_{0}{1}_HPP".format(element_type.upper(), dim) %}
+#ifndef {{include_guard_name}}
+#define {{include_guard_name}}
+{% if element_type not in math.real_types %}
+#include <up/math/vectors.hpp>
+{%- else %}
+#include <up/math/{{sint_vector_type}}.hpp>
+{%- endif %}
+#if defined(UP_SIMD_NEON)
+#   include <up/math/neon/{{vector_type}}_operations.inl>
+#elif defined(UP_SIMD_SSE_2)
+#   include <up/math/sse/{{vector_type}}_operations.inl>
+#else
+#   include <up/math/generic/{{vector_type}}_operations.inl>
+#endif
+{% if element_type in math.real_types %}
+namespace up { namespace math
+{
+    //
+    // Common Functions
+    //
+    
+    inline UPALWAYSINLINE
+    {{vector_type}} degrees({{vector_param_type}} v) noexcept {
+        return mul(v, uniform<{{vector_type}}>::degrees);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} radians({{vector_param_type}} v) noexcept {
+        return mul(v, uniform<{{vector_type}}>::radians);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} step({{vector_param_type}} edge, {{vector_param_type}} d) noexcept {
+        {{sint_vector_type}} t;
+        t = islessequal(edge, d); 
+        t = bitwiseand(t, as<{{sint_vector_type}}>(uniform<{{vector_type}}>::one));
+        return as<{{vector_type}}>(t);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} step({{real_type}} const edge, {{vector_param_type}} d) noexcept {
+        return step(broadcast<{{vector_type}}>(edge), d);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} smoothstep({{vector_param_type}} edge0, {{vector_param_type}} edge1, {{vector_param_type}} d) noexcept {
+        {{vector_type}} t, u, c0, c1, c2, c3;
+        c0 = splatx(uniform<{{vector_type}}>::hermite_coefficients);
+        c1 = splaty(uniform<{{vector_type}}>::hermite_coefficients);
+        c2 = splatz(uniform<{{vector_type}}>::hermite_coefficients);
+        c3 = splatw(uniform<{{vector_type}}>::hermite_coefficients);
+        t = sub(d, edge0);
+        u = sub(edge1, edge0);
+        t = div(t, u);
+        t = clamp(t, c0, c1);
+        u = mul(t, t);
+        t = fnma(t, c2, c3);
+        return mul(t, u);
+    }
+    
+    inline UPALWAYSINLINE
+    {{vector_type}} smoothstep({{real_type}} const edge0, {{real_type}} const edge1, {{vector_param_type}} d) noexcept {
+        return smoothstep(broadcast<{{vector_type}}>(edge0), broadcast<{{vector_type}}>(edge1), d);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} sign({{vector_param_type}} v) noexcept {
+        {{sint_vector_type}} t;
+        t = isnotequal(v, uniform<{{vector_type}}>::negative_zero);
+        t = bitwiseand(t, as<{{sint_vector_type}}>(uniform<{{vector_type}}>::one));
+        return bitselect(as<{{vector_type}}>(t), v, uniform<{{vector_type}}>::negative_zero);
+    }
+
+    //
+    // Mathematical Functions
+    //
+
+    inline UPALWAYSINLINE
+    {{vector_type}} copysign({{vector_param_type}} v1, {{vector_param_type}} v2) noexcept {
+        return bitselect(v1, v2, uniform<float4>::negative_zero);
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} fmod({{vector_param_type}} v1, {{vector_param_type}} v2) noexcept {
+       {{vector_type}} r;
+       r = div(v1, v2);
+       r = trunc(r);
+       r = fnma(r, v2, v1);
+       return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} wrap({{vector_param_type}} v1, {{vector_param_type}} v2) noexcept {
+       {{vector_type}} r;
+       r = div(v1, v2);
+       r = floor(r);
+       r = fnma(r, v2, v1);
+       return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} wrappi({{vector_param_type}} v) noexcept {
+       {{vector_type}} r;
+       r = fma(v, uniform<{{vector_type}}>::reciprocal_two_pi, uniform<{{vector_type}}>::half);
+       r = floor(r);
+       r = fnma(r, uniform<{{vector_type}}>::two_pi, v);
+       return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} wrap2pi({{vector_param_type}} v) noexcept {
+       {{vector_type}} r;
+       r = mul(v, uniform<{{vector_type}}>::reciprocal_two_pi);
+       r = floor(r);
+       r = fnma(r, uniform<{{vector_type}}>::two_pi, v);
+       return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} remainder({{vector_param_type}} v1, {{vector_param_type}} v2) noexcept {
+       {{vector_type}} r;
+       {{sint_vector_type}} m;
+       r = div(v1, v2);
+       r = round(r);
+       r = fnma(r, v2, v1);
+       m = isequal(r, uniform<{{vector_type}}>::negative_zero);
+       r = select(r, uniform<{{vector_type}}>::negative_zero, m);
+       return r;
+    }
+{% if element_type == 'float' %}
+    inline UPALWAYSINLINE
+    {{vector_type}} native_cos({{vector_param_type}} v) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // decompose quadrant of u, let s = sign(cos(v)), let t = |u| reflected at Pi/2
+        u = fabs(v);
+        s = neg(one);
+        m = islessequal(u, half_pi);
+        t = sub(pi, u);
+        s = select(s, one, m);
+        t = select(t, u, m);
+
+        // evaluate polynomial s*P(t) over [0,Pi/2] where P(t) = 1 + c1*t^2 + c2*t^4 + c3*t^6 + ...
+        u = mul(t, t);
+        t = mul(u, s);
+        r = fma(c3, u, c2);
+        r = fma(r, u, c1);
+        r = fma(r, t, s);
+        return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} native_sin({{vector_param_type}} v) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // decompose quadrant of u, let s = sign(u), let t = |u| reflected at Pi/2
+        s = copysign(one, v);
+        u = fabs(v);
+        m = islessequal(u, half_pi);
+        t = sub(pi, u);
+        t = select(t, u, m);
+
+        // evaluate polynomial s*P(t) over [0,Pi/2] where P(t) = t + c1*t^3 + c2*t^5 + c3*t^7 + ...
+        u = mul(t, t);
+        t = mul(t, s);
+        s = mul(u, t);
+        r = fma(c3, u, c2);
+        r = fma(r, u, c1);
+        r = fma(r, s, t);
+        return r; 
+    }
+
+    inline UPALWAYSINLINE
+    float4 native_sincos({{vector_param_type}} v, {{vector_type}}* cosval) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::native_cos_coefficients);
+        {{vector_type}} const s1 = splaty(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} const s2 = splatz(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} const s3 = splatw(uniform<{{vector_type}}>::native_sin_coefficients);
+        {{vector_type}} rs, rc, ss, sc, s, t, u;
+        {{sint_vector_type}} m;
+
+        // decompose quadrant of u, let s = sign(u), let t = |u| reflected at Pi/2
+        ss = copysign(one, v);
+        u = fabs(v);
+        sc = neg(one); 
+        m = islessequal(u, half_pi);
+        t = sub(pi, u);
+        sc = select(sc, one, m);
+        t = select(t, u, m);
+
+        // cos(v) = ss*Q(t) over [0,Pi/2] where Q(t) = t + c1*t^3 + c2*t^5 + c3*t^7 + ...
+        // sin(v) = sc*P(t) over [0,Pi/2] where P(t) = 1 + c1*t^2 + c2*t^4 + c3*t^6 + ...
+        u = mul(t, t);
+        t = mul(t, ss);
+        s = mul(u, sc);
+        ss = mul(u, t);
+        rc = fma(c3, u, c2);
+        rs = fma(s3, u, s2);
+        rc = fma(rc, u, c1);
+        rs = fma(rs, u, s1);
+        rc = fma(rc, s, sc);
+        rs = fma(rs, ss, t);
+        *cosval = rc;
+        return rs;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} native_tan({{vector_param_type}} v) noexcept {
+        {{vector_type}} const quarter_pi = splatx(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const half_pi = splaty(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::native_tan_coefficients0);
+        {{vector_type}} const t1 = splaty(uniform<{{vector_type}}>::native_tan_coefficients0);
+        {{vector_type}} const t2 = splatz(uniform<{{vector_type}}>::native_tan_coefficients0);
+        {{vector_type}} const t3 = splatw(uniform<{{vector_type}}>::native_tan_coefficients0);
+        {{vector_type}} const t4 = splatx(uniform<{{vector_type}}>::native_tan_coefficients1);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::native_tan_coefficients1);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::native_tan_coefficients1);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::native_tan_coefficients1);
+        {{vector_type}} rt, rc, r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // decompose octant of u, let s = sign(u), let t = |u| if |u| < Pi/4 else Pi/2 - |u|
+        s = copysign(one, v);
+        u = fabs(v);
+        m = isless(u, quarter_pi);
+        t = sub(half_pi, u);
+        t = select(t, u, m);
+
+        // tan(x) = s*P(t) over [0,Pi/4] where P(t) = t + t1*t^3 + t2*t^5 + t3*t^7 + ...
+        // cot(x) = s*Q(t) over [Pi/4,Pi/2] where Q(t) = t^-1 + c1*t + c2*t^3 + c3*t^5 + ... 
+        u = mul(t, t);
+        t = mul(t, s);
+        s = mul(u, t);
+        r = add(t, uniform<float4>::epsilon);
+        r = half_recip(r);
+        rt = fma(t4, u, t3);
+        rt = fma(rt, u, t2);
+        rc = fma(c3, u, c2);
+        rt = fma(rt, u, t1);
+        rc = fma(rc, u, c1);
+        rt = fma(rt, s, t);
+        rc = fma(rc, t, r);
+        rt = select(rc, rt, m);
+        return rt;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} native_acos({{vector_param_type}} v) noexcept {
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one_plus_epsilon = splatx(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} q, r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // decompose into positive or negative, let u = |v|
+        u = fabs(v);
+        m = isless(v, zero<float4>());
+
+        // acos(v) = P(1-u) / sqrt(2*(1-u)) over [0,1] where P(x) = 2x + c1*x^2 + c2*x^3 + c3*x^4 + ...
+        u = sub(one_plus_epsilon, u);
+        t = add(u, u);
+        s = mul(u, u);
+        q = half_rsqrt(t);
+        r = fma(c3, u, c2);
+        r = fma(r, u, c1);
+        r = fma(r, s, t);
+        r = mul(r, q);
+
+        // select result based on quadrant
+        q = sub(pi, r);
+        r = select(r, q, m);
+        return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} native_asin({{vector_param_type}} v) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one_plus_epsilon = splatx(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::native_acos_coefficients);
+        {{vector_type}} q, r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // decompose into positive or negative, let u = |v|
+        u = fabs(v);
+        m = isless(v, zero<float4>());
+
+        // acos(v) = P(1-u) / sqrt(2*(1-u)) over [0,1] where P(x) = 2x + c1*x^2 + c2*x^3 + c3*x^4 + ...
+        u = sub(one_plus_epsilon, u);
+        t = add(u, u);
+        s = mul(u, u);
+        q = half_rsqrt(t);
+        r = fma(c3, u, c2);
+        r = fma(r, u, c1);
+        r = fma(r, s, t);
+        r = mul(r, q);
+
+        // select result based on quadrant
+        q = sub(pi, r);
+        r = select(r, q, m);
+
+        // asin(v) = Pi/2 - acos(v)
+        r = sub(half_pi, r);
+        return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} half_cos({{vector_param_type}} v) noexcept {
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const two_pi = splatz(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const rcp_two_pi = splatw(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} u;
+        u = add(v, pi);
+        u = mul(u, rcp_two_pi);
+        u = floor(u);
+        u = fnma(u, two_pi, v);
+        u = native_cos(u);
+        return u;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} half_sin({{vector_param_type}} v) noexcept {
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const two_pi = splatz(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const rcp_two_pi = splatw(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} u;
+        u = add(v, pi);
+        u = mul(u, rcp_two_pi);
+        u = floor(u);
+        u = fnma(u, two_pi, v);
+        u = native_sin(u);
+        return u; 
+    }
+
+    inline UPALWAYSINLINE
+    float4 half_sincos({{vector_param_type}} v, {{vector_type}}* cosval) noexcept {
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const two_pi = splatz(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const rcp_two_pi = splatw(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} u;
+        u = add(v, pi);
+        u = mul(u, rcp_two_pi);
+        u = floor(u);
+        u = fnma(u, two_pi, v);
+        u = native_sincos(u, cosval);
+        return u;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} half_tan({{vector_param_type}} v) noexcept {
+        {{vector_type}} const half_pi = splaty(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const pi = splatz(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const rcp_pi = splatw(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} u;
+        u = add(v, half_pi);
+        u = mul(u, rcp_pi);
+        u = floor(u);
+        u = fnma(u, pi, v);
+        u = native_tan(u);
+        return u;
+    }
+{% endif %}
+    inline UPALWAYSINLINE
+    {{vector_type}} cos({{vector_param_type}} v) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const two_pi = splatz(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const rcp_two_pi = splatw(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c4 = splatx(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const c5 = splaty(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const c6 = splatz(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const c7 = splatw(uniform<{{vector_type}}>::cos_coefficients1);
+{%- if element_type=='double' %}
+        {{vector_type}} const c8 = splatx(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const c9 = splaty(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const c10 = splatz(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const c11 = splatw(uniform<{{vector_type}}>::cos_coefficients2);
+{%- endif %}
+        {{vector_type}} r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // let u = v reduced to [-Pi,Pi]
+        u = add(v, pi);
+        u = mul(u, rcp_two_pi);
+        u = floor(u);
+        u = fnma(u, two_pi, v);
+
+        // decompose quadrant of u, let s = sign(cos(v)), let t = |u| reflected at Pi/2
+        u = fabs(u);
+        s = neg(one);
+        m = islessequal(u, half_pi);
+        t = sub(pi, u);
+        s = select(s, one, m);
+        t = select(t, u, m);
+
+        // evaluate polynomial s*P(t) over [0,Pi/2] where P(t) = 1 + c1*t^2 + c2*t^4 + c3*t^6 + ...
+        u = mul(t, t);
+        t = mul(u, s);
+{%- if element_type=='double' %}
+        r = fma(c11, u, c10);
+        r = fma(r, u, c9);
+        r = fma(r, u, c8);
+        r = fma(r, u, c7);
+        r = fma(r, u, c6);
+{%- else %}
+        r = fma(c7, u, c6);
+{%- endif %}
+        r = fma(r, u, c5);
+        r = fma(r, u, c4);
+        r = fma(r, u, c3);
+        r = fma(r, u, c2);
+        r = fma(r, u, c1);
+        r = fma(r, t, s);
+        return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} sin({{vector_param_type}} v) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const two_pi = splatz(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const rcp_two_pi = splatw(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const c4 = splatx(uniform<{{vector_type}}>::sin_coefficients1);
+        {{vector_type}} const c5 = splaty(uniform<{{vector_type}}>::sin_coefficients1);
+        {{vector_type}} const c6 = splatz(uniform<{{vector_type}}>::sin_coefficients1);
+        {{vector_type}} const c7 = splatw(uniform<{{vector_type}}>::sin_coefficients1);
+{%- if element_type=='double' %}
+        {{vector_type}} const c8 = splatx(uniform<{{vector_type}}>::sin_coefficients2);
+        {{vector_type}} const c9 = splaty(uniform<{{vector_type}}>::sin_coefficients2);
+        {{vector_type}} const c10 = splatz(uniform<{{vector_type}}>::sin_coefficients2);
+        {{vector_type}} const c11 = splatw(uniform<{{vector_type}}>::sin_coefficients2);
+{%- endif %}
+        {{vector_type}} r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // let u = v reduced to [-Pi,Pi]
+        u = add(v, pi);
+        u = mul(u, rcp_two_pi);
+        u = floor(u);
+        u = fnma(u, two_pi, v);
+
+        // decompose quadrant of u, let s = sign(u), let t = |u| reflected at Pi/2
+        s = copysign(one, u);
+        u = fabs(u);
+        m = islessequal(u, half_pi);
+        t = sub(pi, u);
+        t = select(t, u, m);
+
+        // evaluate polynomial s*P(t) over [0,Pi/2] where P(t) = t + c1*t^3 + c2*t^5 + c3*t^7 + ...
+        u = mul(t, t);
+        t = mul(t, s);
+        s = mul(u, t);
+{%- if element_type=='double' %}
+        r = fma(c11, u, c10);
+        r = fma(r, u, c9);
+        r = fma(r, u, c8);
+        r = fma(r, u, c7);
+        r = fma(r, u, c6);
+{%- else %}
+        r = fma(c7, u, c6);
+{%- endif %}
+        r = fma(r, u, c5);
+        r = fma(r, u, c4);
+        r = fma(r, u, c3);
+        r = fma(r, u, c2);
+        r = fma(r, u, c1);
+        r = fma(r, s, t);
+        return r; 
+    }
+
+    inline UPALWAYSINLINE
+    float4 sincos({{vector_param_type}} v, {{vector_type}}* cosval) noexcept {
+        {{vector_type}} const half_pi = splatx(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const pi = splaty(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const two_pi = splatz(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const rcp_two_pi = splatw(uniform<{{vector_type}}>::sincos_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c1 = splaty(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c2 = splatz(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::cos_coefficients0);
+        {{vector_type}} const c4 = splatx(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const c5 = splaty(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const c6 = splatz(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const c7 = splatw(uniform<{{vector_type}}>::cos_coefficients1);
+        {{vector_type}} const s1 = splaty(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const s2 = splatz(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const s3 = splatw(uniform<{{vector_type}}>::sin_coefficients0);
+        {{vector_type}} const s4 = splatx(uniform<{{vector_type}}>::sin_coefficients1);
+        {{vector_type}} const s5 = splaty(uniform<{{vector_type}}>::sin_coefficients1);
+        {{vector_type}} const s6 = splatz(uniform<{{vector_type}}>::sin_coefficients1);
+        {{vector_type}} const s7 = splatw(uniform<{{vector_type}}>::sin_coefficients1);
+{%- if element_type=='double' %}
+        {{vector_type}} const c8 = splatx(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const c9 = splaty(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const c10 = splatz(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const c11 = splatw(uniform<{{vector_type}}>::cos_coefficients2);
+        {{vector_type}} const s8 = splatx(uniform<{{vector_type}}>::sin_coefficients2);
+        {{vector_type}} const s9 = splaty(uniform<{{vector_type}}>::sin_coefficients2);
+        {{vector_type}} const s10 = splatz(uniform<{{vector_type}}>::sin_coefficients2);
+        {{vector_type}} const s11 = splatw(uniform<{{vector_type}}>::sin_coefficients2);
+{%- endif %}
+        {{vector_type}} rs, rc, ss, sc, s, t, u;
+        {{sint_vector_type}} m;
+
+        // let u = v reduced to [-Pi,Pi]
+        u = add(v, pi);
+        u = mul(u, rcp_two_pi);
+        u = floor(u);
+        u = fnma(u, two_pi, v);
+
+        // decompose quadrant of u, let s = sign(u), let t = |u| reflected at Pi/2
+        ss = copysign(one, u);
+        u = fabs(u);
+        sc = neg(one); 
+        m = islessequal(u, half_pi);
+        t = sub(pi, u);
+        sc = select(sc, one, m);
+        t = select(t, u, m);
+
+        // cos(v) = ss*Q(t) over [0,Pi/2] where Q(t) = t + c1*t^3 + c2*t^5 + c3*t^7 + ...
+        // sin(v) = sc*P(t) over [0,Pi/2] where P(t) = 1 + c1*t^2 + c2*t^4 + c3*t^6 + ...
+        u = mul(t, t);
+        t = mul(t, ss);
+        s = mul(u, sc);
+        ss = mul(u, t);
+{%- if element_type=='double' %}
+        rc = fma(c11, u, c10);
+        rs = fma(s11, u, s10);
+        rc = fma(rc, u, c9);
+        rs = fma(rs, u, s9);
+        rc = fma(rc, u, c8);
+        rs = fma(rs, u, s8);
+        rc = fma(rc, u, c7);
+        rs = fma(rs, u, s7);
+        rc = fma(rc, u, c6);
+        rs = fma(rs, u, s6);
+ {%- else %}
+        rc = fma(c7, u, c6);
+        rs = fma(s7, u, s6);
+{%- endif %}
+        rc = fma(rc, u, c5);
+        rs = fma(rs, u, s5);
+        rc = fma(rc, u, c4);
+        rs = fma(rs, u, s4);
+        rc = fma(rc, u, c3);
+        rs = fma(rs, u, s3);
+        rc = fma(rc, u, c2);
+        rs = fma(rs, u, s2);
+        rc = fma(rc, u, c1);
+        rs = fma(rs, u, s1);
+        rc = fma(rc, s, sc);
+        rs = fma(rs, ss, t);
+        *cosval = rc;
+        return rs;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} tan({{vector_param_type}} v) noexcept {
+        {{vector_type}} const quarter_pi = splatx(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const half_pi = splaty(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const pi = splatz(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const rcp_pi = splatw(uniform<{{vector_type}}>::tan_range_constants);
+        {{vector_type}} const one = splatx(uniform<{{vector_type}}>::tan_coefficients0);
+        {{vector_type}} const t1 = splatz(uniform<{{vector_type}}>::tan_coefficients0);
+        {{vector_type}} const c1 = splatw(uniform<{{vector_type}}>::tan_coefficients0);
+        {{vector_type}} const t2 = splatx(uniform<{{vector_type}}>::tan_coefficients1);
+        {{vector_type}} const c2 = splaty(uniform<{{vector_type}}>::tan_coefficients1);
+        {{vector_type}} const t3 = splatz(uniform<{{vector_type}}>::tan_coefficients1);
+        {{vector_type}} const c3 = splatw(uniform<{{vector_type}}>::tan_coefficients1);
+        {{vector_type}} const t4 = splatx(uniform<{{vector_type}}>::tan_coefficients2);
+        {{vector_type}} const c4 = splaty(uniform<{{vector_type}}>::tan_coefficients2);
+        {{vector_type}} const t5 = splatz(uniform<{{vector_type}}>::tan_coefficients2);
+        {{vector_type}} const c5 = splatw(uniform<{{vector_type}}>::tan_coefficients2);
+        {{vector_type}} const t6 = splatx(uniform<{{vector_type}}>::tan_coefficients3);
+        {{vector_type}} const c6 = splaty(uniform<{{vector_type}}>::tan_coefficients3);
+        {{vector_type}} const t7 = splatz(uniform<{{vector_type}}>::tan_coefficients3);
+        {{vector_type}} const c7 = splatw(uniform<{{vector_type}}>::tan_coefficients3);
+{%- if element_type=='double' %}
+        {{vector_type}} const t8 = splatx(uniform<{{vector_type}}>::tan_coefficients4);
+        {{vector_type}} const c8 = splaty(uniform<{{vector_type}}>::tan_coefficients4);
+        {{vector_type}} const t9 = splatz(uniform<{{vector_type}}>::tan_coefficients4);
+        {{vector_type}} const c9 = splatw(uniform<{{vector_type}}>::tan_coefficients4);
+        {{vector_type}} const t10 = splatx(uniform<{{vector_type}}>::tan_coefficients5);
+        {{vector_type}} const c10 = splaty(uniform<{{vector_type}}>::tan_coefficients5);
+        {{vector_type}} const t11 = splatz(uniform<{{vector_type}}>::tan_coefficients5);
+        {{vector_type}} const c11 = splatw(uniform<{{vector_type}}>::tan_coefficients5);
+{%- endif %}
+        {{vector_type}} rt, rc, r, s, t, u;
+        {{sint_vector_type}} m;
+
+        // let u = v reduced to [-Pi/2,Pi/2]
+        u = add(v, half_pi);
+        u = mul(u, rcp_pi);
+        u = floor(u);
+        u = fnma(u, pi, v);
+
+        // decompose octant of u, let s = sign(u), let t = |u| if |u| < Pi/4 else Pi/2 - |u|
+        s = copysign(one, u);
+        u = fabs(u);
+        m = islessequal(u, quarter_pi);
+        t = sub(half_pi, u);
+        t = select(t, u, m);
+
+        // tan(x) = s*P(t) over [0,Pi/4] where P(t) = t + t1*t^3 + t2*t^5 + t3*t^7 + ...
+        // cot(x) = s*Q(t) over [Pi/4,Pi/2] where Q(t) = t^-1 + c1*t + c2*t^3 + c3*t^5 + ... 
+        u = mul(t, t);
+        t = mul(t, s);
+        s = mul(u, t);
+        r = add(t, uniform<float4>::epsilon);
+        r = recip(r);
+{%- if element_type=='double' %}
+        rt = fma(t11, u, t10);
+        rc = fma(c11, u, c10);
+        rt = fma(rt, u, t9);
+        rc = fma(rc, u, c9);
+        rt = fma(rt, u, t8);
+        rc = fma(rc, u, c8);
+        rt = fma(rt, u, t7);
+        rc = fma(rc, u, c7);
+        rt = fma(rt, u, t6);
+        rc = fma(rc, u, c6);
+{%- else %}
+        rt = fma(t7, u, t6);
+        rc = fma(c7, u, c6);
+{%- endif %}
+        rt = fma(rt, u, t5);
+        rc = fma(rc, u, c5);
+        rt = fma(rt, u, t4);
+        rc = fma(rc, u, c4);
+        rt = fma(rt, u, t3);
+        rc = fma(rc, u, c3);
+        rt = fma(rt, u, t2);
+        rc = fma(rc, u, c2);
+        rt = fma(rt, u, t1);
+        rc = fma(rc, u, c1);
+        rt = fma(rt, s, t);
+        rc = fma(rc, t, r);
+        rt = select(rc, rt, m);
+        return rt; 
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} cospi({{vector_param_type}} v) noexcept {
+        {{vector_type}} r = mul(v, uniform<{{vector_type}}>::pi);
+        r = cos(r);
+        return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} sinpi({{vector_param_type}} v) noexcept {
+        {{vector_type}} r = mul(v, uniform<{{vector_type}}>::pi);
+        r = sin(r);
+        return r;
+    }
+
+    inline UPALWAYSINLINE
+    {{vector_type}} tanpi({{vector_param_type}} v) noexcept {
+        {{vector_type}} r = mul(v, uniform<{{vector_type}}>::pi);
+        r = tan(r);
+        return r;
+    }
+
+    extern LIBUPCOREAPI {{vector_type}} acos({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} acosh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} acospi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} asin({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} asinh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} asinpi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} atan({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} atanh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} atanpi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} cbrt({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} cosh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} erfc({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} erf({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} exp({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} exp2({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} exp10({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} expm1({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log2({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log10({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} log1p({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} logb({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} pow({{vector_param_type}} v1, {{vector_param_type}} v2) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} pown({{vector_param_type}} v, int n) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} sinh({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} tanh({{vector_param_type}} v) noexcept;
+}}
+{% endif %}
+#endif
