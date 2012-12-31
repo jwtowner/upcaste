@@ -23,6 +23,7 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
@@ -31,15 +32,14 @@ namespace up
         assert(r);
 
         size_t const alignment = r->alignment;
-        size_t const align_mask = alignment - 1;
-        size_t const offset = (alignment - (reinterpret_cast<uintptr_t>(r->active_chunk->head) & align_mask)) & align_mask;
+        size_t const offset = r->offset;
         size_t space = r->chunk_size;
         void* ptr;
 
         heap_region_chunk* new_chunk = r->active_chunk->next;
         if (!new_chunk) {
-            new_chunk = static_cast<heap_region_chunk*>(r->alloc->allocate(space));
-            if (!new_chunk) {
+            new_chunk = static_cast<heap_region_chunk*>(r->base_alloc->allocate(space));
+            if (UPUNLIKELY(!new_chunk)) {
                 return nullptr;
             }
         }
@@ -48,13 +48,13 @@ namespace up
         space -= sizeof(heap_region_chunk);
 
         verify(align(alignment, offset, alignment, &ptr, &space));
+        assert((reinterpret_cast<uintptr_t>(ptr) & (alignment - 1)) == 0);
+        assert(((reinterpret_cast<uintptr_t>(ptr) + space) & (alignment - 1)) == 0);
 
         new_chunk->next = nullptr;
         new_chunk->owner = r;
         new_chunk->head = static_cast<char*>(ptr);
         new_chunk->tail = new_chunk->head + space;
-        assert((reinterpret_cast<uintptr_t>(new_chunk->tail) & (alignof(max_align_t) - 1)) == 0);
-
         r->active_chunk->next = new_chunk;
         r->active_chunk = new_chunk;
 

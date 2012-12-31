@@ -23,6 +23,9 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cerrno.hpp>
+#include <up/cstdlib.hpp>
+#include <up/page.hpp>
 
 namespace up
 {
@@ -48,18 +51,18 @@ namespace up
         size_t offset
     )
     noexcept {
-        if (!heap_region_validate_args(alloc, chunk_size, large_obj_size, alignment, offset)) {
+        if (UPUNLIKELY(!heap_region_validate_args(alloc, chunk_size, large_obj_size, alignment, offset))) {
             errno = EINVAL;
             return nullptr;
         }
 
         void* const base = alloc->allocate(chunk_size);
-        if (!base) {
+        if (UPUNLIKELY(!base)) {
             return nullptr;
         }
 
         heap_region* const retval = heap_region_construct(base, alloc, chunk_size, large_obj_size, alignment, offset);
-        if (!retval) {
+        if (UPUNLIKELY(!retval)) {
             alloc->deallocate(base, chunk_size);
             return nullptr;
         }

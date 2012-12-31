@@ -23,6 +23,7 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
@@ -41,7 +42,7 @@ namespace up
         }
 
         // release all chunks, including the root chunk of the region itself
-        allocator* const alloc = r->alloc;
+        allocator* const alloc = r->base_alloc;
         size_t const chunk_size = r->chunk_size;
         heap_region_chunk* chunk = r->root_chunk.next, * next_chunk;
 

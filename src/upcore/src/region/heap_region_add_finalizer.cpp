@@ -23,18 +23,19 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cerrno.hpp>
 
 namespace up
 {
     LIBUPCOREAPI
     heap_region_finalizer* heap_region_add_finalizer(heap_region* r, void (*action)(void*,size_t), void* data, size_t size) noexcept {
-        if (!r || !action || ((reinterpret_cast<uintptr_t>(data) & 3) != 0)) {
+        if (UPUNLIKELY(!r || !action || ((reinterpret_cast<uintptr_t>(data) & 3) != 0))) {
             errno = EINVAL;
             return nullptr;
         }
 
         heap_region_finalizer* finalizer = static_cast<heap_region_finalizer*>(heap_region_allocate_tail(r, sizeof(heap_region_finalizer)));
-        if (!finalizer) {
+        if (UPUNLIKELY(!finalizer)) {
             return nullptr;
         }
 
@@ -52,19 +53,19 @@ namespace up
     }
 
     LIBUPCOREAPI
-    heap_region_finalizer* heap_region_add_finalizer(heap_region* r, allocator* alloc, void* data, size_t size) noexcept {
-        if (!r || !alloc || ((reinterpret_cast<uintptr_t>(data) & 3) != 0)) {
+    heap_region_finalizer* heap_region_add_finalizer(heap_region* r, allocator* data_alloc, void* data, size_t size) noexcept {
+        if (UPUNLIKELY(!r || !data_alloc || ((reinterpret_cast<uintptr_t>(data) & 3) != 0))) {
             errno = EINVAL;
             return nullptr;
         }
 
         heap_region_finalizer* finalizer = static_cast<heap_region_finalizer*>(heap_region_allocate_tail(r, sizeof(heap_region_finalizer)));
-        if (!finalizer) {
+        if (UPUNLIKELY(!finalizer)) {
             return nullptr;
         }
 
         finalizer->next = r->finalizers;
-        finalizer->alloc = alloc;
+        finalizer->alloc = data_alloc;
         finalizer->data = reinterpret_cast<uintptr_t>(data) | 1;
         finalizer->size = size;
 

@@ -26,18 +26,64 @@
 #define UP_REGION_LINEAR_REGION_INTERNAL_HPP
 
 #include <up/region.hpp>
-#include <up/cassert.hpp>
-#include <up/cerrno.hpp>
-#include <up/cstring.hpp>
+
+namespace up { namespace detail
+{
+    class UPHIDDEN linear_head_allocator : public allocator
+    {
+    public:
+
+        UPALWAYSINLINE explicit linear_head_allocator(linear_region* r) noexcept : region_(r) { }
+        virtual ~linear_head_allocator() noexcept;
+        virtual UPALLOC UPWARNRESULT void* allocate(size_t n) noexcept;
+        virtual UPALLOC UPWARNRESULT void* allocate_zero(size_t n, size_t s) noexcept;
+        virtual void deallocate(void* p, size_t n) noexcept;
+
+    private:
+
+        linear_region* region_;
+    };
+
+    class UPHIDDEN linear_tail_allocator : public allocator
+    {
+    public:
+
+        UPALWAYSINLINE explicit linear_tail_allocator(linear_region* r) noexcept : region_(r) { }
+        virtual ~linear_tail_allocator() noexcept;
+        virtual UPALLOC UPWARNRESULT void* allocate(size_t n) noexcept;
+        virtual UPALLOC UPWARNRESULT void* allocate_zero(size_t n, size_t s) noexcept;
+        virtual void deallocate(void* p, size_t n) noexcept;
+
+    private:
+
+        linear_region* region_;
+    };
+}}
 
 namespace up
 {
     struct UPHIDDEN linear_region
     {
+        UPNONCOPYABLE(linear_region);
+    
+    public:
+    
         char* head;
         char* tail;
         size_t alignment;
         size_t space;
+        detail::linear_head_allocator head_alloc;
+        detail::linear_tail_allocator tail_alloc;
+
+        UPALWAYSINLINE
+        linear_region(void* p, size_t n, size_t a, size_t s) noexcept
+        : head(static_cast<char*>(p)),
+        tail(static_cast<char*>(p) + n),
+        alignment(a),
+        space(s),
+        head_alloc(this),
+        tail_alloc(this) {
+        }
     };
 }
 

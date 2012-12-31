@@ -23,6 +23,8 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
+#include <up/cstring.hpp>
 
 namespace up
 {
@@ -30,7 +32,7 @@ namespace up
     int heap_region_deallocate(heap_region* r, void* p, size_t n) noexcept {
         assert(r);
 
-        if (!p || !n || (n > r->large_object_size)) {
+        if (UPUNLIKELY(!p || !n || (n > r->large_object_size))) {
             return 0;
         }
 
@@ -39,13 +41,15 @@ namespace up
         size_t const aligned_n = (n + align_mask) & ~align_mask;
         size_t const bin_index = (aligned_n / alignment) - 1;
 
-        if (!r->recycle_bin) {
+        heap_region_recycle_item** recycle_bin = r->recycle_bin;
+        if (!recycle_bin) {
             size_t const bin_size = (r->large_object_size / alignment) * sizeof(heap_region_recycle_item*);
-            r->recycle_bin = static_cast<heap_region_recycle_item**>(heap_region_allocate_tail(r, bin_size));
-            if (!r->recycle_bin) {
+            recycle_bin = static_cast<heap_region_recycle_item**>(heap_region_allocate_tail(r, bin_size));
+            if (UPUNLIKELY(!recycle_bin)) {
                 return -1;
             }
-            memset(r->recycle_bin, 0, bin_size);
+            memset(recycle_bin, 0, bin_size);
+            r->recycle_bin = recycle_bin;
         }
 
         heap_region_recycle_item* new_item = static_cast<heap_region_recycle_item*>(p);
@@ -65,8 +69,8 @@ namespace up
         }
 #endif // UP_NO_UNBOUNDED_REGION_METRICS
 
-        new_item->next = r->recycle_bin[bin_index];
-        r->recycle_bin[bin_index] = new_item;
+        new_item->next = recycle_bin[bin_index];
+        recycle_bin[bin_index] = new_item;
         return 0;
     }
 }

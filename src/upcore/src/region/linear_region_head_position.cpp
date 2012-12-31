@@ -23,11 +23,12 @@
 //
 
 #include "linear_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
     LIBUPCOREAPI UPNONNULLALL
-    void* linear_region_head_position(linear_region* r) noexcept {
+    void* linear_region_head_position(linear_region const* r) noexcept {
         assert(linear_region_validate(r));
         return r->head;
     }

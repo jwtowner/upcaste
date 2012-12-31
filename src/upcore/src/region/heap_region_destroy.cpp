@@ -29,10 +29,10 @@ namespace up
     LIBUPCOREAPI
     void heap_region_destroy(heap_region* r) noexcept {
         if (r) {
-            allocator* const alloc = r->alloc;
+            allocator* const base_alloc = r->base_alloc;
             size_t const chunk_size = r->chunk_size;
             heap_region_destruct(r);
-            alloc->deallocate(r, chunk_size);
+            base_alloc->deallocate(r, chunk_size);
         }
     }
 }

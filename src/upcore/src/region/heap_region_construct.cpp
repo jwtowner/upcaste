@@ -23,33 +23,39 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
+#include <up/cerrno.hpp>
+#include <new>
 
 namespace up
 {
     LIBUPCOREAPI UPWARNRESULT
     heap_region* heap_region_construct(
         void* base,
-        allocator* alloc,
+        allocator* base_alloc,
         size_t chunk_size,
         size_t large_object_size,
         size_t alignment,
         size_t offset
     )
     noexcept {
-        void* ptr = base;
         size_t space = chunk_size;
-        heap_region* retval;
+        void* ptr = base;
+        void* retval;
 
-        if (!base || !heap_region_validate_args(alloc, chunk_size, large_object_size, alignment, offset)) {
+        if ( UPUNLIKELY(!base
+                || !heap_region_validate_args(base_alloc, chunk_size, large_object_size, alignment, offset)
+            )
+        ) {
             errno = EINVAL;
             return nullptr;
         }
 
         retval = static_cast<heap_region*>(align(alignof(heap_region), sizeof(heap_region), &ptr, &space));
-        if (!retval) {
+        if (UPUNLIKELY(!retval)) {
             return nullptr;
         }
-        else if (retval != base) {
+        else if (UPUNLIKELY(retval != base)) {
             errno = EINVAL;
             return nullptr;
         }
@@ -59,29 +65,8 @@ namespace up
             return nullptr;
         }
 
-        retval->root_chunk.next = nullptr;
-        retval->root_chunk.owner = retval;
-        retval->root_chunk.head = static_cast<char*>(ptr);
-        retval->root_chunk.tail = retval->root_chunk.head + space;
-        assert((reinterpret_cast<uintptr_t>(retval->root_chunk.tail) & (alignof(max_align_t) - 1)) == 0);
-
-        retval->active_chunk = &retval->root_chunk;
-        retval->finalizers = nullptr;
-        retval->recycle_bin = nullptr;
-        retval->alignment = alignment;
-        retval->large_object_size = large_object_size;
-        retval->chunk_size = chunk_size;
-        retval->alloc = alloc;
-#ifndef UP_NO_UNBOUNDED_REGION_METRICS
-        retval->metrics.num_chunks = 1;
-        retval->metrics.num_small_objects = 0;
-        retval->metrics.num_large_objects = 0;
-        retval->metrics.num_finalizers = 0;
-        retval->metrics.usage = 0;
-        retval->metrics.peak_usage = 0;
-        retval->metrics.recycle_usage = 0;
-        retval->metrics.peak_recycle_usage = 0;
-#endif
-        return retval;
+        assert((reinterpret_cast<uintptr_t>(ptr) & (alignment - 1)) == 0);
+        assert(((reinterpret_cast<uintptr_t>(ptr) + space) & (alignment - 1)) == 0);
+        return ::new(retval) heap_region(ptr, space, base_alloc, chunk_size, large_object_size, alignment, offset);
     }
 }

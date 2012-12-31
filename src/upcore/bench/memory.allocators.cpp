@@ -95,7 +95,7 @@ namespace memory_allocators
     }
     
     template <size_t Size, size_t Count>
-    UPNOINLINE void linear_allocator_bench() {
+    UPNOINLINE void linear_region_allocator_bench() {
         std::uniform_int_distribution<uint32_t> dist(1, Size);
         void* ptrs[Count];
 
@@ -106,11 +106,11 @@ namespace memory_allocators
         up::linear_region* r = up::linear_region_construct(page, page_size, 1);
         require(r);
 
-        up::linear_head_allocator alloc(r);
+        up::allocator* head_alloc = up::linear_region_head_allocator(r);
 
         for (size_t i = 0; i < Count; ++i) {
             size_t sz = (Size > 1) ? up::ceil2(dist(random_engine)) : 1;
-            ptrs[i] = up::allocate(&alloc, sz);
+            ptrs[i] = up::allocate(head_alloc, sz);
             require(ptrs[i]);
         }
 
@@ -169,18 +169,18 @@ namespace memory_allocators
         UP_TEST_RUN_BENCHMARK("linear_region", 128, 100, &linear_region_bench<128, 20000>);
         UP_TEST_RUN_BENCHMARK("linear_region", 256, 100, &linear_region_bench<256, 20000>);
         UP_TEST_RUN_BENCHMARK("linear_region", 512, 100, &linear_region_bench<512, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_region", 1024, 100, &linear_allocator_bench<1024, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 1, 100, &linear_allocator_bench<1, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 2, 100, &linear_allocator_bench<2, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 4, 100, &linear_allocator_bench<4, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 8, 100, &linear_allocator_bench<8, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 16, 100, &linear_allocator_bench<16, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 32, 100, &linear_allocator_bench<32, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 64, 100, &linear_allocator_bench<64, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 128, 100, &linear_allocator_bench<128, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 256, 100, &linear_allocator_bench<256, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 512, 100, &linear_allocator_bench<512, 20000>);
-        UP_TEST_RUN_BENCHMARK("linear_allocator", 1024, 100, &linear_allocator_bench<1024, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region", 1024, 100, &linear_region_allocator_bench<1024, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 1, 100, &linear_region_allocator_bench<1, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 2, 100, &linear_region_allocator_bench<2, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 4, 100, &linear_region_allocator_bench<4, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 8, 100, &linear_region_allocator_bench<8, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 16, 100, &linear_region_allocator_bench<16, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 32, 100, &linear_region_allocator_bench<32, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 64, 100, &linear_region_allocator_bench<64, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 128, 100, &linear_region_allocator_bench<128, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 256, 100, &linear_region_allocator_bench<256, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 512, 100, &linear_region_allocator_bench<512, 20000>);
+        UP_TEST_RUN_BENCHMARK("linear_region_allocator", 1024, 100, &linear_region_allocator_bench<1024, 20000>);
         UP_TEST_RUN_BENCHMARK("heap_region", 1, 100, &heap_region_bench<1, 20000>);
         UP_TEST_RUN_BENCHMARK("heap_region", 2, 100, &heap_region_bench<2, 20000>);
         UP_TEST_RUN_BENCHMARK("heap_region", 4, 100, &heap_region_bench<4, 20000>);

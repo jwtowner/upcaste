@@ -900,10 +900,6 @@ namespace up
     template <> struct is_allocator<allocator> : std::true_type { };
     template <> struct is_allocator<page_allocator> : std::true_type { };
     template <> struct is_allocator<malloc_allocator> : std::true_type { };
-    template <> struct is_allocator<heap_allocator> : std::true_type { };
-    template <> struct is_allocator<linear_head_allocator> : std::true_type { };
-    template <> struct is_allocator<linear_tail_allocator> : std::true_type { };
-    template <> struct is_allocator<concurrent_linear_allocator> : std::true_type { };
 
     template <class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT

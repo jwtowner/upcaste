@@ -23,12 +23,13 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cerrno.hpp>
 
 namespace up
 {    
     LIBUPCOREAPI
     int heap_region_get_metrics(heap_region* r, heap_region_metrics* metrics) noexcept {
-        if (!r || !metrics) {
+        if (UPUNLIKELY(!r || !metrics)) {
             errno = EINVAL;
             return -1;
         }

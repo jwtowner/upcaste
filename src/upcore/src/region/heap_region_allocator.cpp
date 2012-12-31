@@ -22,25 +22,34 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "linear_region_internal.hpp"
-#include <up/cerrno.hpp>
-#include <up/cstring.hpp>
+#include "heap_region_internal.hpp"
+
+namespace up { namespace detail
+{
+    UPHIDDEN
+    heap_allocator::~heap_allocator() noexcept {
+    }
+
+    UPHIDDEN UPALLOC UPWARNRESULT
+    void* heap_allocator::allocate(size_t n) noexcept {
+        return heap_region_allocate(region_, n);
+    }
+
+    UPHIDDEN UPALLOC UPWARNRESULT
+    void* heap_allocator::allocate_zero(size_t n, size_t s) noexcept {
+        return heap_region_allocate_zero(region_, n, s);
+    }
+
+    UPHIDDEN
+    void heap_allocator::deallocate(void* p, size_t n) noexcept {
+        heap_region_deallocate(region_, p, n);
+    }
+}}
 
 namespace up
 {
-    LIBUPCOREAPI UPNONNULLALL UPALLOC UPWARNRESULT
-    void* linear_region_tail_allocate_zero(linear_region* r, size_t n, size_t s) noexcept {
-        if (UPUNLIKELY(s && (n > (SIZE_MAX / s)))) {
-            errno = EOVERFLOW;
-            return nullptr;
-        }
-
-        size_t const total = n * s;
-        void* const result = linear_region_tail_allocate(r, total);
-        if (UPUNLIKELY(!result)) {
-            return nullptr;
-        }
-
-        return memset(result, 0, total);
+    LIBUPCOREAPI UPNONNULLALL UPPURE
+    allocator* heap_region_allocator(heap_region* r) noexcept {
+        return &r->heap_alloc;
     }
 }

@@ -27,23 +27,9 @@
 namespace up
 {
     LIBUPCOREAPI
-    bool linear_region_validate(linear_region* r) noexcept {
-        if (!r) {
-            return false;
-        }
-        else if (r->head < (reinterpret_cast<char*>(r) + sizeof(linear_region))) {
-            return false;
-        }
-        else if (r->tail > (reinterpret_cast<char*>(r) + sizeof(linear_region) + r->space)) {
-            return false;
-        }
-        else if (r->tail < r->head) {
-            return false;
-        }
-        else if (!r->alignment || ((r->alignment & (r->alignment - 1)) != 0)) {
-            return false;
-        }
-
-        return true;
+    bool linear_region_validate(linear_region const* r) noexcept {
+        return r && r->alignment && !(r->alignment & (r->alignment - 1)) && (r->tail < r->head)
+            && (r->head >= (reinterpret_cast<char const*>(r) + sizeof(linear_region)))
+            && (r->tail <= (reinterpret_cast<char const*>(r) + sizeof(linear_region) + r->space));
     }
 }

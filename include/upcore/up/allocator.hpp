@@ -50,10 +50,6 @@ namespace up
     class page_allocator;
     class malloc_allocator;
     class aligned_malloc_allocator;
-    class linear_head_allocator;
-    class linear_tail_allocator;
-    class concurrent_linear_allocator;
-    class heap_allocator;
 }
 
 #endif

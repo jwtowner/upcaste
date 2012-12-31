@@ -1590,7 +1590,7 @@
       <AssemblerListingLocation>$(IntDir)src\page\windows\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\page\windows\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\region\heap_allocator.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_allocator.cpp">
       <AssemblerListingLocation>$(IntDir)src\region\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\region\</ObjectFileName>
     </ClCompile>
@@ -1651,7 +1651,7 @@
       <AssemblerListingLocation>$(IntDir)src\region\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\region\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\region\linear_head_allocator.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_head_allocator.cpp">
       <AssemblerListingLocation>$(IntDir)src\region\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\region\</ObjectFileName>
     </ClCompile>
@@ -1708,7 +1708,7 @@
       <AssemblerListingLocation>$(IntDir)src\region\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\region\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\region\linear_tail_allocator.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_tail_allocator.cpp">
       <AssemblerListingLocation>$(IntDir)src\region\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\region\</ObjectFileName>
     </ClCompile>

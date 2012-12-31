@@ -30,17 +30,15 @@ namespace up
 {
     LIBUPCOREAPI UPNONNULLALL UPALLOC UPWARNRESULT
     void* heap_region_allocate_zero(heap_region* r, size_t n, size_t s) noexcept {
-        if (s && (n > (SIZE_MAX / s))) {
+        if (UPUNLIKELY(s && (n > (SIZE_MAX / s)))) {
             errno = EOVERFLOW;
             return nullptr;
         }
-
         size_t const total = n * s;
-        void* const result = heap_region_allocate(r, total);
-        if (!result) {
+        void* const retval = heap_region_allocate(r, total);
+        if (UPUNLIKELY(!retval)) {
             return nullptr;
         }
-
-        return memset(result, 0, total);
+        return memset(retval, 0, total);
     }
 }

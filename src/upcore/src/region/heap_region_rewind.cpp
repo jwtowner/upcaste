@@ -23,6 +23,7 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
@@ -42,16 +43,16 @@ namespace up
 
         // determine aligned boundary of root chunk
         size_t const alignment = r->alignment;
-        size_t const align_mask = alignment - 1;
-        size_t const offset = (alignment - (reinterpret_cast<uintptr_t>(r->active_chunk->head) & align_mask)) & align_mask;
+        size_t const offset = r->offset;
         void* ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(r) + sizeof(heap_region));
         size_t space = r->chunk_size - sizeof(heap_region);
         verify(align(alignment, offset, alignment, &ptr, &space));
+        assert((reinterpret_cast<uintptr_t>(ptr) & (alignment - 1)) == 0);
+        assert(((reinterpret_cast<uintptr_t>(ptr) + space) & (alignment - 1)) == 0);
 
         // reset root chunk boundary pointers
         r->root_chunk.head = static_cast<char*>(ptr);
         r->root_chunk.tail = r->root_chunk.head + space;
-        assert((reinterpret_cast<uintptr_t>(r->root_chunk.tail) & (alignof(max_align_t) - 1)) == 0);
 
         // reset the region
         r->active_chunk = &r->root_chunk;

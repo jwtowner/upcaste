@@ -23,22 +23,24 @@
 //
 
 #include "linear_region_internal.hpp"
+#include <up/cerrno.hpp>
+#include <up/cstring.hpp>
 
 namespace up
 {
     LIBUPCOREAPI UPNONNULLALL UPALLOC UPWARNRESULT
     void* linear_region_head_allocate_zero(linear_region* r, size_t n, size_t s) noexcept {
-        if (s && (n > (SIZE_MAX / s))) {
+        if (UPUNLIKELY(s && (n > (SIZE_MAX / s)))) {
             errno = EOVERFLOW;
             return nullptr;
         }
 
         size_t const total = n * s;
-        void* const result = linear_region_head_allocate(r, total);
-        if (!result) {
+        void* const retval = linear_region_head_allocate(r, total);
+        if (UPUNLIKELY(!retval)) {
             return nullptr;
         }
         
-        return memset(result, 0, total);
+        return memset(retval, 0, total);
     }
 }

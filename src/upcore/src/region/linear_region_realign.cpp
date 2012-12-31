@@ -23,17 +23,18 @@
 //
 
 #include "linear_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
-    LIBUPCOREAPI
+    LIBUPCOREAPI UPNONNULLALL
     int linear_region_realign(linear_region* r, size_t alignment, size_t offset) noexcept {
         assert(linear_region_validate(r));
 
         size_t space = r->tail - r->head;
         void* ptr = r->head;
 
-        if (!align_bidirectional(alignment, offset, alignment, &ptr, &space)) {
+        if (UPUNLIKELY(!align_bidirectional(alignment, offset, alignment, &ptr, &space))) {
             return -1;
         }
 

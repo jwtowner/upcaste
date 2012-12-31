@@ -23,6 +23,7 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
@@ -35,7 +36,7 @@ namespace up
 
         if (aligned_n > static_cast<size_t>(active_chunk->tail - active_chunk->head)) {
             active_chunk = heap_region_add_chunk(r);
-            if (!active_chunk) {
+            if (UPUNLIKELY(!active_chunk)) {
                 return nullptr;
             }
         }

@@ -1260,9 +1260,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\page\windows\page.cpp">
       <Filter>src\page\windows</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\region\heap_allocator.cpp">
-      <Filter>src\region</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_add_chunk.cpp">
       <Filter>src\region</Filter>
     </ClCompile>
@@ -1308,9 +1305,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_suppress_finalizer.cpp">
       <Filter>src\region</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\region\linear_head_allocator.cpp">
-      <Filter>src\region</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_construct.cpp">
       <Filter>src\region</Filter>
     </ClCompile>
@@ -1351,9 +1345,6 @@
       <Filter>src\region</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_validate.cpp">
-      <Filter>src\region</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\region\linear_tail_allocator.cpp">
       <Filter>src\region</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\sexp\lexer.cpp">
@@ -1495,6 +1486,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdio\getline.cpp">
       <Filter>src\cstdio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_head_allocator.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\linear_region_tail_allocator.cpp">
+      <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_allocator.cpp">
+      <Filter>src\region</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -23,6 +23,8 @@
 //
 
 #include "linear_region_internal.hpp"
+#include <up/cassert.hpp>
+#include <up/cerrno.hpp>
 
 namespace up
 {
@@ -34,7 +36,7 @@ namespace up
         size_t const aligned_n = (n + align_adjust) & ~align_adjust;
         void* const retval = r->head;
 
-        if (aligned_n > static_cast<size_t>(r->tail - r->head)) {
+        if (UPUNLIKELY(aligned_n > static_cast<size_t>(r->tail - r->head))) {
             errno = ENOMEM;
             return nullptr;
         }

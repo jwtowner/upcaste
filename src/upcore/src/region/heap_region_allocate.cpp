@@ -23,6 +23,7 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
@@ -31,14 +32,14 @@ namespace up
         assert(r && (n > 0));
         
         if (n > r->large_object_size) {
-            allocator* const alloc = r->alloc;
+            allocator* const alloc = r->base_alloc;
             void* const retval = alloc->allocate(n);
-            if (!retval) {
+            if (UPUNLIKELY(!retval)) {
                 return nullptr;
             }
 
-            heap_region_finalizer* finalizer = heap_region_add_finalizer(r, r->alloc, retval, n);
-            if (!finalizer) {
+            heap_region_finalizer* finalizer = heap_region_add_finalizer(r, alloc, retval, n);
+            if (UPUNLIKELY(!finalizer)) {
                 alloc->deallocate(retval, n);
                 return nullptr;
             }
@@ -77,7 +78,7 @@ namespace up
         heap_region_chunk* active_chunk = r->active_chunk;
         if (aligned_n > static_cast<size_t>(active_chunk->tail - active_chunk->head)) {
             active_chunk = heap_region_add_chunk(r);
-            if (!active_chunk) {
+            if (UPUNLIKELY(!active_chunk)) {
                 return nullptr;
             }
         }

@@ -25,11 +25,25 @@
 #ifndef UP_MEMORY_HEAP_REGION_INTERNAL_HPP
 #define UP_MEMORY_HEAP_REGION_INTERNAL_HPP
 
-#include <up/cassert.hpp>
-#include <up/cstdlib.hpp>
-#include <up/cstring.hpp>
-#include <up/page.hpp>
 #include <up/region.hpp>
+
+namespace up { namespace detail
+{
+    class UPHIDDEN heap_allocator : public allocator
+    {
+    public:
+
+        UPALWAYSINLINE explicit heap_allocator(heap_region* r) noexcept : region_(r) { }
+        virtual ~heap_allocator() noexcept;
+        virtual UPALLOC UPWARNRESULT void* allocate(size_t n) noexcept;
+        virtual UPALLOC UPWARNRESULT void* allocate_zero(size_t n, size_t s) noexcept;
+        virtual void deallocate(void* p, size_t n) noexcept;
+
+    private:
+
+        heap_region* region_;
+    };
+}}
 
 namespace up
 {
@@ -59,34 +73,73 @@ namespace up
 
     struct UPHIDDEN heap_region
     {
+        UPNONCOPYABLE(heap_region);
+
+    public:
+
         heap_region_chunk* active_chunk;
         heap_region_finalizer* finalizers;
         heap_region_recycle_item** recycle_bin;
         size_t alignment;
-        size_t large_object_size;
+        size_t offset;
         size_t chunk_size;
-        allocator* alloc;
+        size_t large_object_size;
+        allocator* base_alloc;
+        detail::heap_allocator heap_alloc;
 #ifndef UP_NO_UNBOUNDED_REGION_METRICS
         heap_region_metrics metrics;
 #endif // UP_NO_UNBOUNDED_REGION_METRICS
         heap_region_chunk root_chunk;
+
+        UPALWAYSINLINE
+        heap_region(
+            void* p,
+            size_t n,
+            allocator* ba,
+            size_t csz,
+            size_t losz,
+            size_t aln,
+            size_t off
+        )
+        noexcept
+        : active_chunk(&root_chunk),
+        finalizers(nullptr),
+        recycle_bin(nullptr),
+        alignment(aln),
+        offset(off),
+        chunk_size(csz),
+        large_object_size(losz),
+        base_alloc(ba),
+        heap_alloc(this) {
+#ifndef UP_NO_UNBOUNDED_REGION_METRICS
+            metrics.num_chunks = 1;
+            metrics.num_small_objects = 0;
+            metrics.num_large_objects = 0;
+            metrics.num_finalizers = 0;
+            metrics.usage = 0;
+            metrics.peak_usage = 0;
+            metrics.recycle_usage = 0;
+            metrics.peak_recycle_usage = 0;
+#endif
+            root_chunk.next = nullptr;
+            root_chunk.owner = this;
+            root_chunk.head = static_cast<char*>(p);
+            root_chunk.tail = static_cast<char*>(p) + n;
+        }
     };
 
-    extern UPHIDDEN UPNONNULLALL UPALLOC UPWARNRESULT heap_region_chunk* heap_region_add_chunk(heap_region* r) noexcept;
-    extern UPHIDDEN UPNONNULLALL UPALLOC UPWARNRESULT void* heap_region_allocate_tail(heap_region* r, size_t n) noexcept;
+    extern UPHIDDEN UPNONNULLALL UPALLOC UPWARNRESULT
+    heap_region_chunk* heap_region_add_chunk(heap_region* r) noexcept;
+    
+    extern UPHIDDEN UPNONNULLALL UPALLOC UPWARNRESULT
+    void* heap_region_allocate_tail(heap_region* r, size_t n) noexcept;
 
     inline UPALWAYSINLINE
-    bool heap_region_validate_args(allocator* alloc, size_t chunk_size, size_t large_object_size, size_t alignment, size_t offset) noexcept {
-        if ( !alloc
-            || (chunk_size < heap_region_min_chunk_size) || ((chunk_size & (chunk_size - 1)) != 0)
-            || (large_object_size < heap_region_min_large_object_size) || ((chunk_size / 4) < large_object_size)
-            || (alignment < sizeof(heap_region_recycle_item*)) || ((alignment & (alignment - 1)) != 0)
-            || ((large_object_size / 2) < alignment) || (alignment <= offset)
-        ) {
-            return false;
-        }
-        
-        return true;
+    bool heap_region_validate_args(allocator* ba, size_t csz, size_t losz, size_t aln, size_t off) noexcept {
+        return ba && (csz >= heap_region_min_chunk_size) && ((csz & (csz - 1)) == 0)
+            && (losz >= heap_region_min_large_object_size) && ((csz / 4) >= losz)
+            && (aln >= sizeof(heap_region_recycle_item*)) && ((aln & (aln - 1)) == 0)
+            && ((losz / 2) >= aln) && (aln > off);
     }
 }
 

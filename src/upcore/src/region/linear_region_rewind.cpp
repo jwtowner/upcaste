@@ -23,6 +23,7 @@
 //
 
 #include "linear_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {

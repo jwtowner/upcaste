@@ -23,24 +23,22 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cerrno.hpp>
 
 namespace up
 {
     namespace
     {
-        UPHIDDEN
-        void heap_region_null_deallocate(void*, size_t) noexcept {
-        }
+        UPHIDDEN void heap_region_null_action(void*, size_t) noexcept { }
     }
 
     LIBUPCOREAPI
     int heap_region_suppress_finalizer(heap_region_finalizer* finalizer) noexcept {
-        if (!finalizer) {
+        if (UPUNLIKELY(!finalizer)) {
             errno = EINVAL;
             return -1;
         }
-
-        finalizer->action = &heap_region_null_deallocate;
+        finalizer->action = &heap_region_null_action;
         finalizer->data = 0;
         finalizer->size = 0;
         return 0;

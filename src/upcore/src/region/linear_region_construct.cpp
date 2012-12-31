@@ -23,33 +23,31 @@
 //
 
 #include "linear_region_internal.hpp"
+#include <up/cerrno.hpp>
+#include <new>
 
 namespace up
 {
     LIBUPCOREAPI UPWARNRESULT
     linear_region* linear_region_construct(void* base, size_t space, size_t alignment, size_t offset) noexcept {
-        void* ptr = base;
         size_t const original_space = space;
-        linear_region* retval;
+        linear_region* region;
+        void* ptr = base;
         
-        retval = static_cast<linear_region*>(align(alignof(linear_region), sizeof(linear_region), &ptr, &space));
-        if (!retval) {
+        region = static_cast<linear_region*>(align(alignof(linear_region), sizeof(linear_region), &ptr, &space));
+        if (UPUNLIKELY(!region)) {
             return nullptr;
         }
-        else if (retval != base) {
+        else if (UPUNLIKELY(region != base)) {
             errno = EINVAL;
             return nullptr;
         }
 
         align_advance(sizeof(linear_region), &ptr, &space);
-        if (!align_bidirectional(alignment, offset, alignment, &ptr, &space)) {
+        if (UPUNLIKELY(!align_bidirectional(alignment, offset, alignment, &ptr, &space))) {
             return nullptr;
         }
 
-        retval->head = static_cast<char*>(ptr);
-        retval->tail = retval->head + space;
-        retval->alignment = alignment;
-        retval->space = original_space;
-        return retval;
+        return ::new(region) linear_region(ptr, space, alignment, original_space);
     }
 }

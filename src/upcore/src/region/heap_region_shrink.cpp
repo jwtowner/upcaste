@@ -23,6 +23,7 @@
 //
 
 #include "heap_region_internal.hpp"
+#include <up/cassert.hpp>
 
 namespace up
 {
@@ -30,7 +31,7 @@ namespace up
     void heap_region_shrink(heap_region* r) noexcept {
         assert(r);
 
-        allocator* alloc = r->alloc;
+        allocator* alloc = r->base_alloc;
         size_t const chunk_size = r->chunk_size;
         heap_region_chunk* chunk = r->active_chunk->next, * next_chunk;
         r->active_chunk->next = nullptr;
