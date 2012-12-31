@@ -26,13 +26,13 @@ best tool for the job in each particular case.
 This project is in an early and experimental phase, and a lot its interfaces
 are highly unstable.
 
-Currently only the Upcaste core library, `upcore`, is in a semi-useable state
-on Windows using MSVC11. Ports to other platforms and compilers is a
+Currently only the Upcaste core library, *upcore*, is in a semi-useable state
+on Windows using MSVC++ 2012. Ports to other platforms and compilers is a
 work-in-progress. The core library provides a portable wrapper layer for most
-Standard C11 (that's C11, not C++11!) library facilities, some additional
-POSIX layer functions, and other base level functions and data structures.
+Standard C library facilities, some additional POSIX layer functions, and
+other base level functions and data structures.
 
-The `upsystem` library is currently in the planning stages and will provide
+The *upsystem* library is currently in the planning stages and will provide
 features for configuring and initializing an OpenCL / OpenGL / Direct3D
 environment, for managing task-oriented flow control across compute devices,
 and for high-performance filesystem streaming and data caching.

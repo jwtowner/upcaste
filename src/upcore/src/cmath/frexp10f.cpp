@@ -36,7 +36,14 @@ namespace up { namespace math
 #if (FLT_MANT_DIG == 24) && (FLT_RADIX == 2)
         ieee754_binary32 raw;
         raw.f = x;
+        if (!raw.ieee.exponent && !raw.ieee.mantissa) {
+            *e = 0;
+            return 0.0f;
+        }
         e2 = static_cast<int>(raw.ieee.exponent) - ieee754_binary32_bias;
+        if (e2 == (ieee754_binary32_bias + 1)) {
+            return raw.ieee.mantissa ? FLT_NAN : x;
+        }
 #else
     error "single-precision floating-point format not yet supported!"
 #endif
@@ -47,10 +54,11 @@ namespace up { namespace math
 #else
         e10 = static_cast<int>(e2 * (FLT_LN2 / FLT_LN10));
 #endif
-
-        // compute significand and fine-tune exponent
-        s = x / pow10f(e10);
         
+        // compute significand and fine-tune exponent
+        x = raw.ieee.negative ? -x : x;
+        s = x / pow10f(e10);
+
         while (s < 1.0f) {
             --e10;
             s = x / pow10f(e10);
@@ -62,6 +70,6 @@ namespace up { namespace math
         }
 
         *e = e10;
-        return s;
+        return raw.ieee.negative ? -s : s;
     }
 }}

@@ -36,15 +36,36 @@ namespace up { namespace math
 #if (LDBL_MANT_DIG == 53) && (LDBL_RADIX == 2)
         ieee754_binary64 raw;
         raw.ld = x;
+        if (!raw.ieee.exponent && !raw.ieee.mantissa) {
+            *e = 0;
+            return 0.0l;
+        }
         e2 = static_cast<int>(raw.ieee.exponent) - ieee754_binary64_bias;
+        if (e2 == (ieee754_binary64_bias + 1)) {
+            return raw.ieee.mantissa ? LDBL_NAN : x;
+        }
 #elif (DBL_MANT_DIG == 64) && (DBL_RADIX == 2)
         ieee754_binary96 raw;
         raw.ld = x;
+        if (!raw.ieee.exponent && !raw.ieee.mantissa) {
+            *e = 0;
+            return 0.0l;
+        }
         e2 = static_cast<int>(raw.ieee.exponent) - ieee754_binary96_bias;
+        if (e2 == (ieee754_binary96_bias + 1)) {
+            return raw.ieee.mantissa ? LDBL_NAN : x;
+        }
 #elif (DBL_MANT_DIG == 113) && (DBL_RADIX == 2)
         ieee754_binary128 raw;
         raw.ld = x;
+        if (!raw.ieee.exponent && !raw.ieee.mantissa0 && !raw.ieee.mantissa1) {
+            *e = 0;
+            return 0.0l;
+        }
         e2 = static_cast<int>(raw.ieee.exponent) - ieee754_binary128_bias;
+        if (e2 == (ieee754_binary128_bias + 1)) {
+            return raw.ieee.mantissa ? LDBL_NAN : x;
+        }
 #else
     error "extended double-precision floating-point format not yet supported!"
 #endif
@@ -57,6 +78,7 @@ namespace up { namespace math
 #endif
 
         // compute significand and fine-tune exponent
+        x = raw.ieee.negative ? -x : x;
         s = x * pow10l(-e10);
         
         while (s < 1.0l) {
@@ -70,6 +92,6 @@ namespace up { namespace math
         }
 
         *e = e10;
-        return s;
+        return raw.ieee.negative ? -s : s;
     }
 }}

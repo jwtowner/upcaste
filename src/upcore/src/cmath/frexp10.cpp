@@ -36,7 +36,14 @@ namespace up { namespace math
 #if (DBL_MANT_DIG == 53) && (DBL_RADIX == 2)
         ieee754_binary64 raw;
         raw.d = x;
+        if (!raw.ieee.exponent && !raw.ieee.mantissa) {
+            *e = 0;
+            return 0.0;
+        }
         e2 = static_cast<int>(raw.ieee.exponent) - ieee754_binary64_bias;
+        if (e2 == (ieee754_binary64_bias + 1)) {
+            return raw.ieee.mantissa ? DBL_NAN : x;
+        }
 #else
     error "double-precision floating-point format not yet supported!"
 #endif
@@ -49,6 +56,7 @@ namespace up { namespace math
 #endif
 
         // compute significand and fine-tune exponent
+        x = raw.ieee.negative ? -x : x;
         s = x / pow10(e10);
         
         while (s < 1.0) {
@@ -62,6 +70,6 @@ namespace up { namespace math
         }
 
         *e = e10;
-        return s;
+        return raw.ieee.negative ? -s : s;
     }
 }}

@@ -1,4 +1,3 @@
-Check for subnormals and infinity/nan in frexp10 functions.
 Change cstdio.hpp to use our portable version of printf/scanf when in use with MSVC.
 Fix the formatting of floats in printf/fast_printf variants.
 Implement scanf/fast_scanf variants.
