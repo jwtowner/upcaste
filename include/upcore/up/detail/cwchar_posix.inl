@@ -50,7 +50,7 @@ namespace up
 #ifdef UP_HAS_POSIX_WCSDUP
     using ::wcsdup;
 #endif
-#ifdef UP_HAS_POSIX_WCSNDUP
+#ifdef UP_HAS_GNU_WCSNDUP
     using ::wcsndup;
 #endif
 #ifdef UP_HAS_POSIX_WCSNLEN

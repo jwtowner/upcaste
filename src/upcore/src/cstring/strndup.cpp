@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#ifndef UP_HAS_POSIX_STRNDUP
+#ifndef UP_HAS_GNU_STRNDUP
 
 #include <up/cassert.hpp>
 #include <up/cstring.hpp>

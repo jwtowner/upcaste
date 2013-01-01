@@ -35,14 +35,14 @@ namespace up
 {
     typedef fpos_t off_t;
 
-#ifdef UP_HAS_STDC_FSEEKO
+#ifdef UP_HAS_POSIX_FSEEKO
     inline UPALWAYSINLINE
     int fseeko(FILE* stream, off_t offset, int whence) noexcept {
         return ::_fseeki64(stream, offset, whence);
     }
 #endif
 
-#ifdef UP_HAS_STDC_FTELLO
+#ifdef UP_HAS_POSIX_FTELLO
     inline UPALWAYSINLINE
     off_t ftello(FILE* stream) noexcept {
         return ::_ftelli64(stream);

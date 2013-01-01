@@ -173,7 +173,7 @@ namespace up
     wchar_t* wcsdup(wchar_t const* s) noexcept;
 #endif
 
-#ifndef UP_HAS_POSIX_WCSNDUP
+#ifndef UP_HAS_GNU_WCSNDUP
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT
     wchar_t* wcsndup(wchar_t const* s, size_t n) noexcept;
 #endif

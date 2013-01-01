@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#if defined(UP_HAS_STDC_WCHAR) && !defined(UP_HAS_POSIX_WCSNDUP) 
+#if defined(UP_HAS_STDC_WCHAR) && !defined(UP_HAS_GNU_WCSNDUP) 
 
 #include <up/cwchar.hpp>
 #include <up/cassert.hpp>

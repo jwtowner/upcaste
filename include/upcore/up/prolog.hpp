@@ -72,8 +72,8 @@
 #define UP_TCHAR_CHAR                1
 #define UP_TCHAR_WCHAR               2
 
-#ifndef UP_NO_PROLOG_HOST_HEADER
-#   include <up/prolog/host.hpp>
+#ifndef UP_NO_PROLOG_TARGET_HEADER
+#   include <up/prolog/target.hpp>
 #endif
 
 #ifndef UP_PLATFORM

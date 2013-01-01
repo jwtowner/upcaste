@@ -31,11 +31,11 @@
 
 namespace up
 {
-#ifdef UP_HAS_STDC_FSEEKO
+#ifdef UP_HAS_POSIX_FSEEKO
     using ::fseeko;
 #endif
 
-#ifdef UP_HAS_STDC_FTELLO
+#ifdef UP_HAS_POSIX_FTELLO
     using ::ftello;
 #endif
 

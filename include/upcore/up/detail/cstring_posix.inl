@@ -49,7 +49,7 @@ namespace up
 #ifdef UP_HAS_POSIX_STRDUP
     using ::strdup;
 #endif
-#ifdef UP_HAS_POSIX_STRNDUP
+#ifdef UP_HAS_GNU_STRNDUP
     using ::strndup;
 #endif
 #ifdef UP_HAS_POSIX_STRNLEN

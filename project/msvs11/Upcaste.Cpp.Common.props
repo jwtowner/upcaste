@@ -17,7 +17,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <OpenMPSupport>false</OpenMPSupport>
-      <PreprocessorDefinitions>NOMINMAX;UP_NO_PROLOG_HOST_HEADER;_ALLOW_KEYWORD_MACROS;_CRT_SECURE_NO_WARNINGS;_MATH_DEFINES_DEFINED;_SCL_SECURE_NO_WARNINGS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;UP_NO_PROLOG_TARGET_HEADER;_ALLOW_KEYWORD_MACROS;_CRT_SECURE_NO_WARNINGS;_MATH_DEFINES_DEFINED;_SCL_SECURE_NO_WARNINGS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>

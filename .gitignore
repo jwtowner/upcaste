@@ -2,3 +2,10 @@
 bin
 build
 lib
+autom4te.cache
+config.log
+config.status
+Makefile
+tundra.lua
+.tundra-ancestors
+.tundra-relcache

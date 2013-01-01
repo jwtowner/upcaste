@@ -1,0 +1,168 @@
+--  Upcaste Performance Libraries
+--  Copyright (C) 2012 Jesse W. Towner
+--
+--  Permission is hereby granted, free of charge, to any person obtaining
+--  a copy of this software and associated documentation files (the
+--  "Software"), to deal in the Software without restriction, including
+--  without limitation the rights to use, copy, modify, merge, publish,
+--  distribute, sublicense, and/or sell copies of the Software, and to
+--  permit persons to whom the Software is furnished to do so, subject to
+--  the following conditions:
+--
+--  The above copyright notice and this permission notice shall be
+--  included in all copies or substantial portions of the Software.
+--
+--  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+--  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+--  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+--  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+--  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+--  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+--  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+local glob = require("tundra.syntax.glob")
+
+local CommonCC = {
+	ReplaceEnv = {
+		OBJECTROOT = "build",
+		CPPDEFS_SILVER = "",
+		CPPDEFS_GOLD = "",
+		CPPDEFS_PLATINUM = "",
+		CCOPTS_SILVER = "",
+		CCOPTS_GOLD = "",
+		CCOPTS_RELEASE = "",
+		CXXOPTS_SILVER = "",
+		CXXOPTS_GOLD = "",
+		CXXOPTS_PLATINUM = "",
+	},
+	Env = {
+		CPPPATH = { ".", "dependency/usr/include" },
+		CPPDEFS = {
+			{ "_DEBUG", "UP_DEBUG"; Config = "*-*-debug-*" },
+			{ "NDEBUG", "UP_RELEASE"; Config = "*-*-release-*" },
+			{ "NDEBUG", "UP_SILVER"; Config = "*-*-silver-*" },
+			{ "NDEBUG", "UP_GOLD"; Config = "*-*-gold-*" },
+			{ "NDEBUG", "UP_PLATINUM"; Config = "*-*-platinum-*" },
+			{ "UP_LINKAGE_STATIC"; Config = "*-*-*-static" },
+			{ "UP_LINKAGE_SHARED"; Config = "*-*-*-shared" },
+			{ "UP_NO_PROLOG_TARGET_HEADER"; Config = "*-msvc-*-*" }
+		},
+	},
+}
+
+local CommonGCC = {
+	Inherit = CommonCC,
+	Env = {
+		CXXOPTS = {
+			{ "-g"; Config = "*-*-debug-*" },
+			{ "-Wa,-a=$(@).s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+			{ "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
+			"-std=gnu++0x", "-Wall", "-Wextra", "-Werror",
+			"-fabi-version=6", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+			{ "-fpic"; Config = "*-*-*-shared" },
+			{ "-fexceptions", "-frtti"; Config = { "*-*-debug-*", "*-*-release-*", "*-*-gold-*" } },
+			{ "-fno-exceptions", "-fno-rtti"; Config = { "*-*-silver-*", "*-*-platinum-*" } },
+			{ "-fomit-frame-pointer", "-s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+		},
+		PROGOPTS = {
+            		"-fabi-version=6",
+        }
+	},
+}
+
+Build {
+	Configs = {
+		Config {
+			Name = "linux-gcc",
+			Inherit = CommonGCC,
+			DefaultOnHost = "linux",
+			Tools = { "gcc" },
+		},
+		Config {
+			Name = "ios-gcc",
+			Inherit = CommonGCC,
+			DefaultOnHost = "ios",
+			Tools = { "gcc-osx" },
+		},
+		Config {
+			Name = "macosx-gcc",
+			Inherit = CommonGCC,
+			DefaultOnHost = "macosx",
+			Tools = { "gcc-osx" },
+		},
+		Config {
+			Name = "win32-msvc",
+			DefaultOnHost = "windows",
+			Tools = { "msvc"; TargetArch = "x86" },
+		},
+		Config {
+			Name = "win64-msvc",
+			DefaultOnHost = "windows",
+			Tools = { "msvc"; TargetArch = "x64" },
+		},
+	},
+	Variants = {
+		{ Name = "debug" },
+		{ Name = "release" },
+		{ Name = "silver" },
+		{ Name = "gold" },
+		{ Name = "platinum" },
+	},
+	DefaultVariant = "debug",
+	SubVariants = {
+		{ Name = "static" },
+		{ Name = "shared" },
+	},
+	DefaultSubVariant = "static",
+	Units = function()
+		local cxx_file_filters = {
+			{ Pattern = "/gcc/"; Config = "*-gcc-*" },
+			{ Pattern = "/msvc/"; Config = "*-mscv-*" },
+			{ Pattern = "/linux/"; Config = "linux-*" },
+			{ Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
+			{ Pattern = "/ios/"; Config = "ios-*" },
+			{ Pattern = "/macosx/"; Config = "macosx-*" },
+			{ Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
+			{ Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
+		}
+
+		local function CXXSourceGlob(dir)
+			return FGlob { Dir = dir, Extensions = { "*.cpp" }, Filters = cxx_file_filters }
+		end
+		
+		StaticLibrary {
+			Name = "upcore",
+			Env = { CPPPATH = { "include/upcore" }, },
+			Sources = { CXXSourceGlob "src/upcore/src" },
+		}
+
+		StaticLibrary {
+			Name = "uptest",
+			Env = { CPPPATH = { "include/upcore", "include/uptest" }, },
+			Sources = { CXXSourceGlob "src/uptest/src" },
+		}
+
+		Program {
+			Name = "upcore_tests",
+			Depends = { "uptest", "upcore" },
+			Env = {
+				CPPPATH = { "include/upcore", "include/uptest" },
+				LIBS = { "c", "stdc++", "pthread", "rt", "dispatch" },
+			},
+			Sources = { "src/uptest/driver/console_driver.cpp", CXXSourceGlob "src/upcore/test" },
+		}
+		
+		Program {
+			Name = "upcore_bench",
+			Depends = { "uptest", "upcore" },
+			Env = {
+				CPPPATH = { "include/upcore", "include/uptest" },
+				LIBS = { "c", "stdc++", "pthread", "rt", "dispatch" },
+			},
+			Sources = { "src/uptest/driver/console_driver.cpp", CXXSourceGlob "src/upcore/bench" },
+		}
+
+		Default "upcore_tests"
+	end,
+}
+
