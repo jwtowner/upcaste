@@ -1,8 +1,7 @@
 #!/usr/bin/env python3.1
 
-#
 # Upcaste Performance Foundation
-# Copyright (C) 2012 Jesse W. Towner
+# Copyright (C) 2012-2013 Jesse W. Towner
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -22,7 +21,6 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
 
 # This python script uses the Jinja2 templating framework to generate the
 # following source and header files in libupcore:
@@ -132,7 +130,7 @@ render_template("generic_vectors.inl.template", os.path.join(math_include_dir, "
 for element_type, dim in all_vector_types:
     vector_type = "{0}{1}".format(element_type, dim)
     render_template("generic_vector_type.inl.template", os.path.join(math_include_dir, "generic", vector_type + "_type.inl"), element_type=element_type, dim=dim)
-    
+
 for element_type, dim in op_vector32_types:
     vector_type = "{0}{1}".format(element_type, dim)
     render_template("generic_vector_operations.inl.template", os.path.join(math_include_dir, "generic", vector_type + "_operations.inl"), element_type=element_type, dim=dim)

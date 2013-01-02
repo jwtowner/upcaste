@@ -1,6 +1,6 @@
 Upcaste is provided under the MIT License:
 
-> Copyright (C) 2012 Jesse W. Towner
+> Copyright (C) 2012-2013 Jesse W. Towner
 >
 > Permission is hereby granted, free of charge, to any person obtaining
 > a copy of this software and associated documentation files (the

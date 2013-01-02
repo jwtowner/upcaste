@@ -1,5 +1,7 @@
+#############################################################################
+#
 # Upcaste Performance Libraries
-# Copyright (C) 2012 Jesse W. Towner
+# Copyright (C) 2012-2013 Jesse W. Towner
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -19,6 +21,8 @@
 # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+#############################################################################
 
 LLDIRS = @dependency_target_directories@
 CLEANDIRS = $(ALLDIRS:%=clean-%)

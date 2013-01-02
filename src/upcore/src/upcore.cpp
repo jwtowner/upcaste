@@ -1,6 +1,6 @@
 //
 //  Upcaste Performance Libraries
-//  Copyright (C) 2012 Jesse W. Towner
+//  Copyright (C) 2012-2013 Jesse W. Towner
 //
 //  Permission is hereby granted, free of charge, to any person obtaining
 //  a copy of this software and associated documentation files (the
@@ -71,7 +71,7 @@
 extern "C"
 {
     LIBUPCOREAPI UPUSED
-    char const* const _Upcaste_Upcore_Copyright_ = "Upcaste Performance Libraries. Copyright (C) 2012 Jesse W. Towner";
+    char const* const _Upcaste_Upcore_Copyright_ = "Upcaste Performance Libraries. Copyright (C) 2012-2013 Jesse W. Towner";
 #if UP_COMPILER == UP_COMPILER_MSVC
 #   ifndef UP_LINKAGE_SHARED
 #       pragma comment(linker, "/include:__Upcaste_Upcore_Copyright_")
