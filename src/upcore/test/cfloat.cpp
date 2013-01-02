@@ -38,7 +38,7 @@ namespace cfloat
         require(sizeof(up::ieee754_binary32) == sizeof(uint32_t));
         require(sizeof(up::ieee754_binary64) == sizeof(uint64_t));
         require(sizeof(up::ieee754_binary128) == (sizeof(uint64_t) * 2));
-#if (LDBL_MANT_DIG == 64) && (LDBL_RADIX == 2)
+#if (LDBL_MANT_DIG == 64) && (FLT_RADIX == 2)
         require(sizeof(up::ieee754_binary96) == sizeof(long double));
 #else
         require(sizeof(up::ieee754_binary96) == (sizeof(uint32_t) * 4));

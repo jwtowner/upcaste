@@ -33,7 +33,7 @@ namespace up { namespace math
         long double s;
 
         // get base 2 exponent
-#if (LDBL_MANT_DIG == 53) && (LDBL_RADIX == 2)
+#if (LDBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         ieee754_binary64 raw;
         raw.ld = x;
         if (!raw.ieee.exponent && !raw.ieee.mantissa) {
@@ -44,7 +44,7 @@ namespace up { namespace math
         if (e2 == (ieee754_binary64_bias + 1)) {
             return raw.ieee.mantissa ? LDBL_NAN : x;
         }
-#elif (DBL_MANT_DIG == 64) && (DBL_RADIX == 2)
+#elif (LDBL_MANT_DIG == 64) && (FLT_RADIX == 2)
         ieee754_binary96 raw;
         raw.ld = x;
         if (!raw.ieee.exponent && !raw.ieee.mantissa) {
@@ -55,7 +55,7 @@ namespace up { namespace math
         if (e2 == (ieee754_binary96_bias + 1)) {
             return raw.ieee.mantissa ? LDBL_NAN : x;
         }
-#elif (DBL_MANT_DIG == 113) && (DBL_RADIX == 2)
+#elif (LDBL_MANT_DIG == 113) && (FLT_RADIX == 2)
         ieee754_binary128 raw;
         raw.ld = x;
         if (!raw.ieee.exponent && !raw.ieee.mantissa0 && !raw.ieee.mantissa1) {

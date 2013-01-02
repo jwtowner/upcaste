@@ -34,20 +34,20 @@ namespace up { namespace math
 {
     LIBUPCOREAPI UPPURE
     bool signbit(long double x) noexcept {
-#if (LDBL_MANT_DIG == 53) && (LDBL_RADIX == 2)
+#if (LDBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         ieee754_binary64 bin;
         bin.ld = x;
         return bin.ieee.negative != 0;
-#elif (DBL_MANT_DIG == 64) && (DBL_RADIX == 2)
+#elif (LDBL_MANT_DIG == 64) && (FLT_RADIX == 2)
         ieee754_binary96 bin;
         bin.ld = x;
         return bin.ieee.negative != 0;
-#elif (DBL_MANT_DIG == 113) && (DBL_RADIX == 2)
+#elif (LDBL_MANT_DIG == 113) && (FLT_RADIX == 2)
         ieee754_binary128 bin;
         bin.ld = x;
         return bin.ieee.negative != 0;
 #else
-    error "extended double-precision floating-point format not yet supported!"
+#   error "extended double-precision floating-point format not yet supported!"
 #endif
     }
 }}

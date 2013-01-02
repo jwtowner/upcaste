@@ -71,7 +71,7 @@ namespace up
         assert(func);
         
         quick_exit_entry* entry = static_cast<quick_exit_entry*>(malloc(sizeof(quick_exit_entry)));
-        require(entry, "at_quick_exit - out of memory");
+        require(entry);
 
         call_once(&quick_exit_once_flag, &quick_exit_init);
         verify(thrd_success == mtx_lock(&quick_exit_mutex));

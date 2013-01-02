@@ -28,8 +28,8 @@
 //
 // versions check
 //
-#if (__GNUC__ == 4) && (__GNUC_MINOR__ < 3)
-    #error "GCC versions prior to 4.3 are not supported"
+#if (__GNUC__ == 4) && (__GNUC_MINOR__ < 2)
+    #error "GCC versions prior to 4.2 are not supported"
 #elif (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 7))
     #warning "Untested GCC compiler version"
 #endif
@@ -99,7 +99,7 @@
 #       define decltype __typeof__
 #   endif
 #   ifdef UP_NO_NOEXCEPT
-#       define noexcept __attribute__((nothrow))
+#       define noexcept
 #   endif
 #   ifdef UP_NO_THREAD_LOCAL
 #       define thread_local _Pragma( "error Platform does not support thread_local!" )
@@ -127,10 +127,10 @@
 // compiler built-ins
 //
 #define UPABORT __builtin_trap
-#define UPASSUME(expr) if (!__builtin_expect((expr), 1)) { }
-#define UPLIKELY(expr) __builtin_expect((expr), 1)
-#define UPUNLIKELY(expr) __builtin_expect((expr), 0)
-#define UPPREFETCH(address, rw, locality) __builtin_prefetch((address), (rw), (locality))
+#define UPASSUME(expr) if (!__builtin_expect((expr),1)) { }
+#define UPLIKELY(expr) __builtin_expect((expr),1)
+#define UPUNLIKELY(expr) __builtin_expect((expr),0)
+#define UPPREFETCH(address, rw, locality) __builtin_prefetch(address,rw,locality)
 #define UPIGNORE(expr) ((void)sizeof((expr)))
 
 //
@@ -139,17 +139,17 @@
 #define UPALLOC __attribute__((malloc))
 #define UPCOLD __attribute__((cold))
 #define UPDEPRECATED(msg) __attribute__((deprecated(msg)))
-#define UPALWAYSINLINE __attribute__((always_inline, visibility("hidden")))
+#define UPALWAYSINLINE __attribute__((always_inline,visibility("hidden")))
 #define UPHIDDENINLINE __attribute__((visibility("hidden")))
 #define UPHOT __attribute__((hot))
 #define UPNOINLINE __attribute__((noinline))
 #define UPNONNULLALL __attribute__((nonnull))
 #define UPNONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
 #define UPNORETURN __attribute__((noreturn))
-#define UPPRINTF(format, args) __attribute__((format(gnu_printf, (format), (args))))
+#define UPPRINTF(fmt, args) __attribute__((format(gnu_printf, fmt, args)))
 #define UPPURE __attribute__((pure))
 #define UPRESTRICT __restrict__
-#define UPSCANF(format, args) __attribute__((format(gnu_scanf, (format), (args))))
+#define UPSCANF(fmt, args) __attribute__((format(gnu_scanf, fmt, args)))
 #define UPUSED __attribute__((used))
 #define UPWARNRESULT __attribute__((warn_unused_result))
 

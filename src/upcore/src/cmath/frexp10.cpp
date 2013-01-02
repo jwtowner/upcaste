@@ -33,7 +33,7 @@ namespace up { namespace math
         double s;
 
         // get base 2 exponent
-#if (DBL_MANT_DIG == 53) && (DBL_RADIX == 2)
+#if (DBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         ieee754_binary64 raw;
         raw.d = x;
         if (!raw.ieee.exponent && !raw.ieee.mantissa) {

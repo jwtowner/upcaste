@@ -28,20 +28,17 @@
 #include <up/prolog.hpp>
 #include <cstddef>
 
-#ifndef UP_HAS_POSIX_SSIZE_T
-extern "C"
+namespace up
 {
+    using ::std::ptrdiff_t;
+    using ::std::size_t;
     typedef ptrdiff_t ssize_t;
-}
-#endif
 
-#ifndef UP_HAS_STDC_MAX_ALIGN_T
-extern "C"
-{
+#ifndef UP_HAS_STDC_MAX_ALIGN
     union LIBUPCOREAPI max_align_t
     {
-        int (nat_t::*mfp)(int);
-        int nat_t::* mp;
+        int (max_align_t::*mfp)(int);
+        int max_align_t::* mp;
         int (*fp)(int);
         void* p;
         ptrdiff_t pt;
@@ -56,19 +53,8 @@ extern "C"
         bool b;
         char c;
     };
-}
-#endif
-
-namespace up
-{
-    using ::std::ptrdiff_t;
-    using ::std::size_t;
-    using ::ssize_t;
-
-#ifdef UP_HAS_STDC_MAX_ALIGN_T
-    using ::std::max_align_t;
 #else
-    using ::max_align_t;
+    using ::std::max_align_t;
 #endif
 
 #ifndef UP_NO_NULLPTR

@@ -99,10 +99,10 @@ namespace up
     union LIBUPCOREAPI ieee754_binary64
     {
         unsigned long long u;
-#if (DBL_MANT_DIG == 53) && (DBL_RADIX == 2)
+#if (DBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         double d;
 #endif
-#if (LDBL_MANT_DIG == 53) && (LDBL_RADIX == 2)
+#if (LDBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         long double ld;
 #endif
         struct {
@@ -142,7 +142,7 @@ namespace up
             unsigned long long lo:64;
 #endif
         } u;
-#if (LDBL_MANT_DIG == 64) && (LDBL_RADIX == 2)
+#if (LDBL_MANT_DIG == 64) && (FLT_RADIX == 2)
         long double ld;
 #endif
         struct {
@@ -188,7 +188,7 @@ namespace up
             unsigned long long lo;
 #endif
         } u;
-#if (LDBL_MANT_DIG == 113) && (LDBL_RADIX == 2)
+#if (LDBL_MANT_DIG == 113) && (FLT_RADIX == 2)
         long double ld;
 #endif
         struct {

@@ -22,36 +22,24 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/prolog.hpp>
+#ifndef UP_DETAIL_CSTDATOMIC_PAUSE_MSVC_X86_X64_INL
+#define UP_DETAIL_CSTDATOMIC_PAUSE_MSVC_X86_X64_INL
 
-#if !defined(UP_HAS_STDC_MATH_CXX11)
-
-#include <up/cmath.hpp>
-#include <up/cstdlib.hpp>
-#include <up/ieee754.hpp>
-
-#if UP_COMPILER == UP_COMPILER_MSVC
-#   pragma warning(disable:4756) // overflow in constant arithmetic
+#ifndef UP_CSTDATOMIC_HPP
+#   error "Do not include this file directly, instead include <up/cstdatomic.hpp>"
 #endif
 
-namespace up { namespace math
+namespace up
 {
-    LIBUPCOREAPI UPPURE
-    int fpclassify(float x) noexcept {
-#if (FLT_MANT_DIG == 24) && (FLT_RADIX == 2)
-        ieee754_binary32 bin;
-        bin.f = x;
-        if (bin.ieee.exponent == 0) {
-            return (bin.ieee.mantissa == 0) ? FP_ZERO : FP_SUBNORMAL;
-        }
-        if (bin.ieee.exponent == 0xFF) {
-            return (bin.ieee.mantissa == 0) ? FP_INFINITE : FP_NAN;
-        }
-        return FP_NORMAL;
-#else
-#   error "single-precision floating-point format not yet supported!";
-#endif
+    inline UPALWAYSINLINE
+    void atomic_signal_pause() noexcept {
+        _mm_pause();
     }
-}}
+    
+    inline UPALWAYSINLINE
+    void atomic_thread_pause() noexcept {
+        _mm_pause();
+    }
+}
 
 #endif

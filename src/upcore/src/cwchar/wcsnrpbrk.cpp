@@ -40,7 +40,7 @@ namespace up
         }
 
         for (wchar_t const* cur = s + n - 1; cur >= s; --cur) {
-            wint_t const c = *cur;
+            wchar_t const c = *cur;
             for (wchar_t const* a = accept; *a; ++a) {
                 if (*a == c) {
                     return cur;

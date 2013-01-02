@@ -67,9 +67,6 @@ namespace up { namespace math
     using ::std::logb;
     using ::std::lrint;
     using ::std::lround;
-    using ::std::nan;
-    using ::std::nanf;
-    using ::std::nanl;
     using ::std::nearbyint;
     using ::std::nextafter;
     using ::std::nexttoward;
@@ -82,6 +79,10 @@ namespace up { namespace math
     using ::std::signbit;
     using ::std::tgamma;
     using ::std::trunc;
+
+    inline UPALWAYSINLINE UPNONNULLALL double nan(char const* tagp) noexcept { return ::std::nan(tagp); }
+    inline UPALWAYSINLINE UPNONNULLALL float nanf(char const* tagp) noexcept { return ::std::nanf(tagp); }
+    inline UPALWAYSINLINE UPNONNULLALL long double nanl(char const* tagp) noexcept { return ::std::nanl(tagp); }
 }}
 
 #endif

@@ -31,7 +31,6 @@
 
 namespace up
 {
-    inline UPALWAYSINLINE UPPURE int isascii(int c) noexcept { return __isascii(c); }
     inline UPALWAYSINLINE UPPURE int isblank(int c) noexcept { return _isctype(c, _BLANK); }
 #ifdef UP_HAS_POSIX_LOCALE
     inline UPALWAYSINLINE UPPURE int isalnum_l(int c, _locale_t l) noexcept { return _isalnum_l(c, l); };

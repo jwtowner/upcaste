@@ -55,27 +55,27 @@ namespace up
     inline UPALWAYSINLINE UPNONNULL(4) ssize_t gettdelim(tchar_t** UPRESTRICT lineptr, size_t* UPRESTRICT n, tint_t delimiter, FILE* UPRESTRICT stream) noexcept { return getwdelim(lineptr, n, delimiter, stream); }
     inline UPALWAYSINLINE UPNONNULL(3) ssize_t gettline(tchar_t** UPRESTRICT lineptr, size_t* UPRESTRICT n, FILE* UPRESTRICT stream) noexcept { return getwline(lineptr, n, stream); }
     inline UPALWAYSINLINE UPNONNULL(2) tint_t puttc(tchar_t c, FILE* stream) noexcept { return putwc(c, stream); }
-    inline UPALWAYSINLINE UPNONNULL(1) tint_t puttchar(tchar_t c) noexcept { return putwchar(c); }
+    inline UPALWAYSINLINE tint_t puttchar(tchar_t c) noexcept { return putwchar(c); }
     inline UPALWAYSINLINE UPNONNULL(2) tint_t ungettc(tchar_t c, FILE* stream) noexcept { return ungetwc(c, stream); }
     inline UPALWAYSINLINE UPNONNULL(1,2) int vftprintf(FILE* UPRESTRICT stream, tchar_t const* UPRESTRICT format, va_list arg) noexcept { return vfwprintf(stream, format, arg); };
     inline UPALWAYSINLINE UPNONNULL(1,3) int vstprintf(tchar_t* UPRESTRICT s, size_t n, tchar_t const* UPRESTRICT format, va_list arg) noexcept { return vswprintf(s, n, format, arg); };
     inline UPALWAYSINLINE UPNONNULL(1) int vtprintf(tchar_t const* UPRESTRICT format, va_list arg) noexcept { return vwprintf(format, arg); };
 
     inline UPALWAYSINLINE UPNONNULL(1,2) tchar_t* tcscat(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2) noexcept { return wcscat(s1, s2); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t const* tcschr(tchar_t const* s, tint_t c) noexcept { return wcschr(s, c); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t* tcschr(tchar_t* s, tint_t c) noexcept { return wcschr(s, c); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) tchar_t const* tcschr(tchar_t const* s, tint_t c) noexcept { return wcschr(s, c); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) tchar_t* tcschr(tchar_t* s, tint_t c) noexcept { return wcschr(s, c); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcscmp(tchar_t const* s1, tchar_t const* s2) noexcept { return wcscmp(s1, s2); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcscoll(tchar_t const* s1, tchar_t const* s2) noexcept { return wcscoll(s1, s2); }
     inline UPALWAYSINLINE UPNONNULL(1,2) tchar_t* tcscpy(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2) noexcept { return wcscpy(s1, s2); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) size_t tcscspn(tchar_t const* s1, tchar_t const* s2) noexcept { return wcscspn(s1, s2); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) size_t tcslen(tchar_t const* s) noexcept { return wcslen(s); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) size_t tcslen(tchar_t const* s) noexcept { return wcslen(s); }
     inline UPALWAYSINLINE UPNONNULL(1,2) tchar_t* tcsncat(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2, size_t n) noexcept { return wcsncat(s1, s2, n); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcsncmp(tchar_t const* s1, tchar_t const* s2, size_t n) noexcept { return wcsncmp(s1, s2, n); }
     inline UPALWAYSINLINE UPNONNULL(1,2) tchar_t* tcsncpy(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2, size_t n) noexcept { return wcsncpy(s1, s2, n); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t const* tcspbrk(tchar_t const* s1, tchar_t const* s2) noexcept { return wcspbrk(s1, s2); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t* tcspbrk(tchar_t* s1, tchar_t* s2) noexcept { return wcspbrk(s1, s2); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t const* tcsrchr(tchar_t const* s, tint_t c) noexcept { return wcsrchr(s, c); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t* tcsrchr(tchar_t* s, tint_t c) noexcept { return wcsrchr(s, c); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) tchar_t const* tcsrchr(tchar_t const* s, tint_t c) noexcept { return wcsrchr(s, c); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) tchar_t* tcsrchr(tchar_t* s, tint_t c) noexcept { return wcsrchr(s, c); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) size_t tcsspn(tchar_t const* s1, tchar_t const* s2) noexcept { return wcsspn(s1, s2); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t const* tcsstr(tchar_t const* s1, tchar_t const* s2) noexcept { return wcsstr(s1, s2); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) tchar_t* tcsstr(tchar_t* s1, tchar_t const* s2) noexcept { return wcsstr(s1, s2); }
@@ -92,9 +92,9 @@ namespace up
 
 #ifdef UP_HAS_POSIX_LOCALE
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcscasecmp_l(tchar_t const* s1, tchar_t const* s2, locale_t l) noexcept { return wcscasecmp_l(s1, s2, l); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcsncasecmp_l(tchar_t const* s1, tchar_t const* s2, size_t n, ::_locale_t l) noexcept { return wcsncasecmp_l(s1, s2, n, l); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcsncasecmp_l(tchar_t const* s1, tchar_t const* s2, size_t n, locale_t l) noexcept { return wcsncasecmp_l(s1, s2, n, l); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1,2) int tcscoll_l(tchar_t const* s1, tchar_t const* s2, locale_t l) noexcept { return wcscoll_l(s1, s2, l); }
-    inline UPALWAYSINLINE UPNONNULL(1,2) size_t strxfrm_l(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2, size_t n, locale_t l) noexcept { return wcsxfrm_l(s1, s2, n, l); }
+    inline UPALWAYSINLINE UPNONNULL(1,2) size_t tcsxfrm_l(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2, size_t n, locale_t l) noexcept { return wcsxfrm_l(s1, s2, n, l); }
 #endif
 
     inline UPALWAYSINLINE UPPURE UPNONNULL(1) size_t tcshash(tchar_t const* s) noexcept { return wcshash(s); }   

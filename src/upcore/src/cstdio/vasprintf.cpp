@@ -24,11 +24,12 @@
 
 #include <up/prolog.hpp>
 
-#ifndef UP_HAS_STDC_VASPRINTF
+#ifndef UP_HAS_POSIX_VASPRINTF
 
 #include <up/cassert.hpp>
 #include <up/cstdarg.hpp>
 #include <up/cstdio.hpp>
+#include <up/cstdlib.hpp>
 
 namespace up
 {

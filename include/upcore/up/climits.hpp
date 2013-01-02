@@ -28,18 +28,4 @@
 #include <up/prolog.hpp>
 #include <climits>
 
-#define SHORT_BIT (sizeof(short) * CHAR_BIT)
-#define INT_BIT (sizeof(int) * CHAR_BIT)
-#define LONG_BIT (sizeof(long) * CHAR_BIT)
-#define LLONG_BIT (sizeof(long long) * CHAR_BIT)
-#define UCHAR_BIT (sizeof(unsigned char) * CHAR_BIT)
-#define USHORT_BIT (sizeof(unsigned short) * CHAR_BIT)
-#define UINT_BIT (sizeof(unsigned int) * CHAR_BIT)
-#define ULONG_BIT (sizeof(unsigned long) * CHAR_BIT)
-#define ULLONG_BIT (sizeof(unsigned long long) * CHAR_BIT)
-#define SIZE_BIT (sizeof(size_t) * CHAR_BIT)
-#define SSIZE_BIT (sizeof(size_t) * CHAR_BIT)
-#define PTRDIFF_BIT (sizeof(ptrdiff_t) * CHAR_BIT)
-#define WCHAR_BIT (sizeof(wchar_t) * CHAR_BIT)
-
 #endif

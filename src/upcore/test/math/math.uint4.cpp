@@ -136,7 +136,7 @@ namespace math_uint4
         require(all(isequal(b, make<uint4>(UINT32_MAX, 51, UINT32_MAX, 55))));
 
         b = add_sat(uniform<uint4>::max, uniform<uint4>::max);
-        require(all(isequal(b, broadcast<uint4>(UINT32_MAX))), "%d %d %d %d", getx(b), gety(b), getz(b), getw(b));
+        require(all(isequal(b, broadcast<uint4>(UINT32_MAX))));
 
         b = add_sat(uniform<uint4>::max, a);
         require(all(isequal(b, broadcast<uint4>(UINT32_MAX))));

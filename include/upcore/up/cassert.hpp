@@ -36,10 +36,10 @@ namespace up
         template <> struct static_assert_error<true> { enum { value = true }; };
     }
 
-    typedef bool (UPCDECL *assert_handler)(char const* file, long line, char const* condition, char const* message);
+    typedef bool (UPCDECL *assert_handler)(char const* file, long line, char const* condition);
 
     extern LIBUPCOREAPI UPNONNULLALL
-    bool UPCDECL default_assert_handler(char const* file, long line, char const* condition, char const* message);
+    bool UPCDECL default_assert_handler(char const* file, long line, char const* condition);
 
     extern LIBUPCOREAPI UPWARNRESULT
     assert_handler get_assert_handler();
@@ -49,26 +49,23 @@ namespace up
 
     extern LIBUPCOREAPI UPNONNULLALL
     bool report_assertion(char const* file, long line, char const* condition);
-
-    extern LIBUPCOREAPI UPNONNULLALL
-    bool report_assertion(char const* file, long line, char const* condition, char const* message, ...);
 }
 
-#define UP_DETAIL_REQUIRE_IMPL(condition, ...) { if (!(condition) && ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(condition), __VA_ARGS__)) { UPABORT(); } }
-#define UP_DETAIL_REQUIRE_APPROX_IMPL(x, y, d, ...) UP_DETAIL_REQUIRE_IMPL((((x < y) ? (y - x) : (x - y)) <= (d)), __VA_ARGS__)
-#define UP_DETAIL_ASSERT_IMPL(condition, ...) UPASSUME(!!(condition))
-#define UP_DETAIL_ASSERT_APPROX_IMPL(x, y, d, ...) UPASSUME(!!(((x < y) ? (y - x) : (x - y)) <= (d)))
-#define UP_DETAIL_VERIFY_IMPL(condition, ...) ((void)(condition))
-#define UP_DETAIL_VERIFY_APPROX_IMPL(x, y, d, ...) UP_DETAIL_VERIFY_IMPL((((x < y) ? (y - x) : (x - y)) <= (d)), __VA_ARGS__)
-#define UPREQUIRE(...) UP_DETAIL_REQUIRE_IMPL(__VA_ARGS__)
-#define UPREQUIRE_THROW(condition, action) { if (!(condition) && ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(condition), UPSTRINGIZE(action))) { UPTHROW(action); } }
-#define UPREQUIRE_APPROX(x, y, d, ...) UP_DETAIL_REQUIRE_APPROX_IMPL(x, y, d, __VA_ARGS__)
+#define UP_DETAIL_REQUIRE_IMPL(expression) { if (!(expression) && ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(expression))) { UPABORT(); } }
+#define UP_DETAIL_REQUIRE_APPROX_IMPL(x, y, d) UP_DETAIL_REQUIRE_IMPL((((x < y) ? (y - x) : (x - y)) <= (d)))
+#define UP_DETAIL_ASSERT_IMPL(expression) UPASSUME(!!(expression))
+#define UP_DETAIL_ASSERT_APPROX_IMPL(x, y, d) UPASSUME(!!(((x < y) ? (y - x) : (x - y)) <= (d)))
+#define UP_DETAIL_VERIFY_IMPL(expression) ((void)(expression))
+#define UP_DETAIL_VERIFY_APPROX_IMPL(x, y, d) UP_DETAIL_VERIFY_IMPL((((x < y) ? (y - x) : (x - y)) <= (d)))
+#define UPREQUIRE(expression) UP_DETAIL_REQUIRE_IMPL(expression)
+#define UPREQUIRE_THROW(expression, action) { if (!(expression) && ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(expression))) { UPTHROW(action); } }
+#define UPREQUIRE_APPROX(x, y, d) UP_DETAIL_REQUIRE_APPROX_IMPL(x, y, d)
 #define UPREQUIRE_APPROX_THROW(x, y, d, action) UP_REQUIRE_THROW((((x < y) ? (y - x) : (x - y)) <= (d)), action)
 
 #ifndef UP_NO_NAKED_ASSERT
-#   define require(...) UPREQUIRE(__VA_ARGS__)
-#   define require_throw(condition, action) UPREQUIRE_THROW(condition, action)
-#   define require_approx(x, y, d, ...) UPREQUIRE_APPROX(x, y, d, __VA_ARGS__)
+#   define require(expression) UPREQUIRE(expression)
+#   define require_throw(expression, action) UPREQUIRE_THROW(expression, action)
+#   define require_approx(x, y, d) UPREQUIRE_APPROX(x, y, d)
 #   define require_approx_throw(x, y, d, action) UPREQUIRE_APPROX_THROW(x, y, d, action)
 #endif
 
@@ -94,22 +91,22 @@ namespace up
 #undef UPVERIFY_APPROX_THROW
 
 #ifndef NDEBUG
-#   define UPASSERT(...) UPREQUIRE(__VA_ARGS__)
-#   define UPASSERT_THROW(condition, action) UPREQUIRE_THROW(condition, action)
-#   define UPASSERT_APPROX(x, y, d, ...) UPREQUIRE_APPROX(x, y, d, __VA_ARGS__)
+#   define UPASSERT(expression) UPREQUIRE(expression)
+#   define UPASSERT_THROW(expression, action) UPREQUIRE_THROW(expression, action)
+#   define UPASSERT_APPROX(x, y, d) UPREQUIRE_APPROX(x, y, d)
 #   define UPASSERT_APPROX_THROW(x, y, d, action) UPREQUIRE_APPROX_THROW(x, y, d, action)
-#   define UPVERIFY(...) UPREQUIRE(__VA_ARGS__)
-#   define UPVERIFY_THROW(condition, action) UPREQUIRE_THROW(condition, action)
-#   define UPVERIFY_APPROX(x, y, d, ...) UPREQUIRE_APPROX(x, y, d, __VA_ARGS__)
+#   define UPVERIFY(expression) UPREQUIRE(expression)
+#   define UPVERIFY_THROW(expression, action) UPREQUIRE_THROW(expression, action)
+#   define UPVERIFY_APPROX(x, y, d) UPREQUIRE_APPROX(x, y, d)
 #   define UPVERIFY_APPROX_THROW(x, y, d, action) UPREQUIRE_APPROX_THROW(x, y, d, action)
 #else
-#   define UPASSERT(...) UP_DETAIL_ASSERT_IMPL(__VA_ARGS__)
-#   define UPASSERT_THROW(condition, action) { if (!(condition)) { UPTHROW(action); } }
-#   define UPASSERT_APPROX(...) UP_DETAIL_ASSERT_APPROX_IMPL(__VA_ARGS__)
+#   define UPASSERT(expression) UP_DETAIL_ASSERT_IMPL(expression)
+#   define UPASSERT_THROW(expression, action) { if (!(expression)) { UPTHROW(action); } }
+#   define UPASSERT_APPROX(x, y, d) UP_DETAIL_ASSERT_APPROX_IMPL(x, y, d)
 #   define UPASSERT_APPROX_THROW(x, y, d, action) UPASSERT_THROW((((x < y) ? (y - x) : (x - y)) <= (d)), action)
-#   define UPVERIFY(...) UP_DETAIL_VERIFY_IMPL(__VA_ARGS__)
-#   define UPVERIFY_THROW(condition, action) { if (!(condition)) { UPTHROW(action); } }
-#   define UPVERIFY_APPROX(...) UP_DETAIL_VERIFY_APPROX_IMPL(__VA_ARGS__)
+#   define UPVERIFY(expression) UP_DETAIL_VERIFY_IMPL(expression)
+#   define UPVERIFY_THROW(expression, action) { if (!(expression)) { UPTHROW(action); } }
+#   define UPVERIFY_APPROX(x, y, d) UP_DETAIL_VERIFY_APPROX_IMPL(x, y, d)
 #   define UPVERIFY_APPROX_THROW(x, y, d, action) UPVERIFY_THROW((((x < y) ? (y - x) : (x - y)) <= (d)), action)
 #endif
 
@@ -122,12 +119,12 @@ namespace up
 #   undef verify_throw
 #   undef verify_approx
 #   undef verify_approx_throw
-#   define assert(...) UPASSERT(__VA_ARGS__)
-#   define assert_throw(condition, action) UPASSERT_THROW(condition, action)
-#   define assert_approx(x, y, d, ...) UPASSERT_APPROX(x, y, d, __VA_ARGS__)
+#   define assert(expression) UPASSERT(expression)
+#   define assert_throw(expression, action) UPASSERT_THROW(expression, action)
+#   define assert_approx(x, y, d) UPASSERT_APPROX(x, y, d)
 #   define assert_approx_throw(x, y, d, action) UPASSERT_APPROX_THROW(x, y, d, action)
-#   define verify(...) UPVERIFY(__VA_ARGS__)
-#   define verify_throw(condition, action) UPVERIFY_THROW(condition, action)
-#   define verify_approx(x, y, d, ...) UPVERIFY_APPROX(x, y, d, __VA_ARGS__)
+#   define verify(expression) UPVERIFY(expression)
+#   define verify_throw(expression, action) UPVERIFY_THROW(expression, action)
+#   define verify_approx(x, y, d) UPVERIFY_APPROX(x, y, d)
 #   define verify_approx_throw(x, y, d, action) UPVERIFY_APPROX_THROW(x, y, d, action)
 #endif

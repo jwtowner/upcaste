@@ -28,8 +28,12 @@
 #include <up/prolog.hpp>
 #include <cstdint>
 
-#ifndef UP_HAS_POSIX_SSIZE_T
-#   define SSIZE_MAX (SIZE_MAX / 2)
+#ifndef SSIZE_MAX
+#   define SSIZE_MAX (SIZE_MAX/2)
+#endif
+
+#ifndef SSIZE_MIN
+#   define SSIZE_MIN (-SSIZE_MAX-1)
 #endif
 
 namespace up

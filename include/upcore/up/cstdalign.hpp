@@ -26,6 +26,7 @@
 #define UP_CSTDALIGN_HPP
 
 #include <up/cstddef.hpp>
+#include <up/cstdint.hpp>
 #if UP_HAS_STDC_STDALIGN
 #   include <cstdalign>
 #else

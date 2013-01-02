@@ -25,7 +25,8 @@
 #ifndef UP_SLIST_HPP
 #define UP_SLIST_HPP
 
-#include <up/cstddef.hpp>
+#include <up/allocator.hpp>
+#include <up/cstdint.hpp>
 
 namespace up
 {
@@ -150,6 +151,16 @@ namespace up
         head->next = last;
     }
 
+    template <class Node, slist_node Node::* NodePtr>
+    inline UPALWAYSINLINE
+    void slist_erase_deallocate(slist_node* head, slist_node* first, slist_node* last, allocator* alloc) noexcept {
+        for (slist_node* node = first, * next; node != last; node = next) {
+            next = node->next;
+            alloc->deallocate(::up::slist_cast<Node*>(node, NodePtr), sizeof(Node));
+        }
+        head->next = last;
+    }
+
     inline UPALWAYSINLINE
     void slist_clear(slist_node* head) noexcept {
         ::up::slist_erase(head, head->next, nullptr);
@@ -160,11 +171,24 @@ namespace up
     void slist_clear(slist_node* head, Recycle recycle) noexcept {
         ::up::slist_erase<Node, NodePtr>(head, head->next, nullptr, recycle);
     }
+
+    template <class Node, slist_node Node::* NodePtr>
+    inline UPALWAYSINLINE
+    void slist_clear_deallocate(slist_node* head, allocator* alloc) noexcept {
+        ::up::slist_erase_deallocate<Node, NodePtr>(head, head->next, nullptr, alloc);
+    }
     
     inline UPALWAYSINLINE
     void slist_unlink(slist_node* head, slist_node* node) noexcept {
         head->next = node->next;
         node->next = nullptr;
+    }
+
+    template <class Node, slist_node Node::* NodePtr>
+    inline UPALWAYSINLINE
+    void slist_unlink_deallocate(slist_node* head, slist_node* node, allocator* alloc) noexcept {
+        head->next = node->next;
+        alloc->deallocate(::up::slist_cast<Node*>(node, NodePtr), sizeof(Node));
     }
 
     inline UPALWAYSINLINE

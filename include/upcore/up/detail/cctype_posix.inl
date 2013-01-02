@@ -31,7 +31,6 @@
 
 namespace up
 {
-    using ::std::isascii;
     using ::std::isblank;
 #ifdef UP_HAS_POSIX_LOCALE
     using ::isalnum_l;

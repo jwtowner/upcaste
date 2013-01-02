@@ -25,6 +25,7 @@
 #include <up/cassert.hpp>
 #include <up/cctype.hpp>
 #include <up/cerrno.hpp>
+#include <up/climits.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cwchar.hpp>
 #include <up/cwctype.hpp>

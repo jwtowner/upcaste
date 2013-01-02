@@ -38,13 +38,8 @@ namespace up { namespace sexp
 
         verify(sexp_success == lexer_construct(&par->lex, nullptr, 0));
 
-        slist_clear<parser_token, &parser_token::node>(&par->open_stack, [=] (parser_token* p) {
-            alloc->deallocate(p, sizeof(parser_token));
-        });
-
-        slist_clear<parser_token, &parser_token::node>(&par->unread_stack, [=] (parser_token* p) {
-            alloc->deallocate(p, sizeof(parser_token));
-        });
+        slist_clear_deallocate<parser_token, &parser_token::node>(&par->open_stack, alloc);
+        slist_clear_deallocate<parser_token, &parser_token::node>(&par->unread_stack, alloc);
 
         if (par->buffer_allocated) {
             alloc->deallocate(par->buffer, par->buffer_length);

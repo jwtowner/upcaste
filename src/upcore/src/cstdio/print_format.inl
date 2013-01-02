@@ -220,7 +220,7 @@ namespace up { namespace detail { namespace
         }
 
         // compute amount of zero and space padding
-        assert((work_tail - work_head) <= work_buffer_length);
+        assert(static_cast<size_t>(work_tail - work_head) <= work_buffer_length);
         zeropad = static_cast<int>(work_tail - work_head);
         
         if (UPLIKELY(precision == -1)) {

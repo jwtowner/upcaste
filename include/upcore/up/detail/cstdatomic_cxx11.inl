@@ -41,6 +41,7 @@ namespace up
 	using ::std::memory_order_release;
 	using ::std::memory_order_acq_rel;
 	using ::std::memory_order_seq_cst;
+    using ::std::atomic;
     using ::std::atomic_flag;
     using ::std::atomic_bool;
     using ::std::atomic_char;
@@ -115,6 +116,26 @@ namespace up
     using ::std::atomic_flag_test_and_set_explicit;
     using ::std::atomic_flag_clear;
     using ::std::atomic_flag_clear_explicit;
+    typedef atomic<void*> atomic_address;
+    typedef atomic<void const*> atomic_const_address;
+    typedef atomic<void volatile*> atomic_volatile_address;
+    typedef atomic<void const volatile*> atomic_const_volatile_address;
 }
+
+#if (UP_COMPILER == UP_COMPILER_GCC)
+#   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
+#       include <up/detail/cstdatomic_pause_gcc_x86_x64.inl>
+#   else
+#       error "Architecture not currently supported for atomic operations!"
+#   endif
+#elif (UP_COMPILER == UP_COMPILER_MSVC)
+#   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
+#       include <up/detail/cstdatomic_pause_msvc_x86_x64.inl>
+#   else
+#       error "Architecture not currently supported for atomic operations!"
+#   endif
+#else
+#   error "Compiler not currently supported for atomic operations!"
+#endif
 
 #endif

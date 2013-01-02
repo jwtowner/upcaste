@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#ifndef UP_HAS_STDC_GETDELIM
+#ifndef UP_HAS_POSIX_GETDELIM
 
 #define NAME getdelim
 #define MEMPCPY mempcpy

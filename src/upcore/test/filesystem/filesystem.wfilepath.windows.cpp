@@ -211,7 +211,7 @@ namespace filesystem_wfilepath_windows
         wchar_t const* const wparts2[] = { L"c:\\hello", L"\\/", L"\\world", L"foo", nullptr, L"/bar.baz" };
         wchar_t wbuffer[10];
         wchar_t* wpath;
-        ssize_t sz;
+        up::ssize_t sz;
 
         wpath = up::filesystem::windows::join_path(wparts1, 4);
         require(wpath && !up::wcscmp(wpath, L"hello\\world\\foo\\bar.baz"));

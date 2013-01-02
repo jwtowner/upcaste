@@ -33,19 +33,19 @@ namespace bitwise
         require(up::tzcount(4u) == 2u);
         require(up::tzcount(8u) == 3u);
 
-        for (unsigned int i = 4; i < UINT_BIT; ++i) {
+        for (unsigned int i = 4; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
             require(up::tzcount(1u << i) == i);
         }
     }
 
     UP_TEST_CASE(lzcount) {
-        require(up::lzcount(1u) == (UINT_BIT - 1u));
-        require(up::lzcount(2u) == (UINT_BIT - 2u));
-        require(up::lzcount(4u) == (UINT_BIT - 3u));
-        require(up::lzcount(8u) == (UINT_BIT - 4u));
+        require(up::lzcount(1u) == ((sizeof(unsigned int) * CHAR_BIT) - 1u));
+        require(up::lzcount(2u) == ((sizeof(unsigned int) * CHAR_BIT) - 2u));
+        require(up::lzcount(4u) == ((sizeof(unsigned int) * CHAR_BIT) - 3u));
+        require(up::lzcount(8u) == ((sizeof(unsigned int) * CHAR_BIT) - 4u));
 
-        for (unsigned int i = 4; i < UINT_BIT; ++i) {
-            require(up::lzcount(1u << i) == (UINT_BIT - i - 1));
+        for (unsigned int i = 4; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
+            require(up::lzcount(1u << i) == ((sizeof(unsigned int) * CHAR_BIT) - i - 1));
         }
     }
 
@@ -60,7 +60,7 @@ namespace bitwise
         require(up::popcount(7u) == 3u);
         require(up::popcount(8u) == 1u);
 
-        for (unsigned int i = 1; i < UINT_BIT; ++i) {
+        for (unsigned int i = 1; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
             unsigned int x = i << 1;
             require(up::popcount((x & (unsigned int)(-(int)x)) - 1) == up::tzcount(x));
         }
@@ -77,7 +77,7 @@ namespace bitwise
         require(up::logceil2(7u) == 3u);
         require(up::logceil2(8u) == 3u);
 
-        for (unsigned int i = 2; i < UINT_BIT; ++i) {
+        for (unsigned int i = 2; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
             require(up::logceil2((1u << i) - 1) == i);
         }
     }
@@ -93,7 +93,7 @@ namespace bitwise
         require(up::logfloor2(7u) == 2u);
         require(up::logfloor2(8u) == 3u);
 
-        for (unsigned int i = 2; i < UINT_BIT; ++i) {
+        for (unsigned int i = 2; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
             require(up::logfloor2((1u << i) - 1) == (i - 1));
         }
     }
@@ -109,7 +109,7 @@ namespace bitwise
         require(up::ceil2(7u) == 8u);
         require(up::ceil2(8u) == 8u);
 
-        for (unsigned int i = 2; i < UINT_BIT; ++i) {
+        for (unsigned int i = 2; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
             require(up::ceil2((1u << i) - 1) == (1u << i));
         }
     }
@@ -125,7 +125,7 @@ namespace bitwise
         require(up::floor2(7u) == 4u);
         require(up::floor2(8u) == 8u);
 
-        for (unsigned int i = 2; i < UINT_BIT; ++i) {
+        for (unsigned int i = 2; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
             require(up::floor2((1u << i) - 1) == (1u << (i - 1)));
         }
     }

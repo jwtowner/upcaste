@@ -890,17 +890,6 @@ namespace up { namespace detail
 
 namespace up
 {
-    template <class T> struct is_allocator : std::false_type { };
-    template <class T> struct is_allocator<T const> : std::integral_constant<bool, is_allocator<T>::value> { };
-    template <class T> struct is_allocator<T volatile> : std::integral_constant<bool, is_allocator<T>::value> { };
-    template <class T> struct is_allocator<T const volatile> : std::integral_constant<bool, is_allocator<T>::value> { };
-    template <class T> struct is_allocator<T&> : std::integral_constant<bool, is_allocator<T>::value> { };
-    template <class T> struct is_allocator<T&&> : std::integral_constant<bool, is_allocator<T>::value> { };
-    template <class T> struct is_allocator<T*> : std::integral_constant<bool, is_allocator<T>::value> { };
-    template <> struct is_allocator<allocator> : std::true_type { };
-    template <> struct is_allocator<page_allocator> : std::true_type { };
-    template <> struct is_allocator<malloc_allocator> : std::true_type { };
-
     template <class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     void* allocate(Alloc* a, size_t n) noexcept {

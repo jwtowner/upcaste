@@ -119,32 +119,49 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Recycle>
     UPVISIBLE
     void sparseset_clear(sparseset<R, N, H, E>& set, Recycle recycle) noexcept {
+        if (!set.size) {
+            return;
+        }
+
         slist_node* bucket = set.buckets();
         slist_node* const end_bucket = bucket + set.num_buckets();
         slist_node* curr, * next;
 
-        if (set.size) {
-            for ( ; bucket < end_bucket; ++bucket) {
-                for (curr = bucket->next; curr; curr = next) {
-                    next = curr->next;
-                    curr->next = nullptr;
-                    recycle(::up::slist_cast<R*>(curr, N));
-                }
-                bucket->next = nullptr;
+        for ( ; bucket < end_bucket; ++bucket) {
+            for (curr = bucket->next; curr; curr = next) {
+                next = curr->next;
+                curr->next = nullptr;
+                recycle(::up::slist_cast<R*>(curr, N));
             }
-            set.size = 0;
+            bucket->next = nullptr;
         }
+
+        set.size = 0;
     }
 
     template <class R, slist_node R::* N, class H, class E>
-    inline UPHIDDENINLINE
-    int sparseset_clear(sparseset<R, N, H, E>& set, allocator* record_alloc) noexcept {
-        if (!node_alloc) {
+    UPVISIBLE
+    int sparseset_clear_deallocate(sparseset<R, N, H, E>& set, allocator* record_alloc) noexcept {
+        if (!record_alloc) {
             return sparse_badallocator;
         }
-        ::up::sparseset_clear(set, [=] (R* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        else if (!set.size) {
+            return sparse_success;
+        }
+
+        slist_node* bucket = set.buckets();
+        slist_node* const end_bucket = bucket + set.num_buckets();
+        slist_node* curr, * next;
+
+        for ( ; bucket < end_bucket; ++bucket) {
+            for (curr = bucket->next; curr; curr = next) {
+                next = curr->next;
+                ::up::destruct_deallocate(::up::slist_cast<R*>(curr, N), record);
+            }
+            bucket->next = nullptr;
+        }
+
+        set.size = 0;
         return sparse_success;
     }
 

@@ -65,7 +65,7 @@ namespace up { namespace sexp { namespace
     inline UPALWAYSINLINE
     uint_least32_t lexer_get_char(lexer* lex) noexcept {
         char const* cursor = lex->cursor;
-        uint_least32_t ch = UEOF;
+        char32_t ch = UEOF;
         int octet_count;
         size_t length;
 
@@ -101,7 +101,7 @@ namespace up { namespace sexp { namespace
         char const* cursor = start;
         char const* prev_cursor = lex->prev_cursor;
         uintmax_t column = lex->column;
-        uint_least32_t ch;
+        char32_t ch;
         int octet_count;
 
         while (cursor < last) {
@@ -132,7 +132,7 @@ namespace up { namespace sexp { namespace
     bool lexer_read_delimited_token(lexer* UPRESTRICT lex, char const* UPRESTRICT s, size_t n) noexcept {
         char const* const last = lex->last;
         char const* cursor = lex->cursor;
-        uint_least32_t ch;
+        char32_t ch;
         int octet_count;
 
         if ((static_cast<size_t>(last - cursor) < n) || (fast_strncasecmp(cursor, s, n) != 0)) {
@@ -158,7 +158,7 @@ namespace up { namespace sexp { namespace
         char const* cursor = lex->cursor;
         char const* prev_cursor = lex->cursor;
         uintmax_t column = lex->column;
-        uint_least32_t ch = UEOF;
+        char32_t ch = UEOF;
         int octet_count;
 
         if ((static_cast<size_t>(last - cursor) < n) || (fast_strncasecmp(cursor, s, n) != 0)) {
@@ -191,7 +191,7 @@ namespace up { namespace sexp { namespace
         char const* cursor = lex->cursor;
         char const* prev_cursor = lex->cursor;
         uintmax_t column = lex->column;
-        uint_least32_t ch, retval = UEOF;
+        char32_t ch, retval = UEOF;
         int octet_count;
 
         while (cursor < last) {
@@ -237,7 +237,7 @@ namespace up { namespace sexp { namespace
         uintmax_t column = lex->column;
         uintmax_t line = lex->line;
         int octet_count, retval;
-        uint_least32_t ch;
+        char32_t ch;
 
         tok->category = category_symbol;
         tok->type = token_escaped_identifier;

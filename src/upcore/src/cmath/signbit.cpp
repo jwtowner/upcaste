@@ -34,7 +34,7 @@ namespace up { namespace math
 {
     LIBUPCOREAPI UPPURE
     bool signbit(double x) noexcept {
-#if (DBL_MANT_DIG == 53) && (DBL_RADIX == 2)
+#if (DBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         ieee754_binary64 bin;
         bin.d = x;
         return bin.ieee.negative != 0;

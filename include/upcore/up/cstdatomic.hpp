@@ -28,19 +28,22 @@
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
 
-#if !defined(UP_USE_STDCXX_ATOMIC)
+#ifdef UP_HAS_STDCXX_ATOMIC_CXX11
 #   include <up/detail/cstdatomic_cxx11.inl>
 #else
 #   include <up/detail/cstdatomic_default.inl>
 #endif
 
-#define ATOMIC_COUNT_INIT ATOMIC_VAR_INIT(0)
+#ifndef ATOMIC_COUNT_INIT
+#   define ATOMIC_COUNT_INIT ATOMIC_VAR_INIT(0)
+#endif
 
 namespace up
 {
     template <class T>
     inline UPALWAYSINLINE
-    void sink_dependency(T const& value) UPNOEXCEPT(std::is_nothrow_copy_constructible<T>::value) {
+    void sink_dependency(T const& value)
+    UPNOEXCEPT(std::is_nothrow_copy_constructible<T>::value) {
         T volatile sinkhole(value);
         UPIGNORE(sinkhole);
     }
@@ -68,7 +71,6 @@ namespace up
         if (atomic_fetch_add_explicit(count, -1, memory_order_release) != 1) {
             return false;
         }
-
         atomic_thread_fence(memory_order_acquire);
         return true;
     }
@@ -88,7 +90,6 @@ namespace up
         if (atomic_fetch_add_explicit(count, -1, memory_order_release) != 1) {
             return false;
         }
-
         atomic_thread_fence(memory_order_acquire);
         return true;
     }

@@ -27,10 +27,10 @@
 #include <up/cerrno.hpp>
 #include <up/cstdarg.hpp>
 #include <up/cstdio.hpp>
+#include <up/cstdlib.hpp>
 #include <up/cstring.hpp>
 #include <up/cthreads.hpp>
 #include <up/list.hpp>
-#include <up/memory.hpp>
 
 #if (UP_BASESYSTEM == UP_BASESYSTEM_WINDOWS)
 #   define WIN32_LEAN_AND_MEAN
@@ -57,7 +57,7 @@ namespace up { namespace
     unsigned long log_sequence;
 
     void UPCDECL log_term() noexcept {
-        list_clear<log_sink_node, &log_sink_node::node>(&log_sinks_head, [](log_sink_node* sink) { free(sink); });
+        list_clear_deallocate<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
         mtx_destroy(&log_monitor);
     }
 
@@ -129,7 +129,7 @@ namespace up
     void clear_log_sinks() {
         call_once(&log_once, &log_init);
         verify(thrd_success == mtx_lock(&log_monitor));
-        list_clear<log_sink_node, &log_sink_node::node>(&log_sinks_head, [](log_sink_node* sink) { free(sink); });
+        list_clear_deallocate<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
         verify(thrd_success == mtx_unlock(&log_monitor));
     }
 
@@ -147,7 +147,7 @@ namespace up
             return nullptr;
         }
 
-        log_sink_node* new_sink = malloc<log_sink_node>();
+        log_sink_node* new_sink = static_cast<log_sink_node*>(malloc(sizeof(log_sink_node)));
         if (!new_sink) {
             return nullptr;
         }

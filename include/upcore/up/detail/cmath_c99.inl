@@ -69,9 +69,6 @@ namespace up { namespace math
     using ::logb;
     using ::lrint;
     using ::lround;
-    using ::nan;
-    using ::nanf;
-    using ::nanl;
     using ::nearbyint;
     using ::nextafter;
     using ::nexttoward;
@@ -83,6 +80,10 @@ namespace up { namespace math
     using ::scalbn;
     using ::tgamma;
     using ::trunc;
+
+    inline UPALWAYSINLINE UPNONNULLALL double nan(char const* tagp) noexcept { return ::nan(tagp); }
+    inline UPALWAYSINLINE UPNONNULLALL float nanf(char const* tagp) noexcept { return ::nanf(tagp); }
+    inline UPALWAYSINLINE UPNONNULLALL long double nanl(char const* tagp) noexcept { return ::nanl(tagp); }
 
     inline UPALWAYSINLINE UPPURE float acosh(float x) noexcept { return ::acoshf(x); }
     inline UPALWAYSINLINE UPPURE float asinh(float x) noexcept { return ::asinhf(x); }

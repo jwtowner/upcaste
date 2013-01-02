@@ -36,92 +36,92 @@ namespace up
 {
     inline UPALWAYSINLINE UPPURE
     unsigned int logceil2(unsigned int x) noexcept {
-        return (x > 1) ? (UINT_BIT - lzcount(x - 1)) : 0;
+        return (x > 1) ? ((sizeof(unsigned int) * CHAR_BIT) - lzcount(x - 1)) : 0;
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long logceil2(unsigned long x) noexcept {
-        return (x > 1) ? (ULONG_BIT - lzcount(x - 1)) : 0;
+        return (x > 1) ? ((sizeof(unsigned long) * CHAR_BIT) - lzcount(x - 1)) : 0;
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long long logceil2(unsigned long long x) noexcept {
-        return (x > 1) ? (ULLONG_BIT - lzcount(x - 1)) : 0;
+        return (x > 1) ? ((sizeof(unsigned long long) * CHAR_BIT) - lzcount(x - 1)) : 0;
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned int logfloor2(unsigned int x) noexcept {
-        return (UINT_BIT - 1) - lzcount(x | 1);
+        return ((sizeof(unsigned int) * CHAR_BIT) - 1) - lzcount(x | 1);
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long logfloor2(unsigned long x) noexcept {
-        return (ULONG_BIT - 1) - lzcount(x | 1);
+        return ((sizeof(unsigned long) * CHAR_BIT) - 1) - lzcount(x | 1);
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long long logfloor2(unsigned long long x) noexcept {
-        return (ULLONG_BIT - 1) - lzcount(x | 1);
+        return ((sizeof(unsigned long long) * CHAR_BIT) - 1) - lzcount(x | 1);
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned int ceil2(unsigned int x) noexcept {
-        return (x > 1) ? (1u << (UINT_BIT - lzcount(x - 1))) : x;
+        return (x > 1) ? (1u << ((sizeof(unsigned int) * CHAR_BIT) - lzcount(x - 1))) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long ceil2(unsigned long x) noexcept {
-        return (x > 1) ? (1ul << (ULONG_BIT - lzcount(x - 1))) : x;
+        return (x > 1) ? (1ul << ((sizeof(unsigned long) * CHAR_BIT) - lzcount(x - 1))) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long long ceil2(unsigned long long x) noexcept {
-        return (x > 1) ? (1ull << (ULLONG_BIT - lzcount(x - 1))) : x;
+        return (x > 1) ? (1ull << ((sizeof(unsigned long long) * CHAR_BIT) - lzcount(x - 1))) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned int floor2(unsigned int x) noexcept {
-        return static_cast<unsigned int>(x > 0) << ((UINT_BIT - 1) - lzcount(x | 1));
+        return static_cast<unsigned int>(x > 0) << (((sizeof(unsigned int) * CHAR_BIT) - 1) - lzcount(x | 1));
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long floor2(unsigned long x) noexcept {
-        return static_cast<unsigned long>(x > 0) << ((ULONG_BIT - 1) - lzcount(x | 1));
+        return static_cast<unsigned long>(x > 0) << (((sizeof(unsigned long) * CHAR_BIT) - 1) - lzcount(x | 1));
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long long floor2(unsigned long long x) noexcept {
-        return static_cast<unsigned long long>(x > 0) << ((ULLONG_BIT - 1) - lzcount(x | 1));
+        return static_cast<unsigned long long>(x > 0) << (((sizeof(unsigned long long) * CHAR_BIT) - 1) - lzcount(x | 1));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool addition_overflow(unsigned int x, unsigned int y) noexcept {
-        return (logceil2(x) >= UINT_BIT) || (logceil2(y) >= UINT_BIT);
+        return (logceil2(x) >= (sizeof(unsigned int) * CHAR_BIT)) || (logceil2(y) >= (sizeof(unsigned int) * CHAR_BIT));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool addition_overflow(unsigned long x, unsigned long y) noexcept {
-        return (logceil2(x) >= ULONG_BIT) || (logceil2(y) >= ULONG_BIT);
+        return (logceil2(x) >= (sizeof(unsigned long) * CHAR_BIT)) || (logceil2(y) >= (sizeof(unsigned long) * CHAR_BIT));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool addition_overflow(unsigned long long x, unsigned long long y) noexcept {
-        return (logceil2(x) >= ULLONG_BIT) || (logceil2(y) >= ULLONG_BIT);
+        return (logceil2(x) >= (sizeof(unsigned long long) * CHAR_BIT)) || (logceil2(y) >= (sizeof(unsigned long long) * CHAR_BIT));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool multiplication_overflow(unsigned int x, unsigned int y) noexcept {
-        return (logceil2(x) + logceil2(y)) > UINT_BIT;
+        return (logceil2(x) + logceil2(y)) > (sizeof(unsigned int) * CHAR_BIT);
     }
 
     inline UPALWAYSINLINE UPPURE
     bool multiplication_overflow(unsigned long x, unsigned long y) noexcept {
-        return (logceil2(x) + logceil2(y)) > ULONG_BIT;
+        return (logceil2(x) + logceil2(y)) > (sizeof(unsigned long) * CHAR_BIT);
     }
 
     inline UPALWAYSINLINE UPPURE
     bool multiplication_overflow(unsigned long long x, unsigned long long y) noexcept {
-        return (logceil2(x) + logceil2(y)) > ULLONG_BIT;
+        return (logceil2(x) + logceil2(y)) > (sizeof(unsigned long long) * CHAR_BIT);
     }
 }
 

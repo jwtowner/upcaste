@@ -52,7 +52,7 @@ namespace up { namespace test
         thread_local test_error* current_failure;
 #endif
 
-        bool UPCDECL redirect_assertion_handler(char const* file, long line, char const* condition, char const* message) {
+        bool UPCDECL redirect_assertion_handler(char const* file, long line, char const* condition) {
 #if (UP_PLATFORM == UP_PLATFORM_WINDOWS)
             if (::IsDebuggerPresent()) {
                 ::DebugBreak();
@@ -60,9 +60,9 @@ namespace up { namespace test
 #endif
 
 #ifndef UP_NO_EXCEPTIONS
-            throw test_error(file, line, condition, message);
+            throw test_error(file, line, condition);
 #else
-            current_failure = malloc_construct<test_error>(file, line, condition, message);
+            current_failure = malloc_construct<test_error>(file, line, condition);
             longjmp(current_jump_buffer, 1);
 #endif
         }

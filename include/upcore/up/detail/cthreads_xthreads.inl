@@ -31,27 +31,18 @@
 
 #include <thr/xthreads.h>
 
-#ifndef ONCE_FLAG_INIT
-#   define ONCE_FLAG_INIT _ONCE_FLAG_INIT
-#endif
-
-#ifndef TSS_DTOR_ITERATIONS
-#   define TSS_DTOR_ITERATIONS _TSS_DTOR_ITERATIONS
-#endif
+#define ONCE_FLAG_INIT _ONCE_FLAG_INIT
+#define TSS_DTOR_ITERATIONS _TSS_DTOR_ITERATIONS
 
 namespace up
 {
-    //
-    // threads
-    //
-
-    typedef ::_Thrd_t thrd_t;
-    typedef ::_Thrd_start_t thrd_start_t;
     constexpr int thrd_success = ::_Thrd_success;
     constexpr int thrd_nomem = ::_Thrd_nomem;
 	constexpr int thrd_timedout = ::_Thrd_timedout;
     constexpr int thrd_busy = ::_Thrd_busy;
     constexpr int thrd_error = ::_Thrd_error;
+    typedef ::_Thrd_t thrd_t;
+    typedef ::_Thrd_start_t thrd_start_t;
     inline UPALWAYSINLINE int thrd_create(thrd_t* thr, thrd_start_t func, void* arg) noexcept { return ::_Thrd_create(thr, func, arg); }
     inline UPALWAYSINLINE int thrd_detach(thrd_t thr) noexcept { return ::_Thrd_detach(thr); }
     inline UPALWAYSINLINE int thrd_join(thrd_t thr, int* res) noexcept { return ::_Thrd_join(thr, res); }
@@ -63,32 +54,20 @@ namespace up
     inline UPALWAYSINLINE void thrd_sleep(timespec const* duration) noexcept { ::_Thrd_sleep(reinterpret_cast<xtime const*>(duration)); }
     extern LIBUPCOREAPI int thrd_sleep(timespec const* duration, timespec* remaining) noexcept;
 
-    //
-    // once flag
-    //
-
     typedef ::_Once_flag once_flag;
     inline UPALWAYSINLINE void call_once(once_flag* flag, void (UPCDECL *func)(void)) noexcept { ::_Call_once(flag, func); }
 
-	//
-    // mutexes
-    //
-
-    typedef ::_Mtx_t mtx_t;
     constexpr int mtx_plain = ::_Mtx_plain;
 	constexpr int mtx_try = ::_Mtx_try;
 	constexpr int mtx_timed = ::_Mtx_timed;
 	constexpr int mtx_recursive = ::_Mtx_recursive;
+    typedef ::_Mtx_t mtx_t;
     inline UPALWAYSINLINE void mtx_destroy(mtx_t* mtx) noexcept { ::_Mtx_destroy(mtx); }
     inline UPALWAYSINLINE int mtx_init(mtx_t* mtx, int type) noexcept { return ::_Mtx_init(mtx, type); }
     inline UPALWAYSINLINE int mtx_lock(mtx_t* mtx) noexcept { return ::_Mtx_lock(mtx); }
     inline UPALWAYSINLINE int mtx_trylock(mtx_t* mtx) noexcept { return ::_Mtx_trylock(mtx); }
     inline UPALWAYSINLINE int mtx_timedlock(mtx_t* UPRESTRICT mtx, timespec const* UPRESTRICT ts) noexcept { return ::_Mtx_timedlock(mtx, reinterpret_cast<xtime const*>(ts)); }
     inline UPALWAYSINLINE int mtx_unlock(mtx_t* mtx) noexcept { return ::_Mtx_unlock(mtx); }
-
-    //
-    // condition variables
-    //
 
     typedef ::_Cnd_t cnd_t;
     inline UPALWAYSINLINE void cnd_destroy(cnd_t* cond) noexcept { ::_Cnd_destroy(cond); }
@@ -97,10 +76,6 @@ namespace up
     inline UPALWAYSINLINE int cnd_signal(cnd_t* cond) noexcept { return ::_Cnd_signal(cond); }
     inline UPALWAYSINLINE int cnd_wait(cnd_t* UPRESTRICT cond, mtx_t* UPRESTRICT mtx) noexcept { return ::_Cnd_wait(cond, mtx); }
     inline UPALWAYSINLINE int cnd_timedwait(cnd_t* UPRESTRICT cond, mtx_t* UPRESTRICT mtx, timespec const* UPRESTRICT ts) noexcept { return ::_Cnd_timedwait(cond, mtx, reinterpret_cast<xtime const*>(ts)); }
-
-	//
-    // thread specific storage
-    //
 
     typedef ::_Tss_t tss_t;
     typedef ::_Tss_dtor_t tss_dtor_t;

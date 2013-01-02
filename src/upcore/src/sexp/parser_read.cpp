@@ -28,6 +28,30 @@
 
 namespace up { namespace sexp
 {
+    namespace
+    {
+        struct UPHIDDEN scan_unmatched_lists
+        {
+            parser* par;
+
+            UPALWAYSINLINE
+            scan_unmatched_lists(parser* p) noexcept
+            : par(p) {
+            }
+
+            UPALWAYSINLINE
+            void operator()(parser_token* pt) noexcept {
+                char text[16];
+                assert(pt->tok.length < 15);
+                memcpy(text, pt->tok.text, pt->tok.length);
+                text[pt->tok.length] = '\0';
+                par->prev_column = pt->tok.column;
+                par->prev_line = pt->tok.line;
+                parser_error(par, "unmatched list opening '%s'", text);
+            }
+        };
+    }
+
     LIBUPCOREAPI
     int parser_read(parser* UPRESTRICT par, token* UPRESTRICT tok) noexcept {
         allocator* alloc;
@@ -68,15 +92,7 @@ namespace up { namespace sexp
                 assert(tok->type == token_none);
                 if (!slist_is_empty(&par->open_stack)) {
                     parser_error(par, "premature end of file");
-                    slist_foreach<parser_token, &parser_token::node>(&par->open_stack, [=] (parser_token* pt) {
-                        char text[16];
-                        assert(pt->tok.length < 15);
-                        memcpy(text, pt->tok.text, pt->tok.length);
-                        text[pt->tok.length] = '\0';
-                        par->prev_column = pt->tok.column;
-                        par->prev_line = pt->tok.line;
-                        parser_error(par, "unmatched list opening '%s'", text);
-                    });
+                    slist_foreach<parser_token, &parser_token::node>(&par->open_stack, scan_unmatched_lists(par));
                 }
                 retval = sexp_eof;
                 break;
@@ -93,8 +109,7 @@ namespace up { namespace sexp
                 else {
                     token_node = slist_cast<parser_token*>(node, &parser_token::node);
                     if (token_node->tok.list_type == tok->list_type) {
-                        slist_unlink(&par->open_stack, node);
-                        alloc->deallocate(token_node, sizeof(parser_token));
+                        slist_unlink_deallocate<parser_token, &parser_token::node>(&par->open_stack, node, alloc);
                     }
                     else {
                         if (token_node->tok.list_type == list_parenthesis) {

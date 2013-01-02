@@ -69,23 +69,23 @@ local CommonGCC = {
 			{ "-fomit-frame-pointer", "-s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
 		},
 		PROGOPTS = {
-            		"-fabi-version=6",
+            "-fabi-version=6",
         }
 	},
 }
 
 Build {
-	Configs = {
+    Configs = {
 		Config {
 			Name = "linux-gcc",
 			Inherit = CommonGCC,
 			DefaultOnHost = "linux",
+            Env = { CXXOPTS = { "-D_GNU_SOURCE" } },
 			Tools = { "gcc" },
 		},
 		Config {
 			Name = "ios-gcc",
 			Inherit = CommonGCC,
-			DefaultOnHost = "ios",
 			Tools = { "gcc-osx" },
 		},
 		Config {
@@ -101,7 +101,6 @@ Build {
 		},
 		Config {
 			Name = "win64-msvc",
-			DefaultOnHost = "windows",
 			Tools = { "msvc"; TargetArch = "x64" },
 		},
 	},
@@ -119,54 +118,56 @@ Build {
 	},
 	DefaultSubVariant = "static",
 	Units = function()
-		local cxx_file_filters = {
-			{ Pattern = "/gcc/"; Config = "*-gcc-*" },
-			{ Pattern = "/msvc/"; Config = "*-mscv-*" },
-			{ Pattern = "/linux/"; Config = "linux-*" },
-			{ Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
-			{ Pattern = "/ios/"; Config = "ios-*" },
-			{ Pattern = "/macosx/"; Config = "macosx-*" },
-			{ Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
-			{ Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
-		}
-
 		local function CXXSourceGlob(dir)
-			return FGlob { Dir = dir, Extensions = { "*.cpp" }, Filters = cxx_file_filters }
+			return FGlob {
+                Dir = dir,
+                Extensions = { ".cpp" },
+                Filters = {
+                    { Pattern = "/gcc/"; Config = "*-gcc-*" },
+        			{ Pattern = "/msvc/"; Config = "*-mscv-*" },
+        			{ Pattern = "/linux/"; Config = "linux-*" },
+        			{ Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
+        			{ Pattern = "/ios/"; Config = "ios-*" },
+        			{ Pattern = "/macosx/"; Config = "macosx-*" },
+        			{ Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
+        			{ Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
+                }
+            }
 		end
-		
-		StaticLibrary {
+
+		local upcore = StaticLibrary {
 			Name = "upcore",
 			Env = { CPPPATH = { "include/upcore" }, },
 			Sources = { CXXSourceGlob "src/upcore/src" },
 		}
 
-		StaticLibrary {
+		local uptest = StaticLibrary {
 			Name = "uptest",
 			Env = { CPPPATH = { "include/upcore", "include/uptest" }, },
 			Sources = { CXXSourceGlob "src/uptest/src" },
 		}
 
-		Program {
+		local upcore_tests = Program {
 			Name = "upcore_tests",
-			Depends = { "uptest", "upcore" },
+			Depends = { uptest, upcore },
 			Env = {
 				CPPPATH = { "include/upcore", "include/uptest" },
-				LIBS = { "c", "stdc++", "pthread", "rt", "dispatch" },
+				LIBS = { "c", "stdc++", "pthread", "rt" },
 			},
 			Sources = { "src/uptest/driver/console_driver.cpp", CXXSourceGlob "src/upcore/test" },
 		}
 		
-		Program {
+		local upcore_bench = Program {
 			Name = "upcore_bench",
-			Depends = { "uptest", "upcore" },
+			Depends = { uptest, upcore },
 			Env = {
 				CPPPATH = { "include/upcore", "include/uptest" },
-				LIBS = { "c", "stdc++", "pthread", "rt", "dispatch" },
+				LIBS = { "c", "stdc++", "pthread", "rt" },
 			},
 			Sources = { "src/uptest/driver/console_driver.cpp", CXXSourceGlob "src/upcore/bench" },
 		}
 
-		Default "upcore_tests"
+		Default(upcore_tests)
 	end,
 }
 

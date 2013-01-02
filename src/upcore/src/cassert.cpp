@@ -32,29 +32,11 @@ namespace up
     namespace
     {
         thread_local assert_handler tls_handler = nullptr;
-
-        bool do_report_assertion(char const* filename, long line, char const* condition, char const* message) {
-            if (tls_handler) {
-                return (*tls_handler)(filename, line, condition, message);
-            }
-
-            return default_assert_handler(filename, line, condition, message);
-        }
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    bool UPCDECL default_assert_handler(char const* filename, long line, char const* condition, char const* message) {
-        fast_fprintf(stderr, "ASSERTION FAILURE [%s(%ld)]:\n\n", filename, line);
-
-        if (condition != 0) {
-            fast_fprintf(stderr, "Condition: '%s'\n", condition);
-        }
-        
-        if (message != 0) {
-            fast_fprintf(stderr, "Message: %s\n", message);
-        }
-        
-        fputs("\n", stderr);
+    bool UPCDECL default_assert_handler(char const* filename, long line, char const* condition) {
+        fast_fprintf(stderr, "ASSERTION FAILURE [%s(%ld)] -- CONDITION: '%s'\n", filename, line, condition);
         return true;
     }
 
@@ -72,22 +54,11 @@ namespace up
 
     LIBUPCOREAPI UPNONNULLALL
     bool report_assertion(char const* filename, long line, char const* condition) {
-        return do_report_assertion(filename, line, condition, nullptr);
-    }
-    
-    LIBUPCOREAPI UPNONNULLALL
-    bool report_assertion(char const* filename, long line, char const* condition, char const* message, ...) {
-        char formatted[1024];
-        va_list args;
-
-        if (!message) {
-            return do_report_assertion(filename, line, condition, nullptr);
+        if (tls_handler) {
+            return (*tls_handler)(filename, line, condition);
         }
-        
-        va_start(args, message);
-        fast_vsnprintf(formatted, sizeof(formatted), message, args);
-        va_end(args);
-    
-        return do_report_assertion(filename, line, condition, formatted);
+        else {
+            return default_assert_handler(filename, line, condition);
+        }
     }
 }

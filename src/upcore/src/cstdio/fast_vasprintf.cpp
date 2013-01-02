@@ -25,6 +25,7 @@
 #include <up/cassert.hpp>
 #include <up/cstdarg.hpp>
 #include <up/cstdio.hpp>
+#include <up/cstdlib.hpp>
 
 namespace up
 {

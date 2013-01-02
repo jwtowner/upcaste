@@ -25,7 +25,8 @@
 #ifndef UP_LIST_HPP
 #define UP_LIST_HPP
 
-#include <up/cstddef.hpp>
+#include <up/allocator.hpp>
+#include <up/cstdint.hpp>
 
 namespace up
 {   
@@ -166,15 +167,26 @@ namespace up
         }
     }
     
-    template <class Node, list_node Node::* NodePtr, class Function>
+    template <class Node, list_node Node::* NodePtr, class Recycle>
     inline UPALWAYSINLINE
-    void list_erase(list_node* first, list_node* last, Function func) noexcept {
+    void list_erase(list_node* first, list_node* last, Recycle recycle) noexcept {
         first->prev->next = last;
         last->prev = first->prev;
         for (list_node* node = first, * next; node != last; node = next) {
             next = node->next;
             node->prev = node->next = node;
-            func(::up::list_cast<Node*>(node, NodePtr));
+            recycle(::up::list_cast<Node*>(node, NodePtr));
+        }
+    }
+
+    template <class Node, list_node Node::* NodePtr>
+    inline UPALWAYSINLINE
+    void list_erase_deallocate(list_node* first, list_node* last, allocator* alloc) noexcept {
+        first->prev->next = last;
+        last->prev = first->prev;
+        for (list_node* node = first, * next; node != last; node = next) {
+            next = node->next;
+            alloc->deallocate(::up::list_cast<Node*>(node, NodePtr), sizeof(Node));
         }
     }
 
@@ -183,10 +195,16 @@ namespace up
         ::up::list_erase(sentinel->next, sentinel);
     }
 
-    template <class Node, list_node Node::* NodePtr, class Function>
+    template <class Node, list_node Node::* NodePtr, class Recycle>
     inline UPALWAYSINLINE
-    void list_clear(list_node* sentinel, Function func) noexcept {
-        ::up::list_erase<Node, NodePtr>(sentinel->next, sentinel, func);
+    void list_clear(list_node* sentinel, Recycle recycle) noexcept {
+        ::up::list_erase<Node, NodePtr>(sentinel->next, sentinel, recycle);
+    }
+
+    template <class Node, list_node Node::* NodePtr>
+    inline UPALWAYSINLINE
+    void list_clear_deallocate(list_node* sentinel, allocator* alloc) noexcept {
+        ::up::list_erase_deallocate<Node, NodePtr>(sentinel->next, sentinel, alloc);
     }
 
     inline UPALWAYSINLINE
@@ -194,6 +212,14 @@ namespace up
         node->prev->next = node->next;
         node->next->prev = node->prev;
         node->prev = node->next = node;
+    }
+
+    template <class Node, list_node Node::* NodePtr>
+    inline UPALWAYSINLINE
+    void list_unlink_deallocate(list_node* node, allocator* alloc) noexcept {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        alloc->deallocate(::up::list_cast<Node*>(node, NodePtr), sizeof(Node));
     }
 
     inline UPALWAYSINLINE
@@ -336,7 +362,7 @@ namespace up
                 }
                 else {
                     list_node* next2 = first2->next;
-                    ::up::link_before(first1, first2);
+                    ::up::list_link_before(first1, first2);
                     first2 = next2;
                 }
             }

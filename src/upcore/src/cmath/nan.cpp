@@ -34,7 +34,7 @@ namespace up { namespace math
 {
     LIBUPCOREAPI UPNONNULLALL
     double nan(char const* tag) noexcept {
-#if (DBL_MANT_DIG == 53) && (DBL_RADIX == 2)
+#if (DBL_MANT_DIG == 53) && (FLT_RADIX == 2)
         ieee754_binary64 result;
         int64_t tag_value;
         

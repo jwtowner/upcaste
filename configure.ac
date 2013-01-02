@@ -146,6 +146,115 @@ AC_DEFUN(
 
 AC_MSG_NOTICE([------ Standard C/C++ Library Headers ------])
 
+# UP_HAS_STDCXX_ATOMIC_CXX11
+
+AC_MSG_CHECKING([for C++11 atomic compliance])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <atomic> ]],
+        [
+            using std::kill_dependency;
+            using std::memory_order;
+            using std::atomic_signal_fence;
+            using std::atomic_thread_fence;
+            using std::atomic;
+            using std::atomic_flag;
+            using std::atomic_bool;
+            using std::atomic_char;
+            using std::atomic_schar;
+            using std::atomic_uchar;
+            using std::atomic_short;
+            using std::atomic_ushort;
+            using std::atomic_int;
+            using std::atomic_uint;
+            using std::atomic_long;
+            using std::atomic_ulong;
+            using std::atomic_llong;
+            using std::atomic_ullong;
+            using std::atomic_char16_t;
+            using std::atomic_char32_t;
+            using std::atomic_wchar_t;
+            using std::atomic_int8_t;
+            using std::atomic_uint8_t;
+            using std::atomic_int16_t;
+            using std::atomic_uint16_t;
+            using std::atomic_int32_t;
+            using std::atomic_uint32_t;
+            using std::atomic_int64_t;
+            using std::atomic_uint64_t;
+            using std::atomic_int_least8_t;
+            using std::atomic_uint_least8_t;
+            using std::atomic_int_least16_t;
+            using std::atomic_uint_least16_t;
+            using std::atomic_int_least32_t;
+            using std::atomic_uint_least32_t;
+            using std::atomic_int_least64_t;
+            using std::atomic_uint_least64_t;
+            using std::atomic_int_fast8_t;
+            using std::atomic_uint_fast8_t;
+            using std::atomic_int_fast16_t;
+            using std::atomic_uint_fast16_t;
+            using std::atomic_int_fast32_t;
+            using std::atomic_uint_fast32_t;
+            using std::atomic_int_fast64_t;
+            using std::atomic_uint_fast64_t;
+            using std::atomic_intptr_t;
+            using std::atomic_uintptr_t;
+            using std::atomic_size_t;
+            using std::atomic_ptrdiff_t;
+            using std::atomic_intmax_t;
+            using std::atomic_uintmax_t;
+            using std::atomic_thread_fence;
+            using std::atomic_signal_fence;
+            using std::atomic_init;
+            using std::atomic_is_lock_free;
+            using std::atomic_store;
+            using std::atomic_store_explicit;
+            using std::atomic_load;
+            using std::atomic_load_explicit;
+            using std::atomic_exchange;
+            using std::atomic_exchange_explicit;
+            using std::atomic_compare_exchange_strong;
+            using std::atomic_compare_exchange_strong_explicit;
+            using std::atomic_compare_exchange_weak;
+            using std::atomic_compare_exchange_weak_explicit;
+            using std::atomic_fetch_add;
+            using std::atomic_fetch_add_explicit;
+            using std::atomic_fetch_sub;
+            using std::atomic_fetch_sub_explicit;
+            using std::atomic_fetch_or;
+            using std::atomic_fetch_or_explicit;
+            using std::atomic_fetch_xor;
+            using std::atomic_fetch_xor_explicit;
+            using std::atomic_fetch_and;
+            using std::atomic_fetch_and_explicit;
+            using std::atomic_flag_test_and_set;
+            using std::atomic_flag_test_and_set_explicit;
+            using std::atomic_flag_clear;
+            using std::atomic_flag_clear_explicit;            
+        ]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_STDCXX_ATOMIC_CXX11)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_STDCXX_TYPE_TRAITS_CXX11
+
+AC_MSG_CHECKING([for C++11 type_traits compliance])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <type_traits> ]],
+        [
+            using std::is_nothrow_copy_constructible;
+            using std::is_nothrow_copy_assignable;
+            using std::is_nothrow_move_constructible;
+            using std::is_nothrow_move_assignable;
+        ]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_STDCXX_TYPE_TRAITS_CXX11)],
+    [AC_MSG_RESULT(no)])
+
 # UP_HAS_STDC_INTTYPES_CXX11
 
 have_cinttypes_cxx11="no"
@@ -154,11 +263,13 @@ AC_CHECK_HEADER(
     [cinttypes],
     [AC_MSG_CHECKING([for cinttypes compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <cinttypes> ]],
             [
-                std::strtoimax("123", nullptr, 0);
-                std::strtoumax("123", nullptr, 0);
+                std::imaxabs(-5);
+                std::imaxdiv(1000, 50);
+                std::strtoimax("123", 0, 0);
+                std::strtoumax("123", 0, 0);
             ]
         )],
         [AC_MSG_RESULT(yes)
@@ -173,11 +284,13 @@ AS_IF([test "x${have_cinttypes_cxx11}" != "xyes"],
         [inttypes.h],
         [AC_MSG_CHECKING([for inttypes.h compliance])
         AC_COMPILE_IFELSE(
-            [AC_LANG_SOURCE(
+            [AC_LANG_PROGRAM(
                 [[ #include <inttypes.h> ]],
                 [
-                    strtoimax("123", nullptr, 0);
-                    strtoumax("123", nullptr, 0);
+                    imaxabs(-5);
+                    imaxdiv(1000, 50);
+                    strtoimax("123", 0, 0);
+                    strtoumax("123", 0, 0);
                 ]
             )],
             [AC_MSG_RESULT(yes)
@@ -190,7 +303,7 @@ AC_CHECK_HEADER(
     [clocale],
     [AC_MSG_CHECKING([for clocale compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <clocale> ]],
             [
                 std::setlocale(LC_ALL, "C");
@@ -213,7 +326,7 @@ AC_CHECK_HEADER(
     [cmath],
     [AC_MSG_CHECKING([for cmath compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <cmath> ]],
             [
                 std::acosh(1.0);
@@ -243,7 +356,7 @@ AS_IF([test "x${have_cmath_cxx11}" != "xyes"],
         [math.h],
         [AC_MSG_CHECKING([for math.h compliance])
         AC_COMPILE_IFELSE(
-            [AC_LANG_SOURCE(
+            [AC_LANG_PROGRAM(
                 [[ #include <math.h> ]],
                 [
                     acosh(1.0);
@@ -271,7 +384,7 @@ AC_CHECK_HEADER(
     [cstdalign],
     [AC_MSG_CHECKING([for cstdalign compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <cstdalign> ]],
             [
                 size_t const x = alignof(double);
@@ -288,7 +401,7 @@ AC_CHECK_HEADER(
     [cstdbool],
     [AC_MSG_CHECKING([for cstdbool compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <cstdbool> ]],
             [
                 bool x = true;
@@ -304,7 +417,7 @@ AC_CHECK_HEADER(
     [threads.h],
     [AC_MSG_CHECKING([for threads.h compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <threads.h> ]],
             [
                 thrd_yield();
@@ -320,13 +433,13 @@ AC_CHECK_HEADER(
     [ctime],
     [AC_MSG_CHECKING([for ctime compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <ctime> ]],
             [
                 std::clock();
                 std::difftime(std::time_t(), std::time_t());
-                std::mktime(NULL);
-                std::time(NULL);
+                std::mktime(0);
+                std::time(0);
             ]
         )],
         [AC_MSG_RESULT(yes)
@@ -340,13 +453,13 @@ AC_CHECK_HEADER(
     [cuchar],
     [AC_MSG_CHECKING([for cuchar compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [[ #include <cuchar> ]],
             [
-                std::mbrtoc16(NULL, NULL, 0, NULL);
-                std::mbrtoc32(NULL, NULL, 0, NULL);
-                std::c16rtomb(NULL, 0, NULL);
-                std::c32rtomb(NULL, 0, NULL);
+                std::mbrtoc16(0, 0, 0, 0);
+                std::mbrtoc32(0, 0, 0, 0);
+                std::c16rtomb(0, 0, 0);
+                std::c32rtomb(0, 0, 0);
             ]
         )],
         [AC_MSG_RESULT(yes)
@@ -359,13 +472,13 @@ AS_IF([test "x${have_cuchar_cxx11}" != "xyes"],
         [uchar.h],
         [AC_MSG_CHECKING([for uchar.h compliance])
         AC_COMPILE_IFELSE(
-            [AC_LANG_SOURCE(
+            [AC_LANG_PROGRAM(
                 [[ #include <uchar.h> ]],
                 [
-                    mbrtoc16(NULL, NULL, 0, NULL);
-                    mbrtoc32(NULL, NULL, 0, NULL);
-                    c16rtomb(NULL, 0, NULL);
-                    c32rtomb(NULL, 0, NULL);
+                    mbrtoc16(0, 0, 0, 0);
+                    mbrtoc32(0, 0, 0, 0);
+                    c16rtomb(0, 0, 0);
+                    c32rtomb(0, 0, 0);
                 ]
             )],
             [AC_MSG_RESULT(yes)
@@ -380,7 +493,7 @@ AC_CHECK_HEADER([cwctype])
 if [test "${ac_cv_header_cwchar+set}" = "set" -a "${ac_cv_header_cwctype+set}" = "set"] ; then
     AC_MSG_CHECKING([for wchar_t compliance])
     AC_COMPILE_IFELSE(
-        [AC_LANG_SOURCE(
+        [AC_LANG_PROGRAM(
             [
                 #include <cwctype>
                 #include <cwchar>
@@ -389,7 +502,7 @@ if [test "${ac_cv_header_cwchar+set}" = "set" -a "${ac_cv_header_cwctype+set}" =
             [
                 std::iswspace(L' ');
                 std::wcslen(L"hello");
-                std::wcstombs(NULL, NULL, 0);
+                std::wcstombs(0, 0, 0);
             ]
         )],
         [AC_MSG_RESULT(yes)
@@ -401,13 +514,13 @@ fi
 # Standard C/C++ Library Features
 #############################################################################
 
-AC_MSG_NOTICE([------ Standard C/C++ Library Functions ------])
+AC_MSG_NOTICE([------ Standard C/C++ Library Features ------])
 
 # UP_HAS_STDC_ALLOCA
 
 AC_MSG_CHECKING([for alloca])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdlib> ]],
         [[ void* p = alloca(256); ]]
     )],
@@ -419,7 +532,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for aligned_alloc])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdlib> ]],
         [[ void* p = aligned_alloc(16, 256); ]]
     )],
@@ -427,11 +540,24 @@ AC_COMPILE_IFELSE(
     AC_DEFINE(UP_HAS_STDC_ALIGNED_ALLOC)],
     [AC_MSG_RESULT(no)])
 
+# UP_HAS_STDC_MAX_ALIGN
+
+AC_MSG_CHECKING([for max_align_t])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <cstddef> ]],
+        [[ std::max_align_t x; ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_STDC_MAX_ALIGN)],
+    [AC_MSG_RESULT(no)])
+
+
 # UP_HAS_STDC_SNPRINTF
 
 AC_MSG_CHECKING([for snprintf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [[ snprintf(0, 0, "foo %d bar", 42); ]]
     )],
@@ -443,7 +569,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strtof])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [[ strtof("44e+12", 0); ]]
     )],
@@ -455,7 +581,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strtod])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [[ strtod("44e+12", 0); ]]
     )],
@@ -467,7 +593,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strtold])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [[ strtold("44e+12", 0); ]]
     )],
@@ -479,7 +605,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strtoll])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [[ strtoll("44", 0, 0); ]]
     )],
@@ -491,7 +617,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strtoull])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [[ strtoull("44", 0, 0); ]]
     )],
@@ -503,7 +629,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for at_quick_exit and quick_exit])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdlib> ]],
         [
             at_quick_exit(NULL);
@@ -518,7 +644,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for timespec_get])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <ctime> ]],
         [[ timespec_get(0, 0); ]]
     )],
@@ -531,7 +657,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for _Exit])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdlib> ]],
         [[ _Exit(EXIT_SUCCESS); ]]
     )],
@@ -543,7 +669,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wcstof])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
         [[ wcstof(L"44e+12", 0); ]]
     )],
@@ -555,7 +681,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wcstod])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
         [[ wcstod(L"44e+12", 0); ]]
     )],
@@ -567,7 +693,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wcstold])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
         [[ wcstold(L"44e+12", 0); ]]
     )],
@@ -579,7 +705,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wcstoll])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
         [[ wcstoll(L"44", 0, 0); ]]
     )],
@@ -591,7 +717,7 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wcstoull])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
         [[ wcstoull(L"44", 0, 0); ]]
     )],
@@ -603,14 +729,14 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for vfscanf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [
             #include <cstdarg>
             #include <cstdio>
         ],
         [
             va_list ap;
-            vfscanf(0, "", ap);
+            vfscanf(0, "upcaste", ap);
         ]
     )],
     [AC_MSG_RESULT(yes)
@@ -621,14 +747,14 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for vscanf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [
             #include <cstdarg>
             #include <cstdio>
         ],
         [
             va_list ap;
-            vscanf("", ap);
+            vscanf("upcaste", ap);
         ]
     )],
     [AC_MSG_RESULT(yes)
@@ -639,14 +765,14 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for vsscanf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [
             #include <cstdarg>
             #include <cstdio>
         ],
         [
             va_list ap;
-            vsscanf("", "", ap);
+            vsscanf("upcaste", "upcaste", ap);
         ]
     )],
     [AC_MSG_RESULT(yes)
@@ -657,14 +783,14 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for vsnprintf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [
             #include <cstdarg>
             #include <cstdio>
         ],
         [
             va_list ap;
-            vsnprintf(0, 0, "", ap);
+            vsnprintf(0, 0, "upcaste", ap);
         ]
     )],
     [AC_MSG_RESULT(yes)
@@ -677,32 +803,47 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_NOTICE([------ POSIX Base Specification ------])
 
-# _POSIX_C_SOURCE
-
-AC_DEFINE(_POSIX_C_SOURCE, 200809L)
-
 # UP_HAS_POSIX_THREADS
 
-AC_MSG_CHECKING([for pthreads])
+AC_MSG_CHECKING([for posix threads])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <pthread.h> ]],
-        [[ pthread_create(NULL, NULL, NULL, NULL); ]]
+        [[ pthread_create(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_THREADS)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_LOCALE
+
+AC_MSG_CHECKING([for posix locale extensions])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [
+            #include <clocale>
+        ],
+        [
+            newlocale(LC_ALL, "C", 0);
+            freelocale(0);
+            uselocale(0);
+            duplocale(0);
+        ]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_LOCALE)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_ASPRINTF
 
 AC_MSG_CHECKING([for asprintf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [
             #include <cstdarg>
             #include <cstdio>
         ],
-        [[ asprintf(NULL, ""); ]]
+        [[ asprintf(0, "upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_ASPRINTF)],
@@ -712,14 +853,14 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for vasprintf])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [
             #include <cstdarg>
             #include <cstdio>
         ],
         [
             va_list ap;
-            vasprintf(NULL, "", ap);
+            vasprintf(0, "upcaste", ap);
         ]
     )],
     [AC_MSG_RESULT(yes)
@@ -730,9 +871,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for fseeko])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
-        [[ fseeko(NULL, 0, SEEK_SET); ]]
+        [[ fseeko(0, 0, SEEK_SET); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_FSEEKO)],
@@ -742,9 +883,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for ftello])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
-        [[ ftello(NULL); ]]
+        [[ ftello(0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_FTELLO)],
@@ -754,9 +895,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for getdelim])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
-        [[ getdelim(NULL, NULL, 0, NULL); ]]
+        [[ getdelim(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_GETDELIM)],
@@ -766,9 +907,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for getline])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
-        [[ getline(NULL, NULL, NULL); ]]
+        [[ getline(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_GETLINE)],
@@ -778,9 +919,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for getwdelim])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ getwdelim(NULL, NULL, 0, NULL); ]]
+        [[ getwdelim(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_GETWDELIM)],
@@ -790,40 +931,21 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for getwline])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ getwline(NULL, NULL, NULL); ]]
+        [[ getwline(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_GETWLINE)],
-    [AC_MSG_RESULT(no)])
-
-# UP_HAS_POSIX_LOCALE
-
-AC_MSG_CHECKING([for posix locale extensions])
-AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
-        [
-            #include <clocale>
-        ],
-        [
-            newlocale(LC_ALL, "C", NULL);
-            freelocale(NULL);
-            uselocale(NULL);
-            duplocale(NULL);
-        ]
-    )],
-    [AC_MSG_RESULT(yes)
-    AC_DEFINE(UP_HAS_POSIX_LOCALE)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_MEMALIGN
 
 AC_MSG_CHECKING([for memalign])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdlib> ]],
-        [[ int r = posix_memalign(NULL, 0, 0); ]]
+        [[ int r = posix_memalign(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_MEMALIGN)],
@@ -833,11 +955,11 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for fmemopen])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstdio> ]],
         [ 
-            fmemopen(NULL, 0, "wb");
-            open_memstream(NULL, NULL);
+            fmemopen(0, 0, "wb");
+            open_memstream(0, 0);
         ]
     )],
     [AC_MSG_RESULT(yes)
@@ -848,9 +970,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for memccpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ memccpy(NULL, NULL, 0, 0); ]]
+        [[ memccpy(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_MEMCCPY)],
@@ -860,33 +982,21 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wmemccpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ wmemccpy(NULL, NULL, 0, 0); ]]
+        [[ wmemccpy(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_WMEMCCPY)],
-    [AC_MSG_RESULT(no)])
-
-# UP_HAS_POSIX_SSIZE_T
-
-AC_MSG_CHECKING([for ssize_t])
-AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
-        [[ #include <cstddef> ]],
-        [[ ssize_t x = -1; ]]
-    )],
-    [AC_MSG_RESULT(yes)
-    AC_DEFINE(UP_HAS_POSIX_SSIZE_T)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_STPCPY
 
 AC_MSG_CHECKING([for stpcpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ stpcpy(NULL, NULL); ]]
+        [[ stpcpy(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STPCPY)],
@@ -896,9 +1006,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for stpncpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ stpncpy(NULL, NULL, 0); ]]
+        [[ stpncpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STPNCPY)],
@@ -908,9 +1018,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strdup])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ strdup(NULL); ]]
+        [[ strdup(0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STRDUP)],
@@ -918,28 +1028,35 @@ AC_COMPILE_IFELSE(
 
 # UP_HAS_POSIX_STRCASECMP
 
-AC_MSG_CHECKING([for strcasecmp and strncasecmp])
+AC_MSG_CHECKING([for strcasecmp])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
-        [
-            #include <cstring>
-        ],
-        [
-            strcasecmp("hello world", "hello world");
-            strncasecmp("hello world", "HELLO world", 10);
-        ]
+    [AC_LANG_PROGRAM(
+        [[ #include <cstring> ]],
+        [[ strcasecmp("upcaste", "upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STRCASECMP)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_STRNCASECMP
+
+AC_MSG_CHECKING([for strncasecmp])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <cstring> ]],
+        [[ strncasecmp("upcaste", "upcaste", 7); ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_STRNCASECMP)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_STRNLEN
 
 AC_MSG_CHECKING([for strnlen])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ strnlen("hello world", 11); ]]
+        [[ strnlen("upcaste", 7); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STRNLEN)],
@@ -949,45 +1066,45 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strtok_r]) 
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ strtok_r(NULL, NULL, NULL); ]]
+        [[ strtok_r(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STRTOK_R)],
     [AC_MSG_RESULT(no)])
 
-# UP_HAS_POSIX_WCSCPY
+# UP_HAS_POSIX_WCPCPY
 
-AC_MSG_CHECKING([for wcscpy])
+AC_MSG_CHECKING([for wcpcpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ wcscpy(NULL, NULL); ]]
+        [[ wcpcpy(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
-    AC_DEFINE(UP_HAS_POSIX_WCSCPY)],
+    AC_DEFINE(UP_HAS_POSIX_WCPCPY)],
     [AC_MSG_RESULT(no)])
 
-# UP_HAS_POSIX_WCSNCPY
+# UP_HAS_POSIX_WCPNCPY
 
-AC_MSG_CHECKING([for wcsncpy])
+AC_MSG_CHECKING([for wcpncpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ wcsncpy(NULL, NULL, 0); ]]
+        [[ wcpncpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
-    AC_DEFINE(UP_HAS_POSIX_WCSNCPY)],
+    AC_DEFINE(UP_HAS_POSIX_WCPNCPY)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_WCSDUP
 
 AC_MSG_CHECKING([for wcsdup])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ wcsdup(NULL); ]]
+        [[ wcsdup(0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_WCSDUP)],
@@ -995,26 +1112,33 @@ AC_COMPILE_IFELSE(
     
 # UP_HAS_POSIX_WCSCASECMP
 
-AC_MSG_CHECKING([for wcscasecmp and wcsncasecmp])
+AC_MSG_CHECKING([for wcscasecmp])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
-        [
-            #include <cwchar>
-        ],
-        [
-            wcscasecmp(L"hello world", L"hello world");
-            wcsncasecmp(L"hello world", L"HELLO world", 10);
-        ]
+    [AC_LANG_PROGRAM(
+        [[ #include <cwchar> ]],
+        [[ wcscasecmp(L"upcaste", L"upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_WCSCASECMP)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_WCSNCASECMP
+
+AC_MSG_CHECKING([for wcsncasecmp])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <cwchar> ]],
+        [[ wcsncasecmp(L"upcaste", L"upcaste", 7); ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_WCSNCASECMP)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_WCSNLEN
 
 AC_MSG_CHECKING([for wcsnlen])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
         [[ wcsnlen(L"hello world", 11); ]]
     )],
@@ -1032,9 +1156,9 @@ AC_MSG_NOTICE([------ GNU C Library Functions ------])
 
 AC_MSG_CHECKING([for mempcpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ mempcpy(NULL, NULL, 0); ]]
+        [[ mempcpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_GNU_MEMPCPY)],
@@ -1044,9 +1168,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wmempcpy])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ wmempcpy(NULL, NULL, 0); ]]
+        [[ wmempcpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_GNU_WMEMPCPY)],
@@ -1056,9 +1180,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for strndup])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
-        [[ strndup(NULL); ]]
+        [[ strndup(0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_GNU_STRNDUP)],
@@ -1068,9 +1192,9 @@ AC_COMPILE_IFELSE(
 
 AC_MSG_CHECKING([for wcsndup])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cwchar> ]],
-        [[ wcsndup(NULL, 0); ]]
+        [[ wcsndup(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_GNU_WCSNDUP)],
@@ -1086,12 +1210,12 @@ AC_MSG_NOTICE([------ BSD C Library Functions ------])
 
 AC_MSG_CHECKING([for memset_pattern])
 AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE(
+    [AC_LANG_PROGRAM(
         [[ #include <cstring> ]],
         [
-            memset_pattern4(NULL, NULL, 0);
-            memset_pattern8(NULL, NULL, 0);
-            memset_pattern16(NULL, NULL, 0);
+            memset_pattern4(0, 0, 0);
+            memset_pattern8(0, 0, 0);
+            memset_pattern16(0, 0, 0);
         ]
     )],
     [AC_MSG_RESULT(yes)

@@ -27,7 +27,7 @@
 #ifndef UP_NO_EXCEPTIONS
 
 #include <up/cassert.hpp>
-#include <exception>
+#include <new>
 
 namespace up
 {

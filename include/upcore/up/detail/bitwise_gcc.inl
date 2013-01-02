@@ -32,36 +32,49 @@
 namespace up
 {
     inline UPALWAYSINLINE UPPURE
-    unsigned int bitscanforward(unsigned int x) noexcept {
+    unsigned int tzcount(unsigned int x) noexcept {
         return __builtin_ctz(x);
-    }
-
-    inline UPALWAYSINLINE UPPURE
-    unsigned int bitscanreverse(unsigned int x) noexcept {
-        return __builtin_clz(x);
     }
     
     inline UPALWAYSINLINE UPPURE
-    unsigned long bitscanforward(unsigned long x) noexcept {
+    unsigned long tzcount(unsigned long x) noexcept {
         return __builtin_ctzl(x);
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long bitscanreverse(unsigned long x) noexcept {
-        return __builtin_clzl(x);
-    }
-    
-#ifdef UP_ARCHITECTURE_64BIT
-    inline UPALWAYSINLINE UPPURE
-    unsigned long long bitscanforward(unsigned long long x) noexcept {
+    unsigned long long tzcount(unsigned long long x) noexcept {
         return __builtin_ctzll(x);
     }
-    
+
     inline UPALWAYSINLINE UPPURE
-    unsigned long long bitscanreverse(unsigned long long x) noexcept {
+    unsigned int lzcount(unsigned int x) noexcept {
+        return __builtin_clz(x);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long lzcount(unsigned long x) noexcept {
+        return __builtin_clzl(x);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long lzcount(unsigned long long x) noexcept {
         return __builtin_clzll(x);
     }
-#endif
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned int popcount(unsigned int x) noexcept {
+        return __builtin_popcount(x);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long popcount(unsigned long x) noexcept {
+        return __builtin_popcountl(x);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long popcount(unsigned long long x) noexcept {
+        return __builtin_popcountll(x);
+    }
 }
 
 #endif

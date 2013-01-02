@@ -37,7 +37,7 @@ namespace up
 {
     using ::timespec;
 
-#if defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0) 
+#if (defined(_POSIX_TIMERS) && (_POSIX_TIMERS > 0)) || defined(__USE_POSIX199309)
     using ::clockid_t;
     using ::clock_getres;
     using ::clock_gettime;
@@ -46,12 +46,13 @@ namespace up
 #   error "No POSIX time extensions compatability layer for target platform."
 #endif
 
-#ifdef UP_HAS_STDC_TIMESPEC_GET
-    using ::timespec_get;
-#else
-    inline UPALWAYSINLINE int timespec_get(timespec* ts, int) noexcept {
+#ifndef UP_HAS_STDC_TIMESPEC_GET
+    inline UPALWAYSINLINE
+    int timespec_get(timespec* ts, int) noexcept {
         return clock_gettime(CLOCK_REALTIME, ts);
     }
+#else
+    using ::timespec_get;
 #endif
 }
 

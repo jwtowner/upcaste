@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#ifndef UP_HAS_STDC_GETLINE
+#ifndef UP_HAS_POSIX_GETLINE
 
 #define NAME getline
 #define GETDELIM getdelim

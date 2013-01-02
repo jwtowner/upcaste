@@ -42,8 +42,8 @@ namespace up { namespace sexp
         ++par->error_count;
 
         if (par->error_handler) {
-            va_start(args, message);
-            verify(fast_vsnprintf(message, sizeof(message), format, args) < sizeof(message));
+            va_start(args, format);
+            verify(fast_vsnprintf(message, sizeof(message), format, args) < static_cast<int>(sizeof(message)));
             va_end(args);
 
             filename = par->filename;

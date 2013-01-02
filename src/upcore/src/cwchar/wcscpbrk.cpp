@@ -36,7 +36,7 @@ namespace up
         assert(s && reject);
 
         for ( ; *s; ++s) {
-            wint_t const c = *s;
+            wchar_t const c = *s;
             bool match = false;
 
             for (wchar_t const* r = reject; *r; ++r) {

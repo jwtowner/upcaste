@@ -40,23 +40,20 @@ namespace up { namespace sexp
 
         switch (tok->type) {
         case token_boolean:
-            *result = (ITYPE)tok->bool_value;
+            *result = static_cast<ITYPE>(tok->bool_value);
             retval = sexp_success;
             break;
 
         case token_character:
+#if UINT_LEAST32_MAX > MAX_VALUE
             if (tok->char_value > MAX_VALUE) {
                 *result = MAX_VALUE;
                 retval = sexp_overflow;
+                break;
             }
-            else if (tok->char_value < MIN_VALUE) {
-                *result = MIN_VALUE;
-                retval = sexp_overflow;
-            }
-            else {
-                *result = (ITYPE)tok->char_value;
-                retval = sexp_success;
-            }
+#endif
+            *result = static_cast<ITYPE>(tok->char_value);
+            retval = sexp_success;
             break;
 
         case token_integer:
@@ -75,7 +72,7 @@ namespace up { namespace sexp
                 retval = sexp_overflow;
             }
             else {
-                *result = (ITYPE)real_value;
+                *result = static_cast<ITYPE>(real_value);
             }
             break;
                 
