@@ -31,7 +31,7 @@
 #ifdef UP_HAS_STDCXX_ATOMIC_CXX11
 #   include <up/detail/cstdatomic_cxx11.inl>
 #else
-#   include <up/detail/cstdatomic_default.inl>
+#   include <up/detail/cstdatomic_generic.inl>
 #endif
 
 #ifndef ATOMIC_COUNT_INIT
@@ -42,8 +42,7 @@ namespace up
 {
     template <class T>
     inline UPALWAYSINLINE
-    void sink_dependency(T const& value)
-    UPNOEXCEPT(std::is_nothrow_copy_constructible<T>::value) {
+    void sink_dependency(T const& value) UPNOEXCEPT(is_nothrow_copy_constructible<T>::value) {
         T volatile sinkhole(value);
         UPIGNORE(sinkhole);
     }

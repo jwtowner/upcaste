@@ -107,11 +107,11 @@ namespace up { namespace math
     template <> struct LIBUPCOREAPI make_matrix<float, 1, 1> { typedef float type; };
     template <> struct LIBUPCOREAPI make_matrix<double, 1, 1> { typedef double type; };
 
-    template <class T> struct UPVISIBLE vector_step : std::integral_constant<size_t, 1> { };
-    template <class T> struct UPVISIBLE matrix_column_step : std::integral_constant<size_t, 1> { };
-    template <class T> struct UPVISIBLE matrix_row_step : std::integral_constant<size_t, 1> { };
-    template <class T> struct UPVISIBLE is_vector : std::false_type { };
-    template <class T> struct UPVISIBLE is_matrix : std::false_type { };
+    template <class T> struct UPVISIBLE vector_step : integral_constant<size_t, 1> { };
+    template <class T> struct UPVISIBLE matrix_column_step : integral_constant<size_t, 1> { };
+    template <class T> struct UPVISIBLE matrix_row_step : integral_constant<size_t, 1> { };
+    template <class T> struct UPVISIBLE is_vector : false_type { };
+    template <class T> struct UPVISIBLE is_matrix : false_type { };
 
     template <class T>
     struct uniform;
@@ -124,11 +124,11 @@ namespace up { namespace math
         UPALWAYSINLINE operator T() const noexcept { return v; }
     };
 
-    template <class Tx, class Elem> struct UPVISIBLE vector_step<uniform_constant<Tx, Elem>> : vector_step<Tx> { };
-    template <class Tx, class Elem> struct UPVISIBLE matrix_column_step<uniform_constant<Tx, Elem>> : matrix_column_step<Tx> { };
-    template <class Tx, class Elem> struct UPVISIBLE matrix_row_step<uniform_constant<Tx, Elem>> : matrix_row_step<Tx> { };
-    template <class Tx, class Elem> struct UPVISIBLE is_vector<uniform_constant<Tx, Elem>> : is_vector<Tx> { };
-    template <class Tx, class Elem> struct UPVISIBLE is_matrix<uniform_constant<Tx, Elem>> : is_matrix<Tx> { };
+    template <class Tx, class Elem> struct UPVISIBLE vector_step<uniform_constant<Tx, Elem> > : vector_step<Tx> { };
+    template <class Tx, class Elem> struct UPVISIBLE matrix_column_step<uniform_constant<Tx, Elem> > : matrix_column_step<Tx> { };
+    template <class Tx, class Elem> struct UPVISIBLE matrix_row_step<uniform_constant<Tx, Elem> > : matrix_row_step<Tx> { };
+    template <class Tx, class Elem> struct UPVISIBLE is_vector<uniform_constant<Tx, Elem> > : is_vector<Tx> { };
+    template <class Tx, class Elem> struct UPVISIBLE is_matrix<uniform_constant<Tx, Elem> > : is_matrix<Tx> { };
 }}
 
 namespace up { namespace math { namespace detail
@@ -144,9 +144,9 @@ namespace up { namespace math { namespace detail
         bool = matrix_column_step<To>::value == matrix_column_step<From>::value,
         bool = matrix_row_step<To>::value == matrix_row_step<From>::value
     >
-    struct is_convertible_as_impl : std::false_type { };
+    struct is_convertible_as_impl : false_type { };
 
-    template <class To, class From> struct is_convertible_as_impl<To, From, true, true, true> : std::true_type { };
+    template <class To, class From> struct is_convertible_as_impl<To, From, true, true, true> : true_type { };
     template <class Tx, class Ux, class E> struct is_convertible_as_impl<Tx, uniform_constant<Ux, E>, true, true, true> : is_convertible_as_impl<Tx, Ux> { };
 
     template
@@ -156,23 +156,23 @@ namespace up { namespace math { namespace detail
         bool = matrix_column_step<To>::value == matrix_column_step<From>::value,
         bool = matrix_row_step<To>::value == matrix_row_step<From>::value
     >
-    struct is_convertible_to_impl : std::false_type { };
+    struct is_convertible_to_impl : false_type { };
 
-    template <class To, class From> struct is_convertible_to_impl<To, From, true, true> : std::true_type { };
+    template <class To, class From> struct is_convertible_to_impl<To, From, true, true> : true_type { };
     template <class Tx, class Ux, class E> struct is_convertible_to_impl<Tx, uniform_constant<Ux, E>, true, true> : is_convertible_as_impl<Tx, Ux> { };
 
     template
     <
         class To,
         class From,
-        bool = std::is_integral<typename make_scalar<To>::type>::value,
-        bool = std::is_floating_point<typename make_scalar<From>::type>::value,
+        bool = is_integral<typename make_scalar<To>::type>::value,
+        bool = is_floating_point<typename make_scalar<From>::type>::value,
         bool = matrix_column_step<To>::value == matrix_column_step<From>::value,
         bool = matrix_row_step<To>::value == matrix_row_step<From>::value
     >
-    struct is_roundable_to_impl : std::false_type { };
+    struct is_roundable_to_impl : false_type { };
 
-    template <class To, class From> struct is_roundable_to_impl<To, From, true, true, true, true> : std::true_type { };
+    template <class To, class From> struct is_roundable_to_impl<To, From, true, true, true, true> : true_type { };
     template <class Tx, class Ux, class E> struct is_roundable_to_impl<Tx, uniform_constant<Ux, E>, true, true, true, true> : is_roundable_to_impl<Tx, Ux> { };
 
     template <class To, class From>
@@ -218,74 +218,74 @@ namespace up { namespace math { namespace detail
 
 namespace up { namespace math
 {
-    template <class T, class U> struct UPVISIBLE is_convertible_as : detail::is_convertible_as_impl<typename std::decay<T>::type, typename std::decay<U>::type> { };
-    template <class T, class U> struct UPVISIBLE is_convertible_to : detail::is_convertible_to_impl<typename std::decay<T>::type, typename std::decay<U>::type> { };
-    template <class T, class U> struct UPVISIBLE is_roundable_to : detail::is_roundable_to_impl<typename std::decay<T>::type, typename std::decay<U>::type> { };
+    template <class T, class U> struct UPVISIBLE is_convertible_as : detail::is_convertible_as_impl<typename decay<T>::type, typename decay<U>::type> { };
+    template <class T, class U> struct UPVISIBLE is_convertible_to : detail::is_convertible_to_impl<typename decay<T>::type, typename decay<U>::type> { };
+    template <class T, class U> struct UPVISIBLE is_roundable_to : detail::is_roundable_to_impl<typename decay<T>::type, typename decay<U>::type> { };
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_convertible_as<To, From>::value, To>::type as(From&& v) noexcept {
-        return detail::as_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_convertible_as<To, From>::value, To>::type as(From&& v) noexcept {
+        return detail::as_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_convertible_to<To, From>::value, To>::type convert(From&& v) noexcept {
-        return detail::convert_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_convertible_to<To, From>::value, To>::type convert(From&& v) noexcept {
+        return detail::convert_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_rte(From&& v) noexcept {
-        return detail::convert_rte_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_rte(From&& v) noexcept {
+        return detail::convert_rte_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_rtz(From&& v) noexcept {
-        return detail::convert_rtz_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_rtz(From&& v) noexcept {
+        return detail::convert_rtz_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_rtn(From&& v) noexcept {
-        return detail::convert_rtn_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_rtn(From&& v) noexcept {
+        return detail::convert_rtn_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_rtp(From&& v) noexcept {
-        return detail::convert_rtp_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_rtp(From&& v) noexcept {
+        return detail::convert_rtp_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE
-    typename std::enable_if<is_convertible_to<To, From>::value, To>::type convert_sat(From&& v) noexcept {
-        return detail::convert_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_convertible_to<To, From>::value, To>::type convert_sat(From&& v) noexcept {
+        return detail::convert_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE 
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rte(From&& v) noexcept {
-        return detail::convert_sat_rte_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rte(From&& v) noexcept {
+        return detail::convert_sat_rte_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE 
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rtz(From&& v) noexcept {
-        return detail::convert_sat_rtz_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rtz(From&& v) noexcept {
+        return detail::convert_sat_rtz_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE 
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rtn(From&& v) noexcept {
-        return detail::convert_sat_rtn_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rtn(From&& v) noexcept {
+        return detail::convert_sat_rtn_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 
     template <class To, class From>
     inline UPALWAYSINLINE UPPURE 
-    typename std::enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rtp(From&& v) noexcept {
-        return detail::convert_sat_rtp_impl<typename std::decay<To>::type, typename std::decay<From>::type>::convert(::up::forward<From>(v));
+    typename enable_if<is_roundable_to<To, From>::value, To>::type convert_sat_rtp(From&& v) noexcept {
+        return detail::convert_sat_rtp_impl<typename decay<To>::type, typename decay<From>::type>::convert(::up::forward<From>(v));
     }
 }}
 

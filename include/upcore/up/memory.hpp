@@ -37,9 +37,9 @@ namespace up { namespace detail
     <
         class U1,
         class U2,
-        bool Same = ::std::is_same<U1, U2>::value,
-        bool Empty1 = ::std::is_empty<U1>::value,
-        bool Empty2 = ::std::is_empty<U2>::value
+        bool Same = is_same<U1, U2>::value,
+        bool Empty1 = is_empty<U1>::value,
+        bool Empty2 = is_empty<U2>::value
     >
     class compressed_pair_wrapper
     {
@@ -278,32 +278,32 @@ namespace up
 namespace up { namespace detail
 {
     template <class Iterator> struct iterator_value_type { typedef typename Iterator::value_type type; };
-    template <class T> struct iterator_value_type<T*> { typedef typename std::remove_cv<T>::type type; };
-    template <class T> struct is_destroyable : std::integral_constant<bool, !std::is_trivially_destructible<T>::value && !std::is_void<T>::value> { };
-    template <class T, class R> struct enable_if_destroyable : std::enable_if<is_destroyable<T>::value, R> { };
-    template <class T, class R> struct enable_if_not_destroyable : std::enable_if<!is_destroyable<T>::value, R> { };
+    template <class T> struct iterator_value_type<T*> { typedef typename remove_cv<T>::type type; };
+    template <class T> struct is_destroyable : integral_constant<bool, !is_trivially_destructible<T>::value && !is_void<T>::value> { };
+    template <class T, class R> struct enable_if_destroyable : enable_if<is_destroyable<T>::value, R> { };
+    template <class T, class R> struct enable_if_not_destroyable : enable_if<!is_destroyable<T>::value, R> { };
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    void destruct(ForwardIterator, std::false_type) noexcept {
+    void destruct(ForwardIterator, false_type) noexcept {
     }
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    void destruct(ForwardIterator position, std::true_type) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    void destruct(ForwardIterator position, true_type) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         position->~value_type();
     }
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    ForwardIterator destruct(ForwardIterator, ForwardIterator last, std::false_type) noexcept {
+    ForwardIterator destruct(ForwardIterator, ForwardIterator last, false_type) noexcept {
         return last;
     }
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    ForwardIterator destruct(ForwardIterator first, ForwardIterator last, std::true_type) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    ForwardIterator destruct(ForwardIterator first, ForwardIterator last, true_type) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         for ( ; first != last; ++first) {
             first->~value_type();
@@ -313,13 +313,13 @@ namespace up { namespace detail
 
     template <class ForwardIterator, class Size>
     inline UPALWAYSINLINE
-    ForwardIterator destruct_n(ForwardIterator first, Size n, std::false_type) noexcept {
+    ForwardIterator destruct_n(ForwardIterator first, Size n, false_type) noexcept {
         return first + n;
     }
 
     template <class ForwardIterator, class Size>
     inline UPALWAYSINLINE
-    ForwardIterator destruct_n(ForwardIterator first, Size n, std::true_type) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    ForwardIterator destruct_n(ForwardIterator first, Size n, true_type) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         for ( ; n > 0; ++first, --n) {
             first->~value_type();
@@ -415,21 +415,21 @@ namespace up
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    void destruct(ForwardIterator location) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    void destruct(ForwardIterator location) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         ::up::detail::destruct(location, detail::is_destroyable<value_type>());
     }
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    ForwardIterator destruct(ForwardIterator first, ForwardIterator last) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    ForwardIterator destruct(ForwardIterator first, ForwardIterator last) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         return ::up::detail::destruct(first, last, detail::is_destroyable<value_type>());
     }
 
     template <class ForwardIterator, class Size>
     inline UPALWAYSINLINE
-    ForwardIterator destruct_n(ForwardIterator first, Size n) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    ForwardIterator destruct_n(ForwardIterator first, Size n) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         return ::up::detail::destruct_n(first, n, detail::is_destroyable<value_type>());
     }
@@ -440,60 +440,60 @@ namespace up { namespace detail
     template <class OutputIterator>
     struct is_contiguously_constructible_impl
     {
-        typedef typename std::conditional
+        typedef typename conditional
         <
-            std::is_pointer<OutputIterator>::value
-            && std::is_trivial<typename std::remove_pointer<OutputIterator>::type>::value,
-            std::true_type,
-            std::false_type
+            is_pointer<OutputIterator>::value
+            && is_trivial<typename remove_pointer<OutputIterator>::type>::value,
+            true_type,
+            false_type
         >
         ::type result;
     };
 
     template <class OutputIterator>
-    struct is_contiguously_constructible : std::integral_constant<bool, is_contiguously_constructible_impl<OutputIterator>::result::value> { };
+    struct is_contiguously_constructible : integral_constant<bool, is_contiguously_constructible_impl<OutputIterator>::result::value> { };
 
     template <class InputIterator, class OutputIterator>
     struct is_contiguously_copyable_impl
     {
-        typedef typename std::remove_pointer<InputIterator>::type input_type;
-        typedef typename std::remove_pointer<OutputIterator>::type output_type;
-        typedef typename std::conditional
+        typedef typename remove_pointer<InputIterator>::type input_type;
+        typedef typename remove_pointer<OutputIterator>::type output_type;
+        typedef typename conditional
         <
-            std::is_pointer<InputIterator>::value
-            && std::is_pointer<OutputIterator>::value
-            && std::is_same<input_type, output_type>::value
-            && std::is_trivially_copyable<input_type>::value,
-            std::true_type,
-            std::false_type
+            is_pointer<InputIterator>::value
+            && is_pointer<OutputIterator>::value
+            && is_same<input_type, output_type>::value
+            && is_trivially_copyable<input_type>::value,
+            true_type,
+            false_type
         >
         ::type result;
     };
 
     template <class InputIterator, class OutputIterator>
-    struct is_contiguously_copyable : std::integral_constant<bool, is_contiguously_copyable_impl<InputIterator, OutputIterator>::result::value> { };
+    struct is_contiguously_copyable : integral_constant<bool, is_contiguously_copyable_impl<InputIterator, OutputIterator>::result::value> { };
 
     template <class OutputIterator, class InputType>
     struct is_contiguously_fillable_impl
     {
-        typedef typename std::conditional
+        typedef typename conditional
         <
-            std::is_pointer<OutputIterator>::value
-            && std::is_same<InputType, typename std::remove_pointer<OutputIterator>::type>::value
-            && std::is_trivially_copyable<InputType>::value,
-            std::true_type,
-            std::false_type
+            is_pointer<OutputIterator>::value
+            && is_same<InputType, typename remove_pointer<OutputIterator>::type>::value
+            && is_trivially_copyable<InputType>::value,
+            true_type,
+            false_type
         >
         ::type result;
     };
 
     template <class OutputIterator, class InputType>
-    struct is_contiguously_fillable : std::integral_constant<bool, is_contiguously_fillable_impl<OutputIterator, InputType>::result::value> { };
+    struct is_contiguously_fillable : integral_constant<bool, is_contiguously_fillable_impl<OutputIterator, InputType>::result::value> { };
 
     template <class ContiguousIterator>
     inline UPALWAYSINLINE
     ContiguousIterator
-    uninitialized_construct(ContiguousIterator first, ContiguousIterator last, std::true_type) noexcept {
+    uninitialized_construct(ContiguousIterator first, ContiguousIterator last, true_type) noexcept {
         ::up::memset(first, 0, last - first * sizeof(*first));
         return last;
     }
@@ -501,7 +501,7 @@ namespace up { namespace detail
     template <class ForwardIterator>
     inline UPALWAYSINLINE
     ForwardIterator
-    uninitialized_construct(ForwardIterator first, ForwardIterator last, std::false_type) {
+    uninitialized_construct(ForwardIterator first, ForwardIterator last, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(first);
             
@@ -518,7 +518,7 @@ namespace up { namespace detail
     template <class ContiguousIterator, class Size>
     inline UPALWAYSINLINE
     ContiguousIterator
-    uninitialized_construct_n(ContiguousIterator first, Size n, std::true_type) noexcept {
+    uninitialized_construct_n(ContiguousIterator first, Size n, true_type) noexcept {
         ::up::memset(first, 0, n * sizeof(*first));
         return first + n;
     }
@@ -526,7 +526,7 @@ namespace up { namespace detail
     template <class ForwardIterator, class Size>
     inline UPALWAYSINLINE
     ForwardIterator
-    uninitialized_construct_n(ForwardIterator first, Size n, std::false_type) {
+    uninitialized_construct_n(ForwardIterator first, Size n, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(first);
             
@@ -543,7 +543,7 @@ namespace up { namespace detail
     template <class ContiguousIterator1, class ContiguousIterator2>
     inline UPALWAYSINLINE
     ContiguousIterator2
-    uninitialized_copy(ContiguousIterator1 first, ContiguousIterator1 last, ContiguousIterator2 result, std::true_type) noexcept {
+    uninitialized_copy(ContiguousIterator1 first, ContiguousIterator1 last, ContiguousIterator2 result, true_type) noexcept {
         ptrdiff_t const n = last - first;
         ::up::memmove(result, first, n * sizeof(*result));
         return result + n;
@@ -552,7 +552,7 @@ namespace up { namespace detail
     template <class InputIterator, class ForwardIterator>
     inline UPALWAYSINLINE
     ForwardIterator
-    uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result, std::false_type) {
+    uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(result);
             
@@ -573,7 +573,7 @@ namespace up { namespace detail
         ContiguousIterator1 first,
         ContiguousIterator1 last,
         ContiguousIterator2 result,
-        std::true_type
+        true_type
     )
     noexcept {
         ptrdiff_t const n = last - first;
@@ -589,7 +589,7 @@ namespace up { namespace detail
         BidirectionalIterator1 first,
         BidirectionalIterator1 last,
         BidirectionalIterator2 result,
-        std::false_type
+        false_type
     ) {
         typedef typename iterator_value_type<BidirectionalIterator2>::type value_type;
         BidirectionalIterator2 cur(result);
@@ -607,7 +607,7 @@ namespace up { namespace detail
     template <class ContiguousIterator1, class Size, class ContiguousIterator2>
     inline UPALWAYSINLINE
     ContiguousIterator2
-    uninitialized_copy_n(ContiguousIterator1 first, Size n, ContiguousIterator2 result, std::true_type) noexcept {
+    uninitialized_copy_n(ContiguousIterator1 first, Size n, ContiguousIterator2 result, true_type) noexcept {
         ::up::memmove(result, first, n * sizeof(*result));
         return result + n;
     }
@@ -615,7 +615,7 @@ namespace up { namespace detail
     template <class InputIterator, class Size, class ForwardIterator>
     inline UPALWAYSINLINE
     ForwardIterator
-    uninitialized_copy_n(InputIterator first, Size n, ForwardIterator result, std::false_type) {
+    uninitialized_copy_n(InputIterator first, Size n, ForwardIterator result, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(result);
             
@@ -632,7 +632,7 @@ namespace up { namespace detail
     template <class ContiguousIterator, class Size, class T>
     inline UPALWAYSINLINE
     ContiguousIterator
-    uninitialized_fill_n(ContiguousIterator first, Size n, T value, std::true_type, std::integral_constant<size_t, 1>) noexcept {
+    uninitialized_fill_n(ContiguousIterator first, Size n, T value, true_type, integral_constant<size_t, 1>) noexcept {
         typedef typename iterator_value_type<ContiguousIterator>::type value_type;
         union { value_type value; uint8_t byte; } u = { static_cast<value_type>(value) };
         ::up::memset(first, u.byte, n);
@@ -642,7 +642,7 @@ namespace up { namespace detail
     template <class ContiguousIterator, class Size, class T>
     inline UPALWAYSINLINE
     ContiguousIterator
-    uninitialized_fill_n(ContiguousIterator first, Size n, T value, std::true_type, std::integral_constant<size_t, 2>) noexcept {
+    uninitialized_fill_n(ContiguousIterator first, Size n, T value, true_type, integral_constant<size_t, 2>) noexcept {
         typedef typename iterator_value_type<ContiguousIterator>::type value_type;
         value_type actual_value = static_cast<value_type>(value);
         ::up::memset_pattern2(first, ::up::addressof(actual_value), n);
@@ -652,7 +652,7 @@ namespace up { namespace detail
     template <class ContiguousIterator, class Size, class T>
     inline UPALWAYSINLINE
     ContiguousIterator
-    uninitialized_fill_n(ContiguousIterator first, Size n, T value, std::true_type, std::integral_constant<size_t, 4>) noexcept {
+    uninitialized_fill_n(ContiguousIterator first, Size n, T value, true_type, integral_constant<size_t, 4>) noexcept {
         typedef typename iterator_value_type<ContiguousIterator>::type value_type;
         value_type actual_value = static_cast<value_type>(value);
         ::up::memset_pattern4(first, ::up::addressof(actual_value), n);
@@ -662,7 +662,7 @@ namespace up { namespace detail
     template <class ContiguousIterator, class Size, class T>
     inline UPALWAYSINLINE
     ContiguousIterator
-    uninitialized_fill_n(ContiguousIterator first, Size n, T value, std::true_type, std::integral_constant<size_t, 8>) noexcept {
+    uninitialized_fill_n(ContiguousIterator first, Size n, T value, true_type, integral_constant<size_t, 8>) noexcept {
         typedef typename iterator_value_type<ContiguousIterator>::type value_type;
         value_type actual_value = static_cast<value_type>(value);
         ::up::memset_pattern8(first, ::up::addressof(actual_value), n);
@@ -688,16 +688,16 @@ namespace up { namespace detail
 
     template <class ContiguousIterator, class T>
     inline UPALWAYSINLINE
-    void uninitialized_fill(ContiguousIterator first, ContiguousIterator last, T const& value, std::true_type) {
+    void uninitialized_fill(ContiguousIterator first, ContiguousIterator last, T const& value, true_type) {
         typedef typename iterator_value_type<ContiguousIterator>::type value_type;
-        typedef std::integral_constant<size_t, sizeof(value_type)> value_size;
-        typedef std::integral_constant<bool, !(alignof(value_type) % sizeof(value_type))> is_aligned;
+        typedef integral_constant<size_t, sizeof(value_type)> value_size;
+        typedef integral_constant<bool, !(alignof(value_type) % sizeof(value_type))> is_aligned;
         ::up::detail::uninitialized_fill_n(first, last - first, value, is_aligned(), value_size());
     }
 
     template <class ForwardIterator, class T>
     inline UPALWAYSINLINE
-    void uninitialized_fill(ForwardIterator first, ForwardIterator last, T const& value, std::false_type) {
+    void uninitialized_fill(ForwardIterator first, ForwardIterator last, T const& value, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(first);
         
@@ -712,7 +712,7 @@ namespace up { namespace detail
     template <class ContiguousIterator1, class ContiguousIterator2>
     inline UPALWAYSINLINE
     ContiguousIterator2
-    uninitialized_move(ContiguousIterator1 first, ContiguousIterator1 last, ContiguousIterator2 result, std::true_type) noexcept {
+    uninitialized_move(ContiguousIterator1 first, ContiguousIterator1 last, ContiguousIterator2 result, true_type) noexcept {
         ptrdiff_t const n = last - first;
         ::up::memmove(result, first, n * sizeof(*result));
         return result + n;
@@ -721,7 +721,7 @@ namespace up { namespace detail
     template <class InputIterator, class ForwardIterator>
     inline UPALWAYSINLINE
     ForwardIterator
-    uninitialized_move(InputIterator first, InputIterator last, ForwardIterator result, std::false_type) {
+    uninitialized_move(InputIterator first, InputIterator last, ForwardIterator result, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(result);
         UPTRY {
@@ -740,7 +740,7 @@ namespace up { namespace detail
         ContiguousIterator1 first,
         ContiguousIterator1 last,
         ContiguousIterator2 result,
-        std::true_type
+        true_type
     )
     noexcept {
         ptrdiff_t const n = last - first;
@@ -756,7 +756,7 @@ namespace up { namespace detail
         BidirectionalIterator1 first,
         BidirectionalIterator1 last,
         BidirectionalIterator2 result,
-        std::false_type
+        false_type
     ) {
         typedef typename iterator_value_type<BidirectionalIterator2>::type value_type;
         BidirectionalIterator2 cur(result);
@@ -772,7 +772,7 @@ namespace up { namespace detail
     template <class ContiguousIterator1, class Size, class ContiguousIterator2>
     inline UPALWAYSINLINE
     ContiguousIterator2
-    uninitialized_move_n(ContiguousIterator1 first, Size n, ContiguousIterator2 result, std::true_type) noexcept {
+    uninitialized_move_n(ContiguousIterator1 first, Size n, ContiguousIterator2 result, true_type) noexcept {
         ::up::memmove(result, first, n * sizeof(*result));
         return result + n;
     }
@@ -780,7 +780,7 @@ namespace up { namespace detail
     template <class InputIterator, class Size, class ForwardIterator>
     inline UPALWAYSINLINE
     ForwardIterator
-    uninitialized_move_n(InputIterator first, Size n, ForwardIterator result, std::false_type) {
+    uninitialized_move_n(InputIterator first, Size n, ForwardIterator result, false_type) {
         typedef typename iterator_value_type<ForwardIterator>::type value_type;
         ForwardIterator cur(result);
         UPTRY {        
@@ -848,9 +848,9 @@ namespace up
     ForwardIterator
     uninitialized_fill_n(ForwardIterator first, Size n, T const& value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
-        typedef std::integral_constant<size_t, sizeof(value_type)> value_size;
+        typedef integral_constant<size_t, sizeof(value_type)> value_size;
         typedef detail::is_contiguously_fillable<ForwardIterator, T> contiguously_fillable;
-        typedef std::integral_constant<bool, (contiguously_fillable::value && !(alignof(value_type) % sizeof(value_type)))> contiguously_fillable_and_aligned;
+        typedef integral_constant<bool, (contiguously_fillable::value && !(alignof(value_type) % sizeof(value_type)))> contiguously_fillable_and_aligned;
         return ::up::detail::uninitialized_fill_n(first, n, value, contiguously_fillable_and_aligned(), value_size());
     }
     
@@ -875,17 +875,17 @@ namespace up
     ForwardIterator
     uninitialized_move_n(InputIterator first, Size n, ForwardIterator result) {
         typedef detail::is_contiguously_copyable<InputIterator, ForwardIterator> contiguously_copyable;
-        return ::detail::uninitialized_move_n(first, n, result, contiguously_copyable());
+        return ::up::detail::uninitialized_move_n(first, n, result, contiguously_copyable());
     }
 }
 
 namespace up { namespace detail
 {
-    template <class T> struct deallocate_sizeof : std::integral_constant<size_t, sizeof(T)> { };
-    template <> struct deallocate_sizeof<void> : std::integral_constant<size_t, 0> { };
-    template <> struct deallocate_sizeof<void const> : std::integral_constant<size_t, 0> { };
-    template <> struct deallocate_sizeof<void volatile> : std::integral_constant<size_t, 0> { };
-    template <> struct deallocate_sizeof<void const volatile> : std::integral_constant<size_t, 0> { };
+    template <class T> struct deallocate_sizeof : integral_constant<size_t, sizeof(T)> { };
+    template <> struct deallocate_sizeof<void> : integral_constant<size_t, 0> { };
+    template <> struct deallocate_sizeof<void const> : integral_constant<size_t, 0> { };
+    template <> struct deallocate_sizeof<void volatile> : integral_constant<size_t, 0> { };
+    template <> struct deallocate_sizeof<void const volatile> : integral_constant<size_t, 0> { };
 }}
 
 namespace up
@@ -937,12 +937,12 @@ namespace up
     template <class Alloc, class T>
     inline UPALWAYSINLINE
     void deallocate(Alloc* a, T* p) noexcept {
-        a->deallocate(const_cast<typename std::remove_cv<T>::type*>(p), ::up::detail::deallocate_sizeof<T>::value);
+        a->deallocate(const_cast<typename remove_cv<T>::type*>(p), ::up::detail::deallocate_sizeof<T>::value);
     }
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, typename std::enable_if<std::is_trivial<T>::value, nat_t>::type = nat_t()) {
+    T* allocate_construct(Alloc* a, typename enable_if<is_trivial<T>::value, nat_t>::type = nat_t()) {
 #ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(a->allocate_zero(1, sizeof(T)));
 #else
@@ -952,7 +952,7 @@ namespace up
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, typename std::enable_if<!std::is_trivial<T>::value, nat_t>::type = nat_t()) {
+    T* allocate_construct(Alloc* a, typename enable_if<!is_trivial<T>::value, nat_t>::type = nat_t()) {
 #ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
@@ -1057,15 +1057,15 @@ namespace up
     template <class Alloc, class T>
     inline UPALWAYSINLINE
     void destruct_deallocate(Alloc* a, T* p, typename detail::enable_if_not_destroyable<T, nat_t>::type = nat_t()) noexcept {
-        a->deallocate(const_cast<typename std::remove_cv<T>::type*>(p), sizeof(T));
+        a->deallocate(const_cast<typename remove_cv<T>::type*>(p), sizeof(T));
     }
 
     template <class Alloc, class T>
     inline UPALWAYSINLINE
     void destruct_deallocate(Alloc* a, T* p, typename detail::enable_if_destroyable<T, nat_t>::type = nat_t())
-    UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         if (p) {
-            typename std::remove_cv<T>::type* q = const_cast<typename std::remove_cv<T>::type*>(p);
+            typename remove_cv<T>::type* q = const_cast<typename remove_cv<T>::type*>(p);
             q->~T();
             a->deallocate(q, sizeof(T));
         }
@@ -1084,12 +1084,12 @@ namespace up
     template <class Alloc, class T>
     inline UPALWAYSINLINE
     void deallocate_n(Alloc* a, T* p, size_t n) noexcept {
-        a->deallocate(const_cast<typename std::remove_cv<T>::type*>(p), n * sizeof(T));
+        a->deallocate(const_cast<typename remove_cv<T>::type*>(p), n * sizeof(T));
     }
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct_n(Alloc* a, typename std::enable_if<std::is_trivial<T>::value, size_t>::type n) noexcept {
+    T* allocate_construct_n(Alloc* a, typename enable_if<is_trivial<T>::value, size_t>::type n) noexcept {
 #ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(a->allocate_zero(n, sizeof(T)));
 #else
@@ -1099,7 +1099,7 @@ namespace up
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct_n(Alloc* a, typename std::enable_if<!std::is_trivial<T>::value, size_t>::type n) {
+    T* allocate_construct_n(Alloc* a, typename enable_if<!is_trivial<T>::value, size_t>::type n) {
 #ifdef UP_NO_EXCEPTIONS
         T* const p = static_cast<T*>(a->allocate(n * sizeof(T)));
         if (!p) {
@@ -1114,8 +1114,8 @@ namespace up
 
     template <class Alloc, class T>
     inline UPALWAYSINLINE
-    void destruct_deallocate_n(Alloc* a, T* p, size_t n) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
-        typename std::remove_cv<T>::type* q = const_cast<typename std::remove_cv<T>::type*>(p);
+    void destruct_deallocate_n(Alloc* a, T* p, size_t n) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
+        typename remove_cv<T>::type* q = const_cast<typename remove_cv<T>::type*>(p);
         ::up::destruct_n(q, n);
         a->deallocate(q, n * sizeof(T));
     }
@@ -1132,7 +1132,7 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(typename std::enable_if<std::is_trivial<T>::value, nat_t>::type = nat_t()) {
+    T* malloc_construct(typename enable_if<is_trivial<T>::value, nat_t>::type = nat_t()) {
 #ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(::up::calloc(1, sizeof(T)));
 #else
@@ -1142,7 +1142,7 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(typename std::enable_if<!std::is_trivial<T>::value, nat_t>::type = nat_t()) {
+    T* malloc_construct(typename enable_if<!is_trivial<T>::value, nat_t>::type = nat_t()) {
 #ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
@@ -1248,15 +1248,15 @@ namespace up
     template <class T>
     inline UPALWAYSINLINE
     void destruct_free(T* p, typename detail::enable_if_not_destroyable<T, nat_t>::type = nat_t()) noexcept {
-        ::up::free(const_cast<typename std::remove_cv<T>::type*>(p));
+        ::up::free(const_cast<typename remove_cv<T>::type*>(p));
     }
 
     template <class T>
     inline UPALWAYSINLINE
     void destruct_free(T* p, typename detail::enable_if_destroyable<T, nat_t>::type = nat_t())
-    UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
+    UPNOEXCEPT(is_nothrow_destructible<T>::value) {
         if (p) {
-            typename std::remove_cv<T>::type* q = const_cast<typename std::remove_cv<T>::type*>(p);
+            typename remove_cv<T>::type* q = const_cast<typename remove_cv<T>::type*>(p);
             q->~T();
             ::up::free(q);
         }
@@ -1275,12 +1275,12 @@ namespace up
     template <class T>
     inline UPALWAYSINLINE
     void free_n(T* p, size_t) noexcept {
-        ::up::free(const_cast<typename std::remove_cv<T>::type*>(p));
+        ::up::free(const_cast<typename remove_cv<T>::type*>(p));
     }
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct_n(typename std::enable_if<std::is_trivial<T>::value, size_t>::type n) noexcept {
+    T* malloc_construct_n(typename enable_if<is_trivial<T>::value, size_t>::type n) noexcept {
 #ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(::up::calloc(n, sizeof(T)));
 #else
@@ -1290,7 +1290,7 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct_n(typename std::enable_if<!std::is_trivial<T>::value, size_t>::type n) {
+    T* malloc_construct_n(typename enable_if<!is_trivial<T>::value, size_t>::type n) {
 #ifdef UP_NO_EXCEPTIONS
         T* const p = static_cast<T*>(::up::malloc(n * sizeof(T)));
         if (!p) {
@@ -1305,11 +1305,27 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE
-    void destruct_free_n(T* p, size_t n) UPNOEXCEPT(std::is_nothrow_destructible<T>::value) {
-        typename std::remove_cv<T>::type* q = const_cast<typename std::remove_cv<T>::type*>(p);
+    void destruct_free_n(T* p, size_t n) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
+        typename remove_cv<T>::type* q = const_cast<typename remove_cv<T>::type*>(p);
         ::up::destruct_n(q, n);
         ::up::free(q);
     }
+
+    template <class T>
+    struct UPVISIBLE allocator_deleter
+    {
+    private:
+        allocator* alloc_;
+    public:
+        UPALWAYSINLINE explicit allocator_deleter(allocator* alloc) noexcept : alloc_(alloc) { }
+        UPALWAYSINLINE void operator()(T* p) const noexcept { ::up::destruct_deallocate(alloc_, p); }
+    };
+
+    template <class T>
+    struct UPVISIBLE free_deleter
+    {
+        UPALWAYSINLINE void operator()(T* p) const noexcept { ::up::destruct_free(p); }
+    };
 }
 
 #endif

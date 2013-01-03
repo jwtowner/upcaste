@@ -22,12 +22,12 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_CSTDATOMIC_DEFAULT_INL
-#define UP_DETAIL_CSTDATOMIC_DEFAULT_INL
+#ifndef UP_DETAIL_CSTDATOMIC_GENERIC_INL
+#define UP_DETAIL_CSTDATOMIC_GENERIC_INL
 
 #include <up/cassert.hpp>
 #include <up/cstdalign.hpp>
-#include <type_traits>
+#include <up/type_traits.hpp>
 
 #ifndef ATOMIC_VAR_INIT
 #   define ATOMIC_VAR_INIT(var) var
@@ -194,39 +194,39 @@ namespace up { namespace detail
     Value fetch_add(const_operand_reference operand, memory_order) Volatile noexcept { \
         lock_type lock(this); \
         Value result = value_; \
-        value_ = value_ + operand; \
+        value_ = (Value)(((addition_lvalue_type)value_) + operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_sub(const_operand_reference operand, memory_order) Volatile noexcept { \
         lock_type lock(this); \
         Value result = value_; \
-        value_ = value_ - operand; \
+        value_ = (Value)(((addition_lvalue_type)value_) - operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_and(const_operand_reference operand, memory_order) Volatile noexcept { \
         lock_type lock(this); \
         Value result = value_; \
-        value_ = value_ & operand; \
+        value_ = (Value)(((bitwise_lvalue_type)value_) & operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_or(const_operand_reference operand, memory_order) Volatile noexcept { \
         lock_type lock(this); \
         Value result = value_; \
-        value_ = value_ | operand; \
+        value_ = (Value)(((bitwise_lvalue_type)value_) | operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_xor(const_operand_reference operand, memory_order) Volatile noexcept { \
         lock_type lock(this); \
         Value result = value_; \
-        value_ = value_ ^ operand; \
+        value_ = (Value)(((bitwise_lvalue_type)value_) ^ operand); \
         return result; \
     }
 
-    template <class Value, size_t Size = atomic_storage_size<sizeof(Value)>::value, bool Trivial = std::is_trivial<Value>::value>
+    template <class Value, size_t Size = atomic_storage_size<sizeof(Value)>::value, bool Trivial = is_trivial<Value>::value>
     struct atomic_storage
     {
         UPNONCOPYABLE(atomic_storage);
@@ -235,9 +235,11 @@ namespace up { namespace detail
 
         typedef Value value_type;
         typedef Value& reference;
-        typedef typename std::conditional<std::is_scalar<Value>::value, Value, Value const&>::type const_reference;
-        typedef typename std::conditional<std::is_pointer<Value>::value, ptrdiff_t, Value>::type operand_type;
-        typedef typename std::conditional<std::is_scalar<operand_type>::value, operand_type, operand_type const&>::type const_operand_reference;
+        typedef typename conditional<is_scalar<Value>::value, Value, Value const&>::type const_reference;
+        typedef typename conditional<is_pointer<Value>::value, ptrdiff_t, Value>::type operand_type;
+        typedef typename conditional<is_scalar<operand_type>::value, operand_type, operand_type const&>::type const_operand_reference;
+        typedef typename conditional<is_pointer<Value>::value && is_void<typename remove_pointer<Value>::type>::value, unsigned char*, Value>::type addition_lvalue_type;
+        typedef typename conditional<is_pointer<Value>::value, uintptr_t, Value>::type bitwise_lvalue_type;
         static constexpr bool is_lock_free = false;
         UPALWAYSINLINE UPCONSTEXPR atomic_storage() noexcept : locked_(ATOMIC_FLAG_INIT) { }
         UPALWAYSINLINE UPCONSTEXPR atomic_storage(const_reference v) noexcept : value_(v), locked_(ATOMIC_FLAG_INIT) { }

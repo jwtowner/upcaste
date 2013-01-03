@@ -25,14 +25,10 @@
 #ifndef UP_UTILITY_HPP
 #define UP_UTILITY_HPP
 
-#include <up/cstddef.hpp>
-#include <type_traits>
+#include <up/type_traits.hpp>
 
 namespace up
 {
-    struct LIBUPCOREAPI nat_t { };
-    extern LIBUPCOREAPI nat_t const nat;
-
 #if (UP_COMPILER == UP_COMPILER_GCC) && (__GNUC__ == 4) && (__GNUC_MINOR__ <= 4)
     namespace detail
     {
@@ -41,32 +37,32 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE UPPURE
-    T&& forward(typename ::up::detail::identity<T>::type&& t) noexcept {
+    T&& forward(typename detail::identity<T>::type&& t) noexcept {
         return t;
     }
 
     template <class T>
     inline UPALWAYSINLINE UPPURE
-    typename std::remove_reference<T>::type&& move(T&& t) noexcept {
+    typename remove_reference<T>::type&& move(T&& t) noexcept {
         return t;
     }
 #else
     template <class T>
     inline UPALWAYSINLINE UPPURE
-    T&& forward(typename std::remove_reference<T>::type& t) noexcept {
+    T&& forward(typename remove_reference<T>::type& t) noexcept {
         return static_cast<T&&>(t);
     }
 
     template <class T>
     inline UPALWAYSINLINE UPPURE
-    T&& forward(typename std::remove_reference<T>::type&& t) noexcept {
+    T&& forward(typename remove_reference<T>::type&& t) noexcept {
         return static_cast<T&&>(t);
     }
 
     template <class T>
     inline UPALWAYSINLINE UPPURE
-    typename std::remove_reference<T>::type&& move(T&& t) noexcept {
-        return static_cast<typename std::remove_reference<T>::type&&>(t);
+    typename remove_reference<T>::type&& move(T&& t) noexcept {
+        return static_cast<typename remove_reference<T>::type&&>(t);
     }
 #endif
 
@@ -75,14 +71,10 @@ namespace up
         template <class T>
         struct UPHIDDEN move_if_noexcept_result
         {
-            typedef typename std::conditional
+            typedef typename conditional
             <
-#ifdef UP_HAS_STDCXX_TYPE_TRAITS_CXX11
-                !std::is_nothrow_move_constructible<T>::value
-                && std::is_copy_constructible<T>::value,
-#else
-                !std::has_trivial_copy_constructor<T>::value,
-#endif
+                !is_nothrow_move_constructible<T>::value
+                && is_copy_constructible<T>::value,
                 T const&,
                 T&&
             >
@@ -98,18 +90,18 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE UPPURE
-    typename std::decay<T>::type decay_copy(T&& v) noexcept {
+    typename decay<T>::type decay_copy(T&& v) noexcept {
         return ::up::forward<T>(v);
     }
 
     template <class T>
     UPHIDDEN
-    typename std::add_rvalue_reference<T>::type declval() noexcept;
+    typename add_rvalue_reference<T>::type declval() noexcept;
 
     template <class T>
     inline UPALWAYSINLINE
     void swap(T& a, T& b)
-    UPNOEXCEPT(std::is_nothrow_move_constructible<T>::value && std::is_nothrow_move_assignable<T>::value) {
+    UPNOEXCEPT(is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value) {
         T t(::up::move(a));
         a = ::up::move(b);
         b = ::up::move(t);
@@ -135,43 +127,34 @@ namespace up
     {
         namespace is_swappable_impl
         {
-            struct UPHIDDEN any_t
-            {
-                template <class U> any_t(U&) noexcept;
-                template <class U> any_t(U const&) noexcept;
-                template <class U> any_t(U volatile&) noexcept;
-                template <class U> any_t(U const volatile&) noexcept;
-                template <class U> any_t(U&&) noexcept;
-            };
-
             using ::up::swap;
             nat_t swap(any_t, any_t);
 
-            template <class T, bool = std::is_const<T>::value || std::is_reference<T>::value>
+            template <class T, bool = is_const<T>::value || is_reference<T>::value>
             struct UPHIDDEN result
             {
                 typedef decltype(swap(::up::declval<T&>(), ::up::declval<T&>())) type;
-                static constexpr bool value = !std::is_same<type, nat_t>::value;
+                static constexpr bool value = !is_same<type, nat_t>::value;
             };
 
             template <class T>
-            struct UPHIDDEN result<T, true> : std::false_type { };
+            struct UPHIDDEN result<T, true> : false_type { };
         }
         
         template <class T, bool>
-        struct UPHIDDEN is_nothrow_swappable_impl : std::false_type { };
+        struct UPHIDDEN is_nothrow_swappable_impl : false_type { };
 
 #ifndef UP_NO_NOEXCEPT
         template <class T>
-        struct UPHIDDEN is_nothrow_swappable_impl<T, true> : std::integral_constant<bool, noexcept(swap(::up::declval<T&>(), ::up::declval<T&>()))> { };
+        struct UPHIDDEN is_nothrow_swappable_impl<T, true> : integral_constant<bool, noexcept(swap(::up::declval<T&>(), ::up::declval<T&>()))> { };
 #endif
     }
     
     template <class T>
-    struct UPVISIBLE is_swappable : std::integral_constant<bool, detail::is_swappable_impl::result<T>::value> { };
+    struct UPVISIBLE is_swappable : integral_constant<bool, detail::is_swappable_impl::result<T>::value> { };
 
     template <class T>
-    struct UPVISIBLE is_nothrow_swappable : std::integral_constant<bool, detail::is_nothrow_swappable_impl<T, is_swappable<T>::value>::value> { };
+    struct UPVISIBLE is_nothrow_swappable : integral_constant<bool, detail::is_nothrow_swappable_impl<T, is_swappable<T>::value>::value> { };
 
     template <class T>
     inline UPALWAYSINLINE UPPURE

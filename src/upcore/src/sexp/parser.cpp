@@ -78,8 +78,8 @@ namespace up { namespace sexp
         allocator* const alloc = par->alloc;
         assert(alloc);
 
-        slist_clear_deallocate<parser_token, &parser_token::node>(&par->open_stack, alloc);
-        slist_clear_deallocate<parser_token, &parser_token::node>(&par->unread_stack, alloc);
+        slist_clear<parser_token, &parser_token::node>(&par->open_stack, alloc);
+        slist_clear<parser_token, &parser_token::node>(&par->unread_stack, alloc);
 
         if (par->buffer_allocated) {
             alloc->deallocate(par->buffer, par->buffer_length);

@@ -48,12 +48,12 @@ namespace up { namespace math
 
 namespace up { namespace math { namespace detail
 {
-    template <class X, class Y, bool = std::is_floating_point<X>::value>
+    template <class X, class Y, bool = is_floating_point<X>::value>
     struct generic_convert_sat_helper
     {
         static UPALWAYSINLINE UPPURE
         X convert(Y x) noexcept {
-            typedef typename ::std::common_type<X, Y>::type ctype;
+            typedef typename common_type<X, Y>::type ctype;
             ctype const r = static_cast<ctype>(x);
 
             if (r <= static_cast<ctype>(std::numeric_limits<X>::min())) {
@@ -73,7 +73,7 @@ namespace up { namespace math { namespace detail
     {
         static UPALWAYSINLINE UPPURE
         X convert(Y x) noexcept {
-            typedef typename ::std::common_type<X, Y>::type ctype;
+            typedef typename common_type<X, Y>::type ctype;
             ctype const r = static_cast<ctype>(x);
 
             if (r <= static_cast<ctype>(-std::numeric_limits<X>::max())) {

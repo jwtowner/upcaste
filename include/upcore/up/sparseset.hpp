@@ -95,7 +95,7 @@ namespace up
     template <class R, slist_node R::* N, class H, class E>
     inline UPALWAYSINLINE UPPURE
     bool sparseset_is_overloaded(sparseset<R, N, H, E> const& set, double load_factor) noexcept {
-        ::up::sparse_is_overloaded(set.size, set.num_buckets(), load_factor);
+        return ::up::sparse_is_overloaded(set.size, set.num_buckets(), load_factor);
     }
 
     template <class R, slist_node R::* N, class H, class E>
@@ -141,7 +141,7 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E>
     UPVISIBLE
-    int sparseset_clear_deallocate(sparseset<R, N, H, E>& set, allocator* record_alloc) noexcept {
+    int sparseset_clear(sparseset<R, N, H, E>& set, allocator* record_alloc) noexcept {
         if (!record_alloc) {
             return sparse_badallocator;
         }
@@ -156,7 +156,7 @@ namespace up
         for ( ; bucket < end_bucket; ++bucket) {
             for (curr = bucket->next; curr; curr = next) {
                 next = curr->next;
-                ::up::destruct_deallocate(::up::slist_cast<R*>(curr, N), record);
+                ::up::destruct_deallocate(record_alloc, ::up::slist_cast<R*>(curr, N));
             }
             bucket->next = nullptr;
         }
@@ -215,7 +215,8 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E, class Recycle>
     UPVISIBLE
-    int sparseset_destruct(sparseset<R, N, H, E>& set, allocator* bucket_alloc, Recycle recycle) {
+    typename enable_if<!is_convertible<Recycle, allocator*>::value, int>::type
+    sparseset_destruct(sparseset<R, N, H, E>& set, allocator* bucket_alloc, Recycle recycle) {
         if (!bucket_alloc) {
             return sparse_badallocator;
         }
@@ -234,14 +235,26 @@ namespace up
     }
 
     template <class R, slist_node R::* N, class H, class E>
-    inline UPHIDDENINLINE
+    UPVISIBLE
     int sparseset_destruct(sparseset<R, N, H, E>& set, allocator* bucket_alloc, allocator* record_alloc) {
-        if (!record_alloc) {
+        if (!bucket_alloc) {
             return sparse_badallocator;
         }
-        return ::up::sparseset_destruct(set, bucket_alloc, [=] (R* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        
+        int const retval = ::up::sparseset_clear(set, record_alloc);
+        if (retval != sparse_success) {
+            return retval;
+        }
+
+        size_t const num_buckets = set.num_buckets();
+        if (num_buckets) {
+            ::up::deallocate_n(bucket_alloc, set.buckets(), num_buckets);
+            set.buckets_and_hasher.first(nullptr);
+            set.num_buckets_and_equals.first(0);
+            set.size = 0;
+        }
+
+        return sparse_success;
     }
 
     template <class R, slist_node R::* N, class H, class E, class Function>
@@ -331,9 +344,12 @@ namespace up
     template <class R, slist_node R::* N, class H, class E>
     inline UPHIDDENINLINE
     size_t sparseset_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, R* record) {
-        return ::up::sparseset_erase(set, record, [=] (R* r) {
-            ::up::destruct_deallocate(record_alloc, r);
-        });
+        R* result = ::up::sparseset_erase(set, record);
+        if (result) {
+            ::up::destruct_deallocate(record_alloc, result);
+            return 1;
+        }
+        return 0;
     }
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals>
@@ -379,9 +395,12 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
     size_t sparseset_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, Key const& key, Hasher const& hasher, Equals const& equals) {
-        return ::up::sparseset_erase(set, key, hasher, equals, [=] (R* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        R* result = ::up::sparseset_erase(set, key, hasher, equals);
+        if (result) {
+            ::up::destruct_deallocate(record_alloc, result);
+            return 1;
+        }
+        return 0;
     }
 
     template <class R, slist_node R::* N, class H, class E, class Key>
@@ -393,9 +412,9 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Key, class Recycle>
     inline UPHIDDENINLINE
     size_t sparseset_erase(sparseset<R, N, H, E>& set, Key const& key, Recycle recycle) {
-        R* record = ::up::sparseset_erase(set, key, set.hasher(), set.equals());
-        if (record) {
-            recycle(record);
+        R* result = ::up::sparseset_erase(set, key, set.hasher(), set.equals());
+        if (result) {
+            recycle(result);
             return 1;
         }
         return 0;
@@ -404,9 +423,12 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Key>
     inline UPHIDDENINLINE
     size_t sparseset_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, Key const& key) {
-        return ::up::sparseset_erase(set, key, set.hasher(), set.equals(), [=] (R* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        R* result = ::up::sparseset_erase(set, key, set.hasher(), set.equals());
+        if (result) {
+            ::up::destruct_deallocate(record_alloc, result);
+            return 1;
+        }
+        return 0;
     }
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals, class Recycle>
@@ -444,9 +466,7 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
     size_t sparseset_multi_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, Key const& key, Hasher const& hasher, Equals const& equals) {
-        return ::up::sparseset_multi_erase(set, key, hasher, equals, [=] (R* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        return ::up::sparseset_multi_erase(set, key, hasher, equals, allocator_deleter<R>(record_alloc));
     }
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Recycle>
@@ -458,9 +478,7 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Key>
     inline UPHIDDENINLINE
     size_t sparseset_multi_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, Key const& key) {
-        return ::up::sparseset_multi_erase(set, key, set.hasher(), set.equals(), [=] (R* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        return ::up::sparseset_multi_erase(set, key, set.hasher(), set.equals(), allocator_deleter<R>(record_alloc));
     }
 
     template <class R, slist_node R::* N, class H, class E, class Key>
@@ -545,6 +563,7 @@ namespace up
         return result;
     }
 
+#ifndef UP_NO_RVALUE_REFERENCES
     template <class R, slist_node R::* N, class H, class E, class Data>
     UPVISIBLE
     sparseresult<R> sparseset_insert(sparseset<R, N, H, E>& set, allocator* record_alloc, Data&& data) {
@@ -570,6 +589,7 @@ namespace up
 
         return result;
     }
+#endif
 
     template <class R, slist_node R::* N, class H, class E, class Key>
     inline UPHIDDENINLINE
@@ -605,10 +625,6 @@ namespace up
     template <class R, slist_node R::* N, class H, class E, class Data>
     UPVISIBLE
     R* sparseset_multi_insert(sparseset<R, N, H, E>& set, allocator* record_alloc, Data const& data) {
-        if (!record) {
-            return nullptr;
-        }
-
         slist_node* bucket = ::up::sparseset_multi_prepare(set, data);
         if (!bucket) {
             return nullptr;
@@ -624,13 +640,10 @@ namespace up
         return record;
     }
 
+#ifndef UP_NO_RVALUE_REFERENCES
     template <class R, slist_node R::* N, class H, class E, class Data>
     UPVISIBLE
     R* sparseset_multi_insert(sparseset<R, N, H, E>& set, allocator* record_alloc, Data&& data) {
-        if (!record) {
-            return nullptr;
-        }
-
         slist_node* bucket = ::up::sparseset_multi_prepare(set, data);
         if (!bucket) {
             return nullptr;
@@ -645,6 +658,7 @@ namespace up
         ++set.size;
         return record;
     }
+#endif
 
     template <class R, slist_node R::* N, class H, class E>
     UPVISIBLE
@@ -668,7 +682,7 @@ namespace up
                     next = curr->next;
                     record = ::up::slist_cast<R*>(curr, N);
                     result = ::up::sparseset_insert(dst, record);
-                    UP_ASSERT(result.record);
+                    UPASSERT(result.record);
                 }
                 bucket->next = nullptr;
             }
@@ -698,7 +712,7 @@ namespace up
                     next = curr->next;
                     record = ::up::slist_cast<R*>(curr, N);
                     result = ::up::sparseset_multi_insert(dst, record);
-                    UP_ASSERT(result.record);
+                    UPASSERT(result.record);
                 }
                 bucket->next = nullptr;
             }

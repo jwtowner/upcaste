@@ -109,7 +109,7 @@ namespace up { namespace sexp
                 else {
                     token_node = slist_cast<parser_token*>(node, &parser_token::node);
                     if (token_node->tok.list_type == tok->list_type) {
-                        slist_unlink_deallocate<parser_token, &parser_token::node>(&par->open_stack, node, alloc);
+                        slist_unlink<parser_token, &parser_token::node>(&par->open_stack, node, alloc);
                     }
                     else {
                         if (token_node->tok.list_type == list_parenthesis) {

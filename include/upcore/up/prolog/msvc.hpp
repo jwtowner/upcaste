@@ -28,8 +28,8 @@
 //
 // versions check
 //
-#if (_MSC_VER < 1600)
-#   error "MSVC++ versions prior to MSVC++ 2010 are not supported."
+#if (_MSC_VER < 1400)
+#   error "MSVC++ versions prior to MSVC++ 2008 are not supported."
 #elif (_MSC_VER > 1700)
 #   error "Unknown MSVC++ compiler version"
 #endif
@@ -120,12 +120,16 @@
 //
 // library feature detection
 //
-#if (_MSC_VER >= 1700)
+#if _MSC_VER >= 1600
+#   define UP_HAS_MSVC_XTHREADS
+#   define UP_HAS_MSVC_XTIME
+#endif
+#if _MSC_VER >= 1700
+#   define UP_HAS_STDCXX_ATOMIC_CXX11
+#   define UP_HAS_STDCXX_TYPE_TRAITS_CXX11
 #   define UP_HAS_STDC_MAX_ALIGN
 #endif
 
-#define UP_HAS_STDCXX_ATOMIC_CXX11
-#define UP_HAS_STDCXX_TYPE_TRAITS_CXX11
 #undef  UP_HAS_STDC_INTTYPES_C99
 #undef  UP_HAS_STDC_INTTYPES_CXX11
 #define UP_HAS_STDC_LOCALE
@@ -190,8 +194,33 @@
 #undef  UP_HAS_GNU_STRNDUP
 #undef  UP_HAS_GNU_WCSNDUP
 #undef  UP_HAS_BSD_MEMSET_PATTERN
-#define UP_HAS_MSVC_XTHREADS
-#define UP_HAS_MSVC_XTIME
+
+//
+// compiler type-traits
+//
+#if (_MSC_VER >= 1400)
+#   define UP_TT_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T) __has_trivial_constructor(T)
+#   define UP_TT_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T) __has_trivial_copy(T)
+#   define UP_TT_IS_TRIVIALLY_COPY_ASSIGNABLE(T) __has_trivial_assign(T)
+#   define UP_TT_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T) __has_trivial_copy(T)
+#   define UP_TT_IS_TRIVIALLY_MOVE_ASSIGNABLE(T) __has_trivial_assign(T)
+#   define UP_TT_IS_TRIVIALLY_DESTRUCTIBLE(T) __has_trivial_destructor(T)
+#   define UP_TT_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T) __has_nothrow_constructor(T)
+#   define UP_TT_IS_NOTHROW_COPY_CONSTRUCTIBLE(T) __has_nothrow_copy(T)
+#   define UP_TT_IS_NOTHROW_COPY_ASSIGNABLE(T) __has_nothrow_assign(T)
+#   define UP_TT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T) __has_nothrow_copy(T)
+#   define UP_TT_IS_NOTHROW_MOVE_ASSIGNABLE(T) __has_nothrow_assign(T)
+#   define UP_TT_HAS_VIRTUAL_DESTRUCTOR(T) __has_virtual_destructor(T)
+#   define UP_TT_IS_ABSTRACT(T) __is_abstract(T)
+#   define UP_TT_IS_BASE_OF(T,U) __is_base_of(T,U)
+#   define UP_TT_IS_CLASS(T) __is_class(T)
+#   define UP_TT_IS_CONVERTIBLE_TO(T, U) __is_convertible_to(T, U)
+#   define UP_TT_IS_EMPTY(T) __is_empty(T)
+#   define UP_TT_IS_ENUM(T) __is_enum(T)
+#   define UP_TT_IS_POD(T) __is_pod(T)
+#   define UP_TT_IS_POLYMORPHIC(T) __is_polymorphic(T)
+#   define UP_TT_IS_UNION(T) __is_union(T)
+#endif
 
 //
 // compiler built-ins

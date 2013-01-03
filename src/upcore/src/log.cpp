@@ -51,13 +51,32 @@ namespace up { namespace
         char category[max_category_length];
     };
 
+    struct log_event_dispatcher
+    {
+        log_record* record;
+
+        UPALWAYSINLINE
+        log_event_dispatcher(log_record* r) noexcept
+        : record(r) {
+        }
+
+        UPALWAYSINLINE
+        void operator()(log_sink_node const* sink) const noexcept {
+            if ( (sink->category[0] == '\0' || !strcmp(sink->category, record->category))
+                && (sink->min_level <= record->level) && (record->level <= sink->max_level)
+            ) {
+                sink->handler(record, sink->user_data);
+            }
+        }
+    };
+
     once_flag log_once = ONCE_FLAG_INIT;
     mtx_t log_monitor;
     list_node log_sinks_head;
     unsigned long log_sequence;
 
     void UPCDECL log_term() noexcept {
-        list_clear_deallocate<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
+        list_clear<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
         mtx_destroy(&log_monitor);
     }
 
@@ -80,19 +99,10 @@ namespace up { namespace
         record.level = level;
         record.message = message;
         verify(!clock_gettime(CLOCK_REALTIME, &record.time_stamp));
-
         call_once(&log_once, &log_init);
         verify(thrd_success == mtx_lock(&log_monitor));
-
         record.sequence = log_sequence++;
-        list_foreach<log_sink_node, &log_sink_node::node>(&log_sinks_head, [&](log_sink_node* sink) {
-            if ( (sink->category[0] == '\0' || !strcmp(sink->category, record.category))
-                && (sink->min_level <= record.level) && (record.level <= sink->max_level)
-            ) {
-                sink->handler(&record, sink->user_data);
-            }
-        });
-
+        list_foreach<log_sink_node, &log_sink_node::node>(&log_sinks_head, log_event_dispatcher(&record));
         verify(thrd_success == mtx_unlock(&log_monitor));
     }
 }}
@@ -129,7 +139,7 @@ namespace up
     void clear_log_sinks() {
         call_once(&log_once, &log_init);
         verify(thrd_success == mtx_lock(&log_monitor));
-        list_clear_deallocate<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
+        list_clear<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
         verify(thrd_success == mtx_unlock(&log_monitor));
     }
 

@@ -22,9 +22,35 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/utility.hpp>
+#ifndef UP_TYPE_TRAITS_HPP
+#define UP_TYPE_TRAITS_HPP
+
+#include <up/cstddef.hpp>
 
 namespace up
 {
-    LIBUPCOREAPI nat_t const nat = { };
+    struct LIBUPCOREAPI nat_t { };
+    extern LIBUPCOREAPI nat_t const nat;
 }
+
+namespace up { namespace detail
+{
+    struct UPHIDDEN any_t
+    {
+        template <class U> UPHIDDEN any_t(U&);
+        template <class U> UPHIDDEN any_t(U const&);
+        template <class U> UPHIDDEN any_t(U volatile&);                
+        template <class U> UPHIDDEN any_t(U const volatile&);
+#ifndef UP_NO_RVALUE_REFERENCES
+        template <class U> UPHIDDEN any_t(U&&);
+#endif
+    };
+}}
+
+#ifdef UP_HAS_STDCXX_TYPE_TRAITS_CXX11
+#   include <up/detail/type_traits_cxx11.inl>
+#else
+#   include <up/detail/type_traits_generic.inl>
+#endif
+
+#endif

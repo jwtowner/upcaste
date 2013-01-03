@@ -119,7 +119,8 @@ namespace up
 
     template <class K, class V, class H, class E, class Recycle>
     UPVISIBLE
-    void sparsemap_clear(sparsemap<K, V, H, E>& map, Recycle recycle) noexcept {
+    typename enable_if<!is_convertible<Recycle, allocator*>::value>::type
+    sparsemap_clear(sparsemap<K, V, H, E>& map, Recycle recycle) noexcept {
         slist_node* bucket = map.buckets();
         slist_node* const end_bucket = bucket + map.num_buckets();
         slist_node* curr, * next;
@@ -138,14 +139,27 @@ namespace up
     }
 
     template <class K, class V, class H, class E>
-    inline UPHIDDENINLINE
+    UPVISIBLE
     int sparsemap_clear(sparsemap<K, V, H, E>& map, allocator* record_alloc) noexcept {
-        if (!node_alloc) {
+        if (!record_alloc) {
             return sparse_badallocator;
         }
-        ::up::sparsemap_clear(map, [=] (sparserecord<K, V>* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+
+        slist_node* bucket = map.buckets();
+        slist_node* const end_bucket = bucket + map.num_buckets();
+        slist_node* curr, * next;
+
+        if (map.size) {
+            for ( ; bucket < end_bucket; ++bucket) {
+                for (curr = bucket->next; curr; curr = next) {
+                    next = curr->next;
+                    ::up::destruct_deallocate(record_alloc, ::up::slist_cast<sparserecord<K, V>*>(curr, &sparserecord<K, V>::node));
+                }
+                bucket->next = nullptr;
+            }
+            map.size = 0;
+        }
+
         return sparse_success;
     }
 
@@ -199,7 +213,8 @@ namespace up
 
     template <class K, class V, class H, class E, class Recycle>
     UPVISIBLE
-    int sparsemap_destruct(sparsemap<K, V, H, E>& map, allocator* bucket_alloc, Recycle recycle) {
+    typename enable_if<!is_convertible<Recycle, allocator*>::value, int>::type
+    sparsemap_destruct(sparsemap<K, V, H, E>& map, allocator* bucket_alloc, Recycle recycle) {
         if (!bucket_alloc) {
             return sparse_badallocator;
         }
@@ -218,14 +233,26 @@ namespace up
     }
 
     template <class K, class V, class H, class E>
-    inline UPHIDDENINLINE
+    UPVISIBLE
     int sparsemap_destruct(sparsemap<K, V, H, E>& map, allocator* bucket_alloc, allocator* record_alloc) {
-        if (!record_alloc) {
+        if (!bucket_alloc) {
             return sparse_badallocator;
         }
-        return ::up::sparsemap_destruct(map, bucket_alloc, [=] (sparserecord<K, V>* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+
+        int const retval = ::up::sparsemap_clear(map, record_alloc);
+        if (retval != sparse_success) {
+            return retval;
+        }
+
+        size_t const num_buckets = map.num_buckets();
+        if (num_buckets) {
+            ::up::deallocate_n(bucket_alloc, map.buckets(), num_buckets);
+            map.buckets_and_hasher.first(nullptr);
+            map.num_buckets_and_equals.first(0);
+            map.size = 0;
+        }
+
+        return sparse_success;
     }
 
     template <class K, class V, class H, class E, class Function>
@@ -316,9 +343,12 @@ namespace up
     template <class K, class V, class H, class E>
     inline UPHIDDENINLINE
     size_t sparsemap_erase(sparsemap<K, V, H, E>& map, allocator* record_alloc, sparserecord<K, V>* record) {
-        return ::up::sparsemap_erase(map, record, [=] (sparserecord<K, V>* r) {
-            ::up::destruct_deallocate(record_alloc, r);
-        });
+        sparserecord<K, V>* result = ::up::sparsemap_erase(map, record);
+        if (result) {
+            ::up::destruct_deallocate(record_alloc, result);
+            return 1;
+        }
+        return 0;
     }
 
     template <class K, class V, class H, class E, class Key, class Hasher, class Equals>
@@ -365,9 +395,12 @@ namespace up
     template <class K, class V, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
     size_t sparsemap_erase(sparsemap<K, V, H, E>& map, allocator* record_alloc, Key const& key, Hasher const& hasher, Equals const& equals) {
-        return ::up::sparsemap_erase(map, key, hasher, equals, [=] (sparserecord<K, V>* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        sparserecord<K, V>* result = ::up::sparsemap_erase(map, key, hasher, equals);
+        if (result) {
+            ::up::destruct_deallocate(record_alloc, result);
+            return 1;
+        }
+        return 0;
     }
 
     template <class K, class V, class H, class E, class Key>
@@ -390,9 +423,12 @@ namespace up
     template <class K, class V, class H, class E, class Key>
     inline UPHIDDENINLINE
     size_t sparsemap_erase(sparsemap<K, V, H, E>& map, allocator* record_alloc, Key const& key) {
-        return ::up::sparsemap_erase(map, key, map.hasher(), map.equals(), [=] (sparserecord<K, V>* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        sparserecord<K, V>* result = ::up::sparsemap_erase(map, key, map.hasher(), map.equals());
+        if (result) {
+            ::up::destruct_deallocate(record_alloc, result);
+            return 1;
+        }
+        return 0;
     }
 
     template <class K, class V, class H, class E, class Key, class Hasher, class Equals, class Recycle>
@@ -431,9 +467,7 @@ namespace up
     template <class K, class V, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
     size_t sparsemap_multi_erase(sparsemap<K, V, H, E>& map, allocator* record_alloc, Key const& key, Hasher const& hasher, Equals const& equals) {
-        return ::up::sparsemap_multi_erase(map, key, hasher, equals, [=] (sparserecord<K, V>* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        return ::up::sparsemap_multi_erase(map, key, hasher, equals, allocator_deleter<sparserecord<K, V> >(record_alloc));
     }
 
     template <class K, class V, class H, class E, class Key, class Recycle>
@@ -445,9 +479,7 @@ namespace up
     template <class K, class V, class H, class E, class Key>
     inline UPHIDDENINLINE
     size_t sparsemap_multi_erase(sparsemap<K, V, H, E>& map, allocator* record_alloc, Key const& key) {
-        return ::up::sparsemap_multi_erase(map, key, map.hasher(), map.equals(), [=] (sparserecord<K, V>* record) {
-            ::up::destruct_deallocate(record_alloc, record);
-        });
+        return ::up::sparsemap_multi_erase(map, key, map.hasher(), map.equals(), allocator_deleter<sparserecord<K, V> >(record_alloc));
     }
 
     template <class K, class V, class H, class E>
@@ -517,7 +549,7 @@ namespace up
         result = ::up::sparsemap_prepare(map, key, &bucket);
 
         if (result.success) {
-            result.record = ::up::allocate_construct<sparserecord<K, V>>(record_alloc, key, value);
+            result.record = ::up::allocate_construct<sparserecord<K, V> >(record_alloc, key, value);
             if (result.record) {
                 result.record->node.next = bucket->next;
                 bucket->next = &result.record->node;
@@ -531,6 +563,7 @@ namespace up
         return result;
     }
 
+#ifndef UP_NO_RVALUE_REFERENCES
     template <class K, class V, class H, class E>
     UPVISIBLE
     sparseresult<K, V> sparsemap_insert(sparsemap<K, V, H, E>& map, allocator* record_alloc, K const& key, V&& value) {
@@ -545,7 +578,7 @@ namespace up
         result = ::up::sparsemap_prepare(map, key, &bucket);
 
         if (result.success) {
-            result.record = ::up::allocate_construct<sparserecord<K, V>>(record_alloc, key, ::up::move(value));
+            result.record = ::up::allocate_construct<sparserecord<K, V> >(record_alloc, key, ::up::move(value));
             if (result.record) {
                 result.record->node.next = bucket->next;
                 bucket->next = &result.record->node;
@@ -558,6 +591,7 @@ namespace up
 
         return result;
     }
+#endif
 
     template <class K, class V, class H, class E>
     inline UPHIDDENINLINE
@@ -599,7 +633,7 @@ namespace up
             return nullptr;
         }
 
-        sparserecord<K, V>* record = ::up::allocate_construct<sparserecord<K, V>>(record_alloc, key, value);
+        sparserecord<K, V>* record = ::up::allocate_construct<sparserecord<K, V> >(record_alloc, key, value);
         if (!record) {
             return nullptr;
         }
@@ -610,6 +644,7 @@ namespace up
         return record;
     }
 
+#ifndef UP_NO_RVALUE_REFERENCES
     template <class K, class V, class H, class E>
     UPVISIBLE
     sparserecord<K, V>* sparsemap_multi_insert(sparsemap<K, V, H, E>& map, allocator* record_alloc, K const& key, V&& value) {
@@ -622,7 +657,7 @@ namespace up
             return nullptr;
         }
 
-        sparserecord<K, V>* record = ::up::allocate_construct<sparserecord<K, V>>(record_alloc, key, ::up::move(value));
+        sparserecord<K, V>* record = ::up::allocate_construct<sparserecord<K, V> >(record_alloc, key, ::up::move(value));
         if (!record) {
             return nullptr;
         }
@@ -632,6 +667,7 @@ namespace up
         ++map.size;
         return record;
     }
+#endif
 
     template <class K, class V, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
@@ -658,7 +694,7 @@ namespace up
         sparseresult<K, V> result = ::up::sparsemap_prepare(map, key, &bucket);
 
         if (result.success) {
-            result.record = ::up::allocate_construct<sparserecord<K, V>>(record_alloc, key, value);
+            result.record = ::up::allocate_construct<sparserecord<K, V> >(record_alloc, key, value);
             if (!result.record) {
                 return sparse_nomem;
             }
@@ -673,6 +709,7 @@ namespace up
         return sparse_success;
     }
 
+#ifndef UP_NO_RVALUE_REFERENCES
     template <class K, class V, class H, class E>
     UPVISIBLE
     int sparsemap_set(sparsemap<K, V, H, E>& map, allocator* record_alloc, K const& key, V&& value) {
@@ -684,7 +721,7 @@ namespace up
         sparseresult<K, V> result = ::up::sparsemap_prepare(map, key, &bucket);
 
         if (result.success) {
-            result.record = ::up::allocate_construct<sparserecord<K, V>>(record_alloc, key, ::up::move(value));
+            result.record = ::up::allocate_construct<sparserecord<K, V> >(record_alloc, key, ::up::move(value));
             if (!result.record) {
                 return sparse_nomem;
             }
@@ -698,6 +735,7 @@ namespace up
 
         return sparse_success;
     }
+#endif
 
     template <class K, class V, class H, class E>
     UPVISIBLE

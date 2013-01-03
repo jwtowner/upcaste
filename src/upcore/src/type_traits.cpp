@@ -22,42 +22,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/sexp.hpp>
-#include <up/cassert.hpp>
+#include <up/type_traits.hpp>
 
-namespace up { namespace sexp
+namespace up
 {
-    LIBUPCOREAPI
-    int parser_unload(parser* par) noexcept {
-        if (!par) {
-            return sexp_badarg;
-        }
-
-        allocator* const alloc = par->alloc;
-        assert(alloc);
-
-        verify(sexp_success == lexer_construct(&par->lex, nullptr, 0));
-        slist_clear<parser_token, &parser_token::node>(&par->open_stack, alloc);
-        slist_clear<parser_token, &parser_token::node>(&par->unread_stack, alloc);
-
-        if (par->buffer_allocated) {
-            alloc->deallocate(par->buffer, par->buffer_length);
-            par->buffer = nullptr;
-            par->buffer_length = 0;
-            par->buffer_allocated = false;
-        }
-
-        if (par->filename) {
-            alloc->deallocate(par->filename, par->filename_length + 1);
-            par->filename = nullptr;
-            par->filename_length = 0;
-        }
-
-        par->prev_column = 0;
-        par->prev_line = 0;
-        par->error_count = 0;
-        par->warning_count = 0;
-        par->loaded = false;
-        return sexp_success;
-    }
-}}
+    LIBUPCOREAPI nat_t const nat = { };
+}

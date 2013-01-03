@@ -60,7 +60,7 @@ namespace container_maps
 
     template <int Count>
     UPNOINLINE void densemap_insert_bench() {
-        up::densemap<int, float, std::hash<int>, std::equal_to<int>> map;
+        up::densemap<int, float, std::hash<int>, std::equal_to<int> > map;
         up::allocator* const alloc = up::malloc_allocator::instance();
         int retval;
 
@@ -79,7 +79,7 @@ namespace container_maps
 
     template <int Count>
     UPNOINLINE void sparsemap_insert_bench() {
-        up::sparsemap<int, float, std::hash<int>, std::equal_to<int>> map;
+        up::sparsemap<int, float, std::hash<int>, std::equal_to<int> > map;
         up::allocator* const alloc = up::malloc_allocator::instance();
         int retval;
 

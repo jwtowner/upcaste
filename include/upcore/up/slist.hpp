@@ -25,8 +25,9 @@
 #ifndef UP_SLIST_HPP
 #define UP_SLIST_HPP
 
-#include <up/allocator.hpp>
 #include <up/cstdint.hpp>
+#include <up/allocator.hpp>
+#include <up/type_traits.hpp>
 
 namespace up
 {
@@ -142,7 +143,8 @@ namespace up
 
     template <class Node, slist_node Node::* NodePtr, class Recycle>
     inline UPALWAYSINLINE
-    void slist_erase(slist_node* head, slist_node* first, slist_node* last, Recycle recycle) noexcept {
+    typename enable_if<!is_convertible<Recycle, allocator*>::value>::type
+    slist_erase(slist_node* head, slist_node* first, slist_node* last, Recycle recycle) noexcept {
         for (slist_node* node = first, * next; node != last; node = next) {
             next = node->next;
             node->next = nullptr;
@@ -153,7 +155,7 @@ namespace up
 
     template <class Node, slist_node Node::* NodePtr>
     inline UPALWAYSINLINE
-    void slist_erase_deallocate(slist_node* head, slist_node* first, slist_node* last, allocator* alloc) noexcept {
+    void slist_erase(slist_node* head, slist_node* first, slist_node* last, allocator* alloc) noexcept {
         for (slist_node* node = first, * next; node != last; node = next) {
             next = node->next;
             alloc->deallocate(::up::slist_cast<Node*>(node, NodePtr), sizeof(Node));
@@ -168,14 +170,15 @@ namespace up
 
     template <class Node, slist_node Node::* NodePtr, class Recycle>
     inline UPALWAYSINLINE
-    void slist_clear(slist_node* head, Recycle recycle) noexcept {
+    typename enable_if<!is_convertible<Recycle, allocator*>::value>::type
+    slist_clear(slist_node* head, Recycle recycle) noexcept {
         ::up::slist_erase<Node, NodePtr>(head, head->next, nullptr, recycle);
     }
 
     template <class Node, slist_node Node::* NodePtr>
     inline UPALWAYSINLINE
-    void slist_clear_deallocate(slist_node* head, allocator* alloc) noexcept {
-        ::up::slist_erase_deallocate<Node, NodePtr>(head, head->next, nullptr, alloc);
+    void slist_clear(slist_node* head, allocator* alloc) noexcept {
+        ::up::slist_erase<Node, NodePtr>(head, head->next, nullptr, alloc);
     }
     
     inline UPALWAYSINLINE
@@ -184,9 +187,18 @@ namespace up
         node->next = nullptr;
     }
 
+    template <class Node, slist_node Node::* NodePtr, class Recycle>
+    inline UPALWAYSINLINE
+    typename enable_if<!is_convertible<Recycle, allocator*>::value>::type
+    slist_unlink(slist_node* head, slist_node* node, Recycle recycle) noexcept {
+        head->next = node->next;
+        node->next = nullptr;
+        recycle(node);
+    }
+
     template <class Node, slist_node Node::* NodePtr>
     inline UPALWAYSINLINE
-    void slist_unlink_deallocate(slist_node* head, slist_node* node, allocator* alloc) noexcept {
+    void slist_unlink(slist_node* head, slist_node* node, allocator* alloc) noexcept {
         head->next = node->next;
         alloc->deallocate(::up::slist_cast<Node*>(node, NodePtr), sizeof(Node));
     }

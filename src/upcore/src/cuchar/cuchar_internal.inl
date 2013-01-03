@@ -25,7 +25,7 @@
 #ifndef UP_CUCHAR_INTERNAL_INL
 #define UP_CUCHAR_INTERNAL_INL
 
-#include <type_traits>
+#include <up/type_traits.hpp>
 
 namespace up { namespace detail
 {
@@ -150,21 +150,21 @@ namespace up { namespace detail
     template <class T>
     inline UPALWAYSINLINE
     bool u8_is_trail(T c) noexcept {
-        static_assert(std::is_unsigned<T>::value, "");
+        static_assert(is_unsigned<T>::value, "");
         return (c & 0xC0) == 0x80;
     }
 
     template <class T>
     inline UPALWAYSINLINE
     bool u16_is_surrogate(T c) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
         return (c & 0xF800) == 0xD800;
     }
         
     template <class T>
     inline UPALWAYSINLINE
     bool u16_is_surrogate_pair(T lead, T tail) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
         lead &= 0xFC00; tail &= 0xFC00;
         return (lead == 0xD800) && (tail == 0xDC00);
     }
@@ -172,35 +172,35 @@ namespace up { namespace detail
     template <class T>
     inline UPALWAYSINLINE
     bool u16_is_lead_surrogate(T c) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
         return (c & 0xFC00) == 0xD800;
     }
         
     template <class T>
     inline UPALWAYSINLINE
     bool u16_is_tail_surrogate(T c) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least16_t)), "");
         return (c & 0xFC00) == 0xDC00;
     }
 
     template <class T>
     inline UPALWAYSINLINE
     bool u32_is_surrogate(T c) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least32_t)), "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least32_t)), "");
         return (c & 0xFFFFF800u) == 0x0000D800u;
     }
 
     template <class T>
     inline UPALWAYSINLINE
     bool u32_is_valid(T c) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least32_t)), "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least32_t)), "");
         return (c <= utf32_max_value) && !::up::detail::u32_is_surrogate(c);
     }
 
     template <class T, class U>
     inline UPALWAYSINLINE
     bool u32_from_u8_is_valid(T c, U length) noexcept {
-        static_assert(std::is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least32_t)) && ::std::is_signed<U>::value, "");
+        static_assert(is_unsigned<T>::value && (sizeof(T) >= sizeof(uint_least32_t)) && is_signed<U>::value, "");
         return (::up::detail::u8_min_values[length] <= c) && (c <= utf32_max_value) && !::up::detail::u32_is_surrogate(c);
     }
 }}

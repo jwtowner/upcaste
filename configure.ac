@@ -245,6 +245,8 @@ AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [[ #include <type_traits> ]],
         [
+            using std::is_trivial;
+            using std::is_trivially_destructible;
             using std::is_nothrow_copy_constructible;
             using std::is_nothrow_copy_assignable;
             using std::is_nothrow_move_constructible;

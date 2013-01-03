@@ -32,6 +32,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include <time.h>
+#include <errno.h>
 
 #define ONCE_FLAG_INIT PTHREAD_ONCE_INIT
 #define TSS_DTOR_ITERATIONS PTHREAD_DESTRUCTOR_ITERATIONS

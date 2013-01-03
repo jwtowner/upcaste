@@ -204,9 +204,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\upcore.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\utility.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cerrno\windows\hresult_to_errno.cpp">
       <Filter>src\cerrno\windows</Filter>
     </ClCompile>
@@ -1495,6 +1492,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\region\heap_region_allocator.cpp">
       <Filter>src\region</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\type_traits.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

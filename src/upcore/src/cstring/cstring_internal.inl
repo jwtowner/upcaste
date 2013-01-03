@@ -25,8 +25,6 @@
 #ifndef UP_CSTRING_INTERNAL_INL
 #define UP_CSTRING_INTERNAL_INL
 
-#include <type_traits>
-
 namespace up { namespace detail
 {
     // Constants and functions for efficiently finding a null-terminator in a string

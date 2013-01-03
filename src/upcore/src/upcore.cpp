@@ -66,6 +66,7 @@
 #include <up/sparsemap.hpp>
 #include <up/sparseset.hpp>
 #include <up/tchar.hpp>
+#include <up/type_traits.hpp>
 #include <up/utility.hpp>
 
 extern "C"

@@ -34,13 +34,13 @@ namespace up { namespace math
     template <> struct LIBUPCOREAPI make_vector<{{math.as_actual_type[element_type]}},{{dim}}> { typedef {{element_type}}{{dim}} type; };
 {%- endfor %}
 {%- for (element_type, dim) in all_vector_types %}
-    template <> struct LIBUPCOREAPI vector_step<{{element_type}}{{dim}}> : std::integral_constant<size_t, {{dim}}> { };
+    template <> struct LIBUPCOREAPI vector_step<{{element_type}}{{dim}}> : integral_constant<size_t, {{dim}}> { };
 {%- endfor %}
 {%- for (element_type, dim) in all_vector_types %}
-    template <> struct LIBUPCOREAPI matrix_column_step<{{element_type}}{{dim}}> : std::integral_constant<size_t, {{dim}}> { };
+    template <> struct LIBUPCOREAPI matrix_column_step<{{element_type}}{{dim}}> : integral_constant<size_t, {{dim}}> { };
 {%- endfor %}
 {%- for (element_type, dim) in all_vector_types %}
-    template <> struct LIBUPCOREAPI is_vector<{{element_type}}{{dim}}> : std::true_type { };
+    template <> struct LIBUPCOREAPI is_vector<{{element_type}}{{dim}}> : true_type { };
 {%- endfor %}
 
     //

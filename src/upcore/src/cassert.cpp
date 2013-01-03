@@ -31,7 +31,7 @@ namespace up
 {
     namespace
     {
-        thread_local assert_handler tls_handler = nullptr;
+        thread_local assert_handler tls_handler = 0;
     }
 
     LIBUPCOREAPI UPNONNULLALL

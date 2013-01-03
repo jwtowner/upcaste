@@ -124,6 +124,40 @@
 #endif
 
 //
+// compiler type-traits
+//
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 2))
+#   define UP_TT_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T) __has_trivial_constructor(T)
+#   define UP_TT_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T) __has_trivial_copy(T)
+#   define UP_TT_IS_TRIVIALLY_COPY_ASSIGNABLE(T) __has_trivial_assign(T)
+#   define UP_TT_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T) __has_trivial_copy(T)
+#   define UP_TT_IS_TRIVIALLY_MOVE_ASSIGNABLE(T) __has_trivial_assign(T)
+#   define UP_TT_IS_TRIVIALLY_DESTRUCTIBLE(T) __has_trivial_destructor(T)
+#   define UP_TT_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T) __has_nothrow_constructor(T)
+#   define UP_TT_IS_NOTHROW_COPY_CONSTRUCTIBLE(T) __has_nothrow_copy(T)
+#   define UP_TT_IS_NOTHROW_COPY_ASSIGNABLE(T) __has_nothrow_assign(T)
+#   define UP_TT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T) __has_nothrow_copy(T)
+#   define UP_TT_IS_NOTHROW_MOVE_ASSIGNABLE(T) __has_nothrow_assign(T)
+#   define UP_TT_HAS_VIRTUAL_DESTRUCTOR(T) __has_virtual_destructor(T)
+#   define UP_TT_IS_ABSTRACT(T) __is_abstract(T)
+#   define UP_TT_IS_BASE_OF(T,U) __is_base_of(T,U)
+#   define UP_TT_IS_CLASS(T) __is_class(T)
+#   define UP_TT_IS_EMPTY(T) __is_empty(T)
+#   define UP_TT_IS_ENUM(T) __is_enum(T)
+#   define UP_TT_IS_POD(T) __is_pod(T)
+#   define UP_TT_IS_POLYMORPHIC(T) __is_polymorphic(T)
+#   define UP_TT_IS_UNION(T) __is_union(T)
+#endif
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 5))
+#   define UP_TT_IS_LITERAL_TYPE(T) __is_literal_type(T)
+#   define UP_TT_IS_STANDARD_LAYOUT(T) __is_standard_layout(T)
+#   define UP_TT_IS_TRIVIAL(T) __is_trivial(T)
+#endif
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 6))
+#   define UP_TT_IS_CONVERTIBLE_TO(T, U) __is_convertible_to(T, U)
+#endif
+
+//
 // compiler built-ins
 //
 #define UPABORT __builtin_trap

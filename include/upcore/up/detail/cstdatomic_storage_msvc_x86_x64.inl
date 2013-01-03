@@ -164,7 +164,7 @@
         typedef Value value_type; \
         typedef Value& reference; \
         typedef Value const const_reference; \
-        typedef typename std::conditional<!std::is_pointer<Value>::value, Value, ptrdiff_t>::type operand_type; \
+        typedef typename conditional<!is_pointer<Value>::value, Value, ptrdiff_t>::type operand_type; \
         typedef operand_type const const_operand_reference; \
         static constexpr bool is_lock_free = true; \
         UPALWAYSINLINE UPCONSTEXPR atomic_storage() noexcept { } \

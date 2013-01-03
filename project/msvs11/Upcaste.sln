@@ -68,6 +68,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "up", "up", "{05558204-5216-
 		..\..\include\upcore\up\sparsemap.hpp = ..\..\include\upcore\up\sparsemap.hpp
 		..\..\include\upcore\up\sparseset.hpp = ..\..\include\upcore\up\sparseset.hpp
 		..\..\include\upcore\up\tchar.hpp = ..\..\include\upcore\up\tchar.hpp
+		..\..\include\upcore\up\type_traits.hpp = ..\..\include\upcore\up\type_traits.hpp
 		..\..\include\upcore\up\utility.hpp = ..\..\include\upcore\up\utility.hpp
 	EndProjectSection
 EndProject
@@ -95,11 +96,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "detail", "detail", "{056A60
 		..\..\include\upcore\up\detail\cmath_cxx11.inl = ..\..\include\upcore\up\detail\cmath_cxx11.inl
 		..\..\include\upcore\up\detail\cmath_default.inl = ..\..\include\upcore\up\detail\cmath_default.inl
 		..\..\include\upcore\up\detail\cstdatomic_cxx11.inl = ..\..\include\upcore\up\detail\cstdatomic_cxx11.inl
-		..\..\include\upcore\up\detail\cstdatomic_default.inl = ..\..\include\upcore\up\detail\cstdatomic_default.inl
 		..\..\include\upcore\up\detail\cstdatomic_fence_gcc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_fence_gcc_x86_x64.inl
 		..\..\include\upcore\up\detail\cstdatomic_fence_msvc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_fence_msvc_x86_x64.inl
 		..\..\include\upcore\up\detail\cstdatomic_flag_gcc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_flag_gcc_x86_x64.inl
 		..\..\include\upcore\up\detail\cstdatomic_flag_msvc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_flag_msvc_x86_x64.inl
+		..\..\include\upcore\up\detail\cstdatomic_generic.inl = ..\..\include\upcore\up\detail\cstdatomic_generic.inl
 		..\..\include\upcore\up\detail\cstdatomic_pause_gcc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_pause_gcc_x86_x64.inl
 		..\..\include\upcore\up\detail\cstdatomic_pause_msvc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_pause_msvc_x86_x64.inl
 		..\..\include\upcore\up\detail\cstdatomic_storage_gcc_x86_x64.inl = ..\..\include\upcore\up\detail\cstdatomic_storage_gcc_x86_x64.inl
@@ -124,6 +125,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "detail", "detail", "{056A60
 		..\..\include\upcore\up\detail\sparse.inl = ..\..\include\upcore\up\detail\sparse.inl
 		..\..\include\upcore\up\detail\tchar_char.inl = ..\..\include\upcore\up\detail\tchar_char.inl
 		..\..\include\upcore\up\detail\tchar_wchar.inl = ..\..\include\upcore\up\detail\tchar_wchar.inl
+		..\..\include\upcore\up\detail\type_traits_cxx11.inl = ..\..\include\upcore\up\detail\type_traits_cxx11.inl
+		..\..\include\upcore\up\detail\type_traits_generic.inl = ..\..\include\upcore\up\detail\type_traits_generic.inl
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "math", "math", "{0573372C-5216-11E2-A057-000C2978B81B}"
