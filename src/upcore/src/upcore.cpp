@@ -55,6 +55,7 @@
 #include <up/densemap.hpp>
 #include <up/filesystem.hpp>
 #include <up/hash.hpp>
+#include <up/limits.hpp>
 #include <up/list.hpp>
 #include <up/log.hpp>
 #include <up/math.hpp>

@@ -29,12 +29,12 @@ namespace up { namespace math { namespace detail
             typedef typename common_type<X, Y>::type ctype;
             ctype const r = static_cast<ctype>(x);
 
-            if (r <= static_cast<ctype>(std::numeric_limits<X>::min())) {
-                return ::std::numeric_limits<X>::min();
+            if (r <= static_cast<ctype>(numeric_limits<X>::min())) {
+                return numeric_limits<X>::min();
             }
 
-            if (r >= static_cast<ctype>(std::numeric_limits<X>::max())) {
-                return ::std::numeric_limits<X>::max();
+            if (r >= static_cast<ctype>(numeric_limits<X>::max())) {
+                return numeric_limits<X>::max();
             }
 
             return static_cast<X>(r);
@@ -49,12 +49,12 @@ namespace up { namespace math { namespace detail
             typedef typename common_type<X, Y>::type ctype;
             ctype const r = static_cast<ctype>(x);
 
-            if (r <= static_cast<ctype>(-std::numeric_limits<X>::max())) {
-                return -::std::numeric_limits<X>::max();
+            if (r <= static_cast<ctype>(-numeric_limits<X>::max())) {
+                return -numeric_limits<X>::max();
             }
 
-            if (r >= static_cast<ctype>(std::numeric_limits<X>::max())) {
-                return ::std::numeric_limits<X>::max();
+            if (r >= static_cast<ctype>(numeric_limits<X>::max())) {
+                return numeric_limits<X>::max();
             }
 
             return static_cast<X>(r);

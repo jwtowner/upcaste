@@ -30,8 +30,8 @@
 #define UP_MATH_MATHFWD_HPP
 
 #include <up/cmath.hpp>
+#include <up/limits.hpp>
 #include <up/utility.hpp>
-#include <limits>
 
 namespace up { namespace math
 {

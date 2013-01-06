@@ -1283,7 +1283,7 @@ namespace up
 #endif
 
     template <class T>
-#if defined(UP_TT_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE) && !defined(HRC_NO_RVALUE_REFERENCES)
+#if defined(UP_TT_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE) && !defined(UP_NO_RVALUE_REFERENCES)
     struct UPVISIBLE is_trivially_constructible<T, T&&>
         : integral_constant<bool, UP_TT_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)> { };
 #else
@@ -1390,8 +1390,8 @@ namespace up
 
     template <class T>
     struct UPVISIBLE is_trivially_copyable
-#ifdef HRC_IS_TRIVIALLY_COPYABLE
-        : integral_constant<bool, HRC_IS_TRIVIALLY_COPYABLE(T)> { };
+#ifdef UP_TT_IS_TRIVIALLY_COPYABLE
+        : integral_constant<bool, UP_TT_IS_TRIVIALLY_COPYABLE(T)> { };
 #else    
         : integral_constant<bool,
             is_trivially_destructible<typename remove_const<typename remove_all_extents<T>::type>::type>::value

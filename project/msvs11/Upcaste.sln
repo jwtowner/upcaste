@@ -56,6 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "up", "up", "{05558204-5216-
 		..\..\include\upcore\up\filesystem.hpp = ..\..\include\upcore\up\filesystem.hpp
 		..\..\include\upcore\up\hash.hpp = ..\..\include\upcore\up\hash.hpp
 		..\..\include\upcore\up\ieee754.hpp = ..\..\include\upcore\up\ieee754.hpp
+		..\..\include\upcore\up\limits.hpp = ..\..\include\upcore\up\limits.hpp
 		..\..\include\upcore\up\list.hpp = ..\..\include\upcore\up\list.hpp
 		..\..\include\upcore\up\log.hpp = ..\..\include\upcore\up\log.hpp
 		..\..\include\upcore\up\math.hpp = ..\..\include\upcore\up\math.hpp

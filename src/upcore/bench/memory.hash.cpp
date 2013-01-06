@@ -53,7 +53,7 @@ namespace memory_hash
     private:
 
         void generate() {
-            std::uniform_int_distribution<uint32_t> dist(1, std::numeric_limits<uint32_t>::max());
+            std::uniform_int_distribution<uint32_t> dist(1, UINT32_MAX);
             for (size_t i = 0; i < size_; ++i) {
                 data_[i] = dist(random_engine);
             }
