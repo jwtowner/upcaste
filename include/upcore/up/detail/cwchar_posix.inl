@@ -35,6 +35,12 @@ namespace up
 #ifdef UP_HAS_POSIX_WMEMCCPY
     using ::wmemccpy;
 #endif
+#ifdef UP_HAS_POSIX_MBSNRTOWCS
+    using ::mbsnrtowcs;
+#endif
+#ifdef UP_HAS_POSIX_WCSNRTOMBS
+    using ::wcsnrtombs;
+#endif
 #ifdef UP_HAS_POSIX_WCPCPY
     using ::wcpcpy;
 #endif

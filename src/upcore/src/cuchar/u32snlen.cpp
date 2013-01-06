@@ -28,15 +28,16 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32snlen(char32_t const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    size_t u32snlen(char32_t const* s, size_t n) noexcept {
         assert(s || !n);
 
         char32_t const* unit_ptr = s, * unit_end = s + n;
         
 #ifndef UP_ARCHITECTURE_32BIT
 
-        uintptr_t const mask1 = ::up::detail::null32_test_mask;
-        uintptr_t const mask2 = ::up::detail::null32_test_shift(mask1);
+        uintptr_t const mask1 = detail::null32_test_mask;
+        uintptr_t const mask2 = detail::null32_test_shift(mask1);
 
         if (n == 0) {
             return 0;

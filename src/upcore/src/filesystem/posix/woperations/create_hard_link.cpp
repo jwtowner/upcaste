@@ -22,30 +22,28 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/filesystem/operations.hpp>
-#include <up/filesystem/transcode.hpp>
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
 
-#include <up/filesystem/wchar_operations.hpp>
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    bool create_hard_link(wchar_t const* to, wchar_t const* new_hard_link, std::error_code& ec) noexcept {
-        char* native_to = transcode(to, ec);
+    int create_hard_link(wchar_t const* to, wchar_t const* new_hard_link) noexcept {
+        char* native_to = transcode(to);
         if (!native_to) {
-            return false;
+            return -1;
         }
 
-        char* native_new = transcode(new_hard_link, ec);
+        char* native_new = transcode(new_hard_link);
         if (!native_new) {
             free(native_to);
-            return false;
+            return -1;
         }
 
-        bool result = create_hard_link(native_to, native_new, ec);
+        int result = create_hard_link(native_to, native_new);
         free(native_new);
         free(native_to);
         return result;

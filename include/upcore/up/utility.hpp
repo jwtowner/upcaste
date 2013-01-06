@@ -146,15 +146,18 @@ namespace up
 
 #ifndef UP_NO_NOEXCEPT
         template <class T>
-        struct UPHIDDEN is_nothrow_swappable_impl<T, true> : integral_constant<bool, noexcept(swap(::up::declval<T&>(), ::up::declval<T&>()))> { };
+        struct UPHIDDEN is_nothrow_swappable_impl<T, true>
+            : integral_constant<bool, noexcept(swap(::up::declval<T&>(), ::up::declval<T&>()))> { };
 #endif
     }
     
     template <class T>
-    struct UPVISIBLE is_swappable : integral_constant<bool, detail::is_swappable_impl::result<T>::value> { };
+    struct UPVISIBLE is_swappable
+        : integral_constant<bool, detail::is_swappable_impl::result<T>::value> { };
 
     template <class T>
-    struct UPVISIBLE is_nothrow_swappable : integral_constant<bool, detail::is_nothrow_swappable_impl<T, is_swappable<T>::value>::value> { };
+    struct UPVISIBLE is_nothrow_swappable
+        : integral_constant<bool, detail::is_nothrow_swappable_impl<T, is_swappable<T>::value>::value> { };
 
     template <class T>
     inline UPALWAYSINLINE UPPURE

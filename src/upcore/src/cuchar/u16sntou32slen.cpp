@@ -28,7 +28,8 @@
 
 namespace up
 {        
-    LIBUPCOREAPI size_t u16snlen_u32(char16_t const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    size_t u16sntou32slen(char16_t const* s, size_t n) noexcept {
         assert(s || !n);
 
         char16_t const* end_ptr = s + n;
@@ -41,7 +42,7 @@ namespace up
             }
 
             ++count;
-            if (::up::detail::u16_is_lead_surrogate(lead) && (s < end_ptr) && ::up::detail::u16_is_tail_surrogate(*s)) {
+            if (detail::u16_is_lead_surrogate(lead) && (s < end_ptr) && detail::u16_is_tail_surrogate(*s)) {
                 ++s;
             }
         }

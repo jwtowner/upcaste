@@ -102,7 +102,7 @@ namespace up { namespace filesystem
         }
 
         assert((buffer_length + m) < buffer_max);
-        wmemcpy(buffer + buffer_length, q, m);
+        wmemcpy(buffer + buffer_length, q, m + 1);
         buffer_length += m;
 
         // normalize the joined path to get final result

@@ -205,9 +205,15 @@ namespace up { namespace test
     void test_case::add_category(char const* category) {
         assert(category);
 
-        category_container::const_iterator itr = std::find_if(impl_->categories.begin(), impl_->categories.end(), [=](char const* name) {
-            return (name == category) || !strcmp(name, category);
-        });
+        category_container::const_iterator itr, end;
+        for ( itr  = impl_->categories.begin(), end = impl_->categories.end();
+            itr != end;
+            ++itr
+        ) {
+            if ((*itr == category) || !strcmp(*itr, category)) {
+                return;
+            }
+        }
 
         if (itr != impl_->categories.end()) {
             impl_->categories.push_back(category);

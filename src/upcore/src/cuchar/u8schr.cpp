@@ -27,27 +27,28 @@
 
 namespace up
 {
-    LIBUPCOREAPI char const* u8schr(char const* s, char32_t u32) noexcept {
+    LIBUPCOREAPI
+    char const* u8schr(char const* s, char32_t u32) noexcept {
         assert(s);
 
         // ascii fast-path
         if (u32 < 0x80) {
-            return ::up::strchr(s, static_cast<int>(u32));
+            return strchr(s, static_cast<int>(u32));
         }
         
         // unicode normal-path
-        char c_buffer[U8_CUR_MAX];
-        int c_buffer_length = ::up::u32tou8(c_buffer, u32);
-        if (c_buffer_length == -1) {
+        char buffer[u8_cur_max];
+        int buffer_length = u32tou8(buffer, u32);
+        if (buffer_length == -1) {
             return nullptr;
         }
         
         // search for character sequence in 's'
-        char const* c_end = c_buffer + c_buffer_length;
+        char const* buffer_end = buffer + buffer_length;
         for ( ; *s; ++s) {
-            char const* c = c_buffer;
-            for (char const* s2 = s; (c < c_end) && !(*s2 - *c); ++s2, ++c) ;
-            if (c == c_end) {
+            char const* b = buffer;
+            for (char const* s2 = s; (b < buffer_end) && !(*s2 - *b); ++s2, ++b) ;
+            if (b == buffer_end) {
                 return s;
             }
         }

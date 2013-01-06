@@ -28,7 +28,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u16snlen(char16_t const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    size_t u16snlen(char16_t const* s, size_t n) noexcept {
         assert(s || !n);
 
         char16_t const* unit_ptr = s, * unit_end = s + n;
@@ -56,8 +57,8 @@ namespace up
         // scan string for null-terminator a machine word at a time
         for ( ; unit_ptr < unit_end; unit_ptr += (sizeof(uintptr_t) / sizeof(char16_t))) {
             uintptr_t block = *reinterpret_cast<uintptr_t const*>(unit_ptr);
-            if (::up::detail::null16_test(block)) {
-                unit_ptr += ::up::detail::null16_test_locate(block);
+            if (detail::null16_test(block)) {
+                unit_ptr += detail::null16_test_locate(block);
                 break;
             }
         }

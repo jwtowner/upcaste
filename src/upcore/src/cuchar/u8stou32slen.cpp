@@ -28,7 +28,8 @@
 
 namespace up
 {        
-    LIBUPCOREAPI size_t u8slen_u32(char const* s) noexcept {
+    LIBUPCOREAPI
+    size_t u8stou32slen(char const* s) noexcept {
         assert(s);
     
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
@@ -44,7 +45,7 @@ namespace up
 
             // ascii fast-path
             ++count;
-            length = ::up::detail::u8_sequence_length_table[codepoint];
+            length = detail::u8_sequence_length_table[codepoint];
             if (length <= 1) {
                 continue;
             }
@@ -52,15 +53,15 @@ namespace up
             // fully validate unicode codepoint
             for (i = length - 1; i > 0; ++u8s, --i) {
                 octet = *u8s;
-                if (!::up::detail::u8_is_trail(octet)) {
+                if (!detail::u8_is_trail(octet)) {
                     break;
                 }
                 
                 codepoint = (codepoint << 6) + octet;
             }
 
-            codepoint -= ::up::detail::u8_offset_table[length];
-            if ((i > 0) || !::up::detail::u32_from_u8_is_valid(codepoint, length)) {
+            codepoint -= detail::u8_offset_table[length];
+            if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
                 u8s -= (length - i - 1);
             }
         }

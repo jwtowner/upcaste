@@ -315,7 +315,10 @@ namespace up
         slist_node* node = first, * new_first = last;
         while (node != last) {
             slist_node* next = node->next, * tail = new_first, ** tail_ptr = &new_first;
-            while ((tail != last) && !comp(::up::slist_cast<Node const*>(node, NodePtr), ::up::slist_cast<Node const*>(tail, NodePtr))) {
+            while (tail != last) {
+                if (comp(::up::slist_cast<Node const*>(node, NodePtr), ::up::slist_cast<Node const*>(tail, NodePtr))) {
+                    break;
+                }
                 tail_ptr = &tail->next;
                 tail = tail->next;
             }

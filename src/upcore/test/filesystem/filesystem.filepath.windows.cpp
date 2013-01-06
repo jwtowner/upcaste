@@ -204,7 +204,7 @@ namespace filesystem_filepath_windows
 
     UP_TEST_CASE(windows_join_path) {
         char const* const parts1[] = { "hello", "world", "/foo\\", "\\bar.baz" };
-        char const* const parts2[] = { "c:\\hello", "\\/", "\\world", "foo", nullptr, "/bar.baz" };
+        char const* const parts2[] = { "c:\\hello", "\\/", "\\world", "foo", (char const*)nullptr, "/bar.baz" };
         char buffer[10];
         char* path;
         size_t sz;
@@ -217,13 +217,13 @@ namespace filesystem_filepath_windows
         require(path && !up::strcmp(path, "c:\\hello\\world\\foo\\bar.baz"));
         free(path);
 
-        sz = up::filesystem::windows::join_path(buffer, sizeof(buffer), nullptr);
+        sz = up::filesystem::windows::join_path(buffer, sizeof(buffer), (char const*)nullptr);
         require(!sz && !up::strcmp(buffer, ""));
 
-        sz = up::filesystem::windows::join_path(buffer, sizeof(buffer), "/hi", "you", nullptr, "/bar.baz", nullptr);
+        sz = up::filesystem::windows::join_path(buffer, sizeof(buffer), "/hi", "you", (char const*)nullptr, "/bar.baz", (char const*)nullptr);
         require((sz == 7) && !up::strcmp(buffer, "/hi\\you"));
 
-        sz = up::filesystem::windows::join_path(buffer, sizeof(buffer), "hello", "world", "/foo/", "/bar.baz", nullptr);
+        sz = up::filesystem::windows::join_path(buffer, sizeof(buffer), "hello", "world", "/foo/", "/bar.baz", (char const*)nullptr);
         require((sz == 23) && !up::strcmp(buffer, "hello\\wor"));
     }
 

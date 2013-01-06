@@ -28,7 +28,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u8sspn(char const* s, char const* accept) noexcept {
+    LIBUPCOREAPI
+    size_t u8sspn(char const* s, char const* accept) noexcept {
         assert(s && accept);
         
         // fast-path
@@ -42,7 +43,7 @@ namespace up
         for (;;) {
             // determine start and end bounds of current character in 's'
             char const* char_ptr, * end_ptr, * s_next;
-            int char_length = ::up::u8len(s);
+            int char_length = u8len(s);
             if (char_length == 0) {
                 break;
             }

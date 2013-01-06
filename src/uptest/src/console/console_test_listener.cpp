@@ -66,10 +66,10 @@ namespace up { namespace test
 
     LIBUPTESTAPI
     void console_test_listener::started(test_suite const&, unsigned int total_tests, unsigned int total_tests_to_run) {
+        std::string empty;
+        impl_->log_buffer.swap(empty);
         error_buffer_index_ = 0;
         error_buffer_[0] = '\0';
-        impl_->log_buffer.clear();
-        impl_->log_buffer.shrink_to_fit();
     
         printf("Running %d out of %d test cases ...\n", total_tests_to_run, total_tests);
         printf("%s\n\n", section_separator);
@@ -100,7 +100,7 @@ namespace up { namespace test
     LIBUPTESTAPI
     void console_test_listener::exit_test_suite(test_suite const& suite) {
         if (suite.parent() != nullptr) {
-            puts("\n");
+            putchar('\n');
         }
     }
         
@@ -112,8 +112,8 @@ namespace up { namespace test
             printf("    ---\n%s\n    ---\n", impl_->log_buffer.c_str());
         }
 
-        impl_->log_buffer.clear();
-        impl_->log_buffer.shrink_to_fit();
+        std::string empty;
+        impl_->log_buffer.swap(empty);
     }
         
     LIBUPTESTAPI
@@ -129,8 +129,8 @@ namespace up { namespace test
             printf("    ---\n%s\n    ---\n", impl_->log_buffer.c_str());
         }
 
-        impl_->log_buffer.clear();
-        impl_->log_buffer.shrink_to_fit();
+        std::string empty;
+        impl_->log_buffer.swap(empty);
 
         if (error_buffer_index_ > 0) {
             error_printf("%s\n\n", group_separator);
@@ -178,7 +178,7 @@ namespace up { namespace test
             }
         }
             
-        puts("\n");
+        putchar('\n');
             
         for (test_benchmark_result const* result = first; result != last; ++result) {
             printf(
@@ -193,7 +193,7 @@ namespace up { namespace test
             );
         }
             
-        puts("\n");
+        putchar('\n');
     }
 
     UPHIDDEN

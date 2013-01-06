@@ -28,29 +28,37 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u16stou32s(char32_t* UPRESTRICT u32s, char16_t const* UPRESTRICT u16s, size_t n) noexcept {
-        assert((u16s && u32s) || !n);
+    LIBUPCOREAPI
+    size_t u16stou32s(char32_t* UPRESTRICT dst, char16_t const** UPRESTRICT src, size_t n) noexcept {
+        assert((dst && src && *src) || !n);
         
-        char32_t const* u32s_start = u32s, * u32s_end = u32s + n;
+        char16_t const* src_cur = *src;
+        char32_t* const dst_start = dst;
+        char32_t* const dst_end = dst + n;
         char32_t lead, tail;
         
-        for ( ; u32s < u32s_end; ++u32s) {
-            lead = *(u16s++);
-            if (!::up::detail::u16_is_surrogate(lead)) {
-                *u32s = lead;
+        for ( ; dst < dst_end; ++src_cur, ++dst) {
+            lead = *src_cur;
+            if (!detail::u16_is_surrogate(lead)) {
+                *dst = lead;
                 if (!lead) {
+                    src_cur = nullptr;
                     break;
                 }
+                continue;
             }
-            else if (::up::detail::u16_is_surrogate_pair(lead, (tail = *u16s))) {
-                *u32s = (lead << 10) + tail - detail::utf16_surrogate_offset;
-                ++u16s;
+
+            tail = *(++src_cur);
+            if (detail::u16_is_surrogate_pair(lead, tail)) {
+                *dst = (lead << 10) + tail - detail::utf16_surrogate_offset;
+                continue;
             }
-            else {
-                *u32s = detail::u32_replacement_character;
-            }
+
+            *dst = detail::u32_replacement_character;
+            --src_cur;
         }
         
-        return static_cast<size_t>(u32s - u32s_start);
+        *src = src_cur;
+        return static_cast<size_t>(dst - dst_start);
     }
 }

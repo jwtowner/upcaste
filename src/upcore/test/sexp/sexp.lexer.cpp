@@ -29,7 +29,7 @@
 namespace sexp_lexer
 {
     UP_TEST_CASE(is_delimiter) {
-        require(up::sexp::lexer_is_delimiter(UEOF));        
+        require(up::sexp::lexer_is_delimiter(up::ueof));
         require(up::sexp::lexer_is_delimiter('\t'));
         require(up::sexp::lexer_is_delimiter('\v'));
         require(up::sexp::lexer_is_delimiter('\r'));

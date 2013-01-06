@@ -23,7 +23,7 @@
 //
 
 #include <up/slist.hpp>
-#include <up/cfloat.hpp>
+#include <up/climits.hpp>
 #include <up/test.hpp>
 
 namespace slist
@@ -32,6 +32,13 @@ namespace slist
     {
         up::slist_node node;
         int value;
+    };
+
+    struct compare_int_node
+    {
+        bool operator()(int_node const* x, int_node const* y) const noexcept {
+            return x->value < y->value;
+        }
     };
 
     void build_int_slist(up::slist_node* root, int_node* store, int const* values, size_t n) {
@@ -51,9 +58,13 @@ namespace slist
         up::slist_node root;
         bool result;
 
+#ifndef UP_NO_LAMBDAS
         auto compare = [](int_node const* x, int_node const* y) {
             return x->value < y->value;
         };
+#else
+        compare_int_node compare;
+#endif
 
         build_int_slist(&root, node_store, sorted_values, 10);
         require(up::slist_validate(&root, 10));
@@ -74,9 +85,13 @@ namespace slist
         up::slist_node root;
         bool result;
 
+#ifndef UP_NO_LAMBDAS
         auto compare = [](int_node const* x, int_node const* y) {
             return x->value < y->value;
         };
+#else
+        compare_int_node compare;
+#endif
 
         build_int_slist(&root, node_store, unsorted_values, 10);
         require(up::slist_validate(&root, 10));

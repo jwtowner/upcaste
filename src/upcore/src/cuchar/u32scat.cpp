@@ -31,7 +31,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI char32_t* u32scat(char32_t* UPRESTRICT s1, char32_t const* UPRESTRICT s2) noexcept {
+    LIBUPCOREAPI
+    char32_t* u32scat(char32_t* UPRESTRICT s1, char32_t const* UPRESTRICT s2) noexcept {
         assert(s1 && s2);
         char32_t* result = s1;
         for ( ; *s1; ++s1) ;

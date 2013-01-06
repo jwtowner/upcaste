@@ -28,7 +28,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI char16_t const* u16spbrk(char16_t const* s, char16_t const* accept) noexcept {
+    LIBUPCOREAPI
+    char16_t const* u16spbrk(char16_t const* s, char16_t const* accept) noexcept {
         assert(s && accept);
 
         // fast-path
@@ -40,7 +41,7 @@ namespace up
         for (;;) {
             // determine start and end bounds of current character in 's'
             char16_t const* char_ptr, * end_ptr, * s_next;
-            int char_length = ::up::u16len(s);
+            int char_length = u16len(s);
             if (char_length == 0) {
                 break;
             }

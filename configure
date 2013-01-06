@@ -3126,6 +3126,8 @@ int
 main ()
 {
 
+            using std::is_trivial;
+            using std::is_trivially_destructible;
             using std::is_nothrow_copy_constructible;
             using std::is_nothrow_copy_assignable;
             using std::is_nothrow_move_constructible;
@@ -4654,6 +4656,114 @@ $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
+# UP_HAS_POSIX_PTHREAD_MUTEX_TIMEDLOCK
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_mutex_timedlock" >&5
+$as_echo_n "checking for pthread_mutex_timedlock... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <pthread.h>
+int
+main ()
+{
+ pthread_mutex_timedlock(0, 0);
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_PTHREAD_MUTEX_TIMEDLOCK 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# UP_HAS_POSIX_PTHREAD_MUTEX_ADAPTIVE_NP
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for PTHREAD_MUTEX_ADAPTIVE_NP" >&5
+$as_echo_n "checking for PTHREAD_MUTEX_ADAPTIVE_NP... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <pthread.h>
+int
+main ()
+{
+ int x = PTHREAD_MUTEX_ADAPTIVE_NP;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_PTHREAD_MUTEX_ADAPTIVE_NP 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# UP_HAS_POSIX_PTHREAD_MUTEX_ERRORCHECK
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for PTHREAD_MUTEX_ERRORCHECK" >&5
+$as_echo_n "checking for PTHREAD_MUTEX_ERRORCHECK... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <pthread.h>
+int
+main ()
+{
+ int x = PTHREAD_MUTEX_ERRORCHECK;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_PTHREAD_MUTEX_ERRORCHECK 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# UP_HAS_POSIX_PTHREAD_MUTEX_TIMED_NP
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for PTHREAD_MUTEX_TIMED_NP" >&5
+$as_echo_n "checking for PTHREAD_MUTEX_TIMED_NP... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <pthread.h>
+int
+main ()
+{
+ int x = PTHREAD_MUTEX_TIMED_NP;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_PTHREAD_MUTEX_TIMED_NP 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
 # UP_HAS_POSIX_LOCALE
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for posix locale extensions" >&5
@@ -5017,6 +5127,60 @@ if ac_fn_cxx_try_compile "$LINENO"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
     $as_echo "#define UP_HAS_POSIX_WMEMCCPY 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# UP_HAS_POSIX_MBSNRTOWCS
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for mbsnrtowcs" >&5
+$as_echo_n "checking for mbsnrtowcs... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <cwchar>
+int
+main ()
+{
+ mbsnrtowcs(0, 0, 0, 0, 0);
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_MBSNRTOWCS 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# UP_HAS_POSIX_WCSNRTOMBS
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for wcsnrtombs" >&5
+$as_echo_n "checking for wcsnrtombs... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <cwchar>
+int
+main ()
+{
+ wcsnrtombs(0, 0, 0, 0, 0);
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_WCSNRTOMBS 1" >>confdefs.h
 
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5

@@ -27,13 +27,16 @@
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    int space(char const* p, space_info& info) noexcept {
+    int space(char const* UPRESTRICT p, space_info* UPRESTRICT info) noexcept {
+        if (!info) {
+            errno = EINVAL;
+            return -1;
+        }
         struct ::statvfs buf;
         if (::statvfs(p, &buf) != 0) {
             return -1;
         }
-
-        detail::get_space_info(buf, info);
+        detail::get_space_info(&buf, info);
         return 0;
     }
 }}

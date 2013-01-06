@@ -27,23 +27,24 @@
 
 namespace up
 {
-    LIBUPCOREAPI char32_t* u32stok(char32_t* UPRESTRICT s, char32_t const* UPRESTRICT delim, char32_t** UPRESTRICT state) noexcept {
+    LIBUPCOREAPI
+    char32_t* u32stok(char32_t* UPRESTRICT s, char32_t const* UPRESTRICT delim, char32_t** UPRESTRICT state) noexcept {
         assert(delim && state);
 
         if (!s) {
             s = *state;
         }
 
-        s += ::up::u32sspn(s, delim);
+        s += u32sspn(s, delim);
         if (*s == 0) {
             *state = s;
             return nullptr;
         }
         
         char32_t* token = s;
-        s = ::up::u32spbrk(s, delim);
+        s = u32spbrk(s, delim);
         if (!s) {
-            *state = ::up::u32schr(token, 0);
+            *state = u32schr(token, 0);
             return nullptr;
         }
 

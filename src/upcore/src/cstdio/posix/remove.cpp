@@ -22,20 +22,22 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
+
+#include "../../filesystem/posix/filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    bool remove(wchar_t const* p, std::error_code& ec) noexcept {
-        char* native = transcode(p, ec);
+    bool remove(wchar_t const* p) noexcept {
+        char* native = transcode(p);
         if (!native) {
             return false;
         }
 
-        bool result = remove(native, ec);
+        bool result = remove(native);
         free(native);
         return result;
     }

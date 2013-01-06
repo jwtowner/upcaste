@@ -22,9 +22,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
+
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
@@ -32,9 +34,8 @@ namespace up { namespace filesystem
     int exists(wchar_t const* UPRESTRICT p, bool* UPRESTRICT result) noexcept {
         char* native_p = transcode(p);
         if (!native_p) {
-            return false;
+            return -1;
         }
-
         int retval = exists(native_p, result);
         free(native_p);
         return retval;

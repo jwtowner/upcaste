@@ -28,21 +28,23 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u8stou16s(char16_t* UPRESTRICT u16s, char const* UPRESTRICT s, size_t n) noexcept {
-        assert((u16s && s) || !n);
+    LIBUPCOREAPI
+    size_t u8stou16s(char16_t* UPRESTRICT dst, char const** UPRESTRICT src, size_t n) noexcept {
+        assert((dst && src && *src) || !n);
 
-        unsigned char const* UPRESTRICT u8s = reinterpret_cast<unsigned char const*>(s);
-        char16_t* u16s_start = u16s, * u16s_end = u16s + n;
+        unsigned char const* usrc = reinterpret_cast<unsigned char const*>(*src);
+        char16_t* dst_start = dst, * dst_end = dst + n;
         uint_fast32_t codepoint, octet;
         int_fast32_t i, length;
 
-        for ( ; u16s < u16s_end; ++u16s) {
-            codepoint = *(u8s++);
+        for ( ; dst < dst_end; ++usrc, ++dst) {
+            codepoint = *usrc;
             
             // ascii fast-path
             if (codepoint < 0x80) {
-                *u16s = static_cast<char16_t>(codepoint);
+                *dst = static_cast<char16_t>(codepoint);
                 if (!codepoint) {
+                    usrc = nullptr;
                     break;
                 }
                 continue;
@@ -51,17 +53,15 @@ namespace up
             // fully decode and validate utf-8 sequence
             length = detail::u8_sequence_length_table[codepoint];
             if (length > 1) {
-                for (i = length - 1; i > 0; ++u8s, --i) {
-                    octet = *u8s;
-                    if (!::up::detail::u8_is_trail(octet)) {
+                for (i = length - 1; i > 0; --i) {
+                    octet = *(++usrc);
+                    if (!detail::u8_is_trail(octet)) {
                         break;
                     }
-
                     codepoint = (codepoint << 6) + octet;
                 }
-
                 codepoint -= detail::u8_offset_table[length];
-                if ((i > 0) || !::up::detail::u32_from_u8_is_valid(codepoint, length)) {
+                if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
                     codepoint = detail::u32_replacement_character;
                 }
             }
@@ -71,20 +71,19 @@ namespace up
             
             // encode utf-16 sequence
             if (codepoint < 0x10000) {
-                *u16s = static_cast<char16_t>(codepoint);
+                *dst = static_cast<char16_t>(codepoint);
             }
             else {
-                if ((u16s + 1) >= u16s_end) {
-                    *u16s = 0;
-                    return n;
+                if ((dst + 1) >= dst_end) {
+                    break;
                 }
-
                 codepoint -= 0x10000;
-                *(u16s++) = static_cast<char16_t>(0xD800 + (codepoint >> 10));
-                *u16s = static_cast<char16_t>(0xDC00 + (codepoint & 0x3FF));
+                *(dst++) = static_cast<char16_t>(0xD800 + (codepoint >> 10));
+                *dst = static_cast<char16_t>(0xDC00 + (codepoint & 0x3FF));
             }
         }
         
-        return static_cast<size_t>(u16s - u16s_start);
+        *src = reinterpret_cast<char const*>(usrc);
+        return static_cast<size_t>(dst - dst_start);
     }
 }

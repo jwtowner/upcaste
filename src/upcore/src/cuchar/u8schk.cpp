@@ -27,7 +27,8 @@
 
 namespace up
 {        
-    LIBUPCOREAPI char const* u8schk(char const* s) noexcept {
+    LIBUPCOREAPI
+    char const* u8schk(char const* s) noexcept {
         assert(s);
 
         for (;;) {

@@ -24,26 +24,37 @@
 
 #include <up/cuchar.hpp>
 #include <up/cassert.hpp>
+#include "cuchar_internal.inl"
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32snlen_u16(char32_t const* u32s, size_t n) noexcept {
-        assert(u32s || !n);
+    LIBUPCOREAPI
+    size_t u16stou8slen(char16_t const* s) noexcept {
+        assert(s);
         
-        char32_t const* u32s_end = u32s + n;
-        char32_t codepoint;
+        char16_t lead;
         size_t count = 0;
-
-        for ( ; u32s < u32s_end; ++count, ++u32s) {
-            codepoint = *u32s;
-            if (!codepoint) {
-                break;
-            }
-            else if ((0x10000 <= codepoint) && (codepoint < 0x110000)) {
+        
+        for (;;) {
+            lead = *(s++);
+            if (lead < 0x80) {
+                if (!lead) {
+                    break;
+                }
                 ++count;
             }
+            else if (lead < 0x800) {
+                count += 2;
+            }
+            else if (!detail::u16_is_surrogate(lead) || !detail::u16_is_surrogate_pair(lead, *s)) {
+                count += 3;
+            }
+            else {
+                count += 4;
+                ++s;
+            }
         }
-
+        
         return count;
     }
 }

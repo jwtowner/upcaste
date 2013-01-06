@@ -187,7 +187,13 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E>
     UPVISIBLE
-    int sparseset_construct(sparseset<R, N, H, E>& set, allocator* bucket_alloc, size_t num_buckets, H const& hasher = H(), E const& equals = E()) {
+    int sparseset_construct(
+        sparseset<R, N, H, E>& set,
+        allocator* bucket_alloc,
+        size_t num_buckets,
+        H const& hasher = H(),
+        E const& equals = E()
+    ) {
         if (!bucket_alloc) {
             return sparse_badallocator;
         }
@@ -383,7 +389,13 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals, class Recycle>
     inline UPHIDDENINLINE
-    size_t sparseset_erase(sparseset<R, N, H, E>& set, Key const& key, Hasher const& hasher, Equals const& equals, Recycle recycle) {
+    size_t sparseset_erase(
+        sparseset<R, N, H, E>& set,
+        Key const& key,
+        Hasher const& hasher,
+        Equals const& equals,
+        Recycle recycle
+    ) {
         R* result = ::up::sparseset_erase(set, key, hasher, equals);
         if (result) {
             recycle(result);
@@ -394,7 +406,13 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
-    size_t sparseset_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, Key const& key, Hasher const& hasher, Equals const& equals) {
+    size_t sparseset_erase(
+        sparseset<R, N, H, E>& set,
+        allocator* record_alloc,
+        Key const& key,
+        Hasher const& hasher,
+        Equals const& equals
+    ) {
         R* result = ::up::sparseset_erase(set, key, hasher, equals);
         if (result) {
             ::up::destruct_deallocate(record_alloc, result);
@@ -433,7 +451,13 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals, class Recycle>
     UPVISIBLE
-    size_t sparseset_multi_erase(sparseset<R, N, H, E>& set, Key const& key, Hasher const& hasher, Equals const& equals, Recycle recycle) {
+    size_t sparseset_multi_erase(
+        sparseset<R, N, H, E>& set,
+        Key const& key,
+        Hasher const& hasher,
+        Equals const& equals,
+        Recycle recycle
+    ) {
         if (!set.size) {
             return 0;
         }
@@ -465,7 +489,13 @@ namespace up
 
     template <class R, slist_node R::* N, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
-    size_t sparseset_multi_erase(sparseset<R, N, H, E>& set, allocator* record_alloc, Key const& key, Hasher const& hasher, Equals const& equals) {
+    size_t sparseset_multi_erase(
+        sparseset<R, N, H, E>& set,
+        allocator* record_alloc,
+        Key const& key,
+        Hasher const& hasher,
+        Equals const& equals
+    ) {
         return ::up::sparseset_multi_erase(set, key, hasher, equals, allocator_deleter<R>(record_alloc));
     }
 

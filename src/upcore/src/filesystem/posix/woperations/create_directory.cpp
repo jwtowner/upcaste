@@ -34,7 +34,6 @@ namespace up { namespace filesystem
         if (!native_p) {
             return false;
         }
-
         int retval = create_directory(native_p);
         free(native_p);
         return retval;

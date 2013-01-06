@@ -43,7 +43,7 @@
 #   elif defined(UP_HAS_POSIX_MEMALIGN)
 #       include <up/detail/aligned_alloc_posix.inl>
 #   else
-#       include <up/detail/aligned_alloc_default.inl>
+#       include <up/detail/aligned_alloc_generic.inl>
 #   endif
 #endif
 

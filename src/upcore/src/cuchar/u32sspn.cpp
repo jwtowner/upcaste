@@ -27,7 +27,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32sspn(char32_t const* s, char32_t const* accept) noexcept {
+    LIBUPCOREAPI
+    size_t u32sspn(char32_t const* s, char32_t const* accept) noexcept {
         assert(s && accept);
 
         // fast-path

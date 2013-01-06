@@ -145,7 +145,7 @@ namespace filesystem_filepath_posix
 
     UP_TEST_CASE(posix_join_path) {
         char const* const parts1[] = { "hello", "world", "/foo/", "/bar.baz" };
-        char const* const parts2[] = { "/hello", "///", "/world", "foo", nullptr, "/bar.baz" };
+        char const* const parts2[] = { "/hello", "///", "/world", "foo", (char const*)nullptr, "/bar.baz" };
         char const* const parts3[] = { "//", "hello", "world" };
         char buffer[10];
         char* path;
@@ -163,19 +163,19 @@ namespace filesystem_filepath_posix
         require(path && !up::strcmp(path, "//hello/world"));
         free(path);
 
-        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), nullptr);
+        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), (char const*)nullptr);
         require(!sz && !up::strcmp(buffer, ""));
 
-        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "/hi", "you", nullptr, "/bar.baz", nullptr);
+        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "/hi", "you", (char const*)nullptr, "/bar.baz", (char const*)nullptr);
         require((sz == 7) && !up::strcmp(buffer, "/hi/you"));
 
-        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "hello", "world", "/foo/", "/bar.baz", nullptr);
+        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "hello", "world", "/foo/", "/bar.baz", (char const*)nullptr);
         require((sz == 23) && !up::strcmp(buffer, "hello/wor"));
 
-        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "///", "hello", nullptr);
+        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "///", "hello", (char const*)nullptr);
         require((sz == 8) && !up::strcmp(buffer, "///hello"));
 
-        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "/", "world", nullptr);
+        sz = up::filesystem::posix::join_path(buffer, sizeof(buffer), "/", "world", (char const*)nullptr);
         require((sz == 6) && !up::strcmp(buffer, "/world"));
     }
 

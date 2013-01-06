@@ -27,12 +27,13 @@
 
 namespace up
 {        
-    LIBUPCOREAPI int u32nlen(char32_t const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    int u32nlen(char32_t const* s, size_t n) noexcept {
         if (!s) {
             return -1;
         }
 
         char32_t u32 = (n > 0) ? *s : 0;
-        return ::up::detail::u32_is_valid(u32) ? (u32 ? 1 : 0) : -1;
+        return detail::u32_is_valid(u32) ? (u32 ? 1 : 0) : -1;
     }
 }

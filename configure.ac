@@ -817,6 +817,54 @@ AC_COMPILE_IFELSE(
     AC_DEFINE(UP_HAS_POSIX_THREADS)],
     [AC_MSG_RESULT(no)])
 
+# UP_HAS_POSIX_PTHREAD_MUTEX_TIMEDLOCK
+
+AC_MSG_CHECKING([for pthread_mutex_timedlock])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <pthread.h> ]],
+        [[ pthread_mutex_timedlock(0, 0); ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_PTHREAD_MUTEX_TIMEDLOCK)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_PTHREAD_MUTEX_ADAPTIVE_NP
+
+AC_MSG_CHECKING([for PTHREAD_MUTEX_ADAPTIVE_NP])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <pthread.h> ]],
+        [[ int x = PTHREAD_MUTEX_ADAPTIVE_NP; ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_PTHREAD_MUTEX_ADAPTIVE_NP)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_PTHREAD_MUTEX_ERRORCHECK
+
+AC_MSG_CHECKING([for PTHREAD_MUTEX_ERRORCHECK])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <pthread.h> ]],
+        [[ int x = PTHREAD_MUTEX_ERRORCHECK; ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_PTHREAD_MUTEX_ERRORCHECK)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_PTHREAD_MUTEX_TIMED_NP
+
+AC_MSG_CHECKING([for PTHREAD_MUTEX_TIMED_NP])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <pthread.h> ]],
+        [[ int x = PTHREAD_MUTEX_TIMED_NP; ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_PTHREAD_MUTEX_TIMED_NP)],
+    [AC_MSG_RESULT(no)])
+
 # UP_HAS_POSIX_LOCALE
 
 AC_MSG_CHECKING([for posix locale extensions])
@@ -990,6 +1038,30 @@ AC_COMPILE_IFELSE(
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_WMEMCCPY)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_MBSNRTOWCS
+
+AC_MSG_CHECKING([for mbsnrtowcs])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <cwchar> ]],
+        [[ mbsnrtowcs(0, 0, 0, 0, 0); ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_MBSNRTOWCS)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_WCSNRTOMBS
+
+AC_MSG_CHECKING([for wcsnrtombs])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <cwchar> ]],
+        [[ wcsnrtombs(0, 0, 0, 0, 0); ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_WCSNRTOMBS)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_STPCPY

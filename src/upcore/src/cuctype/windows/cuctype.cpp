@@ -32,8 +32,8 @@ namespace up
 {
     LIBUPCOREAPI UPPURE
     int isualnum(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
 
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -46,8 +46,8 @@ namespace up
 
     LIBUPCOREAPI UPPURE
     int isualpha(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
         
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -60,8 +60,8 @@ namespace up
 
     LIBUPCOREAPI UPPURE
     int isublank(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
         
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -74,8 +74,8 @@ namespace up
 
     LIBUPCOREAPI UPPURE
     int isucntrl(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
         
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -88,8 +88,8 @@ namespace up
 
     LIBUPCOREAPI UPPURE
     int isugraph(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
         
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -102,8 +102,8 @@ namespace up
     
     LIBUPCOREAPI UPPURE
     int isuprint(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
         
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -116,8 +116,8 @@ namespace up
     
     LIBUPCOREAPI UPPURE
     int isupunct(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
 
         int count = u32towc(buffer, uc);
         if (count <= 0) {
@@ -130,8 +130,8 @@ namespace up
     
     LIBUPCOREAPI UPPURE
     int isuspace(uint_least32_t uc) noexcept {
-        WCHAR buffer[U16_CUR_MAX];
-        WORD type[U16_CUR_MAX]; 
+        WCHAR buffer[u16_cur_max];
+        WORD type[u16_cur_max]; 
 
         int count = u32towc(buffer, uc);
         if (count <= 0) {

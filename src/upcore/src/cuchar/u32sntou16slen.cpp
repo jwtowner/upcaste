@@ -24,51 +24,27 @@
 
 #include <up/cuchar.hpp>
 #include <up/cassert.hpp>
-#include "cuchar_internal.inl"
 
 namespace up
 {
-    LIBUPCOREAPI size_t u8slen_u16(char const* s) noexcept {
-        assert(s);
-    
-        unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
+    LIBUPCOREAPI
+    size_t u32sntou16slen(char32_t const* u32s, size_t n) noexcept {
+        assert(u32s || !n);
+        
+        char32_t const* u32s_end = u32s + n;
+        char32_t codepoint;
         size_t count = 0;
 
-        for (;;) {
-            codepoint = *(u8s++);
+        for ( ; u32s < u32s_end; ++count, ++u32s) {
+            codepoint = *u32s;
             if (!codepoint) {
                 break;
             }
-
-            // ascii fast-path
-            ++count;
-            length = ::up::detail::u8_sequence_length_table[codepoint];
-            if (length <= 1) {
-                continue;
+            else if ((0x10000 <= codepoint) && (codepoint < 0x110000)) {
+                ++count;
             }
-
-            // fully validate unicode codepoint
-            for (i = length - 1; i > 0; ++u8s, --i) {
-                octet = *u8s;
-                if (!::up::detail::u8_is_trail(octet)) {
-                    break;
-                }
-                
-                codepoint = (codepoint << 6) + octet;
-            }
-
-            codepoint -= ::up::detail::u8_offset_table[length];
-            if ((i > 0) || !::up::detail::u32_from_u8_is_valid(codepoint, length)) {
-                u8s -= (length - i - 1);
-                length = 0;
-            }
-            
-            // 4-byte utf-8 characters always map to a utf-16 surrogate pair
-            count += (length & 4) >> 2;
         }
-        
+
         return count;
     }
 }

@@ -23,6 +23,7 @@
 //
 
 #include <up/cstdlib.hpp>
+#include <up/climits.hpp>
 #include <up/cmath.hpp>
 #include <up/test.hpp>
 

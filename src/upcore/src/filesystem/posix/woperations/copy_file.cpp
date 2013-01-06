@@ -22,31 +22,28 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
+
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    int copy_file(wchar_t const* from, wchar_t const* to) noexcept {
-        return copy_file(from, to, copy_option::no_overwrite);
-    }
-
-    LIBUPCOREAPI UPNONNULLALL
-    bool copy_file(wchar_t const* from, wchar_t const* to, copy_option option) noexcept {
+    int copy_file(wchar_t const* from, wchar_t const* to, copy_option option) noexcept {
         char* native_from = transcode(from);
         if (!native_from) {
-            return false;
+            return -1;
         }
 
         char* native_to = transcode(to);
         if (!native_to) {
             free(native_from);
-            return false;
+            return -1;
         }
 
-        bool result = copy_file(native_from, native_to, option);
+        int result = copy_file(native_from, native_to, option);
         free(native_to);
         free(native_from);
         return result;

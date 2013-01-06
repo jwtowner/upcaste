@@ -8,7 +8,7 @@
 //  without limitation the rights to use, copy, modify, merge, publish,
 //  distribute, sublicense, and/or sell copies of the Software, and to
 //  permit persons to whom the Software is furnished to do so, subject to
-//  the following conditions:
+//  the following cs:
 //
 //  The above copyright notice and this permission notice shall be
 //  included in all copies or substantial portions of the Software.
@@ -32,160 +32,156 @@
 namespace up
 {
     inline UPALWAYSINLINE UPPURE
-    int16_t byteswap_int16(int16_t value) noexcept {
+    int16_t byteswap_int16(int16_t x) noexcept {
 #if (UP_COMPILER == UP_COMPILER_GCC) && (UP_ARCHITECTURE_ARM_VERSION >= 6)
-        __asm__ ( "rev16 %0, %0" : "+r" (value) );
-        return value;
+        __asm__ ( "rev16 %0, %0" : "+r" (x) );
+        return x;
 #else
-        union { int16_t s16; uint16_t u16; } r = { value };
-        r.u16 = (r.u16 <<8) | (r.u16 >> 8);
+        union { int16_t s16; uint16_t u16; } r = { x };
+        r.u16 = (r.u16 << 8) | (r.u16 >> 8);
         return r.s16;
 #endif
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint16_t byteswap_uint16(uint16_t value) noexcept {
+    uint16_t byteswap_uint16(uint16_t x) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
-        __asm__ ( "rev16 %0, %0" : "+r" (value) );
+        __asm__ ( "rev16 %0, %0" : "+r" (x) );
 #else
-        value = (value <<8) | (value >> 8);
+        x = (x << 8) | (x >> 8);
 #endif
-        return value;
+        return x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    int32_t byteswap_int32(int32_t value) noexcept {
+    int32_t byteswap_int32(int32_t x) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
-        __asm__ ( "rev %0, %0" : "+r" (value) );
-        return value;
+        __asm__ ( "rev %0, %0" : "+r" (x) );
+        return x;
 #else
-        union { int32_t s32; uint32_t u32; } r = { value };
-        r.u32 = ((r.u32 ^ (r.u32 >> 16 | (r.u32 <<16))) & 0xFF00FFFFU)>> 8) ^ (r.u32 >> 8 | r.u32 <<24);
+        union { int32_t s32; uint32_t u32; } r = { x };
+        r.u32 = (((r.u32 ^ (r.u32 >> 16 | r.u32 << 16)) & 0xFF00FFFFU) >> 8) ^ (r.u32 >> 8 | r.u32 << 24);
         return r.s32;
 #endif
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint32_t byteswap_uint32(uint32_t value) noexcept {
+    uint32_t byteswap_uint32(uint32_t x) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
-        __asm__ ( "rev %0, %0" : "+r" (value) );
+        __asm__ ( "rev %0, %0" : "+r" (x) );
 #else
-        value = ((value ^ (value >> 16 | (value <<16))) & 0xFF00FFFFU)>> 8) ^ (value >> 8 | value <<24);
+        x = (((x ^ (x >> 16 | x << 16)) & 0xFF00FFFFU) >> 8) ^ (x >> 8 | x << 24);
 #endif
-        return value;
+        return x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    int64_t byteswap_int64(int64_t value) noexcept {
-        union { uint32_t input32[2]; int64_t output64; } r;
-        r.input32[0] = static_cast<uint32_t>(value >> 32);
-        r.input32[1] = static_cast<uint32_t>(value);
-        r.input32[0] = byteswap(r.input32[0]);
-        r.input32[1] = byteswap(r.input32[1]);
-        return r.output64;
+    int64_t byteswap_int64(int64_t x) noexcept {
+        union { uint32_t u32[2]; int64_t u64; } r;
+        r.u32[0] = static_cast<uint32_t>(x >> 32);
+        r.u32[1] = static_cast<uint32_t>(x);
+        r.u32[0] = byteswap(r.u32[0]);
+        r.u32[1] = byteswap(r.u32[1]);
+        return r.u64;
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint64_t byteswap_uint64(uint64_t value) noexcept {
-        union { uint32_t input32[2]; uint64_t output64; } r;
-        r.input32[0] = static_cast<uint32_t>(value >> 32);
-        r.input32[1] = static_cast<uint32_t>(value);
-        r.input32[0] = byteswap(r.input32[0]);
-        r.input32[1] = byteswap(r.input32[1]);
-        return r.output64;
+    uint64_t byteswap_uint64(uint64_t x) noexcept {
+        union { uint32_t u32[2]; uint64_t u64; } r;
+        r.u32[0] = static_cast<uint32_t>(x >> 32);
+        r.u32[1] = static_cast<uint32_t>(x);
+        r.u32[0] = byteswap(r.u32[0]);
+        r.u32[1] = byteswap(r.u32[1]);
+        return r.u64;
     }
 
     inline UPALWAYSINLINE UPPURE
-    int16_t byteswap_int16(int16_t value, bool condition) noexcept {
+    int16_t byteswap_int16(int16_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
             "rev16ne %0, %0"
-            : "+r" (value)
-            : "r" (condition)
+            : "+r" (x)
+            : "r" (c)
             : "cc"
         );
 
-        return value;
+        return x;
 #else
-        union { int16_t s16; uint16_t u16; } r = { value };
-
-        if (condition) {
-            r.u16 = (r.u16 <<8) | (r.u16 >> 8);
+        union { int16_t s16; uint16_t u16; } r = { x };
+        if (c) {
+            r.u16 = (r.u16 << 8) | (r.u16 >> 8);
         }
-        
         return r.s16;
 #endif
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint16_t byteswap_uint16(uint16_t value, bool condition) noexcept {
+    uint16_t byteswap_uint16(uint16_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
             "rev16ne %0, %0"
-            : "+r" (value)
-            : "r" (condition)
+            : "+r" (x)
+            : "r" (c)
             : "cc"
         );
 #else
-        if (condition) {
-            value = (value <<8) | (value >> 8);
+        if (c) {
+            x = (x << 8) | (x >> 8);
         }
 #endif
-        return value;
+        return x;
     }
  
      inline UPALWAYSINLINE UPPURE
-     int32_t byteswap_int32(int32_t value, bool condition) noexcept {
+     int32_t byteswap_int32(int32_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
             "revne %0, %0"
-            : "+r" (value)
-            : "r" (condition)
+            : "+r" (x)
+            : "r" (c)
             : "cc"
         );
-
-        return value;
+        return x;
 #else
-        union { int32_t s32; uint32_t u32; } r = { value };
-
-        if (condition) {
-            r.u32 = (((r.u32 ^ (r.u32 >> 16 | (r.u32 <<16))) & 0xFF00FFFFU) >> 8) ^ (r.u32 >> 8 | r.u32 <<24);
+        union { int32_t s32; uint32_t u32; } r = { x };
+        if (c) {
+            r.u32 = (((r.u32 ^ (r.u32 >> 16 | r.u32 << 16)) & 0xFF00FFFFU) >> 8) ^ (r.u32 >> 8 | r.u32 << 24);
         }
-        
         return r.s32;
 #endif
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint32_t byteswap_uint32(uint32_t value, bool condition) noexcept {
+    uint32_t byteswap_uint32(uint32_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
             "revne %0, %0"
-            : "+r" (value)
-            : "r" (condition)
+            : "+r" (x)
+            : "r" (c)
             : "cc"
         );
 #else
-        if (condition) {
-            value = (((value ^ (value >> 16 | (value <<16))) & 0xFF00FFFFU) >> 8) ^ (value >> 8 | value <<24);
+        if (c) {
+            x = (((x ^ (x >> 16 | x << 16)) & 0xFF00FFFFU) >> 8) ^ (x >> 8 | x << 24);
         }
 #endif
-        return value;
+        return x;
     }
         
     inline UPALWAYSINLINE UPPURE
-    int64_t byteswap_int64(int64_t value, bool condition) noexcept {
-        return (condition) ? byteswap_int64(value) : value;
+    int64_t byteswap_int64(int64_t x, bool c) noexcept {
+        return c ? byteswap_int64(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint64_t byteswap_uint64(uint64_t value, bool condition) noexcept {
-        return (condition) ? byteswap_uint64(value) : value;
+    uint64_t byteswap_uint64(uint64_t x, bool c) noexcept {
+        return c ? byteswap_uint64(x) : x;
     }
 }
 
 #endif
+

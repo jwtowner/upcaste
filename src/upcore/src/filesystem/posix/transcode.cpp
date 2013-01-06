@@ -22,225 +22,333 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include <up/prolog.hpp>
+
+#if (UP_FILESYSTEM != UP_FILESYSTEM_NONE) && defined(UP_HAS_STDC_WCHAR)
+
 #include "filesystem_internal.hpp"
-
-#ifdef UP_HAS_STDC_WCHAR
-
-namespace up { namespace filesystem { namespace
-{
-    inline UPALWAYSINLINE UPNONNULL(2)
-    size_t transcode_to_utf8(char* UPRESTRICT d, wchar_t const* UPRESTRICT s, size_t n) noexcept {
-        if (!d) {
-            return wcslen_u8(s);
-        }
-        return wcstou8s(d, s, n);
-    }
-
-    inline UPALWAYSINLINE UPNONNULL(2)
-    size_t transcode_from_utf8(wchar_t* UPRESTRICT d, char const* UPRESTRICT s, size_t n) noexcept {
-        if (!d) {
-            return u8slen_wc(s);
-        }
-        return u8stowcs(d, s, n);
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL UPALLOC UPWARNRESULT
-    char* transcode_to_utf8(wchar_t const* s) noexcept {
-        size_t maxlength = wcslen_u8(s);
-        char* result = static_cast<char*>(malloc(maxlength + 1));
-        if (!result) {
-            return nullptr;
-        }
-        size_t length = wcstou8s(result, s, maxlength + 1);
-        assert(length == maxlength);
-        return result;            
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL UPALLOC UPWARNRESULT
-    wchar_t* transcode_from_utf8(char const* s) noexcept {
-        size_t maxlength = u8slen_wc(s);
-        wchar_t* result = static_cast<wchar_t*>(malloc(sizeof(wchar_t) * (maxlength + 1)));
-        if (!result) {
-            return nullptr;
-        }
-        size_t length = u8stowcs(result, s, maxlength + 1);
-        assert(length == maxlength);
-        return result;
-    }
-}}}
+#include <up/climits.hpp>
 
 namespace up { namespace filesystem
 {
-    LIBUPCOREAPI UPNONNULL(2)
-    size_t transcode(char* UPRESTRICT d, wchar_t const* UPRESTRICT s, size_t n) noexcept {
-        if (!s) {
+    LIBUPCOREAPI
+    ssize_t transcode(char* UPRESTRICT d, size_t dsz, wchar_t const* UPRESTRICT s) noexcept {
+        if ((!d && dsz) || (dsz > INT_MAX) || !s) {
             errno = EINVAL;
-            return size_t(-1);
+            return -1;
         }
 
 #if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
-        return transcode_to_utf8(d, s, n, ec);
+        if (!d) { 
+            return static_cast<ssize_t>(wcstou8slen(s));
+        }
+        wchar_t const* source = s
+        size_t length = wcstou8s(d, &source, dsz);
 #else
-        locale_t old_locale;
-        mbstate_t state;
-        wchar_t const* cursor;
+        wchar_t const* source = s;
         size_t length;
-
-        // get current transcode locale info and handle utf-8 fastpath
-        call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
-        if (detail::transcode_locale_is_utf8) {
-            return transcode_to_utf8(d, s, n);
-        }
-
-        old_locale = uselocale(detail::transcode_locale);
-        assert(old_locale);
-
-        // convert to multi-byte character string
-        cursor = s;
-        memset(&state, 0, sizeof(mbstate_t));
-        length = wcsrtombs(d, &cursor, n, &state);
-        uselocale(old_locale);
-        return length;
-#endif
-    }
-    
-    LIBUPCOREAPI UPNONNULL(2)
-    size_t transcode(wchar_t* UPRESTRICT d, char const* UPRESTRICT s, size_t n) noexcept {
-        if (!s) {
-            errno = EINVAL;
-            return size_t(-1);
-        }
-
-#if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
-        return transcode_from_utf8(d, s, n, ec);
-#else
-        locale_t old_locale;
         mbstate_t state;
-        char const* cursor;
-        size_t length;
-
-        // get current transcode locale info and handle utf-8 fastpath
-        call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
-        if (detail::transcode_locale_is_utf8) {
-            return transcode_from_utf8(d, s, n);
-        }
-
-        old_locale = uselocale(detail::transcode_locale);
-        assert(old_locale);
-
-        // convert to wide-character string
-        cursor = s;
-        memset(&state, 0, sizeof(mbstate_t));
-        length = mbsrtowcs(d, &cursor, n, &state);
-        uselocale(old_locale);
-        return length;
-#endif
-    }
-    
-    LIBUPCOREAPI UPALLOC UPWARNRESULT UPNONNULL(1)
-    char* transcode(wchar_t const* s) noexcept {
-        if (!s) {
-            errno = EINVAL;
-            return nullptr;
-        }
-
-#if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
-        return transcode_to_utf8(s);
-#else
-        size_t length, maxlength;
-        char* result = nullptr;
         locale_t old_locale;
-        mbstate_t state;
-        wchar_t const* cursor;
 
-        // get current transcode locale info and handle utf-8 fastpath
         call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
         if (detail::transcode_locale_is_utf8) {
-            return transcode_to_utf8(s);
+            // convert to utf-8 character string
+            if (!d) { 
+                return static_cast<ssize_t>(wcstou8slen(s));
+            }
+            length = wcstou8s(d, &source, dsz);
         }
-
-        old_locale = uselocale(detail::transcode_locale);
-        assert(old_locale);
-
-        // determine size of multi-byte character string
-        cursor = s;
-        memset(&state, 0, sizeof(mbstate_t));
-        maxlength = wcsrtombs(nullptr, &cursor, 0, &state);
-        if (maxlength == size_t(-1)) {
-            uselocale(old_locale);
-            return nullptr;
+        else {
+            // convert to multi-byte character string
+            old_locale = uselocale(detail::transcode_locale);
+            if (!old_locale) {
+                return -1;
+            }
+            memset(&state, 0, sizeof(mbstate_t));
+            length = wcsrtombs(d, &source, dsz, &state);
+            if (uselocale(old_locale) != detail::transcode_locale) {
+                return -1;
+            }
+            if (!d) {
+                return static_cast<ssize_t>(length);
+            }
         }
-
-        // allocate storage for multi-byte character string
-        assert(!cursor);
-        result = static_cast<char*>(malloc(maxlength + 1));
-        if (!result) {
-            uselocale(old_locale);
-            return nullptr;
-        }
-
-        // convert to multi-byte character encoding
-        cursor = s;
-        memset(&state, 0, sizeof(mbstate_t));
-        length = wcsrtombs(result, &cursor, maxlength + 1, &state);
-        assert(!cursor && (length == maxlength));
-
-        uselocale(old_locale);
-        return result;
 #endif
-    }
-
-    LIBUPCOREAPI UPALLOC UPWARNRESULT UPNONNULL(1)
-    wchar_t* transcode(char const* s) noexcept {
-        if (!s) {
-            errno = EINVAL;
-            return nullptr;
-        }
-
-#if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
-        return transcode_from_utf8(s);
-#else
-        size_t length, maxlength;
-        wchar_t* result = nullptr;
-        locale_t old_locale;
-        mbstate_t state;
-        char const* cursor;
-
-        // get current transcode locale info and handle utf-8 fastpath
-        call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
-        if (detail::transcode_locale_is_utf8) {
-            return transcode_from_utf8(s);
-        }
-
-        old_locale = uselocale(detail::transcode_locale);
-        assert(old_locale);
-
-        // determine size of wide-character string
-        cursor = s;
-        memset(&state, 0, sizeof(mbstate_t));
-        maxlength = mbsrtowcs(nullptr, &cursor, 0, &state);
-        if (maxlength == size_t(-1)) {
-            uselocale(old_locale);
-            return nullptr;
-        }
-
-        // allocate storage for wide-character string
-        assert(!cursor);
-        result = static_cast<wchar_t*>(malloc(sizeof(wchar_t) * (maxlength + 1)));
-        if (!result) {
-            uselocale(old_locale);
-            return nullptr;
-        }
-
-        // convert to wide-character encoding
-        cursor = s;
-        memset(&state, 0, sizeof(mbstate_t));
-        length = mbsrtowcs(result, &cursor, maxlength + 1, &state);
-        assert(!cursor && (length == maxlength));
         
-        uselocale(old_locale);
-        return result;
+        if (length > INT_MAX) {
+            return -1;
+        }
+
+        if (source && (dsz > 0)) {
+            // make sure result is null-terminated
+            if (length > 0) {
+                --length;
+            }
+            d[length] = '\0';
+        }
+
+        return static_cast<ssize_t>(length);
+    }
+
+    LIBUPCOREAPI
+    ssize_t transcode(char* UPRESTRICT d, size_t dsz, wchar_t const* UPRESTRICT s, size_t n) noexcept {
+        if ((!d && dsz) || (dsz > INT_MAX) || (!s && n) || (n > INT_MAX)) {
+            errno = EINVAL;
+            return -1;
+        }
+
+#if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
+        if (!d) { 
+            return static_cast<ssize_t>(wcsntou8slen(s, n));
+        }
+        wchar_t const* source = s
+        size_t length = wcsntou8s(d, &source, n, dsz);
+#else
+        wchar_t const* source = s;
+        size_t length;
+        mbstate_t state;
+        locale_t old_locale;
+
+        call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
+        if (detail::transcode_locale_is_utf8) {
+            // convert to utf-8 character string
+            if (!d) { 
+                return static_cast<ssize_t>(wcsntou8slen(s, n));
+            }
+            length = wcsntou8s(d, &source, n, dsz);
+        }
+        else {
+            // convert to multi-byte character string
+            old_locale = uselocale(detail::transcode_locale);
+            if (!old_locale) {
+                return -1;
+            }
+            memset(&state, 0, sizeof(mbstate_t));
+            length = wcsnrtombs(d, &source, n, dsz, &state);
+            if (uselocale(old_locale) != detail::transcode_locale) {
+                return -1;
+            }
+            if (!d) {
+                return static_cast<ssize_t>(length);
+            }
+        }
 #endif
+        
+        if (length > INT_MAX) {
+            return -1;
+        }
+
+        if (source && (dsz > 0)) {
+            // make sure result is null-terminated
+            if (length > 0) {
+                --length;
+            }
+            d[length] = '\0';
+        }
+
+        return static_cast<ssize_t>(length);
+    }
+
+    LIBUPCOREAPI
+    ssize_t transcode(wchar_t* UPRESTRICT d, size_t dsz, char const* UPRESTRICT s) noexcept {
+        if ((!d && dsz) || (dsz > INT_MAX) || !s) {
+            errno = EINVAL;
+            return -1;
+        }
+
+#if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
+        if (!d) { 
+            return static_cast<ssize_t>(u8stowcslen(s));
+        }
+        char const* source = s
+        size_t length = u8stowcs(d, &source, dsz);
+#else
+        char const* source = s;
+        size_t length;
+        mbstate_t state;
+        locale_t old_locale;
+
+        call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
+        if (detail::transcode_locale_is_utf8) {
+            // convert from utf-8 to wide-character character string
+            if (!d) { 
+                return static_cast<ssize_t>(u8stowcslen(s));
+            }
+            length = u8stowcs(d, &source, dsz);
+        }
+        else {
+            // convert to wide-character character string
+            old_locale = uselocale(detail::transcode_locale);
+            if (!old_locale) {
+                return -1;
+            }
+            memset(&state, 0, sizeof(mbstate_t));
+            length = mbsrtowcs(d, &source, dsz, &state);
+            if (uselocale(old_locale) != detail::transcode_locale) {
+                return -1;
+            }
+            if (!d) {
+                return static_cast<ssize_t>(length);
+            }
+        }
+#endif
+        
+        if (length > INT_MAX) {
+            return -1;
+        }
+
+        if (source && (dsz > 0)) {
+            // make sure result is null-terminated
+            if (length > 0) {
+                --length;
+            }
+            d[length] = L'\0';
+        }
+
+        return static_cast<ssize_t>(length);
+    }
+    
+    LIBUPCOREAPI
+    ssize_t transcode(wchar_t* UPRESTRICT d, size_t dsz, char const* UPRESTRICT s, size_t n) noexcept {
+        if ((!d && dsz) || (dsz > INT_MAX) || (!s && n) || (n > INT_MAX)) {
+            errno = EINVAL;
+            return -1;
+        }
+
+#if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
+        if (!d) { 
+            return static_cast<ssize_t>(u8sntowcslen(s. n));
+        }
+        char const* source = s
+        size_t length = u8sntowcs(d, &source, n, dsz);
+#else
+        char const* source = s;
+        size_t length;
+        mbstate_t state;
+        locale_t old_locale;
+
+        call_once(&detail::transcode_locale_guard, &detail::transcode_locale_init);
+        if (detail::transcode_locale_is_utf8) {
+            // convert from utf-8 to wide-character character string
+            if (!d) { 
+                return static_cast<ssize_t>(u8sntowcslen(s, n));
+            }
+            length = u8sntowcs(d, &source, n, dsz);
+        }
+        else {
+            // convert to wide-character character string
+            old_locale = uselocale(detail::transcode_locale);
+            if (!old_locale) {
+                return -1;
+            }
+            memset(&state, 0, sizeof(mbstate_t));
+            length = mbsnrtowcs(d, &source, n, dsz, &state);
+            if (uselocale(old_locale) != detail::transcode_locale) {
+                return -1;
+            }
+            if (!d) {
+                return static_cast<ssize_t>(length);
+            }
+        }
+#endif
+        
+        if (length > INT_MAX) {
+            return -1;
+        }
+
+        if (source && (dsz > 0)) {
+            // make sure result is null-terminated
+            if (length > 0) {
+                --length;
+            }
+            d[length] = L'\0';
+        }
+
+        return static_cast<ssize_t>(length);
+    }
+
+    LIBUPCOREAPI UPALLOC UPWARNRESULT
+    char* transcode(wchar_t const* s) noexcept {
+        ssize_t dsz = transcode(nullptr, 0, s);
+        if (dsz < 0) {
+            return nullptr;
+        }
+
+        char* d = static_cast<char*>(malloc(dsz + 1));
+        if (!d) {
+            return nullptr;
+        }
+
+        if (dsz != transcode(d, dsz + 1, s)) {
+            free(d);
+            return nullptr;
+        }
+
+        assert(!d[dsz]);
+        return d;
+    }
+    
+    LIBUPCOREAPI UPALLOC UPWARNRESULT
+    char* transcode(wchar_t const* s, size_t n) noexcept {
+        ssize_t dsz = transcode(nullptr, 0, s, n);
+        if (dsz < 0) {
+            return nullptr;
+        }
+
+        char* d = static_cast<char*>(malloc(dsz + 1));
+        if (!d) {
+            return nullptr;
+        }
+
+        if (dsz != transcode(d, dsz + 1, s, n)) {
+            free(d);
+            return nullptr;
+        }
+
+        assert(!d[dsz]);
+        return d;
+    }
+    
+    LIBUPCOREAPI UPALLOC UPWARNRESULT
+    wchar_t* transcode(char const* s) noexcept {
+        ssize_t dsz = transcode(nullptr, 0, s);
+        if (dsz < 0) {
+            return nullptr;
+        }
+
+        wchar_t* d = static_cast<wchar_t*>(malloc((dsz + 1) * sizeof(wchar_t)));
+        if (!d) {
+            return nullptr;
+        }
+
+        if (dsz != transcode(d, dsz + 1, s)) {
+            free(d);
+            return nullptr;
+        }
+
+        assert(!d[dsz]);
+        return d;
+    }
+    
+    LIBUPCOREAPI UPALLOC UPWARNRESULT
+    wchar_t* transcode(char const* s, size_t n) noexcept {
+        ssize_t dsz = transcode(nullptr, 0, s, n);
+        if (dsz < 0) {
+            return nullptr;
+        }
+
+        wchar_t* d = static_cast<wchar_t*>(malloc((dsz + 1) * sizeof(wchar_t)));
+        if (!d) {
+            return nullptr;
+        }
+
+        if (dsz != transcode(d, dsz + 1, s, n)) {
+            free(d);
+            return nullptr;
+        }
+
+        assert(!d[dsz]);
+        return d;
     }
 }}
 

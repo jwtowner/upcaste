@@ -24,6 +24,7 @@
 
 #include <up/list.hpp>
 #include <up/test.hpp>
+#include <up/climits.hpp>
 
 namespace list
 {
@@ -31,6 +32,13 @@ namespace list
     {
         up::list_node node;
         int value;
+    };
+
+    struct compare_int_node
+    {
+        bool operator()(int_node const* x, int_node const* y) const noexcept {
+            return x->value < y->value;
+        }
     };
 
     void build_int_list(up::list_node* sentinel, int_node* store, int const* values, size_t n) {
@@ -49,9 +57,13 @@ namespace list
         up::list_node root;
         bool result;
 
+#ifndef UP_NO_LAMBDAS
         auto compare = [](int_node const* x, int_node const* y) {
             return x->value < y->value;
         };
+#else
+        compare_int_node compare;
+#endif
 
         build_int_list(&root, node_store, sorted_values, 10);
         require(up::list_validate(&root, 10));
@@ -77,21 +89,23 @@ namespace list
         build_int_list(&root, node_store, unsorted_values, 10);
         require(up::list_validate(&root, 10));
 
-        result = up::list_is_sorted<int_node, &int_node::node>(&root, [](int_node const* x, int_node const* y) {
+#ifndef UP_NO_LAMBDAS
+        auto compare = [](int_node const* x, int_node const* y) {
             return x->value < y->value;
-        });
+        };
+#else
+        compare_int_node compare;
+#endif
+
+        result = up::list_is_sorted<int_node, &int_node::node>(&root, compare);
 
         require(!result && up::list_validate(&root, 10));
 
-        up::list_sort<int_node, &int_node::node>(&root, [](int_node const* x, int_node const* y) {
-            return x->value < y->value;
-        });
+        up::list_sort<int_node, &int_node::node>(&root, compare);
 
         require(up::list_validate(&root, 10));
 
-        result = up::list_is_sorted<int_node, &int_node::node>(&root, [](int_node const* x, int_node const* y) {
-            return x->value < y->value;
-        });
+        result = up::list_is_sorted<int_node, &int_node::node>(&root, compare);
 
         require(result && up::list_validate(&root, 10));
     }

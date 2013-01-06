@@ -24,25 +24,46 @@
 
 #include <up/cuchar.hpp>
 #include <up/cassert.hpp>
+#include "cuchar_internal.inl"
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32slen_u16(char32_t const* u32s) noexcept {
-        assert(u32s);
+    LIBUPCOREAPI
+    size_t u16sntou32s(char32_t* UPRESTRICT dst, char16_t const** UPRESTRICT src, size_t nu16, size_t n) noexcept {
+        assert((dst || !n) && src && (*src || !nu16));
         
-        char32_t codepoint;
-        size_t count = 0;
-
-        for ( ; ; ++count) {
-            codepoint = *(u32s++);
-            if (!codepoint) {
-                break;
-            }            
-            else if ((0x10000 <= codepoint) && (codepoint < 0x110000)) {
-                ++count;
+        char32_t* dst_start = dst;
+        char32_t* const dst_end = dst + n;
+        char16_t const* src_cur = *src;
+        char16_t const* const src_end = src_cur + nu16;
+        char32_t lead, tail;
+        
+        for ( ; (dst < dst_end) && (src_cur < src_end); ++dst, ++src_cur) {
+            lead = *src_cur;
+            if (!detail::u16_is_surrogate(lead)) {
+                *dst = lead;
+                if (!lead) {
+                    src_cur = nullptr;
+                    break;
+                }
+                continue;
             }
-        }
 
-        return count;
+            if ((src_cur + 1) >= src_end) {
+                break;
+            }
+
+            tail = *(++src_cur);
+            if (detail::u16_is_surrogate_pair(lead, tail)) {
+                *dst = (lead << 10) + tail - detail::utf16_surrogate_offset;
+                continue;
+            }
+
+            *dst = detail::u32_replacement_character;
+            --src_cur;
+        }
+        
+        *src = src_cur;
+        return static_cast<size_t>(dst - dst_start);
     }
 }

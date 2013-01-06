@@ -28,6 +28,17 @@
 
 namespace clocale
 {
+    UP_TEST_CASE(uselocale_all) {
+        up::locale_t c_locale = up::newlocale(LC_ALL_MASK, "C", nullptr);
+        up::locale_t old_locale = up::uselocale(c_locale);
+
+        require(old_locale);
+        require(!up::strcasecmp("HeLLo", "hELlO"));
+
+        require(c_locale == up::uselocale(old_locale));
+        up::freelocale(c_locale);
+    }
+
     UP_TEST_CASE(newlocale_all) {
         up::locale_t c_locale = up::newlocale(LC_ALL_MASK, "C", nullptr);
         require(c_locale);
@@ -44,17 +55,6 @@ namespace clocale
         up::freelocale(c_locale);
         up::freelocale(posix_locale);
         up::freelocale(system_locale);
-    }
-
-    UP_TEST_CASE(uselocale_all) {
-        up::locale_t c_locale = up::newlocale(LC_ALL_MASK, "C", nullptr);
-        up::locale_t old_locale = up::uselocale(c_locale);
-
-        require(old_locale);
-        require(!up::strcasecmp("HeLLo", "hELlO"));
-
-        up::freelocale(c_locale);
-        up::freelocale(old_locale);
     }
 
     UP_TEST_CASE(newlocale_ctype) {

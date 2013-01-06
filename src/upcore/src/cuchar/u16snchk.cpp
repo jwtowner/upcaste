@@ -27,16 +27,16 @@
 
 namespace up
 {        
-    LIBUPCOREAPI char16_t const* u16snchk(char16_t const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    char16_t const* u16snchk(char16_t const* s, size_t n) noexcept {
         assert(s || !n);
 
         char16_t const* end_ptr = s + n;
         while (s < end_ptr) {
-            int length = ::up::u16nlen(s, end_ptr - s);
+            int length = u16nlen(s, end_ptr - s);
             if (length < 0) {
                 return s;
             }
-            
             s += (length > 0) ? length : 1;
         }
         

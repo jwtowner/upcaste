@@ -27,8 +27,9 @@
 
 namespace up
 {
-    LIBUPCOREAPI int u32tou8(char* s, char32_t u32) noexcept {
-        unsigned char u8temp[U8_CUR_MAX];
+    LIBUPCOREAPI
+    int u32tou8(char* s, char32_t u32) noexcept {
+        unsigned char u8temp[u8_cur_max];
         unsigned char* u8s = s ? reinterpret_cast<unsigned char*>(s) : u8temp;
         
         if (u32 < 0x80) {
@@ -41,7 +42,7 @@ namespace up
             return 2;
         }
         else if (u32 < 0x10000) {
-            if (::up::detail::u32_is_surrogate(u32)) {
+            if (detail::u32_is_surrogate(u32)) {
                 goto error;
             }
             

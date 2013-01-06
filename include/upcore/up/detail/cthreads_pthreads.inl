@@ -29,10 +29,10 @@
 #   error "Do not include this header file directly! Instead include <up/cthreads.hpp>"
 #endif
 
+#include <errno.h>
 #include <pthread.h>
 #include <sched.h>
 #include <time.h>
-#include <errno.h>
 
 #define ONCE_FLAG_INIT PTHREAD_ONCE_INIT
 #define TSS_DTOR_ITERATIONS PTHREAD_DESTRUCTOR_ITERATIONS
@@ -54,23 +54,26 @@ namespace up
     inline UPALWAYSINLINE UPPURE thrd_t thrd_current() noexcept { return ::pthread_self(); }
     inline UPALWAYSINLINE UPNORETURN void thrd_exit(int res) noexcept { ::pthread_exit((void*)((long)res)); }
     inline UPALWAYSINLINE void thrd_yield() noexcept { ::sched_yield(); }
-    extern LIBUPCOREAPI void thrd_sleep(timespec const* duration) noexcept;
-    inline UPALWAYSINLINE int thrd_sleep(timespec const* UPRESTRICT duration, timespec* UPRESTRICT remaining) noexcept { return ::nanosleep(duration, remaining) ? thrd_error : thrd_success; }
+    inline UPALWAYSINLINE int thrd_sleep(timespec const* duration, timespec* remaining) noexcept { return ::nanosleep(duration, remaining); }
 
     typedef ::pthread_once_t once_flag;
     inline UPALWAYSINLINE void call_once(once_flag* flag, void (UPCDECL *func)(void)) noexcept { ::pthread_once(flag, func); }
 
-    constexpr int mtx_plain = 0;
-	constexpr int mtx_try = 1;
-	constexpr int mtx_timed = 2;
+    constexpr int mtx_plain = 1;
+	constexpr int mtx_timed = 3;
 	constexpr int mtx_recursive = 4;
     typedef ::pthread_mutex_t mtx_t;
     extern LIBUPCOREAPI int mtx_init(mtx_t* mtx, int type) noexcept;
     inline UPALWAYSINLINE void mtx_destroy(mtx_t* mtx) noexcept { ::pthread_mutex_destroy(mtx); }
-    inline UPALWAYSINLINE int mtx_lock(mtx_t* mtx) noexcept { int r = ::pthread_mutex_lock(mtx); return !r ? thrd_success : ((r == EDEADLK) ? thrd_busy : thrd_error);  }
+    inline UPALWAYSINLINE int mtx_lock(mtx_t* mtx) noexcept { int r = ::pthread_mutex_lock(mtx); return !r ? thrd_success : thrd_error;  }
     inline UPALWAYSINLINE int mtx_trylock(mtx_t* mtx) noexcept { int r = ::pthread_mutex_trylock(mtx); return !r ? thrd_success : ((r == EBUSY) ? thrd_busy : thrd_error); }
-    inline UPALWAYSINLINE int mtx_timedlock(mtx_t* UPRESTRICT mtx, timespec const* UPRESTRICT ts) noexcept { int r = ::pthread_mutex_timedlock(mtx, ts); return !r ? thrd_success : ((r == EBUSY) ? thrd_busy : thrd_error); }
-    inline UPALWAYSINLINE int mtx_unlock(mtx_t* mtx) noexcept { return ::pthread_mutex_unlock(mtx) ? thrd_error : thrd_success; }
+    inline UPALWAYSINLINE int mtx_unlock(mtx_t* mtx) noexcept { int r = ::pthread_mutex_unlock(mtx); return !r ? thrd_success : thrd_error; }
+
+#ifdef UP_HAS_POSIX_PTHREAD_MUTEX_TIMEDLOCK
+    inline UPALWAYSINLINE int mtx_timedlock(mtx_t* UPRESTRICT mtx, timespec const* UPRESTRICT ts) noexcept { int r = ::pthread_mutex_timedlock(mtx, ts); return !r ? thrd_success : ((r == ETIMEDOUT) ? thrd_timedout : thrd_error); }
+#else
+    extern LIBUPCOREAPI int mtx_timedlock(mtx_t* UPRESTRICT mtx, timespec const* UPRESTRICT ts) noexcept;
+#endif
 
     typedef ::pthread_cond_t cnd_t;
     inline UPALWAYSINLINE int cnd_init(cnd_t* cond) noexcept { return ::pthread_cond_init(cond, 0) ? thrd_error : thrd_success; }
@@ -89,4 +92,3 @@ namespace up
 }
 
 #endif
-

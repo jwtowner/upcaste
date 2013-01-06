@@ -139,6 +139,9 @@
     <Filter Include="src\cinttypes">
       <UniqueIdentifier>{efcad9a8-1265-4a0c-afdd-eccc4614daa8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\cthreads\posix">
+      <UniqueIdentifier>{6071a42d-a190-41bd-a8da-a7fbef159a58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\upcore\gen\generatemath.bat">
@@ -606,12 +609,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen_u32.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen_u8.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sncat.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
@@ -625,12 +622,6 @@
       <Filter>src\cuchar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen_u32.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen_u8.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16spbrk.cpp">
@@ -696,12 +687,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen_u16.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen_u8.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sncat.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
@@ -712,12 +697,6 @@
       <Filter>src\cuchar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen_u16.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen_u8.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32spbrk.cpp">
@@ -762,19 +741,7 @@
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8scspn.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8slen_u16.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8slen_u32.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snchk.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snlen_u16.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snlen_u32.cpp">
       <Filter>src\cuchar</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8spbrk.cpp">
@@ -1227,12 +1194,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\user_directory_path.cpp">
       <Filter>src\filesystem\windows\woperations</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\hash\accumulate_hash32.cpp">
-      <Filter>src\hash</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\hash\accumulate_hash64.cpp">
-      <Filter>src\hash</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\list\list_sort_tree_recursive.cpp">
       <Filter>src\list</Filter>
     </ClCompile>
@@ -1464,6 +1425,12 @@
     <None Include="..\..\..\src\upcore\src\cstdio\getline.inl">
       <Filter>src\cstdio</Filter>
     </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\absolute_path.cpp">
+      <Filter>src\filesystem\posix\woperations</Filter>
+    </None>
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\absolute_path.cpp">
+      <Filter>src\filesystem\posix\operations</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\upcore\src\cinttypes\strtoimax.cpp">
@@ -1496,5 +1463,91 @@
     <ClCompile Include="..\..\..\src\upcore\src\type_traits.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrtombs.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\mbsnrtowcs.cpp">
+      <Filter>src\cwchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stou32slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stou8slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou32slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou8slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stou16slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stou8slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou16slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou8slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stou16slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stou32slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou16slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou32slen.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou16s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou32s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou8s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou32s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou8s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou16s.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\c16rtomb.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\c32rtomb.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\mbrtoc16.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\mbrtoc32.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\hash\hash32_accumulate.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\hash\hash64_accumulate.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\upcore\src\cthreads\posix\mtx_timedlock.cpp">
+      <Filter>src\cthreads\posix</Filter>
+    </Text>
+    <Text Include="..\..\..\src\upcore\src\cthreads\posix\mtx_init.cpp">
+      <Filter>src\cthreads\posix</Filter>
+    </Text>
   </ItemGroup>
 </Project>

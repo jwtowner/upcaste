@@ -49,13 +49,39 @@ namespace up { namespace sexp { namespace
         false, false, false,  true,  true,  true, false,  true  //   x,   y,   z,   {,   |,   },   ~,  DEL
     };
 
-    token_number_info const default_number_info = { 0, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 10 };
-    token_number_info const exact_number_info = { 2, static_cast<uint_least8_t>(exactness_exact), static_cast<uint_least8_t>(precision_unspecified), 10 };
-    token_number_info const inexact_number_info = { 2, static_cast<uint_least8_t>(exactness_inexact), static_cast<uint_least8_t>(precision_unspecified), 10 };
-    token_number_info const binary_number_info = { 2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 2 };
-    token_number_info const octal_number_info = { 2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 8 };
-    token_number_info const decimal_number_info = { 2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 10 };
-    token_number_info const hexadecimal_number_info = { 2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 16 };
+    token_number_info const default_number_info =
+    {
+        0, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 10
+    };
+
+    token_number_info const exact_number_info =
+    {
+        2, static_cast<uint_least8_t>(exactness_exact), static_cast<uint_least8_t>(precision_unspecified), 10
+    };
+
+    token_number_info const inexact_number_info =
+    {
+        2, static_cast<uint_least8_t>(exactness_inexact), static_cast<uint_least8_t>(precision_unspecified), 10
+    };
+    
+    token_number_info const binary_number_info =
+    {
+        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 2
+    };
+    
+    token_number_info const octal_number_info = {
+        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 8
+    };
+    
+    token_number_info const decimal_number_info =
+    {
+        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 10
+    };
+    
+    token_number_info const hexadecimal_number_info =
+    {
+        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 16 
+    };
 
     inline UPALWAYSINLINE UPPURE
     bool lexer_fast_is_delimiter(uint_least32_t ch) noexcept {
@@ -65,7 +91,7 @@ namespace up { namespace sexp { namespace
     inline UPALWAYSINLINE
     uint_least32_t lexer_get_char(lexer* lex) noexcept {
         char const* cursor = lex->cursor;
-        char32_t ch = UEOF;
+        char32_t ch = ueof;
         int octet_count;
         size_t length;
 
@@ -85,7 +111,7 @@ namespace up { namespace sexp { namespace
 
     inline UPALWAYSINLINE
     void lexer_unget_char(lexer* lex, uint_least32_t ch) noexcept {
-        if ((ch != UEOF) && lex->prev_cursor) {
+        if ((ch != ueof) && lex->prev_cursor) {
             lex->cursor = lex->prev_cursor;
             lex->prev_cursor = nullptr;
             if (!(lex->column--)) {
@@ -158,7 +184,7 @@ namespace up { namespace sexp { namespace
         char const* cursor = lex->cursor;
         char const* prev_cursor = lex->cursor;
         uintmax_t column = lex->column;
-        char32_t ch = UEOF;
+        char32_t ch = ueof;
         int octet_count;
 
         if ((static_cast<size_t>(last - cursor) < n) || (fast_strncasecmp(cursor, s, n) != 0)) {
@@ -191,7 +217,7 @@ namespace up { namespace sexp { namespace
         char const* cursor = lex->cursor;
         char const* prev_cursor = lex->cursor;
         uintmax_t column = lex->column;
-        char32_t ch, retval = UEOF;
+        char32_t ch, retval = ueof;
         int octet_count;
 
         while (cursor < last) {
@@ -295,7 +321,7 @@ namespace up { namespace sexp { namespace
                     break;
                 }
             }
-            if (ch == UEOF) {
+            if (ch == ueof) {
                 tok->category = category_error;
                 tok->type = token_unclosed_block_comment;
                 retval = sexp_badsyntax;
@@ -316,7 +342,7 @@ namespace up { namespace sexp { namespace
                 break;
             }
         }
-        while (ch != UEOF);
+        while (ch != ueof);
 
         tok->category = category_comment;
         tok->type = token_line_comment;
@@ -339,11 +365,20 @@ namespace up { namespace sexp { namespace
     }
 
     inline UPALWAYSINLINE
-    bool lexer_match_character_name(lexer* UPRESTRICT lex, token* UPRESTRICT tok, uint_least32_t a, uint_least32_t e, char const* s, size_t n, uint_least32_t v) noexcept {
-        if (((a & 0xFFFFFF5F) == e) && lexer_read_delimited_token(lex, s, n)) {
+    bool lexer_match_character_name(
+        lexer* UPRESTRICT lex,
+        token* UPRESTRICT tok,
+        uint_least32_t actual_ch,
+        uint_least32_t expected_ch,
+        char const* s,
+        size_t n,
+        uint_least32_t value
+    )
+    noexcept {
+        if (((actual_ch & 0xFFFFFF5F) == expected_ch) && lexer_read_delimited_token(lex, s, n)) {
             tok->category = category_number;
             tok->type = token_character;
-            tok->char_value = v;
+            tok->char_value = value;
             return true;
         }
         return false;
@@ -423,7 +458,7 @@ namespace up { namespace sexp { namespace
 
                 for (;;) {
                     first = lexer_get_char(lex);
-                    if (first == UEOF) {
+                    if (first == ueof) {
                         break;
                     }
                         
@@ -491,7 +526,7 @@ namespace up { namespace sexp { namespace
                 type = token_escaped_string;
                 ch = lexer_get_char(lex);
             }
-            if (ch == UEOF) {
+            if (ch == ueof) {
                 category = category_error;
                 type = token_unclosed_string;
                 retval = sexp_badsyntax;
@@ -641,7 +676,13 @@ namespace up { namespace sexp { namespace
         return sexp_badsyntax;
     }
 
-    unsigned int lexer_match_number_part(lexer* UPRESTRICT lex, int radix, uint_least32_t first_ch, uint_least32_t* result) noexcept {
+    unsigned int lexer_match_number_part(
+        lexer* UPRESTRICT lex,
+        int radix,
+        uint_least32_t first_ch,
+        uint_least32_t* result
+    )
+    noexcept {
         uint_least32_t const exponent = (radix > 14) ? 'P' : 'E';
         uint_least32_t ch = first_ch;
         unsigned int type = token_none;
@@ -705,7 +746,13 @@ namespace up { namespace sexp { namespace
         return type;
     }
 
-    int lexer_match_number(lexer* UPRESTRICT lex, token* UPRESTRICT tok, token_number_info number_info, uint_least32_t first_ch) noexcept {
+    int lexer_match_number(
+        lexer* UPRESTRICT lex,
+        token* UPRESTRICT tok,
+        token_number_info number_info,
+        uint_least32_t first_ch
+    )
+    noexcept {
         unsigned int type, imaginary_type;
         uint_least32_t ch = first_ch;
 
@@ -995,7 +1042,7 @@ namespace up { namespace sexp
     int lexer_read(lexer* UPRESTRICT lex, token* UPRESTRICT tok) noexcept {
         char const* start;
         uintmax_t column, line;
-        uint_least32_t ch = UEOF;
+        uint_least32_t ch = ueof;
         int retval = sexp_success;
 
         if (!lex || !tok) {
@@ -1116,7 +1163,7 @@ namespace up { namespace sexp
                 retval = lexer_match_number(lex, tok, default_number_info, ch);
                 goto finalize;
             default:
-                if (ch == UEOF) {
+                if (ch == ueof) {
                     tok->category = category_none;
                     tok->type = token_none;
                     retval = sexp_eof;

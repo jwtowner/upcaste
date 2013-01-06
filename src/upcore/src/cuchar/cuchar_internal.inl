@@ -30,6 +30,22 @@
 namespace up { namespace detail
 {
     //
+    // multi-byte to utf-16 & utf-32 conversion
+    //
+
+    struct LIBUPCOREAPI ucstate_t
+    {
+        int count;
+        union {
+            char c8[u8_cur_max];
+            char16_t c16[u16_cur_max];
+            char32_t c32;
+        };
+    };
+
+    static_assert(sizeof(ucstate_t) >= sizeof(mbstate_t), "size of default mbstate_t is not large enough");
+
+    //
     // Constants and functions for efficiently finding a null-terminator in a string
     //
 

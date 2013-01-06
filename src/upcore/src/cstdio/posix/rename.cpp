@@ -22,30 +22,28 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/filesystem/operations.hpp>
-#include <up/filesystem/transcode.hpp>
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
 
-#include <up/filesystem/wchar_operations.hpp>
+#include "../../filesystem/posix/filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    bool rename(wchar_t const* old_p, wchar_t const* new_p, std::error_code& ec) noexcept {
-        char* native_old = transcode(old_p, ec);
+    bool rename(wchar_t const* old_filename, wchar_t const* new_filename) noexcept {
+        char* native_old = transcode(old_filename);
         if (!native_old) {
             return false;
         }
 
-        char* native_new = transcode(new_p, ec);
+        char* native_new = transcode(new_filename);
         if (!native_new) {
             free(native_old);
             return false;
         }
 
-        bool result = rename(native_old, native_new, ec);
+        bool result = rename(native_old, native_new);
         free(native_new);
         free(native_old);
         return result;

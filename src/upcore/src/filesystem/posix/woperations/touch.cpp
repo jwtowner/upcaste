@@ -22,9 +22,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
+
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
@@ -34,7 +36,6 @@ namespace up { namespace filesystem
         if (!native_p) {
             return -1;
         }
-
         int result = touch(native_p, ts);
         free(native_p);
         return result;

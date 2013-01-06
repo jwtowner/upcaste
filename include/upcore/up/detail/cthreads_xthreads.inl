@@ -57,9 +57,8 @@ namespace up
     typedef ::_Once_flag once_flag;
     inline UPALWAYSINLINE void call_once(once_flag* flag, void (UPCDECL *func)(void)) noexcept { ::_Call_once(flag, func); }
 
-    constexpr int mtx_plain = ::_Mtx_plain;
-	constexpr int mtx_try = ::_Mtx_try;
-	constexpr int mtx_timed = ::_Mtx_timed;
+    constexpr int mtx_plain = ::_Mtx_plain | ::_Mtx_try;
+	constexpr int mtx_timed = ::_Mtx_timed | ::_Mtx_try;
 	constexpr int mtx_recursive = ::_Mtx_recursive;
     typedef ::_Mtx_t mtx_t;
     inline UPALWAYSINLINE void mtx_destroy(mtx_t* mtx) noexcept { ::_Mtx_destroy(mtx); }

@@ -27,7 +27,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI char32_t const* u32memrchr(char32_t const* s, char32_t c, size_t n) noexcept {
+    LIBUPCOREAPI
+    char32_t const* u32memrchr(char32_t const* s, char32_t c, size_t n) noexcept {
         assert(s || !n);
 
         if (n == 0) {

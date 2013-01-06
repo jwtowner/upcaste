@@ -27,10 +27,10 @@
 namespace up { namespace filesystem { namespace detail
 {
     UPHIDDEN
-    void get_space_info(struct ::statvfs const& buf, space_info& info) noexcept {
-        uintmax_t const block_size = static_cast<uintmax_t>(buf.f_frsize); 
-        info.capacity = static_cast<uintmax_t>(buf.f_blocks) * block_size; 
-        info.free = static_cast<uintmax_t>(buf.f_bfree) * block_size;
-        info.available = static_cast<uintmax_t>(buf.f_bavail) * block_size;
+    void get_space_info(struct ::statvfs const* UPRESTRICT buf, space_info* UPRESTRICT info) noexcept {
+        uintmax_t const block_size = static_cast<uintmax_t>(buf->f_frsize); 
+        info->capacity = static_cast<uintmax_t>(buf->f_blocks) * block_size; 
+        info->free = static_cast<uintmax_t>(buf->f_bfree) * block_size;
+        info->available = static_cast<uintmax_t>(buf->f_bavail) * block_size;
     }
 }}}

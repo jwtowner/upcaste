@@ -31,7 +31,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI int u32memcmp(char32_t const* s1, char32_t const* s2, size_t n) noexcept {
+    LIBUPCOREAPI
+    int u32memcmp(char32_t const* s1, char32_t const* s2, size_t n) noexcept {
         assert((s1 && s2) || !n);
 
         int result = 0;

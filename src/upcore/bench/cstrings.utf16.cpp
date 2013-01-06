@@ -54,8 +54,8 @@ namespace cstrings_utf16
 		u16data_source(size_t sz, data_source_generate_type gen = data_source_generate_garbage, bool r = false)
         : result_(0),
         size_(sz),
-        data_(new char16_t[sz + U16_CUR_MAX]),
-        scratch_(new char16_t[(sz + U16_CUR_MAX) * U16_CUR_MAX * 2]),
+        data_(new char16_t[sz + up::u16_cur_max]),
+        scratch_(new char16_t[(sz + up::u16_cur_max) * up::u16_cur_max * 2]),
         gen_type_(gen),
         regenerate_(r) {
             if (!r) {
@@ -94,7 +94,7 @@ namespace cstrings_utf16
                 std::uniform_int_distribution<char32_t> dist(min_char, 0x010FFFF);
                 for (size_t i = 0; i < size_; ) {
                     char32_t codepoint = dist(random_engine);
-                    char16_t u16buffer[U16_CUR_MAX];
+                    char16_t u16buffer[up::u16_cur_max];
                     int length = up::u32tou16(u16buffer, codepoint);
                     if (length <= 0) {
                         continue;
@@ -155,7 +155,7 @@ namespace cstrings_utf16
 
     UPNOINLINE void u16nlen_iteration(u16data_source& ds) {
         char16_t const* char_ptr = ds.data();
-        char16_t const* end_ptr = ds.data() + ds.size() + U16_CUR_MAX;
+        char16_t const* end_ptr = ds.data() + ds.size() + up::u16_cur_max;
         size_t count = 0;
         
         for (;;) {
@@ -173,7 +173,7 @@ namespace cstrings_utf16
     
     UPNOINLINE void u16tou32_iteration(u16data_source& ds) {
         char16_t const* char_ptr = ds.data();
-        char16_t const* end_ptr = ds.data() + ds.size() + U16_CUR_MAX;
+        char16_t const* end_ptr = ds.data() + ds.size() + up::u16_cur_max;
         size_t count = 0;
         
         for (;;) {
@@ -190,25 +190,25 @@ namespace cstrings_utf16
     }
 
     UPNOINLINE void u16slen_u8_iteration(u16data_source& ds) {
-        size_t count = up::u16slen_u8(ds.data());
+        size_t count = up::u16stou8slen(ds.data());
         ds.result(count);
         up::sink_dependency(count);
     }
     
     UPNOINLINE void u16snlen_u8_iteration(u16data_source& ds) {
-        size_t count = up::u16snlen_u8(ds.data(), ds.size() + U16_CUR_MAX);
+        size_t count = up::u16sntou8slen(ds.data(), ds.size() + up::u16_cur_max);
         ds.result(count);
         up::sink_dependency(count);
     }
 
     UPNOINLINE void u16slen_u32_iteration(u16data_source& ds) {
-        size_t count = up::u16slen_u32(ds.data());
+        size_t count = up::u16stou32slen(ds.data());
         ds.result(count);
         up::sink_dependency(count);
     }
     
     UPNOINLINE void u16snlen_u32_iteration(u16data_source& ds) {
-        size_t count = up::u16snlen_u32(ds.data(), ds.size() + U16_CUR_MAX);
+        size_t count = up::u16sntou32slen(ds.data(), ds.size() + up::u16_cur_max);
         ds.result(count);
         up::sink_dependency(count);
     }
@@ -233,16 +233,16 @@ namespace cstrings_utf16
         UP_TEST_RUN_BENCHMARK("u16tou32", size, iterations, &u16tou32_iteration, ds);
         size_t u16tou32_result = ds.result();
 
-        UP_TEST_RUN_BENCHMARK("u16slen_u8", size, iterations, &u16slen_u8_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16stou8slen", size, iterations, &u16slen_u8_iteration, ds);
         size_t u16slen_u8_result = ds.result();
    
-        UP_TEST_RUN_BENCHMARK("u16snlen_u8", size, iterations, &u16snlen_u8_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16sntou8slen", size, iterations, &u16snlen_u8_iteration, ds);
         size_t u16snlen_u8_result = ds.result();
 
-        UP_TEST_RUN_BENCHMARK("u16slen_u32", size, iterations, &u16slen_u32_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16stou32slen", size, iterations, &u16slen_u32_iteration, ds);
         size_t u16slen_u32_result = ds.result();
    
-        UP_TEST_RUN_BENCHMARK("u16snlen_u32", size, iterations, &u16snlen_u32_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16sntou32slen", size, iterations, &u16snlen_u32_iteration, ds);
         size_t u16snlen_u32_result = ds.result();
 
         require(u16memlen_result == u16memnlen_result);
@@ -274,16 +274,16 @@ namespace cstrings_utf16
         UP_TEST_RUN_BENCHMARK("u16tou32", size, iterations, &u16tou32_iteration, ds);
         size_t u16tou32_result = ds.result();
         
-        UP_TEST_RUN_BENCHMARK("u16slen_u8", size, iterations, &u16slen_u8_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16stou8slen", size, iterations, &u16slen_u8_iteration, ds);
         size_t u16slen_u8_result = ds.result();
    
-        UP_TEST_RUN_BENCHMARK("u16snlen_u8", size, iterations, &u16snlen_u8_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16sntou8slen", size, iterations, &u16snlen_u8_iteration, ds);
         size_t u16snlen_u8_result = ds.result();
 
-        UP_TEST_RUN_BENCHMARK("u16slen_u32", size, iterations, &u16slen_u32_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16stou32slen", size, iterations, &u16slen_u32_iteration, ds);
         size_t u16slen_u32_result = ds.result();
    
-        UP_TEST_RUN_BENCHMARK("u16snlen_u32", size, iterations, &u16snlen_u32_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16sntou32slen", size, iterations, &u16snlen_u32_iteration, ds);
         size_t u16snlen_u32_result = ds.result();
 
         require(u16memlen_result == u16memnlen_result);
@@ -315,16 +315,16 @@ namespace cstrings_utf16
         UP_TEST_RUN_BENCHMARK("u16tou32", size, iterations, &u16tou32_iteration, ds);
         size_t u16tou32_result = ds.result();
 
-        UP_TEST_RUN_BENCHMARK("u16slen_u8", size, iterations, &u16slen_u8_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16stou8slen", size, iterations, &u16slen_u8_iteration, ds);
         size_t u16slen_u8_result = ds.result();
    
-        UP_TEST_RUN_BENCHMARK("u16snlen_u8", size, iterations, &u16snlen_u8_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16sntou8slen", size, iterations, &u16snlen_u8_iteration, ds);
         size_t u16snlen_u8_result = ds.result();
 
-        UP_TEST_RUN_BENCHMARK("u16slen_u32", size, iterations, &u16slen_u32_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16stou32slen", size, iterations, &u16slen_u32_iteration, ds);
         size_t u16slen_u32_result = ds.result();
    
-        UP_TEST_RUN_BENCHMARK("u16snlen_u32", size, iterations, &u16snlen_u32_iteration, ds);
+        UP_TEST_RUN_BENCHMARK("u16sntou32slen", size, iterations, &u16snlen_u32_iteration, ds);
         size_t u16snlen_u32_result = ds.result();
 
         require(u16memlen_result == u16memnlen_result);
@@ -341,32 +341,36 @@ namespace cstrings_utf16
     //
     
     UPNOINLINE void u16stou8s_conversion(u16data_source& ds) {
-        size_t count1 = up::u16slen_u8(ds.data());
-        size_t count2 = up::u16stou8s(reinterpret_cast<char*>(ds.scratch()), ds.data(), count1 + 1);
+        char16_t const* src = ds.data();
+        size_t count1 = up::u16stou8slen(ds.data());
+        size_t count2 = up::u16stou8s(reinterpret_cast<char*>(ds.scratch()), &src, count1 + 1);
         ds.result(count2);
         up::sink_dependency(count1);
         up::sink_dependency(count2);
     }
     
     UPNOINLINE void u16stou8s_guess_conversion(u16data_source& ds) {
-        size_t count1 = ds.size() * U8_CUR_MAX; // UTF-8 length <= UTF-16 length * U8_CUR_MAX
-        size_t count2 = up::u16stou8s(reinterpret_cast<char*>(ds.scratch()), ds.data(), count1 + 1);
+        char16_t const* src = ds.data();
+        size_t count1 = ds.size() * up::u8_cur_max; // UTF-8 length <= UTF-16 length * up::u8_cur_max
+        size_t count2 = up::u16stou8s(reinterpret_cast<char*>(ds.scratch()), &src, count1 + 1);
         ds.result(count2);
         up::sink_dependency(count1);
         up::sink_dependency(count2);
     }
     
     UPNOINLINE void u16stou32s_conversion(u16data_source& ds) {
+        char16_t const* src = ds.data();
         size_t count1 = up::u16slen(ds.data());
-        size_t count2 = up::u16stou32s(reinterpret_cast<char32_t*>(ds.scratch()), ds.data(), count1 + 1);
+        size_t count2 = up::u16stou32s(reinterpret_cast<char32_t*>(ds.scratch()), &src, count1 + 1);
         ds.result(count2);
         up::sink_dependency(count1);
         up::sink_dependency(count2);
     }
     
     UPNOINLINE void u16stou32s_guess_conversion(u16data_source& ds) {
+        char16_t const* src = ds.data();
         size_t count1 = ds.size(); // UTF-32 length <= UTF-16 length
-        size_t count2 = up::u16stou32s(reinterpret_cast<char32_t*>(ds.scratch()), ds.data(), count1 + 1);
+        size_t count2 = up::u16stou32s(reinterpret_cast<char32_t*>(ds.scratch()), &src, count1 + 1);
         ds.result(count2);
         up::sink_dependency(count1);
         up::sink_dependency(count2);

@@ -28,75 +28,73 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32stou8s(char* UPRESTRICT s, char32_t const* UPRESTRICT u32s, size_t n) noexcept {
-        assert((s && u32s) || !n);
+    LIBUPCOREAPI
+    size_t u32stou8s(char* UPRESTRICT dst, char32_t const** UPRESTRICT src, size_t n) noexcept {
+        assert((dst && src && *src) || !n);
         
-        unsigned char* UPRESTRICT u8s = reinterpret_cast<unsigned char*>(s);
-        unsigned char* u8s_end = u8s + n;
+        unsigned char* udst = reinterpret_cast<unsigned char*>(dst);
+        unsigned char* const udst_end = udst + n;
+        char32_t const* src_cur = *src;
         char32_t codepoint;
 
-        for ( ; u8s < u8s_end; ++u32s, ++u8s) {
-            codepoint = *u32s;
+        for ( ; udst < udst_end; ++src_cur, ++udst) {
+            codepoint = *src_cur;
+            
             if (codepoint < 0x80) {
                 // ascii-fast path
-                *u8s = static_cast<unsigned char>(codepoint);
+                *udst = static_cast<unsigned char>(codepoint);
                 if (!codepoint) {
+                    src_cur = nullptr;
                     break;
                 }
+                continue;
             }
-            else if (codepoint < 0x0800) {
+            
+            if (codepoint < 0x0800) {
                 // encode two-byte utf-8 sequence
-                if ((u8s + 2) > u8s_end) {
-                    goto out_of_storage_space;
+                if ((udst + 2) > udst_end) {
+                    break;
                 }
                 
-                *(u8s++) = static_cast<unsigned char>((codepoint >> 6) | 0xC0);
-                *u8s = static_cast<unsigned char>((codepoint & 0x3F) | 0x80);
+                *(udst++) = static_cast<unsigned char>((codepoint >> 6) | 0xC0);
+                *udst = static_cast<unsigned char>((codepoint & 0x3F) | 0x80);
+                continue;
             }
-            else {
-                // check if this is a supplementary code point
-                if (codepoint >= 0x10000) {
-                    if (codepoint < 0x110000) {
-                        // encode four-byte utf-8 sequence
-                        if ((u8s + 4) > u8s_end) {
-                            goto out_of_storage_space;
-                        }
 
-                        *(u8s++) = static_cast<unsigned char>((codepoint >> 18) | 0xF0);
-                        *(u8s++) = static_cast<unsigned char>(((codepoint >> 12) & 0x3F) | 0x80);
-                        *(u8s++) = static_cast<unsigned char>(((codepoint >> 6) & 0x3F) | 0x80);
-                        *u8s = static_cast<unsigned char>((codepoint & 0x3F) | 0x80);
-                        continue;
+            // check if this is a supplementary code point
+            if (codepoint >= 0x10000) {
+                if (codepoint < 0x110000) {
+                    // encode four-byte utf-8 sequence
+                    if ((udst + 4) > udst_end) {
+                        break;
                     }
 
-                    // invalid code point
-                    codepoint = detail::u32_replacement_character;
-                }
-                else if (::up::detail::u32_is_surrogate(codepoint)) {
-                    // invalid surrogate sequence
-                    codepoint = detail::u32_replacement_character;
-                }
-                
-                // encode three-byte utf-8 sequence
-                if ((u8s + 3) > u8s_end) {
-                    goto out_of_storage_space;
+                    *(udst++) = static_cast<unsigned char>((codepoint >> 18) | 0xF0);
+                    *(udst++) = static_cast<unsigned char>(((codepoint >> 12) & 0x3F) | 0x80);
+                    *(udst++) = static_cast<unsigned char>(((codepoint >> 6) & 0x3F) | 0x80);
+                    *udst = static_cast<unsigned char>((codepoint & 0x3F) | 0x80);
+                    continue;
                 }
 
-                *(u8s++) = static_cast<unsigned char>((codepoint >> 12) | 0xE0);
-                *(u8s++) = static_cast<unsigned char>(((codepoint >> 6) & 0x3F) | 0x80);
-                *u8s = static_cast<unsigned char>((codepoint & 0x3F) | 0x80);
+                // invalid code point
+                codepoint = detail::u32_replacement_character;
             }
+            else if (detail::u32_is_surrogate(codepoint)) {
+                // invalid surrogate sequence
+                codepoint = detail::u32_replacement_character;
+            }
+                
+            // encode three-byte utf-8 sequence
+            if ((udst + 3) > udst_end) {
+                break;
+            }
+
+            *(udst++) = static_cast<unsigned char>((codepoint >> 12) | 0xE0);
+            *(udst++) = static_cast<unsigned char>(((codepoint >> 6) & 0x3F) | 0x80);
+            *udst = static_cast<unsigned char>((codepoint & 0x3F) | 0x80);
         }
 
-        return static_cast<size_t>(u8s - reinterpret_cast<unsigned char*>(s));
-        
-    out_of_storage_space:
-    
-        // fill remaining space with null-terminators
-        for ( ; u8s < u8s_end; ++u8s) {
-            *u8s = 0;
-        }
-        
-        return n;
+        *src = src_cur;
+        return static_cast<size_t>(udst - reinterpret_cast<unsigned char*>(dst));
     }
 }

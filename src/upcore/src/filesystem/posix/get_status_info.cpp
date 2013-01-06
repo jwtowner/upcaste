@@ -27,13 +27,13 @@
 namespace up { namespace filesystem { namespace detail
 {
     UPHIDDEN
-    void get_status_info(struct ::stat const& buf, status_info& info) noexcept {
-        info.type = get_status_type(buf.st_mode);
-        info.file_size = static_cast<uintmax_t>(buf.st_size);
-        info.hard_link_count = static_cast<uintmax_t>(buf.st_nlink);
-        info.last_access_time.tv_sec = buf.st_atime;
-        info.last_access_time.tv_nsec = 0;
-        info.last_write_time.tv_sec = buf.st_mtime;
-        info.last_write_time.tv_nsec = 0;
+    void get_status_info(struct ::stat const*  UPRESTRICT buf, status_info* UPRESTRICT info) noexcept {
+        info->type = get_status_type(buf->st_mode);
+        info->file_size = static_cast<uintmax_t>(buf->st_size);
+        info->hard_link_count = static_cast<uintmax_t>(buf->st_nlink);
+        info->last_access_time.tv_sec = buf->st_atime;
+        info->last_access_time.tv_nsec = 0;
+        info->last_write_time.tv_sec = buf->st_mtime;
+        info->last_write_time.tv_nsec = 0;
     }
 }}}

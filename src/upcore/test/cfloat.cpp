@@ -24,27 +24,10 @@
 
 #include <up/cfloat.hpp>
 #include <up/cmath.hpp>
-#include <up/cstdint.hpp>
 #include <up/test.hpp>
-
-#if UP_COMPILER == UP_COMPILER_MSVC
-#   pragma warning(disable:4127) // conditional expression is constant
-#endif
 
 namespace cfloat
 {
-    UP_TEST_CASE(ieee754) {
-        require(sizeof(up::ieee754_binary16) == sizeof(uint16_t));
-        require(sizeof(up::ieee754_binary32) == sizeof(uint32_t));
-        require(sizeof(up::ieee754_binary64) == sizeof(uint64_t));
-        require(sizeof(up::ieee754_binary128) == (sizeof(uint64_t) * 2));
-#if (LDBL_MANT_DIG == 64) && (FLT_RADIX == 2)
-        require(sizeof(up::ieee754_binary96) == sizeof(long double));
-#else
-        require(sizeof(up::ieee754_binary96) == (sizeof(uint32_t) * 4));
-#endif
-    }
-
     UP_TEST_CASE(infinity) {
         require(up::math::isinf(FLT_INFINITY));
         require(up::math::isinf(-FLT_INFINITY));

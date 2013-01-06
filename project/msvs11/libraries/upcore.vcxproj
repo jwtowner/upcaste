@@ -360,6 +360,22 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdio\getdelim.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\cstdio\getline.cpp" />
+    <Text Include="..\..\..\src\upcore\src\cthreads\posix\mtx_init.cpp" />
+    <Text Include="..\..\..\src\upcore\src\cthreads\posix\mtx_timedlock.cpp" />
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\woperations\absolute_path.cpp" />
+    <None Include="..\..\..\src\upcore\src\filesystem\posix\operations\absolute_path.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\c16rtomb.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\c32rtomb.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\mbrtoc16.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\mbrtoc32.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou32s.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou8s.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou16s.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou8s.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou16s.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou32s.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\mbsnrtowcs.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnrtombs.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\log.cpp">
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
@@ -869,11 +885,11 @@
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen_u32.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stou32slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen_u8.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16stou8slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -897,11 +913,11 @@
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen_u32.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou32slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snlen_u8.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sntou8slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -989,11 +1005,11 @@
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen_u16.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stou16slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen_u8.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32stou8slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -1013,11 +1029,11 @@
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen_u16.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou16slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snlen_u8.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sntou8slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -1077,11 +1093,11 @@
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8slen_u16.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stou16slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8slen_u32.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8stou32slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -1089,11 +1105,11 @@
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snlen_u16.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou16slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snlen_u32.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8sntou32slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -1553,11 +1569,11 @@
       <AssemblerListingLocation>$(IntDir)src\filesystem\windows\woperations\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\filesystem\windows\woperations\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\hash\accumulate_hash32.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\hash\hash32_accumulate.cpp">
       <AssemblerListingLocation>$(IntDir)src\hash\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\hash\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\hash\accumulate_hash64.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\hash\hash64_accumulate.cpp">
       <AssemblerListingLocation>$(IntDir)src\hash\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\hash\</ObjectFileName>
     </ClCompile>

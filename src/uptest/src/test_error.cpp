@@ -87,13 +87,13 @@ namespace up { namespace test
     }
 
     LIBUPTESTAPI
-    test_error::~test_error() noexcept {
+    test_error::~test_error() UPEXCEPTNOTHROW {
         free(condition_);
         free(message_);
     }
 
     LIBUPTESTAPI
-    char const* test_error::what() const noexcept {
+    char const* test_error::what() const UPEXCEPTNOTHROW {
         return "test_error";
     }
 }}

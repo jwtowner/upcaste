@@ -102,7 +102,6 @@ namespace up
     using ::std::wcsrtombs;
     using ::std::wcsspn;
     using ::std::wcsstr;
-    using ::std::wcstod;
     using ::std::wcstol;
     using ::std::wcstoul;
     using ::std::wcsxfrm;
@@ -110,11 +109,28 @@ namespace up
     using ::std::wprintf;
     using ::std::wscanf;
 
+#ifndef UP_HAS_POSIX_GETWDELIM
+    extern LIBUPCOREAPI UPNONNULL(4)
+    ssize_t getwdelim(wchar_t** UPRESTRICT lineptr, size_t* UPRESTRICT n, wint_t delimiter, FILE* UPRESTRICT stream) noexcept;
+#endif
+
+#ifndef UP_HAS_POSIX_GETWLINE
+    extern LIBUPCOREAPI UPNONNULL(3)
+    ssize_t getwline(wchar_t** UPRESTRICT lineptr, size_t* UPRESTRICT n, FILE* UPRESTRICT stream) noexcept;
+#endif
+
 #ifndef UP_HAS_STDC_WCSTOF
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     float wcstof(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr) noexcept;
 #else
     using ::std::wcstof;
+#endif
+
+#ifndef UP_HAS_STDC_WCSTOD
+    extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
+    double wcstod(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr) noexcept;
+#else
+    using ::std::wcstod;
 #endif
 
 #ifndef UP_HAS_STDC_WCSTOLD
@@ -138,14 +154,28 @@ namespace up
     using ::std::wcstoull;
 #endif
 
-#ifndef UP_HAS_POSIX_GETWDELIM
-    extern LIBUPCOREAPI UPNONNULL(4)
-    ssize_t getwdelim(wchar_t** UPRESTRICT lineptr, size_t* UPRESTRICT n, wint_t delimiter, FILE* UPRESTRICT stream) noexcept;
+#ifndef UP_HAS_POSIX_MBSNRTOWCS
+    extern LIBUPCOREAPI UPNONNULL(2)
+    size_t mbsnrtowcs(
+        wchar_t* UPRESTRICT dst,
+        char const** UPRESTRICT src,
+        size_t nmc,
+        size_t len,
+        mbstate_t* UPRESTRICT ps
+    )
+    noexcept;
 #endif
 
-#ifndef UP_HAS_POSIX_GETWLINE
-    extern LIBUPCOREAPI UPNONNULL(3)
-    ssize_t getwline(wchar_t** UPRESTRICT lineptr, size_t* UPRESTRICT n, FILE* UPRESTRICT stream) noexcept;
+#ifndef UP_HAS_POSIX_WCSNRTOMBS
+    extern LIBUPCOREAPI UPNONNULL(2)
+    size_t wcsnrtombs(
+        char* UPRESTRICT dst,
+        wchar_t const** UPRESTRICT src,
+        size_t nwc,
+        size_t len,
+        mbstate_t* UPRESTRICT ps
+    )
+    noexcept;
 #endif
 
 #ifndef UP_HAS_POSIX_WCPCPY

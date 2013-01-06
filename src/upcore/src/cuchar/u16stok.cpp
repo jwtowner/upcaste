@@ -27,23 +27,24 @@
 
 namespace up
 {
-    LIBUPCOREAPI char16_t* u16stok(char16_t* UPRESTRICT s, char16_t const* UPRESTRICT delim, char16_t** UPRESTRICT state) noexcept {
+    LIBUPCOREAPI
+    char16_t* u16stok(char16_t* UPRESTRICT s, char16_t const* UPRESTRICT delim, char16_t** UPRESTRICT state) noexcept {
         assert(delim && state);
 
         if (!s) {
             s = *state;
         }
 
-        s += ::up::u16sspn(s, delim);
+        s += u16sspn(s, delim);
         if (*s == 0) {
             *state = s;
             return nullptr;
         }
         
         char16_t* token = s;
-        s = ::up::u16spbrk(s, delim);
+        s = u16spbrk(s, delim);
         if (!s) {
-            *state = ::up::u16schr(token, 0);
+            *state = u16schr(token, 0);
             return nullptr;
         }
 

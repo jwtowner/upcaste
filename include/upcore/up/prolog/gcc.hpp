@@ -187,6 +187,12 @@
 #define UPUSED __attribute__((used))
 #define UPWARNRESULT __attribute__((warn_unused_result))
 
+#ifndef UP_NO_NOEXCEPT
+#   define UPEXCEPTNOTHROW noexcept
+#else
+#   define UPEXCEPTNOTHROW throw()
+#endif
+
 //
 // calling conventions
 //

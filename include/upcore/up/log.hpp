@@ -53,26 +53,37 @@ namespace up
         timespec time_stamp;
     };
 
-    typedef void (UPCDECL *log_handler)(log_record const* record, void* user_data);
+    typedef void (UPCDECL *log_handler)(log_record const* record, void* user);
     typedef void* log_sink;
     
     extern LIBUPCOREAPI
-    void UPCDECL debugger_log_handler(log_record const* record, void* user_data);
+    void UPCDECL debugger_log_handler(log_record const* record, void* user);
 
     extern LIBUPCOREAPI
-    void UPCDECL stdout_log_handler(log_record const* record, void* user_data);
+    void UPCDECL stdout_log_handler(log_record const* record, void* user);
 
     extern LIBUPCOREAPI
-    void UPCDECL stderr_log_handler(log_record const* record, void* user_data);
+    void UPCDECL stderr_log_handler(log_record const* record, void* user);
 
     extern LIBUPCOREAPI
     void clear_log_sinks();
 
     extern LIBUPCOREAPI UPNONNULL(1)
-    log_sink add_log_sink(log_handler handler, void* user_data, unsigned int min_level = 0, unsigned int max_level = UINT_MAX);
+    log_sink add_log_sink(
+        log_handler handler,
+        void* user,
+        unsigned int min_level = 0,
+        unsigned int max_level = UINT_MAX
+    );
 
     extern LIBUPCOREAPI UPNONNULL(1)
-    log_sink add_log_sink(log_handler handler, void* user_data, char const* category, unsigned int min_level = 0, unsigned int max_level = UINT_MAX);
+    log_sink add_log_sink(
+        log_handler handler,
+        void* user,
+        char const* category,
+        unsigned int min_level = 0,
+        unsigned int max_level = UINT_MAX
+    );
 
     extern LIBUPCOREAPI UPNONNULL(1)
     int remove_log_sink(log_sink sink);

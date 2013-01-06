@@ -54,10 +54,10 @@ namespace up { namespace filesystem { namespace detail
     void UPCDECL transcode_locale_init() noexcept;
 
     extern UPHIDDEN
-    void get_space_info(struct ::statvfs const& buf, space_info& info) noexcept;
+    void get_space_info(struct ::statvfs const* UPRESTRICT buf, space_info* UPRESTRICT info) noexcept;
 
     extern UPHIDDEN
-    void get_status_info(struct ::stat const& buf, status_info& info) noexcept;
+    void get_status_info(struct ::stat const* UPRESTRICT buf, status_info* UPRESTRICT info) noexcept;
 
     extern UPHIDDEN UPPURE
     status_type get_status_type(::mode_t mode) noexcept;

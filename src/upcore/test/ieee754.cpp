@@ -22,29 +22,25 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/cuchar.hpp>
-#include <up/cassert.hpp>
-#include "cuchar_internal.inl"
+#include <up/ieee754.hpp>
+#include <up/cstdint.hpp>
+#include <up/test.hpp>
 
-namespace up
-{        
-    LIBUPCOREAPI size_t u16slen_u32(char16_t const* s) noexcept {
-        assert(s);
+#if UP_COMPILER == UP_COMPILER_MSVC
+#   pragma warning(disable:4127) // conditional expression is constant
+#endif
 
-        size_t count = 0;
-        
-        for (;;) {
-            char16_t lead = *(s++);
-            if (!lead) {
-                break;
-            }
-
-            ++count;
-            if (::up::detail::u16_is_surrogate_pair(lead, *s)) {
-                ++s;
-            }
-        }
-
-        return count;
+namespace ieee754
+{
+    UP_TEST_CASE(ieee754) {
+        require(sizeof(up::ieee754_binary16) == sizeof(uint16_t));
+        require(sizeof(up::ieee754_binary32) == sizeof(uint32_t));
+        require(sizeof(up::ieee754_binary64) == sizeof(uint64_t));
+        require(sizeof(up::ieee754_binary128) == (sizeof(uint64_t) * 2));
+#if (LDBL_MANT_DIG == 64) && (FLT_RADIX == 2)
+        require(sizeof(up::ieee754_binary96) == sizeof(long double));
+#else
+        require(sizeof(up::ieee754_binary96) == (sizeof(uint32_t) * 4));
+#endif
     }
 }

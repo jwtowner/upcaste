@@ -156,13 +156,20 @@
 #endif
 
 #ifndef UP_NO_SCOPED_ENUMS
+#   define UPENUMTYPE(name) name
 #   define UPENUMBEGIN(name) enum class name
 #   define UPENUMEND ;
-#   define UPENUMTYPE(name) name
 #else
-#   define UPENUMBEGIN(name) class UPHIDDEN name { public: UPALWAYSINLINE name(){} template <class T> UPALWAYSINLINE name(T t):e_(t){} enum enum_t
-#   define UPENUMEND ; inline UPALWAYSINLINE operator enum_t() const { return e_; } private: enum_t e_; };
 #   define UPENUMTYPE(name) name::enum_type
+#   define UPENUMBEGIN(name) \
+        class UPHIDDEN name { public: \
+            UPALWAYSINLINE name(){} \
+            template <class T> UPALWAYSINLINE name(T t):e_(t){} \
+            enum enum_t
+#   define UPENUMEND \
+            ; \
+            inline UPALWAYSINLINE operator enum_t() const { return e_; } \
+            private: enum_t e_; };
 #endif
 
 #ifndef UPCONCATENATE

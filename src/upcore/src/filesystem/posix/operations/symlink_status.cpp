@@ -27,14 +27,17 @@
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    int symlink_status(char const* p, status_info& info) noexcept {
-        struct ::stat buf;
-        if (::lstat(p, &buf) != 0) {
-            info.type = status_type::error;
+    int symlink_status(char const* UPRESTRICT p, status_info* UPRESTRICT info) noexcept {
+        if (!info) {
+            errno = EINVAL;
             return -1;
         }
-
-        detail::get_status_info(buf, info);
+        struct ::stat buf;
+        if (::lstat(p, &buf) != 0) {
+            info->type = status_invalid;
+            return -1;
+        }
+        detail::get_status_info(&buf, info);
         return 0;
     }
 }}

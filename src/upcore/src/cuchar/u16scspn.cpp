@@ -28,7 +28,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u16scspn(char16_t const* s, char16_t const* reject) noexcept {
+    LIBUPCOREAPI
+    size_t u16scspn(char16_t const* s, char16_t const* reject) noexcept {
         assert(s && reject);
 
         // fast-path

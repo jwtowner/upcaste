@@ -22,24 +22,21 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/filesystem/operations.hpp>
-#include <up/filesystem/transcode.hpp>
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
 
-#include <up/filesystem/wchar_operations.hpp>
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem { namespace detail
 {
     LIBUPCOREAPI UPALLOC UPWARNRESULT
-    wchar_t* observer_operations<wchar_t*>::current_directory_path(std::error_code& ec) noexcept {
-        char* native_result = ::up::filesystem::current_directory_path<char*>(ec);
+    wchar_t* observer_operations<wchar_t>::current_directory_path() noexcept {
+        char* native_result = ::up::filesystem::current_directory_path<char>();
         if (!native_result) {
             return nullptr;
         }
-
-        wchar_t* result = transcode(native_result, ec);
+        wchar_t* result = transcode(native_result);
         free(native_result);
         return result;
     }
@@ -48,13 +45,12 @@ namespace up { namespace filesystem { namespace detail
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    bool current_directory_path(wchar_t const* p, std::error_code& ec) noexcept {
-        char* native_p = transcode(p, ec);
+    int current_directory_path(wchar_t const* p) noexcept {
+        char* native_p = transcode(p);
         if (!native_p) {
-            return false;
+            return -1;
         }
-
-        bool result = current_directory_path(native_p, ec);
+        int result = current_directory_path(native_p);
         free(native_p);
         return result;
     }

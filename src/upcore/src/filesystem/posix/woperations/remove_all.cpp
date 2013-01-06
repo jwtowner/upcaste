@@ -22,24 +22,21 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/filesystem/operations.hpp>
-#include <up/filesystem/transcode.hpp>
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
 
-#include <up/filesystem/wchar_operations.hpp>
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    uintmax_t remove_all(wchar_t const* p, std::error_code& ec) noexcept {
-        char* native_p = transcode(p, ec);
+    uintmax_t remove_all(wchar_t const* p) noexcept {
+        char* native_p = transcode(p);
         if (!native_p) {
             return 0;
         }
-
-        uintmax_t result = remove_all(native_p, ec);
+        uintmax_t result = remove_all(native_p);
         free(native_p);
         return result;
     }

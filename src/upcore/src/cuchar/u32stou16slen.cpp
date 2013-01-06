@@ -27,29 +27,20 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32snlen_u8(char32_t const* u32s, size_t n) noexcept {
-        assert(u32s || !n);
+    LIBUPCOREAPI
+    size_t u32stou16slen(char32_t const* u32s) noexcept {
+        assert(u32s);
         
-        char32_t const* u32s_end = u32s + n;
         char32_t codepoint;
         size_t count = 0;
 
-        for ( ; u32s < u32s_end; ++u32s) {
-            codepoint = *u32s;
-            if (codepoint < 0x80) {
-                if (!codepoint) {
-                    break;
-                }
+        for ( ; ; ++count) {
+            codepoint = *(u32s++);
+            if (!codepoint) {
+                break;
+            }            
+            else if ((0x10000 <= codepoint) && (codepoint < 0x110000)) {
                 ++count;
-            }
-            else if (codepoint < 0x0800) {
-                count += 2;
-            }
-            else if ((codepoint < 0x10000) || (codepoint >= 0x110000)) {
-                count += 3;
-            }
-            else {
-                count += 4;
             }
         }
 

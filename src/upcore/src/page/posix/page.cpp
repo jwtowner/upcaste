@@ -26,7 +26,6 @@
 #include <up/cassert.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cstring.hpp>
-#include <algorithm>
 
 #include <sys/mman.h>
 #include <dirent.h>
@@ -36,6 +35,7 @@ namespace up
 {
     namespace
     {
+        UPALWAYSINLINE
         int get_protection_flags(unsigned int flags) noexcept {
             int prot = PROT_NONE;
 
@@ -54,8 +54,19 @@ namespace up
             return prot;    
         }
 
+        UPALWAYSINLINE
         int page_size_compare(void const* p1, void const* p2) noexcept {
             return (*static_cast<size_t const*>(p1)) < (*static_cast<size_t const*>(p2));
+        }
+
+        int UPCDECL compare_sizes(void const* x, void const* y) noexcept {
+            if (*static_cast<size_t const*>(x) < *static_cast<size_t const*>(y)) {
+                return -1;
+            }
+            else if (*static_cast<size_t const*>(x) > *static_cast<size_t const*>(y)) {
+                return 1;
+            }
+            return 0;
         }
     }
 
@@ -66,7 +77,7 @@ namespace up
     }
 
     LIBUPCOREAPI
-    size_t page_get_sizes(size_t* page_sizes, size_t max_page_sizes) noexcept {
+    ssize_t page_get_sizes(size_t* page_sizes, size_t max_page_sizes) noexcept {
 #if UP_BASESYSTEM == UP_BASESYSTEM_LINUX
         size_t count = 1;
         long default_page_size;
@@ -78,7 +89,9 @@ namespace up
 
         // get regular page size
         default_page_size = ::sysconf(_SC_PAGESIZE);
-        assert(default_page_size > 0);
+        if (default_page_size <= 0) {
+            return -1;
+        }
         
         if (page_sizes && (max_page_sizes > 0)) {
             page_sizes[0] = static_cast<size_t>(default_page_size);
@@ -98,7 +111,7 @@ namespace up
                     continue;
                 }
 
-                hugetlb_size = strtoul(&entry->d_name[10], &unitptr, 10);
+                hugetlb_size = fast_strtoul(&entry->d_name[10], &unitptr, 10);
 
                 // ensure page size is power of two
                 if (!hugetlb_size || ((hugetlb_size & (hugetlb_size - 1)) != 0)) {
@@ -119,14 +132,15 @@ namespace up
             }
 
             result = ::closedir(hugetlb_dir);
-            assert(!result);
+            if (!result) {
+                return -1;
+            }
         }
 
         // sort and remove duplicates
         if (page_sizes) {
-            count = ::std::min(count, max_page_sizes);
-            ::std::qsort(page_sizes, count, sizeof(size_t), &page_size_compare);
-            count = ::std::unique(page_sizes, page_sizes + count) - page_sizes;
+            count = count < max_page_sizes ? count : max_page_sizes;
+            qsort(page_sizes, count, sizeof(size_t), &compare_sizes);
         }
 
         return count;
@@ -141,7 +155,7 @@ namespace up
 
         if (flags & (page_option_huge_relaxed | page_option_huge_strict)) {
             void* result = ::mmap(nullptr, n, prot, MAP_ANONYMOUS | MAP_PRIVATE | MAP_HUGETLB, 0, 0);
-            if (result || !(flags & page_option::huge_relaxed)) {
+            if (result || !(flags & page_option_huge_relaxed)) {
                 return result;
             }
         }
@@ -154,7 +168,6 @@ namespace up
         if (!p || !n) {
             return 0;
         }
-
         return ::munmap(p, n);
     }
 

@@ -40,73 +40,73 @@
 
 namespace up
 {
-    inline UPALWAYSINLINE UPPURE int16_t byteswap(int16_t value) noexcept { return byteswap_int16(value); }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap(int32_t value) noexcept { return byteswap_int32(value); }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap(int64_t value) noexcept { return byteswap_int64(value); }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap(uint16_t value) noexcept { return byteswap_uint16(value); }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap(uint32_t value) noexcept { return byteswap_uint32(value); }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap(uint64_t value) noexcept { return byteswap_uint64(value); }
-    inline UPALWAYSINLINE UPPURE int16_t byteswap(int16_t value, bool condition) noexcept { return byteswap_int16(value, condition); }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap(int32_t value, bool condition) noexcept { return byteswap_int32(value, condition); }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap(int64_t value, bool condition) noexcept { return byteswap_int64(value, condition); }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap(uint16_t value, bool condition) noexcept { return byteswap_uint16(value, condition); }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap(uint32_t value, bool condition) noexcept { return byteswap_uint32(value, condition); }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap(uint64_t value, bool condition) noexcept { return byteswap_uint64(value, condition); }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap(int16_t x) noexcept { return byteswap_int16(x); }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap(int32_t x) noexcept { return byteswap_int32(x); }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap(int64_t x) noexcept { return byteswap_int64(x); }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap(uint16_t x) noexcept { return byteswap_uint16(x); }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap(uint32_t x) noexcept { return byteswap_uint32(x); }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap(uint64_t x) noexcept { return byteswap_uint64(x); }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap(int16_t x, bool c) noexcept { return byteswap_int16(x, c); }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap(int32_t x, bool c) noexcept { return byteswap_int32(x, c); }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap(int64_t x, bool c) noexcept { return byteswap_int64(x, c); }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap(uint16_t x, bool c) noexcept { return byteswap_uint16(x, c); }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap(uint32_t x, bool c) noexcept { return byteswap_uint32(x, c); }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap(uint64_t x, bool c) noexcept { return byteswap_uint64(x, c); }
 
 #if (UP_BYTE_ORDER == UP_BIG_ENDIAN)
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_be(int16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_be(int32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_be(int64_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be(uint16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be(uint32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be(uint64_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_le(int16_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_le(int32_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_le(int64_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le(uint16_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le(uint32_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le(uint64_t value) noexcept { return byteswap(value); }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_be(int16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_be(int32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_be(int64_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be(uint16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be(uint32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be(uint64_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_le(int16_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_le(int32_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_le(int64_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le(uint16_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le(uint32_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le(uint64_t x) noexcept { return byteswap(x); }
 #else
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_be(int16_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_be(int32_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_be(int64_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be(uint16_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be(uint32_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be(uint64_t value) noexcept { return byteswap(value); }
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_le(int16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_le(int32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_le(int64_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le(uint16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le(uint32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le(uint64_t value) noexcept { return value; }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_be(int16_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_be(int32_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_be(int64_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be(uint16_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be(uint32_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be(uint64_t x) noexcept { return byteswap(x); }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_le(int16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_le(int32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_le(int64_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le(uint16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le(uint32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le(uint64_t x) noexcept { return x; }
 #endif
 
 #if (UP_BYTE_ORDER == UP_BIG_ENDIAN)
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_be_int16(int16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_be_int32(int32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_be_int64(int64_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be_uint16(uint16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be_uint32(uint32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be_uint64(uint64_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_le_int16(int16_t value) noexcept { return byteswap_int16(value); }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_le_int32(int32_t value) noexcept { return byteswap_int32(value); }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_le_int64(int64_t value) noexcept { return byteswap_int64(value); }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le_uint16(uint16_t value) noexcept { return byteswap_uint16(value); }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le_uint32(uint32_t value) noexcept { return byteswap_uint32(value); }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le_uint64(uint64_t value) noexcept { return byteswap_uint64(value); }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_be_int16(int16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_be_int32(int32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_be_int64(int64_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be_uint16(uint16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be_uint32(uint32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be_uint64(uint64_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_le_int16(int16_t x) noexcept { return byteswap_int16(x); }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_le_int32(int32_t x) noexcept { return byteswap_int32(x); }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_le_int64(int64_t x) noexcept { return byteswap_int64(x); }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le_uint16(uint16_t x) noexcept { return byteswap_uint16(x); }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le_uint32(uint32_t x) noexcept { return byteswap_uint32(x); }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le_uint64(uint64_t x) noexcept { return byteswap_uint64(x); }
 #else
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_be_int16(int16_t value) noexcept { return byteswap_int16(value); }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_be_int32(int32_t value) noexcept { return byteswap_int32(value); }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_be_int64(int64_t value) noexcept { return byteswap_int64(value); }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be_uint16(uint16_t value) noexcept { return byteswap_uint16(value); }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be_uint32(uint32_t value) noexcept { return byteswap_uint32(value); }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be_uint64(uint64_t value) noexcept { return byteswap_uint64(value); }
-    inline UPALWAYSINLINE UPPURE int16_t byteswap_le_int16(int16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int32_t byteswap_le_int32(int32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE int64_t byteswap_le_int64(int64_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le_uint16(uint16_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le_uint32(uint32_t value) noexcept { return value; }
-    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le_uint64(uint64_t value) noexcept { return value; }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_be_int16(int16_t x) noexcept { return byteswap_int16(x); }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_be_int32(int32_t x) noexcept { return byteswap_int32(x); }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_be_int64(int64_t x) noexcept { return byteswap_int64(x); }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_be_uint16(uint16_t x) noexcept { return byteswap_uint16(x); }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_be_uint32(uint32_t x) noexcept { return byteswap_uint32(x); }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_be_uint64(uint64_t x) noexcept { return byteswap_uint64(x); }
+    inline UPALWAYSINLINE UPPURE  int16_t byteswap_le_int16(int16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int32_t byteswap_le_int32(int32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE  int64_t byteswap_le_int64(int64_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint16_t byteswap_le_uint16(uint16_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint32_t byteswap_le_uint32(uint32_t x) noexcept { return x; }
+    inline UPALWAYSINLINE UPPURE uint64_t byteswap_le_uint64(uint64_t x) noexcept { return x; }
 #endif
 }
 

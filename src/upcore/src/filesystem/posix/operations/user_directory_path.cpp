@@ -33,7 +33,6 @@ namespace up { namespace filesystem { namespace detail
             errno = ENOENT;
             return nullptr;
         }
-
         return strdup(path);
     }
 }}}

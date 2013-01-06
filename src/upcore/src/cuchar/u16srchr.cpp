@@ -27,7 +27,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI char16_t const* u16srchr(char16_t const* s, char32_t u32) noexcept {
+    LIBUPCOREAPI
+    char16_t const* u16srchr(char16_t const* s, char32_t u32) noexcept {
         assert(s);
 
         char16_t const* result = nullptr;

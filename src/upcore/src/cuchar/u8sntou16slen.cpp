@@ -28,7 +28,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u8snlen_u16(char const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    size_t u8sntou16slen(char const* s, size_t n) noexcept {
         assert(s);
     
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);

@@ -90,11 +90,15 @@ namespace up { namespace detail
         typedef integral_constant<bool, sizeof(sfinae<T>(declval<T>())) == sizeof(yes)> result;
     };
 
-    template <class T> struct is_member_function_pointer_impl : false_type { };
-    template <class T, class U> struct is_member_function_pointer_impl<T U::*> : integral_constant<bool, is_function_impl<T>::result::value> { };
+    template <class T> struct is_member_function_pointer_impl
+        : false_type { };
+    template <class T, class U> struct is_member_function_pointer_impl<T U::*>
+        : integral_constant<bool, is_function_impl<T>::result::value> { };
 
-    template <class T> struct is_member_object_pointer_impl : false_type { };
-    template <class T, class U> struct is_member_object_pointer_impl<T U::*> : integral_constant<bool, !is_function_impl<T>::result::value> { };
+    template <class T> struct is_member_object_pointer_impl
+        : false_type { };
+    template <class T, class U> struct is_member_object_pointer_impl<T U::*>
+        : integral_constant<bool, !is_function_impl<T>::result::value> { };
 
     template <class T> struct is_pointer_impl : false_type { };
     template <class T> struct is_pointer_impl<T*> : true_type { };
@@ -150,17 +154,24 @@ namespace up
     template <class T> struct UPVISIBLE is_function<T volatile> : is_function<T> { };
     template <class T> struct UPVISIBLE is_function<T const volatile> : is_function<T> { };
 
-    template <class T> struct UPVISIBLE is_member_function_pointer : integral_constant<bool, detail::is_member_function_pointer_impl<T>::value> { };
-    template <class T> struct UPVISIBLE is_member_function_pointer<T const> : is_member_function_pointer<T> { };
-    template <class T> struct UPVISIBLE is_member_function_pointer<T volatile> : is_member_function_pointer<T> { };
-    template <class T> struct UPVISIBLE is_member_function_pointer<T const volatile> : is_member_function_pointer<T> { };
+    template <class T> struct UPVISIBLE is_member_function_pointer
+        : integral_constant<bool, detail::is_member_function_pointer_impl<T>::value> { };
+    template <class T> struct UPVISIBLE is_member_function_pointer<T const>
+        : is_member_function_pointer<T> { };
+    template <class T> struct UPVISIBLE is_member_function_pointer<T volatile>
+        : is_member_function_pointer<T> { };
+    template <class T> struct UPVISIBLE is_member_function_pointer<T const volatile>
+        : is_member_function_pointer<T> { };
     
-    template <class T> struct UPVISIBLE is_member_object_pointer : integral_constant<bool, detail::is_member_object_pointer_impl<T>::value> { };
+    template <class T> struct UPVISIBLE is_member_object_pointer
+        : integral_constant<bool, detail::is_member_object_pointer_impl<T>::value> { };
     template <class T> struct UPVISIBLE is_member_object_pointer<T const> : is_member_object_pointer<T> { };
     template <class T> struct UPVISIBLE is_member_object_pointer<T volatile> : is_member_object_pointer<T> { };
     template <class T> struct UPVISIBLE is_member_object_pointer<T const volatile> : is_member_object_pointer<T> { };
 
-    template <class T> struct UPVISIBLE is_pointer : integral_constant<bool, detail::is_pointer_impl<T>::value && !is_member_function_pointer<T>::value && !is_member_object_pointer<T>::value> { };
+    template <class T> struct UPVISIBLE is_pointer
+        : integral_constant<bool, detail::is_pointer_impl<T>::value
+          && !is_member_function_pointer<T>::value && !is_member_object_pointer<T>::value> { };
     template <class T> struct UPVISIBLE is_pointer<T const> : is_pointer<T> { };
     template <class T> struct UPVISIBLE is_pointer<T volatile> : is_pointer<T> { };
     template <class T> struct UPVISIBLE is_pointer<T const volatile> : is_pointer<T> { };
@@ -425,15 +436,24 @@ namespace up
     template <class T> struct UPVISIBLE remove_extent<T volatile[]> { typedef T volatile type; };
     template <class T> struct UPVISIBLE remove_extent<T const volatile[]> { typedef T const volatile type; };
     
-    template <class T> struct UPVISIBLE remove_all_extents { typedef T type; };
-    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T[Size]> { typedef typename remove_all_extents<T>::type type; };
-    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T const[Size]> { typedef typename remove_all_extents<T const>::type type; };
-    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T volatile[Size]> { typedef typename remove_all_extents<T volatile>::type type; };
-    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T const volatile[Size]> { typedef typename remove_all_extents<T const volatile>::type type; };
-    template <class T> struct UPVISIBLE remove_all_extents<T[]> { typedef typename remove_all_extents<T>::type type; };
-    template <class T> struct UPVISIBLE remove_all_extents<T const[]> { typedef typename remove_all_extents<T const>::type const type; };
-    template <class T> struct UPVISIBLE remove_all_extents<T volatile[]> { typedef typename remove_all_extents<T volatile>::type volatile type; };
-    template <class T> struct UPVISIBLE remove_all_extents<T const volatile[]> { typedef typename remove_all_extents<T const volatile>::type const volatile type; };    
+    template <class T> struct UPVISIBLE remove_all_extents
+        { typedef T type; };
+    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T[Size]>
+        { typedef typename remove_all_extents<T>::type type; };
+    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T const[Size]>
+        { typedef typename remove_all_extents<T const>::type type; };
+    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T volatile[Size]>
+        { typedef typename remove_all_extents<T volatile>::type type; };
+    template <class T, size_t Size> struct UPVISIBLE remove_all_extents<T const volatile[Size]>
+        { typedef typename remove_all_extents<T const volatile>::type type; };
+    template <class T> struct UPVISIBLE remove_all_extents<T[]>
+        { typedef typename remove_all_extents<T>::type type; };
+    template <class T> struct UPVISIBLE remove_all_extents<T const[]>
+        { typedef typename remove_all_extents<T const>::type const type; };
+    template <class T> struct UPVISIBLE remove_all_extents<T volatile[]>
+        { typedef typename remove_all_extents<T volatile>::type volatile type; };
+    template <class T> struct UPVISIBLE remove_all_extents<T const volatile[]>
+        { typedef typename remove_all_extents<T const volatile>::type const volatile type; };    
     
     template <class T> struct UPVISIBLE remove_pointer { typedef T type; };
     template <class T> struct UPVISIBLE remove_pointer<T*> { typedef T type; };
@@ -615,11 +635,19 @@ namespace up
 
 #ifdef UP_TT_IS_ABSTRACT
     template <class T>
-    struct UPVISIBLE is_abstract : integral_constant<bool, UP_TT_IS_ABSTRACT(T)> { };
+    struct UPVISIBLE is_abstract
+        : integral_constant<bool, UP_TT_IS_ABSTRACT(T)> { };
 #else
     template <class T>
     struct UPVISIBLE is_abstract
-        : integral_constant<bool, detail::is_abstract_impl<typename remove_cv<typename remove_all_extents<T>::type>::type>::value> {};
+        : integral_constant
+        <
+            bool,
+            detail::is_abstract_impl
+            <
+                typename remove_cv<typename remove_all_extents<T>::type>::type
+            >::value
+        > {};
 #endif
 }
 
@@ -715,8 +743,11 @@ namespace up
     template <class T> struct UPVISIBLE is_volatile<T volatile> : true_type { };
     template <class T> struct UPVISIBLE is_volatile<T const volatile> : true_type { };
 
-    template <class T> struct UPVISIBLE is_signed : integral_constant<bool, detail::is_signed_impl<typename remove_reference<T>::type>::value> { };
-    template <class T> struct UPVISIBLE is_unsigned : integral_constant<bool, is_integral<T>::value && !is_signed<T>::value> { };
+    template <class T> struct UPVISIBLE is_signed
+        : integral_constant<bool, detail::is_signed_impl<typename remove_reference<T>::type>::value> { };
+
+    template <class T> struct UPVISIBLE is_unsigned
+        : integral_constant<bool, is_integral<T>::value && !is_signed<T>::value> { };
 
 #ifdef UP_TT_IS_EMPTY
     template <class T>
@@ -824,7 +855,12 @@ namespace up { namespace detail
         struct tester
         {
             template <class U, class B1, class B2, class B3, class B4>
-            static is_constructible_t sfinae(decltype((U(::up::detail::declval<B1>(), ::up::detail::declval<B2>(), ::up::detail::declval<B3>(), ::up::detail::declval<B4>())))*) noexcept;
+            static is_constructible_t sfinae(
+                decltype((U(::up::detail::declval<B1>(), 
+                            ::up::detail::declval<B2>(),
+                            ::up::detail::declval<B3>(),
+                            ::up::detail::declval<B4>())))*) noexcept;
+
             template <class U, class B1, class B2, class B3, class B4>
             static is_not_constructible_t sfinae(...) noexcept;
         };
@@ -916,7 +952,11 @@ namespace up { namespace detail
         struct tester
         {
             template <class U, class B1, class B2, class B3>
-            static is_constructible_t sfinae(decltype((U(::up::detail::declval<B1>(), ::up::detail::declval<B2>(), ::up::detail::declval<B3>()))*)) noexcept;
+            static is_constructible_t sfinae(
+                decltype((U(::up::detail::declval<B1>(),
+                            ::up::detail::declval<B2>(),
+                            ::up::detail::declval<B3>()))*)) noexcept;
+
             template <class U, class B1, class B2, class B3>
             static is_not_constructible_t sfinae(...) noexcept;
         };
@@ -1488,7 +1528,8 @@ namespace up { namespace detail
     struct result_of_impl;
 
 #ifndef UP_NO_VARIADIC_TEMPLATES    
-    template <class F, class... Args> struct result_of_impl<F(Args...), true, false> { typedef decltype(::up::detail::declval<F>()(::up::detail::declval<Args>()...)) type; };
+    template <class F, class... Args> struct result_of_impl<F(Args...), true, false>
+        { typedef decltype(::up::detail::declval<F>()(::up::detail::declval<Args>()...)) type; };
     template <class R, class T, class... Args> struct result_of_impl<R(T::*)(Args...), false, true> { typedef R type; };
     template <class R, class T, class... Args> struct result_of_impl<R(T::*)(Args...) const, false, true> { typedef R type; };
     template <class R, class T, class... Args> struct result_of_impl<R(T::*)(Args...) volatile, false, true> { typedef R type; };

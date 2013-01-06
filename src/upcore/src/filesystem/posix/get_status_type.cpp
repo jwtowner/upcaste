@@ -29,28 +29,28 @@ namespace up { namespace filesystem { namespace detail
     UPHIDDEN UPPURE
     status_type get_status_type(::mode_t mode) noexcept {
         if (S_ISREG(mode)) {
-            return status_type::regular;
+            return status_regular;
         }
         else if (S_ISDIR(mode)) {
-            return status_type::directory;
+            return status_directory;
         }
         else if (S_ISLNK(mode)) {
-            return status_type::symlink;
+            return status_symlink;
         }
         else if (S_ISBLK(mode)) {
-            return status_type::block;
+            return status_block;
         }
         else if (S_ISCHR(mode)) {
-            return status_type::character;
+            return status_character;
         }
         else if (S_ISFIFO(mode)) {
-            return status_type::fifo;
+            return status_fifo;
         }
         else if (S_ISSOCK(mode)) {
-            return status_type::socket;
+            return status_socket;
         }
         else {
-            return status_type::unknown;
+            return status_unknown;
         }
     }
 }}}

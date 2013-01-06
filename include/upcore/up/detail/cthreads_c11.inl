@@ -34,7 +34,6 @@
 namespace up
 {
     constexpr int mtx_plain = ::mtx_plain;
-	constexpr int mtx_try = ::mtx_try;
 	constexpr int mtx_timed = ::mtx_timed;
 	constexpr int mtx_recursive = ::mtx_recursive;
     constexpr int thrd_success = ::thrd_success;

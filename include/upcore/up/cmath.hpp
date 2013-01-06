@@ -61,7 +61,7 @@ namespace up { namespace math
 #elif defined(UP_HAS_STDC_MATH_C99)
 #   include <up/detail/cmath_c99.inl>
 #else
-#   include <up/detail/cmath_default.inl>
+#   include <up/detail/cmath_generic.inl>
 #endif
 
 namespace up { namespace math
@@ -78,7 +78,7 @@ namespace up { namespace math
     inline UPALWAYSINLINE double asinpi(double x) noexcept { return asin(x) * DBL_1_PI; }
     inline UPALWAYSINLINE double atanpi(double x) noexcept { return atan(x) * DBL_1_PI; }
     inline UPALWAYSINLINE double atan2pi(double x, double y) noexcept { return atan2(x, y) * DBL_1_PI; }
-    inline UPALWAYSINLINE double clamp(double x, double min_val, double max_val) noexcept { return fmax(fmin(x, max_val), min_val); }
+    inline UPALWAYSINLINE double clamp(double x, double xmin, double xmax) noexcept { return fmax(fmin(x, xmax), xmin); }
     inline UPALWAYSINLINE double cospi(double x) noexcept { return cos(x * DBL_PI); }
     inline UPALWAYSINLINE double degrees(double x) noexcept { return x * DBL_DEGREES; }
     inline UPALWAYSINLINE double distance(double x, double y) noexcept { return fabs(y - x); }
@@ -153,7 +153,7 @@ namespace up { namespace math
     inline UPALWAYSINLINE float asinpi(float x) noexcept { return asin(x) * FLT_1_PI; }
     inline UPALWAYSINLINE float atanpi(float x) noexcept { return atan(x) * FLT_1_PI; }
     inline UPALWAYSINLINE float atan2pi(float x, float y) noexcept { return atan2(x, y) * FLT_1_PI; }
-    inline UPALWAYSINLINE float clamp(float x, float min_val, float max_val) noexcept { return fmax(fmin(x, max_val), min_val); }
+    inline UPALWAYSINLINE float clamp(float x, float xmin, float xmax) noexcept { return fmax(fmin(x, xmax), xmin); }
     inline UPALWAYSINLINE float cospi(float x) noexcept { return cos(x * FLT_PI); }
     inline UPALWAYSINLINE float degrees(float x) noexcept { return x * FLT_DEGREES; }
     inline UPALWAYSINLINE float distance(float x, float y) noexcept { return fabs(y - x); }
@@ -223,12 +223,12 @@ namespace up { namespace math
         float const t = clamp((d - edge0) / (edge1 - edge0), 0.0f, 1.0f);
         return t * t * (3.0f - (2.0f * t));
     }
-    
+
     inline UPALWAYSINLINE long double acospi(long double x) noexcept { return acos(x) * LDBL_1_PI; }
     inline UPALWAYSINLINE long double asinpi(long double x) noexcept { return asin(x) * LDBL_1_PI; }
     inline UPALWAYSINLINE long double atanpi(long double x) noexcept { return atan(x) * LDBL_1_PI; }
     inline UPALWAYSINLINE long double atan2pi(long double x, long double y) noexcept { return atan2(x, y) * LDBL_1_PI; }
-    inline UPALWAYSINLINE long double clamp(long double x, long double min_val, long double max_val) noexcept { return fmax(fmin(x, max_val), min_val); }
+    inline UPALWAYSINLINE long double clamp(long double x, long double xmin, long double xmax) noexcept { return fmax(fmin(x, xmax), xmin); }
     inline UPALWAYSINLINE long double cospi(long double x) noexcept { return cos(x * LDBL_PI); }
     inline UPALWAYSINLINE long double degrees(long double x) noexcept { return x * LDBL_DEGREES; }
     inline UPALWAYSINLINE long double distance(long double x, long double y) noexcept { return fabs(y - x); }
@@ -342,3 +342,4 @@ namespace up { namespace math
 }}
 
 #endif
+

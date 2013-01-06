@@ -31,7 +31,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI char16_t* u16sncat(char16_t* UPRESTRICT s1, char16_t const* UPRESTRICT s2, size_t n) noexcept {
+    LIBUPCOREAPI
+    char16_t* u16sncat(char16_t* UPRESTRICT s1, char16_t const* UPRESTRICT s2, size_t n) noexcept {
         assert(s1 && (s2 || !n));
         
         char16_t* result = s1;

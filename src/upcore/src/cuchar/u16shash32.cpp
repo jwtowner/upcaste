@@ -27,7 +27,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI uint_least32_t u16shash32(char16_t const* s) noexcept {
+    LIBUPCOREAPI
+    uint_least32_t u16shash32(char16_t const* s) noexcept {
         return hash32_finalize(hash32_accumulate(hashseed32, s, u16slen(s) * sizeof(char16_t)));
     }
 }

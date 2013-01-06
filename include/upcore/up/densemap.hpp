@@ -590,14 +590,26 @@ namespace up
 
     template <class K, class V, class H, class E, class Key, class Hasher, class Equals>
     inline UPHIDDENINLINE
-    V const& densemap_get(densemap<K, V, H, E> const& map, Key const& key, Hasher const& hasher, Equals const& equals, V const& default_value = V()) {
+    typename conditional<is_fundamental<V>::value, V, V const&>::type
+    densemap_get(
+        densemap<K, V, H, E> const& map,
+        Key const& key,
+        Hasher const& hasher,
+        Equals const& equals,
+        typename conditional<is_fundamental<V>::value, V, V const&>::type default_value = V()
+    ) {
         denserecord<K, V> record = ::up::densemap_find(map, key, hasher, equals);
         return record.key_ptr ? *record.value_ptr : default_value;
     }
 
     template <class K, class V, class H, class E, class Key>
     inline UPHIDDENINLINE
-    V const& densemap_get(densemap<K, V, H, E> const& map, Key const& key, V const& default_value = V()) {
+    typename conditional<is_fundamental<V>::value, V, V const&>::type
+    densemap_get(
+        densemap<K, V, H, E> const& map,
+        Key const& key,
+        typename conditional<is_fundamental<V>::value, V, V const&>::type default_value = V()
+    ) {
         denserecord<K, V> record = ::up::densemap_find(map, key);
         return record.key_ptr ? *record.value_ptr : default_value;
     }

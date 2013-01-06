@@ -51,14 +51,15 @@ namespace up
     bool report_assertion(char const* file, long line, char const* condition);
 }
 
-#define UP_DETAIL_REQUIRE_IMPL(expression) { if (!(expression) && ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(expression))) { UPABORT(); } }
+#define UP_DETAIL_REPORT_ASSERTION(expression) ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(expression))
+#define UP_DETAIL_REQUIRE_IMPL(expression) { if (!(expression) && UP_DETAIL_REPORT_ASSERTION(expression)) { UPABORT(); } }
 #define UP_DETAIL_REQUIRE_APPROX_IMPL(x, y, d) UP_DETAIL_REQUIRE_IMPL((((x < y) ? (y - x) : (x - y)) <= (d)))
 #define UP_DETAIL_ASSERT_IMPL(expression) UPASSUME(!!(expression))
 #define UP_DETAIL_ASSERT_APPROX_IMPL(x, y, d) UPASSUME(!!(((x < y) ? (y - x) : (x - y)) <= (d)))
 #define UP_DETAIL_VERIFY_IMPL(expression) ((void)(expression))
 #define UP_DETAIL_VERIFY_APPROX_IMPL(x, y, d) UP_DETAIL_VERIFY_IMPL((((x < y) ? (y - x) : (x - y)) <= (d)))
 #define UPREQUIRE(expression) UP_DETAIL_REQUIRE_IMPL(expression)
-#define UPREQUIRE_THROW(expression, action) { if (!(expression) && ::up::report_assertion(__FILE__, __LINE__, UPSTRINGIZE(expression))) { UPTHROW(action); } }
+#define UPREQUIRE_THROW(expression, action) { if (!(expression) && UP_DETAIL_REPORT_ASSERTION(expression)) { UPTHROW(action); } }
 #define UPREQUIRE_APPROX(x, y, d) UP_DETAIL_REQUIRE_APPROX_IMPL(x, y, d)
 #define UPREQUIRE_APPROX_THROW(x, y, d, action) UP_REQUIRE_THROW((((x < y) ? (y - x) : (x - y)) <= (d)), action)
 

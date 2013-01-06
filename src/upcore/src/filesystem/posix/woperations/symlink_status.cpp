@@ -22,25 +22,26 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/filesystem/operations.hpp>
-#include <up/filesystem/transcode.hpp>
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
 
-#include <up/filesystem/wchar_operations.hpp>
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem
 {
     LIBUPCOREAPI UPNONNULLALL
-    bool symlink_status(wchar_t const* p, status_info& info, std::error_code& ec) noexcept {
-        char* native_p = transcode(p, ec);
-        if (!native_p) {
-            info.type = status_type::error;
-            return false;
+    int symlink_status(wchar_t const* UPRESTRICT p, status_info* UPRESTRICT info) noexcept {
+        if (!info) {
+            errno = EINVAL;
+            return -1;
         }
-
-        bool result = symlink_status(native_p, info, ec);
+        char* native_p = transcode(p);
+        if (!native_p) {
+            info->type = status_invalid;
+            return -1;
+        }
+        int result = symlink_status(native_p, info);
         free(native_p);
         return result;
     }

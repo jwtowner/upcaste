@@ -27,21 +27,19 @@
 
 namespace up
 {        
-    LIBUPCOREAPI int u16nlen(char16_t const* s, size_t n) noexcept {        
+    LIBUPCOREAPI
+    int u16nlen(char16_t const* s, size_t n) noexcept {        
         if (s) {
             if (!n || !s[0]) {
                 return 0;
             }
-            
-            if (!::up::detail::u16_is_surrogate(s[0])) {
+            if (!detail::u16_is_surrogate(s[0])) {
                 return 1;
             }
-            
-            if ((n > 1) && ::up::detail::u16_is_surrogate_pair(s[0], s[1])) {
+            if ((n > 1) && detail::u16_is_surrogate_pair(s[0], s[1])) {
                 return 2;
             }
         }
-        
         return -1;
     }
 }

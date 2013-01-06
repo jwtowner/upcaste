@@ -379,7 +379,7 @@ namespace up { namespace filesystem
     extern LIBUPCOREAPI int create_hard_link(char const* to, char const* new_hard_link) noexcept;
     extern LIBUPCOREAPI int create_symlink(char const* to, char const* new_symlink) noexcept;
     extern LIBUPCOREAPI int current_directory_path(char const* p) noexcept;
-    extern LIBUPCOREAPI int equivalent(char const* UPRESTRICT p1, char const* UPRESTRICT p2, bool* UPRESTRICT result) noexcept;
+    extern LIBUPCOREAPI int equivalent(char const* UPRESTRICT p1, char const* UPRESTRICT p2) noexcept;
     extern LIBUPCOREAPI int exists(char const* UPRESTRICT p, bool* UPRESTRICT result) noexcept;
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT char* read_symlink(char const* p) noexcept;
     extern LIBUPCOREAPI int remove_all(char const* p, remove_callback callback = nullptr) noexcept;
@@ -400,7 +400,7 @@ namespace up { namespace filesystem
     extern LIBUPCOREAPI int create_hard_link(wchar_t const* to, wchar_t const* new_hard_link) noexcept;
     extern LIBUPCOREAPI int create_symlink(wchar_t const* to, wchar_t const* new_symlink) noexcept;
     extern LIBUPCOREAPI int current_directory_path(wchar_t const* p) noexcept;
-    extern LIBUPCOREAPI int equivalent(wchar_t const* UPRESTRICT p1, wchar_t const* UPRESTRICT p2, bool* UPRESTRICT result) noexcept;
+    extern LIBUPCOREAPI int equivalent(wchar_t const* UPRESTRICT p1, wchar_t const* UPRESTRICT p2) noexcept;
     extern LIBUPCOREAPI int exists(wchar_t const* UPRESTRICT p, bool* UPRESTRICT result) noexcept;
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT wchar_t* read_symlink(wchar_t const* p) noexcept;
     extern LIBUPCOREAPI int remove_all(wchar_t const* p, remove_callback callback = nullptr) noexcept;

@@ -148,7 +148,7 @@ namespace filesystem_wfilepath_posix
 
     UP_TEST_CASE(posix_join_path) {
         wchar_t const* const wparts1[] = { L"hello", L"world", L"/foo/", L"/bar.baz" };
-        wchar_t const* const wparts2[] = { L"/hello", L"///", L"/world", L"foo", nullptr, L"/bar.baz" };
+        wchar_t const* const wparts2[] = { L"/hello", L"///", L"/world", L"foo", (wchar_t const*)nullptr, L"/bar.baz" };
         wchar_t const* const wparts3[] = { L"//", L"hello", L"world" };
         wchar_t wbuffer[10];
         wchar_t* wpath;
@@ -166,19 +166,19 @@ namespace filesystem_wfilepath_posix
         require(wpath && !up::wcscmp(wpath, L"//hello/world"));
         free(wpath);
 
-        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), nullptr);
+        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), (wchar_t const*)nullptr);
         require(!sz && !up::wcscmp(wbuffer, L""));
 
-        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"/hi", L"you", nullptr, L"/bar.baz", nullptr);
+        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"/hi", L"you", (wchar_t const*)nullptr, L"/bar.baz", (wchar_t const*)nullptr);
         require((sz == 7) && !up::wcscmp(wbuffer, L"/hi/you"));
 
-        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"hello", L"world", L"/foo/", L"/bar.baz", nullptr);
+        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"hello", L"world", L"/foo/", L"/bar.baz", (wchar_t const*)nullptr);
         require((sz == 23) && !up::wcscmp(wbuffer, L"hello/wor"));
 
-        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer), L"///", L"hello", nullptr);
+        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer), L"///", L"hello", (wchar_t const*)nullptr);
         require((sz == 8) && !up::wcscmp(wbuffer, L"///hello"));
 
-        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer), L"/", L"world", nullptr);
+        sz = up::filesystem::posix::join_path(wbuffer, sizeof(wbuffer), L"/", L"world", (wchar_t const*)nullptr);
         require((sz == 6) && !up::wcscmp(wbuffer, L"/world"));
     }
 

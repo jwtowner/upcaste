@@ -24,77 +24,78 @@
 
 #include "../filesystem_internal.hpp"
 
+namespace up { namespace filesystem { namespace
+{
+    uintmax_t remove_all_recursive(char const* UPRESTRICT p, bool* UPRESTRICT error) noexcept {
+        uintmax_t result = 0;
+        struct ::dirent* entry;
+        DIR* dir;
+
+        assert(error && !*error);
+
+        dir = ::opendir(p);
+        if (!dir) {
+            goto handle_error;
+        }
+
+        errno = 0;
+            
+        while ((entry = ::readdir(dir))) {
+            if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0)) {
+                continue;
+            }
+
+            if (entry->d_type == DT_DIR) {
+                result += remove_all_recursive(entry->d_name, error);
+                if (*error) {
+                    goto cleanup;
+                }
+                continue;
+            }
+                
+            if (entry->d_type == DT_UNKNOWN) {
+                result += remove_all(entry->d_name);
+                if (errno != 0) {
+                    goto cleanup;
+                }
+                continue;
+            }
+
+            if (::unlink(entry->d_name) != 0) {
+                goto handle_error;
+            }
+
+            ++result;
+        }
+
+        if ((errno != 0) || (::closedir(dir) != 0)) {
+            goto handle_error;
+        }
+        
+        dir = nullptr;
+
+        if (::rmdir(p) != 0) {
+            goto handle_error;
+        }
+
+        return result + 1;
+
+    handle_error:
+
+        *error = true;
+
+    cleanup:
+
+        if (dir) {
+            ::closedir(dir);
+        }
+
+        return result;
+    }
+}}}
+
 namespace up { namespace filesystem
 {
-    namespace
-    {
-        uintmax_t remove_all_recursive(char const* p) noexcept {
-            uintmax_t result = 0;
-            struct ::dirent* entry;
-            DIR* dir;
-
-            dir = ::opendir(p);
-            if (!dir) {
-                goto handle_error;
-            }
-
-            errno = 0;
-            
-            while ((entry = ::readdir(dir))) {
-                if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0)) {
-                    continue;
-                }
-
-                if (entry->d_type == DT_DIR) {
-                    result += remove_all_recursive(entry->d_name, ec);
-                    if (ec) {
-                        goto cleanup;
-                    }
-                    continue;
-                }
-                
-                if (entry->d_type == DT_UNKNOWN) {
-                    result += remove_all(entry->d_name, ec);
-                    if (ec) {
-                        goto cleanup;
-                    }
-                    continue;
-                }
-
-                if (::unlink(entry->d_name) != 0) {
-                    goto handle_error;
-                }
-
-                ++result;
-            }
-
-            if ((errno != 0) || (::closedir(dir) != 0)) {
-                goto handle_error;
-            }
-        
-            dir = nullptr;
-
-            if (::rmdir(p) != 0) {
-                goto handle_error;
-            }
-
-            ec.clear();
-            return result + 1;
-
-        handle_error:
-        
-            ec.assign(errno, ::std::system_category());
-        
-        cleanup:
-
-            if (dir) {
-                ::closedir(dir);
-            }
-
-            return result;
-        }
-    }
-
     LIBUPCOREAPI UPNONNULLALL
     uintmax_t remove_all(char const* p) noexcept {
         struct ::stat buf;
@@ -103,7 +104,8 @@ namespace up { namespace filesystem
         }
 
         if (S_ISDIR(buf.st_mode)) {
-            return remove_all_recursive(p);
+            bool error = false;
+            return remove_all_recursive(p, &error);
         }
 
         if (::unlink(p) != 0) {

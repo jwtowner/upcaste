@@ -39,7 +39,13 @@ namespace up
     bool linear_region_validate(linear_region const* r) noexcept;
 
     extern LIBUPCOREAPI UPWARNRESULT
-    linear_region* linear_region_construct(void* base, size_t space, size_t alignment = alignof(max_align_t), size_t offset = 0) noexcept;
+    linear_region* linear_region_construct(
+        void* base,
+        size_t space,
+        size_t alignment = alignof(max_align_t),
+        size_t offset = 0
+    )
+    noexcept;
 
     extern LIBUPCOREAPI UPNONNULLALL
     int linear_region_realign(linear_region* r, size_t alignment, size_t offset = 0) noexcept;
@@ -152,10 +158,22 @@ namespace up
     void heap_region_shrink(heap_region* r) noexcept;
 
     extern LIBUPCOREAPI
-    heap_region_finalizer* heap_region_add_finalizer(heap_region* r, void (*action)(void*,size_t), void* data, size_t size) noexcept;
+    heap_region_finalizer* heap_region_add_finalizer(
+        heap_region* r,
+        void (*action)(void*,size_t),
+        void* data,
+        size_t size
+    )
+    noexcept;
 
     extern LIBUPCOREAPI
-    heap_region_finalizer* heap_region_add_finalizer(heap_region* r, allocator* data_alloc, void* data, size_t size) noexcept;
+    heap_region_finalizer* heap_region_add_finalizer(
+        heap_region* r,
+        allocator* data_alloc,
+        void* data,
+        size_t size
+    )
+    noexcept;
 
     extern LIBUPCOREAPI
     int heap_region_suppress_finalizer(heap_region_finalizer* finalizer) noexcept;

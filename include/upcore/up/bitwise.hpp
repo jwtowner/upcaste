@@ -81,32 +81,38 @@ namespace up
 
     inline UPALWAYSINLINE UPPURE
     unsigned int floor2(unsigned int x) noexcept {
-        return static_cast<unsigned int>(x > 0) << (((sizeof(unsigned int) * CHAR_BIT) - 1) - lzcount(x | 1));
+        return static_cast<unsigned int>(x > 0)
+            << (((sizeof(unsigned int) * CHAR_BIT) - 1) - lzcount(x | 1));
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long floor2(unsigned long x) noexcept {
-        return static_cast<unsigned long>(x > 0) << (((sizeof(unsigned long) * CHAR_BIT) - 1) - lzcount(x | 1));
+        return static_cast<unsigned long>(x > 0)
+            << (((sizeof(unsigned long) * CHAR_BIT) - 1) - lzcount(x | 1));
     }
 
     inline UPALWAYSINLINE UPPURE
     unsigned long long floor2(unsigned long long x) noexcept {
-        return static_cast<unsigned long long>(x > 0) << (((sizeof(unsigned long long) * CHAR_BIT) - 1) - lzcount(x | 1));
+        return static_cast<unsigned long long>(x > 0)
+            << (((sizeof(unsigned long long) * CHAR_BIT) - 1) - lzcount(x | 1));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool addition_overflow(unsigned int x, unsigned int y) noexcept {
-        return (logceil2(x) >= (sizeof(unsigned int) * CHAR_BIT)) || (logceil2(y) >= (sizeof(unsigned int) * CHAR_BIT));
+        return (logceil2(x) >= (sizeof(unsigned int) * CHAR_BIT))
+            || (logceil2(y) >= (sizeof(unsigned int) * CHAR_BIT));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool addition_overflow(unsigned long x, unsigned long y) noexcept {
-        return (logceil2(x) >= (sizeof(unsigned long) * CHAR_BIT)) || (logceil2(y) >= (sizeof(unsigned long) * CHAR_BIT));
+        return (logceil2(x) >= (sizeof(unsigned long) * CHAR_BIT))
+            || (logceil2(y) >= (sizeof(unsigned long) * CHAR_BIT));
     }
 
     inline UPALWAYSINLINE UPPURE
     bool addition_overflow(unsigned long long x, unsigned long long y) noexcept {
-        return (logceil2(x) >= (sizeof(unsigned long long) * CHAR_BIT)) || (logceil2(y) >= (sizeof(unsigned long long) * CHAR_BIT));
+        return (logceil2(x) >= (sizeof(unsigned long long) * CHAR_BIT))
+            || (logceil2(y) >= (sizeof(unsigned long long) * CHAR_BIT));
     }
 
     inline UPALWAYSINLINE UPPURE
@@ -126,3 +132,4 @@ namespace up
 }
 
 #endif
+

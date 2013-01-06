@@ -30,21 +30,26 @@
 #endif
 
 #if (SIZE_MAX == 0xFFFFFFFFu)
-#   define UP_DETAIL_MALLOCA_MAGIC (0xDEADBEEFu)
+#   define UP_DETAIL_MALLOCA_MAGIC 0xDEADBEEFu
 #elif (SIZE_MAX == 0xFFFFFFFFFFFFFFFFull)
-#   define UP_DETAIL_MALLOCA_MAGIC (0xBADF00D0DEADBEEFull)
+#   define UP_DETAIL_MALLOCA_MAGIC 0xBADF00D0DEADBEEFull
 #endif
 
-#define UP_DETAIL_MALLOCA_MAGIC_SIZE ((sizeof(::up::size_t) + (alignof(::up::max_align_t) - 1)) & ~(alignof(::up::max_align_t) - 1))
-#define UP_DETAIL_MALLOCA_GUARD_SIZE (UP_MIN_TLB_PAGE_SIZE - 64)
+#define UP_DETAIL_MALLOCA_MAGIC_SIZE \
+    ((sizeof(::up::size_t) + (alignof(::up::max_align_t) - 1)) & ~(alignof(::up::max_align_t) - 1))
+
+#define UP_DETAIL_MALLOCA_GUARD_SIZE \
+    (UP_MIN_TLB_PAGE_SIZE - 64)
+
+#define UP_DETAIL_MALLOCA_ALLOCA(n) \
+    ((char*)(&(*((::up::size_t*)alloca((n) + UP_DETAIL_MALLOCA_MAGIC_SIZE)) = ::up::size_t(0))))
 
 #define malloca(n) \
     ( ((n) < (UP_DETAIL_MALLOCA_GUARD_SIZE - UP_DETAIL_MALLOCA_MAGIC_SIZE)) \
-    ? ((void*)((char*)(*((::up::size_t*)alloca((n) + UP_DETAIL_MALLOCA_MAGIC_SIZE)) = ::up::size_t(0)) + UP_DETAIL_MALLOCA_MAGIC_SIZE)) \
+    ? ((void*)(UP_DETAIL_MALLOCA_ALLOCA(n) + UP_DETAIL_MALLOCA_MAGIC_SIZE)) \
     : ((void*)(::up::detail::malloca_impl(n))) )
 
-#define freea(p) \
-    { \
+#define freea(p) { \
         if (p && (UP_DETAIL_MALLOCA_MAGIC == *((::up::size_t*)(((char*)p) - UP_DETAIL_MALLOCA_MAGIC_SIZE)))) { \
             ::up::detail::freea_impl(p); \
         } \

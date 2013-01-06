@@ -25,6 +25,15 @@
 #ifndef UP_IEEE754_HPP
 #define UP_IEEE754_HPP
 
+namespace up
+{
+    union ieee754_binary16;
+    union ieee754_binary32;
+    union ieee754_binary64;
+    union ieee754_binary96;
+    union ieee754_binary128;
+}
+
 #include <up/cfloat.hpp>
 
 namespace up

@@ -22,9 +22,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include "../filesystem_internal.hpp"
+#include <up/prolog.hpp>
 
 #ifdef UP_HAS_STDC_WCHAR
+
+#include "../filesystem_internal.hpp"
 
 namespace up { namespace filesystem { namespace detail
 {
@@ -34,7 +36,6 @@ namespace up { namespace filesystem { namespace detail
         if (!path) {
             return nullptr;
         }
-
         wchar_t* result = transcode(path);
         free(path);
         return result;

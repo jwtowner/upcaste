@@ -44,7 +44,6 @@ namespace up
 
         unsigned long get_protection_flags(unsigned int flags) noexcept {
             unsigned long result;
-
             switch (flags & 0x07) {
             case page_access_read: result = PAGE_READONLY; break;
             case page_access_write: result = PAGE_WRITECOPY; break;
@@ -55,7 +54,6 @@ namespace up
             case page_access_execute | page_access_read | page_access_write: result = PAGE_EXECUTE_READWRITE; break;
             default: result = PAGE_NOACCESS; break;
             }
-
             return result;    
         }
     }

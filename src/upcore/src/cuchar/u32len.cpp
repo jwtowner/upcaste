@@ -27,7 +27,8 @@
 
 namespace up
 {        
-    LIBUPCOREAPI int u32len(char32_t const* s) noexcept {    
+    LIBUPCOREAPI
+    int u32len(char32_t const* s) noexcept {    
         if (!s) {
             return -1;
         }
@@ -37,6 +38,6 @@ namespace up
             return 0;
         }
         
-        return ::up::detail::u32_is_valid(u32) ? 1 : -1;
+        return detail::u32_is_valid(u32) ? 1 : -1;
     }
 }

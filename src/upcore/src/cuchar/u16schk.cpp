@@ -27,7 +27,8 @@
 
 namespace up
 {        
-    LIBUPCOREAPI char16_t const* u16schk(char16_t const* s) noexcept {
+    LIBUPCOREAPI
+    char16_t const* u16schk(char16_t const* s) noexcept {
         assert(s);
 
         for (;;) {
@@ -35,11 +36,9 @@ namespace up
             if (!length) {
                 break;
             }
-
             if (length < 0) {
                 return s;
             }
-
             s += length;
         }
         

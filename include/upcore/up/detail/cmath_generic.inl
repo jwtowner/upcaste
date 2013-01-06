@@ -22,8 +22,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_CMATH_DEFAULT_INL
-#define UP_DETAIL_CMATH_DEFAULT_INL
+#ifndef UP_DETAIL_CMATH_GENERIC_INL
+#define UP_DETAIL_CMATH_GENERIC_INL
 
 #ifndef UP_CMATH_HPP
 #   error "Do not include this header directly. Instead include <up/cmath.hpp>"

@@ -27,12 +27,13 @@
 
 namespace up
 {        
-    LIBUPCOREAPI char const* u8snchk(char const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    char const* u8snchk(char const* s, size_t n) noexcept {
         assert(s || !n);
 
         char const* end_ptr = s + n;
         while (s < end_ptr) {
-            int length = ::up::u8nlen(s, end_ptr - s);
+            int length = u8nlen(s, end_ptr - s);
             if (length < 0) {
                 return s;
             }

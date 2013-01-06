@@ -31,7 +31,8 @@
 
 namespace up
 {
-    LIBUPCOREAPI char32_t const* u32sstr(char32_t const* s1, char32_t const* s2) noexcept {
+    LIBUPCOREAPI
+    char32_t const* u32sstr(char32_t const* s1, char32_t const* s2) noexcept {
         assert(s1 && s2);
 
         if (*s2 == 0) {

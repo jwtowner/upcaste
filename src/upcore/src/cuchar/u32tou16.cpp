@@ -27,19 +27,20 @@
 
 namespace up
 {
-    LIBUPCOREAPI int u32tou16(char16_t* u16s, char32_t u32) noexcept {
-        char16_t u16temp[U16_CUR_MAX];
+    LIBUPCOREAPI
+    int u32tou16(char16_t* u16s, char32_t u32) noexcept {
+        char16_t u16temp[u16_cur_max];
         if (!u16s) {
             u16s = u16temp;
         }
         
         if (u32 < 0x10000) {
-            if (!::up::detail::u32_is_surrogate(u32)) {
+            if (!detail::u32_is_surrogate(u32)) {
                 u16s[0] = static_cast<char16_t>(u32);
                 return u32 ? 1 : 0;
             }
             
-            u16s[0] = static_cast<char16_t>(::up::detail::u32_replacement_character);
+            u16s[0] = static_cast<char16_t>(detail::u32_replacement_character);
             return -1;
         }
         

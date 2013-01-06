@@ -28,43 +28,45 @@
 
 namespace up
 {
-    LIBUPCOREAPI size_t u32stou16s(char16_t* UPRESTRICT u16s, char32_t const* UPRESTRICT u32s, size_t n) noexcept {
-        assert((u16s && u32s) || !n);
+    LIBUPCOREAPI
+    size_t u32stou16s(char16_t* UPRESTRICT dst, char32_t const** UPRESTRICT src, size_t n) noexcept {
+        assert((dst && src && *src) || !n);
         
-        char16_t* u16s_start = u16s, * u16s_end = u16s + n;
+        char16_t* dst_start = dst;
+        char16_t* const dst_end = dst + n;
+        char32_t const* src_cur = *src;
         char32_t codepoint;
 
-        for ( ; u16s < u16s_end; ++u32s, ++u16s) {
-            codepoint = *u32s;
+        for ( ; dst < dst_end; ++src_cur, ++dst) {
+            codepoint = *src_cur;
 
             if (codepoint < 0x10000) {
                 // encode single UTF-16 code unit
-                if (!::up::detail::u32_is_surrogate(codepoint)) {
-                    *u16s = static_cast<char16_t>(codepoint);
+                if (!detail::u32_is_surrogate(codepoint)) {
+                    *dst = static_cast<char16_t>(codepoint);
                     if (!codepoint) {
+                        src_cur = nullptr;
                         break;
                     }
-                    
                     continue;
                 }
             }
             else if (codepoint < 0x110000) {
                 // encode UTF-16 surrogate pair
-                if ((u16s + 1) >= u16s_end) {
-                    *u16s = 0;
-                    return n;
+                if ((dst + 1) >= dst_end) {
+                    break;
                 }
-                
                 codepoint -= 0x10000;
-                *(u16s++) = static_cast<char16_t>(0xD800 + (codepoint >> 10));
-                *u16s = static_cast<char16_t>(0xDC00 + (codepoint & 0x3FF));
+                *(dst++) = static_cast<char16_t>(0xD800 + (codepoint >> 10));
+                *dst = static_cast<char16_t>(0xDC00 + (codepoint & 0x3FF));
                 continue;
             }
             
             // invalid code point
-            *u16s = ::up::detail::u16_replacement_character;
+            *dst = detail::u16_replacement_character;
         }
 
-        return static_cast<size_t>(u16s - u16s_start);
+        *src = src_cur;
+        return static_cast<size_t>(dst - dst_start);
     }
 }

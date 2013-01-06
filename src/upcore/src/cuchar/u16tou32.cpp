@@ -28,24 +28,24 @@
 
 namespace up
 {
-    LIBUPCOREAPI int u16tou32(char32_t* UPRESTRICT u32, char16_t const* UPRESTRICT u16s, size_t n) noexcept {
+    LIBUPCOREAPI
+    int u16tou32(char32_t* UPRESTRICT u32, char16_t const* UPRESTRICT u16s, size_t n) noexcept {
         char32_t codepoint, tail;
         int length;
 
         codepoint = (n > 0) ? (u16s ? *u16s : detail::utf16_tail_surrogate_min) : 0x0000;
-        if (!::up::detail::u16_is_surrogate(codepoint)) {
+        if (!detail::u16_is_surrogate(codepoint)) {
             length = codepoint ? 1 : 0;
             goto done;
         }
 
         tail = *(++u16s);
-        if ((n > 1) && ::up::detail::u16_is_surrogate_pair(codepoint, tail)) {
+        if ((n > 1) && detail::u16_is_surrogate_pair(codepoint, tail)) {
             codepoint = (codepoint << 10) + tail - detail::utf16_surrogate_offset;
             length = 2;
             goto done;
         }
 
-        errno = EILSEQ;
         codepoint = detail::u32_replacement_character;
         length = -1;
 

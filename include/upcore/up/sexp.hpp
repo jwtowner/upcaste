@@ -291,7 +291,13 @@ namespace up { namespace sexp
 #endif
 
     extern LIBUPCOREAPI
-    int parser_load_memory(parser* UPRESTRICT par, char const* UPRESTRICT filename, char const* UPRESTRICT text, size_t length) noexcept;
+    int parser_load_memory(
+        parser* UPRESTRICT par,
+        char const* UPRESTRICT filename,
+        char const* UPRESTRICT text,
+        size_t length
+    )
+    noexcept;
 
     extern LIBUPCOREAPI
     int parser_unload(parser* par) noexcept;

@@ -96,5 +96,11 @@
     <ClCompile Include="..\..\..\src\upcore\test\cmath.cpp">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\ieee754.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cwchar.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -40,8 +40,8 @@ namespace up { namespace test
         LIBUPTESTAPI test_error(char const* file_name, long line_number, char const* condition, char const* message) noexcept;
         LIBUPTESTAPI test_error(test_error const& other) noexcept;
         LIBUPTESTAPI test_error& operator=(test_error const& other) noexcept;
-        LIBUPTESTAPI virtual ~test_error() noexcept;
-        LIBUPTESTAPI virtual char const* what() const noexcept;
+        LIBUPTESTAPI virtual ~test_error() UPEXCEPTNOTHROW;
+        LIBUPTESTAPI virtual char const* what() const UPEXCEPTNOTHROW;
         UPHIDDEN char const* file_name() const noexcept;        
         UPHIDDEN long line_number() const noexcept;
         UPHIDDEN char const* condition() const noexcept;

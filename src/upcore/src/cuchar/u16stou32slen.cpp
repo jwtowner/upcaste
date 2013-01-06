@@ -28,49 +28,24 @@
 
 namespace up
 {        
-    LIBUPCOREAPI size_t u8snlen_u32(char const* s, size_t n) noexcept {
+    LIBUPCOREAPI
+    size_t u16stou32slen(char16_t const* s) noexcept {
         assert(s);
-    
-        unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        unsigned char const* u8s_end = u8s + n;
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
+
         size_t count = 0;
-
-        while (u8s < u8s_end) {
-            codepoint = *(u8s++);
-            if (!codepoint) {
+        
+        for (;;) {
+            char16_t lead = *(s++);
+            if (!lead) {
                 break;
             }
 
-            // ascii fast-path
             ++count;
-            length = ::up::detail::u8_sequence_length_table[codepoint];
-            if (length <= 1) {
-                continue;
-            }
-
-            // ensure we won't read beyond the end
-            if ((u8s + length - 1) > u8s_end) {
-                break;
-            }
-
-            // fully validate unicode codepoint
-            for (i = length - 1; i > 0; ++u8s, --i) {
-                octet = *u8s;
-                if (!::up::detail::u8_is_trail(octet)) {
-                    break;
-                }
-
-                codepoint = (codepoint << 6) + octet;
-            }
-
-            codepoint -= ::up::detail::u8_offset_table[length];
-            if ((i > 0) || !::up::detail::u32_from_u8_is_valid(codepoint, length)) {
-                u8s -= (length - i - 1);
+            if (detail::u16_is_surrogate_pair(lead, *s)) {
+                ++s;
             }
         }
-        
+
         return count;
     }
 }

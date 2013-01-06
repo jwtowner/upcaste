@@ -208,7 +208,7 @@ namespace filesystem_wfilepath_windows
 
     UP_TEST_CASE(windows_join_path) {
         wchar_t const* const wparts1[] = { L"hello", L"world", L"/foo\\", L"\\bar.baz" };
-        wchar_t const* const wparts2[] = { L"c:\\hello", L"\\/", L"\\world", L"foo", nullptr, L"/bar.baz" };
+        wchar_t const* const wparts2[] = { L"c:\\hello", L"\\/", L"\\world", L"foo", (wchar_t const*)nullptr, L"/bar.baz" };
         wchar_t wbuffer[10];
         wchar_t* wpath;
         up::ssize_t sz;
@@ -221,13 +221,13 @@ namespace filesystem_wfilepath_windows
         require(wpath && !up::wcscmp(wpath, L"c:\\hello\\world\\foo\\bar.baz"));
         free(wpath);
 
-        sz = up::filesystem::windows::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), nullptr);
+        sz = up::filesystem::windows::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), (wchar_t const*)nullptr);
         require(!sz && !up::wcscmp(wbuffer, L""));
 
-        sz = up::filesystem::windows::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"/hi", L"you", nullptr, L"/bar.baz", nullptr);
+        sz = up::filesystem::windows::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"/hi", L"you", (wchar_t*)nullptr, L"/bar.baz", (wchar_t const*)nullptr);
         require((sz == 7) && !up::wcscmp(wbuffer, L"/hi\\you"));
 
-        sz = up::filesystem::windows::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"hello", L"world", L"/foo/", L"/bar.baz", nullptr);
+        sz = up::filesystem::windows::join_path(wbuffer, sizeof(wbuffer) / sizeof(wchar_t), L"hello", L"world", L"/foo/", L"/bar.baz", (wchar_t const*)nullptr);
         require((sz == 23) && !up::wcscmp(wbuffer, L"hello\\wor"));
     }
 

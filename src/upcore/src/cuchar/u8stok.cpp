@@ -27,23 +27,24 @@
 
 namespace up
 {
-    LIBUPCOREAPI char* u8stok(char* UPRESTRICT s, char const* UPRESTRICT delim, char** UPRESTRICT state) noexcept {
+    LIBUPCOREAPI
+    char* u8stok(char* UPRESTRICT s, char const* UPRESTRICT delim, char** UPRESTRICT state) noexcept {
         assert(delim && state);
         
         if (!s) {
             s = *state;
         }
 
-        s += ::up::u8sspn(s, delim);
+        s += u8sspn(s, delim);
         if (*s == 0) {
             *state = s;
             return nullptr;
         }
         
         char* token = s;
-        s = ::up::u8spbrk(s, delim);
+        s = u8spbrk(s, delim);
         if (!s) {
-            *state = ::up::u8schr(token, 0);
+            *state = u8schr(token, 0);
             return nullptr;
         }
 

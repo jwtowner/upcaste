@@ -66,7 +66,7 @@ namespace filesystem_woperations
 #if UP_FILESYSTEM == UP_FILESYSTEM_POSIX
 
         wpath = up::filesystem::absolute_path(L"/hello//world");
-        require(path && !up::wcscmp(wpath, L"/hello/world"));
+        require(wpath && !up::wcscmp(wpath, L"/hello/world"));
         free(wpath);
 
         wpath = up::filesystem::absolute_path(L"//hello//world");

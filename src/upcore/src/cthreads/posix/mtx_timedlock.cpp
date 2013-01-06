@@ -22,39 +22,47 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/cuchar.hpp>
-#include <up/cassert.hpp>
-#include "cuchar_internal.inl"
+#include <up/prolog.hpp>
+
+#if !defined(UP_HAS_STDC_THREADS) \
+    && defined(UP_HAS_POSIX_THREADS) \
+    && !defined(UP_HAS_POSIX_PTHREAD_MUTEX_TIMEDLOCK)
+
+#include <up/cthreads.hpp>
+#include <up/ctime.hpp>
 
 namespace up
 {
-    LIBUPCOREAPI size_t u16snlen_u8(char16_t const* s, size_t n) noexcept {
-        assert(s || !n);
+    LIBUPCOREAPI
+    int mtx_timedlock(mtx_t* UPRESTRICT mtx, timespec const* UPRESTRICT ts) noexcept {
+        timespec rel_time, abs_time;
+        int res, status;
         
-        char16_t const* end_ptr = s + n;
-        char16_t lead;
-        size_t count = 0;
-        
-        while (s < end_ptr) {
-            lead = *(s++);
-            if (lead < 0x80) {
-                if (!lead) {
-                    break;
-                }
-                ++count;
+        abs_time = *ts;
+
+        do
+        {
+            res = ::pthread_mutex_trylock(mtx);
+            if (res != EBUSY) {
+                break;
             }
-            else if (lead < 0x800) {
-                count += 2;
+
+            rel_time.tv_sec = 0;
+            rel_time.tv_sec = 10000000;
+            if (timespec_subtract(&abs_time, &rel_time, &abs_time)) {
+                return thrd_timedout;
             }
-            else if (!::up::detail::u16_is_surrogate(lead) || (s >= end_ptr) || !::up::detail::u16_is_surrogate_pair(lead, *s)) {
-                count += 3;
+            
+            status = -1;
+            do {
+                status = ::nanosleep(&rel_time, &rel_time);
             }
-            else {
-                count += 4;
-                ++s;
-            }
+            while (status == -1);
         }
-        
-        return count;
+        while (res != 0);
+
+	    return !res ? thrd_success : thrd_error;
     }
 }
+
+#endif
