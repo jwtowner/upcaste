@@ -64,7 +64,7 @@ namespace densemap
         require(up::densemap_is_empty(map));
         require(up::densemap_size(map) == 0);
         require(up::densemap_num_buckets(map) == 32);
-        require(up::densemap_memory_footprint(map) >= (up::ssize_t)(32 * (sizeof(int) + sizeof(float) + sizeof(size_t))));
+        require(up::densemap_memory_footprint(map) >= (ssize_t)(32 * (sizeof(int) + sizeof(float) + sizeof(size_t))));
 
         retval = up::densemap_destruct(map, nullptr);
         require(retval == up::dense_badallocator);

@@ -34,6 +34,8 @@
 #   error "Unknown MSVC++ compiler version"
 #endif
 
+#define UP_COMPILER UP_COMPILER_MSVC
+
 //
 // ignored warnings
 //
@@ -46,11 +48,6 @@
 // dependencies
 //
 #include <intrin.h>
-
-//
-// compiler configuration
-//
-#define UP_COMPILER UP_COMPILER_MSVC
 
 //
 // C++11 feature detection
@@ -125,25 +122,20 @@
 #   define UP_HAS_MSVC_XTIME
 #endif
 #if _MSC_VER >= 1700
-#   define UP_HAS_STDCXX_ATOMIC_CXX11
-#   define UP_HAS_STDCXX_TYPE_TRAITS_CXX11
-#   define UP_HAS_STDC_MAX_ALIGN
+#   define UP_HAS_STDCXX_ATOMIC
+#   define UP_HAS_STDCXX_TYPE_TRAITS
 #endif
 
-#undef  UP_HAS_STDC_INTTYPES_C99
-#undef  UP_HAS_STDC_INTTYPES_CXX11
+#undef  UP_HAS_STDC_INTTYPES
 #define UP_HAS_STDC_LOCALE
 #undef  UP_HAS_STDC_MATH_C99
-#undef  UP_HAS_STDC_MATH_CXX11
-#undef  UP_HAS_STDC_STDALIGN
-#undef  UP_HAS_STDC_STDBOOL
 #undef  UP_HAS_STDC_THREADS
 #define UP_HAS_STDC_TIME
-#undef  UP_HAS_STDC_UCHAR_C11
-#undef  UP_HAS_STDC_UCHAR_CXX11
+#undef  UP_HAS_STDC_UCHAR
 #define UP_HAS_STDC_WCHAR
 #define UP_HAS_STDC_ALLOCA
 #undef  UP_HAS_STDC_ALIGNED_ALLOC
+#undef  UP_HAS_STDC_MAX_ALIGN
 #undef  UP_HAS_STDC_SNPRINTF
 #undef  UP_HAS_STDC_STRTOF
 #undef  UP_HAS_STDC_STRTOD

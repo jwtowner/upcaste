@@ -3007,151 +3007,8 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: ------ Standard C/C++ Library Headers ------" >&5
 $as_echo "$as_me: ------ Standard C/C++ Library Headers ------" >&6;}
 
-# UP_HAS_STDCXX_ATOMIC_CXX11
+# UP_HAS_STDC_INTTYPES
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C++11 atomic compliance" >&5
-$as_echo_n "checking for C++11 atomic compliance... " >&6; }
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <atomic>
-int
-main ()
-{
-
-            using std::kill_dependency;
-            using std::memory_order;
-            using std::atomic_signal_fence;
-            using std::atomic_thread_fence;
-            using std::atomic;
-            using std::atomic_flag;
-            using std::atomic_bool;
-            using std::atomic_char;
-            using std::atomic_schar;
-            using std::atomic_uchar;
-            using std::atomic_short;
-            using std::atomic_ushort;
-            using std::atomic_int;
-            using std::atomic_uint;
-            using std::atomic_long;
-            using std::atomic_ulong;
-            using std::atomic_llong;
-            using std::atomic_ullong;
-            using std::atomic_char16_t;
-            using std::atomic_char32_t;
-            using std::atomic_wchar_t;
-            using std::atomic_int8_t;
-            using std::atomic_uint8_t;
-            using std::atomic_int16_t;
-            using std::atomic_uint16_t;
-            using std::atomic_int32_t;
-            using std::atomic_uint32_t;
-            using std::atomic_int64_t;
-            using std::atomic_uint64_t;
-            using std::atomic_int_least8_t;
-            using std::atomic_uint_least8_t;
-            using std::atomic_int_least16_t;
-            using std::atomic_uint_least16_t;
-            using std::atomic_int_least32_t;
-            using std::atomic_uint_least32_t;
-            using std::atomic_int_least64_t;
-            using std::atomic_uint_least64_t;
-            using std::atomic_int_fast8_t;
-            using std::atomic_uint_fast8_t;
-            using std::atomic_int_fast16_t;
-            using std::atomic_uint_fast16_t;
-            using std::atomic_int_fast32_t;
-            using std::atomic_uint_fast32_t;
-            using std::atomic_int_fast64_t;
-            using std::atomic_uint_fast64_t;
-            using std::atomic_intptr_t;
-            using std::atomic_uintptr_t;
-            using std::atomic_size_t;
-            using std::atomic_ptrdiff_t;
-            using std::atomic_intmax_t;
-            using std::atomic_uintmax_t;
-            using std::atomic_thread_fence;
-            using std::atomic_signal_fence;
-            using std::atomic_init;
-            using std::atomic_is_lock_free;
-            using std::atomic_store;
-            using std::atomic_store_explicit;
-            using std::atomic_load;
-            using std::atomic_load_explicit;
-            using std::atomic_exchange;
-            using std::atomic_exchange_explicit;
-            using std::atomic_compare_exchange_strong;
-            using std::atomic_compare_exchange_strong_explicit;
-            using std::atomic_compare_exchange_weak;
-            using std::atomic_compare_exchange_weak_explicit;
-            using std::atomic_fetch_add;
-            using std::atomic_fetch_add_explicit;
-            using std::atomic_fetch_sub;
-            using std::atomic_fetch_sub_explicit;
-            using std::atomic_fetch_or;
-            using std::atomic_fetch_or_explicit;
-            using std::atomic_fetch_xor;
-            using std::atomic_fetch_xor_explicit;
-            using std::atomic_fetch_and;
-            using std::atomic_fetch_and_explicit;
-            using std::atomic_flag_test_and_set;
-            using std::atomic_flag_test_and_set_explicit;
-            using std::atomic_flag_clear;
-            using std::atomic_flag_clear_explicit;
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-    $as_echo "#define UP_HAS_STDCXX_ATOMIC_CXX11 1" >>confdefs.h
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-
-# UP_HAS_STDCXX_TYPE_TRAITS_CXX11
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C++11 type_traits compliance" >&5
-$as_echo_n "checking for C++11 type_traits compliance... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <type_traits>
-int
-main ()
-{
-
-            using std::is_trivial;
-            using std::is_trivially_destructible;
-            using std::is_nothrow_copy_constructible;
-            using std::is_nothrow_copy_assignable;
-            using std::is_nothrow_move_constructible;
-            using std::is_nothrow_move_assignable;
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-    $as_echo "#define UP_HAS_STDCXX_TYPE_TRAITS_CXX11 1" >>confdefs.h
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-
-# UP_HAS_STDC_INTTYPES_CXX11
-
-have_cinttypes_cxx11="no"
 
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -3542,60 +3399,21 @@ fi
 done
 
 
-ac_fn_cxx_check_header_mongrel "$LINENO" "cinttypes" "ac_cv_header_cinttypes" "$ac_includes_default"
-if test "x$ac_cv_header_cinttypes" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cinttypes compliance" >&5
-$as_echo_n "checking for cinttypes compliance... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <cinttypes>
-int
-main ()
-{
-
-                std::imaxabs(-5);
-                std::imaxdiv(1000, 50);
-                std::strtoimax("123", 0, 0);
-                std::strtoumax("123", 0, 0);
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-        $as_echo "#define UP_HAS_STDC_INTTYPES_CXX11 1" >>confdefs.h
-
-        have_cinttypes_cxx11="yes"
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
-
-
-# UP_HAS_STDC_INTTYPES_C99
-
-if test "x${have_cinttypes_cxx11}" != "xyes"; then :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "inttypes.h" "ac_cv_header_inttypes_h" "$ac_includes_default"
+ac_fn_cxx_check_header_mongrel "$LINENO" "inttypes.h" "ac_cv_header_inttypes_h" "$ac_includes_default"
 if test "x$ac_cv_header_inttypes_h" = xyes; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for inttypes.h compliance" >&5
 $as_echo_n "checking for inttypes.h compliance... " >&6; }
-        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
  #include <inttypes.h>
 int
 main ()
 {
 
-                    imaxabs(-5);
-                    imaxdiv(1000, 50);
-                    strtoimax("123", 0, 0);
-                    strtoumax("123", 0, 0);
+                imaxabs(-5);
+                imaxdiv(1000, 50);
+                strtoimax("123", 0, 0);
+                strtoumax("123", 0, 0);
 
 
   ;
@@ -3605,7 +3423,7 @@ _ACEOF
 if ac_fn_cxx_try_compile "$LINENO"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-            $as_echo "#define UP_HAS_STDC_INTTYPES_C99 1" >>confdefs.h
+        $as_echo "#define UP_HAS_STDC_INTTYPES 1" >>confdefs.h
 
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -3615,28 +3433,27 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
 
-fi
 
 # UP_HAS_STDC_LOCALE
 
-ac_fn_cxx_check_header_mongrel "$LINENO" "clocale" "ac_cv_header_clocale" "$ac_includes_default"
-if test "x$ac_cv_header_clocale" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for clocale compliance" >&5
-$as_echo_n "checking for clocale compliance... " >&6; }
+ac_fn_cxx_check_header_mongrel "$LINENO" "locale.h" "ac_cv_header_locale_h" "$ac_includes_default"
+if test "x$ac_cv_header_locale_h" = xyes; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for locale.h compliance" >&5
+$as_echo_n "checking for locale.h compliance... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <clocale>
+ #include <locale.h>
 int
 main ()
 {
 
-                std::setlocale(LC_ALL, "C");
-                std::setlocale(LC_COLLATE, "C");
-                std::setlocale(LC_CTYPE, "C");
-                std::setlocale(LC_MONETARY, "C");
-                std::setlocale(LC_NUMERIC, "C");
-                std::setlocale(LC_TIME, "C");
-                std::localeconv();
+                setlocale(LC_ALL, "C");
+                setlocale(LC_COLLATE, "C");
+                setlocale(LC_CTYPE, "C");
+                setlocale(LC_MONETARY, "C");
+                setlocale(LC_NUMERIC, "C");
+                setlocale(LC_TIME, "C");
+                localeconv();
 
 
   ;
@@ -3657,81 +3474,32 @@ fi
 
 
 
-# UP_HAS_STDC_MATH_CXX11
-
-have_cmath_cxx11="no"
-ac_fn_cxx_check_header_mongrel "$LINENO" "cmath" "ac_cv_header_cmath" "$ac_includes_default"
-if test "x$ac_cv_header_cmath" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cmath compliance" >&5
-$as_echo_n "checking for cmath compliance... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <cmath>
-int
-main ()
-{
-
-                std::acosh(1.0);
-                std::asinh(1.0);
-                std::atanh(1.0);
-                std::erf(1.0);
-                std::erfc(1.0);
-                std::lgamma(1.0);
-                std::tgamma(1.0);
-                std::nan("1234");
-                std::fpclassify(-1241.0);
-                std::signbit(-1.0);
-                std::rint(-66.43);
-                std::round(44.6);
-                std::trunc(612.512);
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-        $as_echo "#define UP_HAS_STDC_MATH_CXX11 1" >>confdefs.h
-
-        have_cmath_cxx11="yes"
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
-
-
 # UP_HAS_STDC_MATH_C99
 
-if test "x${have_cmath_cxx11}" != "xyes"; then :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "math.h" "ac_cv_header_math_h" "$ac_includes_default"
+ac_fn_cxx_check_header_mongrel "$LINENO" "math.h" "ac_cv_header_math_h" "$ac_includes_default"
 if test "x$ac_cv_header_math_h" = xyes; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for math.h compliance" >&5
 $as_echo_n "checking for math.h compliance... " >&6; }
-        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
  #include <math.h>
 int
 main ()
 {
 
-                    acosh(1.0);
-                    asinh(1.0);
-                    atanh(1.0);
-                    erf(1.0);
-                    erfc(1.0);
-                    lgamma(1.0);
-                    tgamma(1.0);
-                    nan("1234");
-                    fpclassify(-1241.0);
-                    signbit(-1.0);
-                    rint(-66.43);
-                    round(44.6);
-                    trunc(612.512);
+                acosh(1.0);
+                asinh(1.0);
+                atanh(1.0);
+                erf(1.0);
+                erfc(1.0);
+                lgamma(1.0);
+                tgamma(1.0);
+                nan("1234");
+                fpclassify(-1241.0);
+                signbit(-1.0);
+                rint(-66.43);
+                round(44.6);
+                trunc(612.512);
 
 
   ;
@@ -3741,43 +3509,7 @@ _ACEOF
 if ac_fn_cxx_try_compile "$LINENO"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-            $as_echo "#define UP_HAS_STDC_MATH_C99 1" >>confdefs.h
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
-
-fi
-
-# UP_HAS_STDC_STDALIGN
-
-ac_fn_cxx_check_header_mongrel "$LINENO" "cstdalign" "ac_cv_header_cstdalign" "$ac_includes_default"
-if test "x$ac_cv_header_cstdalign" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cstdalign compliance" >&5
-$as_echo_n "checking for cstdalign compliance... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <cstdalign>
-int
-main ()
-{
-
-                size_t const x = alignof(double);
-                alignas(16) float y = 0.0f;
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-        $as_echo "#define UP_HAS_STDC_STDALIGN 1" >>confdefs.h
+        $as_echo "#define UP_HAS_STDC_MATH_C99 1" >>confdefs.h
 
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -3788,41 +3520,7 @@ fi
 
 
 
-# UP_HAS_STDC_STDBOOL
-
-ac_fn_cxx_check_header_mongrel "$LINENO" "cstdbool" "ac_cv_header_cstdbool" "$ac_includes_default"
-if test "x$ac_cv_header_cstdbool" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cstdbool compliance" >&5
-$as_echo_n "checking for cstdbool compliance... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <cstdbool>
-int
-main ()
-{
-
-                bool x = true;
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-        $as_echo "#define UP_HAS_STDC_STDBOOL 1" >>confdefs.h
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
-
-
-# UP_HAS_STDC_TIME
+# UP_HAS_STDC_THREADS
 
 ac_fn_cxx_check_header_mongrel "$LINENO" "threads.h" "ac_cv_header_threads_h" "$ac_includes_default"
 if test "x$ac_cv_header_threads_h" = xyes; then :
@@ -3858,21 +3556,21 @@ fi
 
 # UP_HAS_STDC_TIME
 
-ac_fn_cxx_check_header_mongrel "$LINENO" "ctime" "ac_cv_header_ctime" "$ac_includes_default"
-if test "x$ac_cv_header_ctime" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ctime compliance" >&5
-$as_echo_n "checking for ctime compliance... " >&6; }
+ac_fn_cxx_check_header_mongrel "$LINENO" "time.h" "ac_cv_header_time_h" "$ac_includes_default"
+if test "x$ac_cv_header_time_h" = xyes; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for time.h compliance" >&5
+$as_echo_n "checking for time.h compliance... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <ctime>
+ #include <time.h>
 int
 main ()
 {
 
-                std::clock();
-                std::difftime(std::time_t(), std::time_t());
-                std::mktime(0);
-                std::time(0);
+                clock();
+                difftime(time_t(), time_t());
+                mktime(0);
+                time(0);
 
 
   ;
@@ -3895,59 +3593,21 @@ fi
 
 # UP_HAS_STDC_UCHAR
 
-have_cuchar_cxx11="no"
-ac_fn_cxx_check_header_mongrel "$LINENO" "cuchar" "ac_cv_header_cuchar" "$ac_includes_default"
-if test "x$ac_cv_header_cuchar" = xyes; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cuchar compliance" >&5
-$as_echo_n "checking for cuchar compliance... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
- #include <cuchar>
-int
-main ()
-{
-
-                std::mbrtoc16(0, 0, 0, 0);
-                std::mbrtoc32(0, 0, 0, 0);
-                std::c16rtomb(0, 0, 0);
-                std::c32rtomb(0, 0, 0);
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-        $as_echo "#define UP_HAS_STDC_UCHAR_CXX11 1" >>confdefs.h
-
-        have_cuchar_cxx11="yes"
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
-
-
-if test "x${have_cuchar_cxx11}" != "xyes"; then :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "uchar.h" "ac_cv_header_uchar_h" "$ac_includes_default"
+ac_fn_cxx_check_header_mongrel "$LINENO" "uchar.h" "ac_cv_header_uchar_h" "$ac_includes_default"
 if test "x$ac_cv_header_uchar_h" = xyes; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for uchar.h compliance" >&5
 $as_echo_n "checking for uchar.h compliance... " >&6; }
-        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
  #include <uchar.h>
 int
 main ()
 {
 
-                    mbrtoc16(0, 0, 0, 0);
-                    mbrtoc32(0, 0, 0, 0);
-                    c16rtomb(0, 0, 0);
-                    c32rtomb(0, 0, 0);
+                mbrtoc16(0, 0, 0, 0);
+                mbrtoc32(0, 0, 0, 0);
+                c16rtomb(0, 0, 0);
+                c32rtomb(0, 0, 0);
 
 
   ;
@@ -3957,7 +3617,7 @@ _ACEOF
 if ac_fn_cxx_try_compile "$LINENO"; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-            $as_echo "#define UP_HAS_STDC_UCHAR_C11 1" >>confdefs.h
+        $as_echo "#define UP_HAS_STDC_UCHAR 1" >>confdefs.h
 
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -3967,40 +3627,39 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
 
-fi
 
 # UP_HAS_STDC_WCHAR
 
-ac_fn_cxx_check_header_mongrel "$LINENO" "cwchar" "ac_cv_header_cwchar" "$ac_includes_default"
-if test "x$ac_cv_header_cwchar" = xyes; then :
+ac_fn_cxx_check_header_mongrel "$LINENO" "wchar.h" "ac_cv_header_wchar_h" "$ac_includes_default"
+if test "x$ac_cv_header_wchar_h" = xyes; then :
 
 fi
 
 
-ac_fn_cxx_check_header_mongrel "$LINENO" "cwctype" "ac_cv_header_cwctype" "$ac_includes_default"
-if test "x$ac_cv_header_cwctype" = xyes; then :
+ac_fn_cxx_check_header_mongrel "$LINENO" "wctype.h" "ac_cv_header_wctype_h" "$ac_includes_default"
+if test "x$ac_cv_header_wctype_h" = xyes; then :
 
 fi
 
 
 
-if test "${ac_cv_header_cwchar+set}" = "set" -a "${ac_cv_header_cwctype+set}" = "set" ; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for wchar_t compliance" >&5
+if test "${ac_cv_header_wchar_h+set}" = "set" -a "${ac_cv_header_wctype_h+set}" = "set"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for wchar_t compliance" >&5
 $as_echo_n "checking for wchar_t compliance... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-                #include <cwctype>
-                #include <cwchar>
-                #include <cstdlib>
+                #include <wctype.h>
+                #include <wchar.h>
+                #include <stdlib.h>
 
 int
 main ()
 {
 
-                std::iswspace(L' ');
-                std::wcslen(L"hello");
-                std::wcstombs(0, 0, 0);
+                iswspace(L' ');
+                wcslen(L"hello");
+                wcstombs(0, 0, 0);
 
 
   ;
@@ -4019,6 +3678,148 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
+# UP_HAS_STDCXX_ATOMIC
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C++11 <atomic> compliance" >&5
+$as_echo_n "checking for C++11 <atomic> compliance... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <atomic>
+int
+main ()
+{
+
+            using std::kill_dependency;
+            using std::memory_order;
+            using std::atomic_signal_fence;
+            using std::atomic_thread_fence;
+            using std::atomic;
+            using std::atomic_flag;
+            using std::atomic_bool;
+            using std::atomic_char;
+            using std::atomic_schar;
+            using std::atomic_uchar;
+            using std::atomic_short;
+            using std::atomic_ushort;
+            using std::atomic_int;
+            using std::atomic_uint;
+            using std::atomic_long;
+            using std::atomic_ulong;
+            using std::atomic_llong;
+            using std::atomic_ullong;
+            using std::atomic_char16_t;
+            using std::atomic_char32_t;
+            using std::atomic_wchar_t;
+            using std::atomic_int8_t;
+            using std::atomic_uint8_t;
+            using std::atomic_int16_t;
+            using std::atomic_uint16_t;
+            using std::atomic_int32_t;
+            using std::atomic_uint32_t;
+            using std::atomic_int64_t;
+            using std::atomic_uint64_t;
+            using std::atomic_int_least8_t;
+            using std::atomic_uint_least8_t;
+            using std::atomic_int_least16_t;
+            using std::atomic_uint_least16_t;
+            using std::atomic_int_least32_t;
+            using std::atomic_uint_least32_t;
+            using std::atomic_int_least64_t;
+            using std::atomic_uint_least64_t;
+            using std::atomic_int_fast8_t;
+            using std::atomic_uint_fast8_t;
+            using std::atomic_int_fast16_t;
+            using std::atomic_uint_fast16_t;
+            using std::atomic_int_fast32_t;
+            using std::atomic_uint_fast32_t;
+            using std::atomic_int_fast64_t;
+            using std::atomic_uint_fast64_t;
+            using std::atomic_intptr_t;
+            using std::atomic_uintptr_t;
+            using std::atomic_size_t;
+            using std::atomic_ptrdiff_t;
+            using std::atomic_intmax_t;
+            using std::atomic_uintmax_t;
+            using std::atomic_thread_fence;
+            using std::atomic_signal_fence;
+            using std::atomic_init;
+            using std::atomic_is_lock_free;
+            using std::atomic_store;
+            using std::atomic_store_explicit;
+            using std::atomic_load;
+            using std::atomic_load_explicit;
+            using std::atomic_exchange;
+            using std::atomic_exchange_explicit;
+            using std::atomic_compare_exchange_strong;
+            using std::atomic_compare_exchange_strong_explicit;
+            using std::atomic_compare_exchange_weak;
+            using std::atomic_compare_exchange_weak_explicit;
+            using std::atomic_fetch_add;
+            using std::atomic_fetch_add_explicit;
+            using std::atomic_fetch_sub;
+            using std::atomic_fetch_sub_explicit;
+            using std::atomic_fetch_or;
+            using std::atomic_fetch_or_explicit;
+            using std::atomic_fetch_xor;
+            using std::atomic_fetch_xor_explicit;
+            using std::atomic_fetch_and;
+            using std::atomic_fetch_and_explicit;
+            using std::atomic_flag_test_and_set;
+            using std::atomic_flag_test_and_set_explicit;
+            using std::atomic_flag_clear;
+            using std::atomic_flag_clear_explicit;
+
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_STDCXX_ATOMIC 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+# UP_HAS_STDCXX_TYPE_TRAITS
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C++11 <type_traits> compliance" >&5
+$as_echo_n "checking for C++11 <type_traits> compliance... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <type_traits>
+int
+main ()
+{
+
+            using std::is_trivial;
+            using std::is_trivially_destructible;
+            using std::is_nothrow_copy_constructible;
+            using std::is_nothrow_copy_assignable;
+            using std::is_nothrow_move_constructible;
+            using std::is_nothrow_move_assignable;
+
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_STDCXX_TYPE_TRAITS 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+
 #############################################################################
 # Standard C/C++ Library Features
 #############################################################################
@@ -4032,7 +3833,7 @@ $as_echo "$as_me: ------ Standard C/C++ Library Features ------" >&6;}
 $as_echo_n "checking for alloca... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdlib>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4059,7 +3860,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for aligned_alloc... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdlib>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4086,11 +3887,11 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for max_align_t... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstddef>
+ #include <stddef.h>
 int
 main ()
 {
- std::max_align_t x;
+ max_align_t x;
 
   ;
   return 0;
@@ -4114,7 +3915,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for snprintf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdio.h>
 int
 main ()
 {
@@ -4141,7 +3942,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strtof... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4168,7 +3969,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strtod... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4195,7 +3996,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strtold... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4222,7 +4023,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strtoll... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4249,7 +4050,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strtoull... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4276,7 +4077,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for at_quick_exit and quick_exit... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdlib>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4306,7 +4107,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for timespec_get... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <ctime>
+ #include <time.h>
 int
 main ()
 {
@@ -4334,7 +4135,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for _Exit... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdlib>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -4361,7 +4162,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcstof... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -4388,7 +4189,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcstod... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -4415,7 +4216,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcstold... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -4442,7 +4243,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcstoll... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -4469,7 +4270,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcstoull... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -4497,8 +4298,8 @@ $as_echo_n "checking for vfscanf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
 
 int
 main ()
@@ -4530,8 +4331,8 @@ $as_echo_n "checking for vscanf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
 
 int
 main ()
@@ -4563,8 +4364,8 @@ $as_echo_n "checking for vsscanf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
 
 int
 main ()
@@ -4596,8 +4397,8 @@ $as_echo_n "checking for vsnprintf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
 
 int
 main ()
@@ -4771,7 +4572,7 @@ $as_echo_n "checking for posix locale extensions... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <clocale>
+            #include <locale.h>
 
 int
 main ()
@@ -4805,8 +4606,8 @@ $as_echo_n "checking for asprintf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
 
 int
 main ()
@@ -4835,8 +4636,8 @@ $as_echo_n "checking for vasprintf... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
 
 int
 main ()
@@ -4867,7 +4668,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for fseeko... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdio.h>
 int
 main ()
 {
@@ -4894,7 +4695,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for ftello... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdio.h>
 int
 main ()
 {
@@ -4921,7 +4722,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for getdelim... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdio.h>
 int
 main ()
 {
@@ -4948,7 +4749,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for getline... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdio.h>
 int
 main ()
 {
@@ -4975,7 +4776,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for getwdelim... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5002,7 +4803,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for getwline... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5029,7 +4830,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for memalign... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdlib>
+ #include <stdlib.h>
 int
 main ()
 {
@@ -5056,7 +4857,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for fmemopen... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstdio>
+ #include <stdio.h>
 int
 main ()
 {
@@ -5086,7 +4887,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for memccpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5113,7 +4914,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wmemccpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5140,7 +4941,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for mbsnrtowcs... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5167,7 +4968,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcsnrtombs... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5188,13 +4989,40 @@ $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
+# UP_HAS_POSIX_SSIZE
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ssize_t" >&5
+$as_echo_n "checking for ssize_t... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <sys/types.h>
+int
+main ()
+{
+ ssize_t x = 0;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+    $as_echo "#define UP_HAS_POSIX_SSIZE 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
 # UP_HAS_POSIX_STPCPY
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for stpcpy" >&5
 $as_echo_n "checking for stpcpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5221,7 +5049,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for stpncpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5248,11 +5076,11 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strdup... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
- strdup(0);
+ strdup("upcaste");
 
   ;
   return 0;
@@ -5275,7 +5103,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strcasecmp... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5302,7 +5130,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strncasecmp... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5329,7 +5157,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strnlen... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5356,7 +5184,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strtok_r... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5383,7 +5211,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcpcpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5410,7 +5238,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcpncpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5437,11 +5265,11 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcsdup... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
- wcsdup(0);
+ wcsdup(L"upcaste");
 
   ;
   return 0;
@@ -5464,7 +5292,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcscasecmp... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5491,7 +5319,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcsncasecmp... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5518,7 +5346,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcsnlen... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5552,7 +5380,7 @@ $as_echo "$as_me: ------ GNU C Library Functions ------" >&6;}
 $as_echo_n "checking for mempcpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5579,7 +5407,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wmempcpy... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5606,7 +5434,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for strndup... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {
@@ -5633,7 +5461,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 $as_echo_n "checking for wcsndup... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cwchar>
+ #include <wchar.h>
 int
 main ()
 {
@@ -5667,7 +5495,7 @@ $as_echo "$as_me: ------ BSD C Library Functions ------" >&6;}
 $as_echo_n "checking for memset_pattern... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
- #include <cstring>
+ #include <string.h>
 int
 main ()
 {

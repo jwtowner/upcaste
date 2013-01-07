@@ -23,11 +23,11 @@
 //
 
 #include "device_enumerator.hpp"
-#include <up/cstdatomic.hpp>
 #include <up/cstdio.hpp>
 #include <up/ctime.hpp>
 #include <up/page.hpp>
 #include <up/test.hpp>
+#include <up/utility.hpp>
 #include <random>
 
 namespace create_buffer

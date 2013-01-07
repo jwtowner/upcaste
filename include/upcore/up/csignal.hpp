@@ -26,13 +26,13 @@
 #define UP_CSIGNAL_HPP
 
 #include <up/prolog.hpp>
-#include <csignal>
+#include <signal.h>
 
 namespace up
 {
-    using ::std::sig_atomic_t;
-    using ::std::raise;
-    using ::std::signal;
+    using ::sig_atomic_t;
+    using ::raise;
+    using ::signal;
 }
 
 #endif

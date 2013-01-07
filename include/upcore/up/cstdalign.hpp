@@ -27,15 +27,15 @@
 
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
-#if UP_HAS_STDC_STDALIGN
-#   include <cstdalign>
-#else
-#   if !defined(UP_NO_ALIGNAS) || defined(alignas)
-#       define __alignas_is_defined 1
-#   endif
-#   if !defined(UP_NO_ALIGNOF) || defined(alignof)
-#       define __alignof_is_defined 1
-#   endif
+
+#undef __alignas_is_defined
+#if !defined(UP_NO_ALIGNAS) || defined(alignas)
+#   define __alignas_is_defined 1
+#endif
+
+#undef __alignof_is_defined
+#if !defined(UP_NO_ALIGNOF) || defined(alignof)
+#   define __alignof_is_defined 1
 #endif
 
 namespace up

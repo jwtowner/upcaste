@@ -23,6 +23,7 @@
 //
 
 #include <up/allocator.hpp>
+#include <up/atomic.hpp>
 #include <up/bitwise.hpp>
 #include <up/byteswap.hpp>
 #include <up/cassert.hpp>
@@ -39,7 +40,6 @@
 #include <up/csignal.hpp>
 #include <up/cstdalign.hpp>
 #include <up/cstdarg.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/cstdbool.hpp>
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>

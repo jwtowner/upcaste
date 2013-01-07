@@ -27,6 +27,7 @@
 
 #include <up/cfloat.hpp>
 #include <up/climits.hpp>
+#include <up/cstdint.hpp>
 
 namespace up
 {

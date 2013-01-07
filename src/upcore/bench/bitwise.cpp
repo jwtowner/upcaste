@@ -23,9 +23,9 @@
 //
 
 #include <up/bitwise.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/ctime.hpp>
 #include <up/test.hpp>
+#include <up/utility.hpp>
 #include <random>
 
 namespace bitwise

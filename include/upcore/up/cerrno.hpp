@@ -26,7 +26,7 @@
 #define UP_CERRNO_HPP
 
 #include <up/prolog.hpp>
-#include <cerrno>
+#include <errno.h>
 
 #if UP_BASESYSTEM == UP_BASESYSTEM_WINDOWS
 #   include <up/detail/cerrno_windows.inl>

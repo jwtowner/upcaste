@@ -27,9 +27,7 @@
 
 #include <up/cstdint.hpp>
 
-#if defined(UP_HAS_STDC_INTTYPES_CXX11)
-#   include <up/detail/cinttypes_cxx11.inl>
-#elif defined(UP_HAS_STDC_INTTYPES_C99)
+#if defined UP_HAS_STDC_INTTYPES
 #   include <up/detail/cinttypes_c99.inl>
 #elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
 #   include <up/detail/cinttypes_msvc.inl>

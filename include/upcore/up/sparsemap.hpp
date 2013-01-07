@@ -890,7 +890,6 @@ namespace up
                     next = curr->next;
                     record = ::up::slist_cast<sparserecord<K, V>*>(curr, &sparserecord<K, V>::node);
                     result = ::up::sparsemap_insert(dst, record);
-                    UPASSERT(result.record);
                 }
                 bucket->next = nullptr;
             }
@@ -920,7 +919,6 @@ namespace up
                     next = curr->next;
                     record = ::up::slist_cast<sparserecord<K, V>*>(curr, &sparserecord<K, V>::node);
                     result = ::up::sparsemap_multi_insert(dst, record);
-                    UPASSERT(result.record);
                 }
                 bucket->next = nullptr;
             }

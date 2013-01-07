@@ -23,7 +23,6 @@
 //
 
 #include <up/cstdlib.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/memory.hpp>
 #include <up/test.hpp>
 #include <random>

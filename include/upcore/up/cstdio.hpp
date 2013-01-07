@@ -26,52 +26,52 @@
 #define UP_CSTDIO_HPP
 
 #include <up/cstddef.hpp>
-#include <cstdio>
+#include <stdio.h>
 
 namespace up
 {
-    using ::std::FILE;
-    using ::std::fpos_t;
-    using ::std::clearerr;
-    using ::std::fclose;
-    using ::std::feof;
-    using ::std::ferror;
-    using ::std::fflush;
-    using ::std::fgetc;
-    using ::std::fgetpos;
-    using ::std::fgets;
-    using ::std::fopen;
-    using ::std::fputc;
-    using ::std::fputs;
-    using ::std::fread;
-    using ::std::freopen;
-    using ::std::fseek;
-    using ::std::fsetpos;
-    using ::std::fwrite;
-    using ::std::getc;
-    using ::std::getchar;
-    using ::std::gets;
-    using ::std::perror;
-    using ::std::putc;
-    using ::std::putchar;
-    using ::std::puts;
-    using ::std::remove;
-    using ::std::rename;
-    using ::std::rewind;
-    using ::std::setbuf;
-    using ::std::setvbuf;
-    using ::std::tmpfile;
-    using ::std::tmpnam;
-    using ::std::ungetc;
-    using ::std::printf;
-    using ::std::fprintf;
-    using ::std::sprintf;
-    using ::std::vprintf;
-    using ::std::vfprintf;
-    using ::std::vsprintf;
-    using ::std::scanf;
-    using ::std::fscanf;
-    using ::std::sscanf;
+    using ::FILE;
+    using ::fpos_t;
+    using ::clearerr;
+    using ::fclose;
+    using ::feof;
+    using ::ferror;
+    using ::fflush;
+    using ::fgetc;
+    using ::fgetpos;
+    using ::fgets;
+    using ::fopen;
+    using ::fputc;
+    using ::fputs;
+    using ::fread;
+    using ::freopen;
+    using ::fseek;
+    using ::fsetpos;
+    using ::fwrite;
+    using ::getc;
+    using ::getchar;
+    using ::gets;
+    using ::perror;
+    using ::putc;
+    using ::putchar;
+    using ::puts;
+    using ::remove;
+    using ::rename;
+    using ::rewind;
+    using ::setbuf;
+    using ::setvbuf;
+    using ::tmpfile;
+    using ::tmpnam;
+    using ::ungetc;
+    using ::printf;
+    using ::fprintf;
+    using ::sprintf;
+    using ::vprintf;
+    using ::fprintf;
+    using ::vsprintf;
+    using ::scanf;
+    using ::fscanf;
+    using ::sscanf;
 
 #ifndef UP_HAS_POSIX_GETDELIM
     extern LIBUPCOREAPI UPNONNULL(4)

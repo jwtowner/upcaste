@@ -24,9 +24,9 @@
 
 #include <up/page.hpp>
 #include <up/cassert.hpp>
+#include <up/cerrno.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cstring.hpp>
-
 #include <sys/mman.h>
 #include <dirent.h>
 #include <unistd.h>

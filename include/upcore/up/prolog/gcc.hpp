@@ -34,9 +34,6 @@
     #warning "Untested GCC compiler version"
 #endif
 
-//
-// compiler configuration
-//
 #define UP_COMPILER UP_COMPILER_GCC
 
 //

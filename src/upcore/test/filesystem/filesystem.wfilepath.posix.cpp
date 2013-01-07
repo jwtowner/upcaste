@@ -152,7 +152,7 @@ namespace filesystem_wfilepath_posix
         wchar_t const* const wparts3[] = { L"//", L"hello", L"world" };
         wchar_t wbuffer[10];
         wchar_t* wpath;
-        up::ssize_t sz;
+        ssize_t sz;
 
         wpath = up::filesystem::posix::join_path(wparts1, 4);
         require(wpath && !up::wcscmp(wpath, L"hello/world/foo/bar.baz"));

@@ -712,7 +712,6 @@ namespace up
                     next = curr->next;
                     record = ::up::slist_cast<R*>(curr, N);
                     result = ::up::sparseset_insert(dst, record);
-                    UPASSERT(result.record);
                 }
                 bucket->next = nullptr;
             }
@@ -742,7 +741,6 @@ namespace up
                     next = curr->next;
                     record = ::up::slist_cast<R*>(curr, N);
                     result = ::up::sparseset_multi_insert(dst, record);
-                    UPASSERT(result.record);
                 }
                 bucket->next = nullptr;
             }

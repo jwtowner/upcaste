@@ -31,7 +31,7 @@
 
 #include <inttypes.h>
 
-namespace ups
+namespace up
 {
     using ::imaxdiv_t;
     using ::imaxabs;

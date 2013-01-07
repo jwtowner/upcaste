@@ -22,11 +22,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_CSTDATOMIC_STORAGE_MSVC_X86_64_INL
-#define UP_CSTDATOMIC_STORAGE_MSVC_X86_64_INL
+#ifndef UP_ATOMIC_STORAGE_MSVC_X86_64_INL
+#define UP_ATOMIC_STORAGE_MSVC_X86_64_INL
 
-#ifndef UP_CSTDATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/cstdatomic.hpp>"
+#ifndef UP_ATOMIC_HPP
+#   error "Do not include this file directly, instead include <up/atomic.hpp>"
 #endif
 
 #define ATOMIC_BOOL_LOCK_FREE 2

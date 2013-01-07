@@ -25,6 +25,7 @@
 #include <up/page.hpp>
 #include <up/cassert.hpp>
 #include <up/cstdlib.hpp>
+#include <up/cerrno.hpp>
 #include <up/cthreads.hpp>
 
 namespace up

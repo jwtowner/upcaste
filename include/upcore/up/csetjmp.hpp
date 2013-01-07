@@ -26,12 +26,12 @@
 #define UP_CSETJMP_HPP
 
 #include <up/prolog.hpp>
-#include <csetjmp>
+#include <setjmp.h>
 
 namespace up
 {
-    using ::std::jmp_buf;
-    using ::std::longjmp;
+    using ::jmp_buf;
+    using ::longjmp;
 }
 
 #endif

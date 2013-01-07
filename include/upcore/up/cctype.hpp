@@ -26,7 +26,7 @@
 #define UP_CCTYPE_HPP
 
 #include <up/prolog.hpp>
-#include <cctype>
+#include <ctype.h>
 
 #undef isalnum
 #undef isalpha
@@ -46,19 +46,19 @@
 
 namespace up
 {
-    using ::std::isalnum;
-    using ::std::isalpha;
-    using ::std::iscntrl;
-    using ::std::isdigit;
-    using ::std::islower;
-    using ::std::isgraph;
-    using ::std::isprint;
-    using ::std::ispunct;
-    using ::std::isspace;
-    using ::std::isupper;
-    using ::std::isxdigit;
-    using ::std::tolower;
-    using ::std::toupper;
+    using ::isalnum;
+    using ::isalpha;
+    using ::iscntrl;
+    using ::isdigit;
+    using ::islower;
+    using ::isgraph;
+    using ::isprint;
+    using ::ispunct;
+    using ::isspace;
+    using ::isupper;
+    using ::isxdigit;
+    using ::tolower;
+    using ::toupper;
 
     inline UPALWAYSINLINE UPPURE
     int fast_isascii(int c) noexcept {

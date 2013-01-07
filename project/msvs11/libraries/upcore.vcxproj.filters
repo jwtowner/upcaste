@@ -192,9 +192,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\allocator.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cassert.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdalign.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1540,6 +1537,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\hash\hash64_accumulate.cpp">
       <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cassert.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,6 @@
 #define UP_CISO646_HPP
 
 #include <up/prolog.hpp>
-#include <ciso646>
+#include <iso646.h>
 
 #endif

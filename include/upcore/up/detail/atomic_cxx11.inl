@@ -22,11 +22,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_CSTDATOMIC_CXX11_INL
-#define UP_DETAIL_CSTDATOMIC_CXX11_INL
+#ifndef UP_DETAIL_ATOMIC_CXX11_INL
+#define UP_DETAIL_ATOMIC_CXX11_INL
 
-#ifndef UP_CSTDATOMIC_HPP
-#   error "Do not include this header file directly! Instead include <up/cstdatomic.hpp>"
+#ifndef UP_ATOMIC_HPP
+#   error "Do not include this header file directly! Instead include <up/atomic.hpp>"
 #endif
 
 #include <atomic>
@@ -116,21 +116,17 @@ namespace up
     using ::std::atomic_flag_test_and_set_explicit;
     using ::std::atomic_flag_clear;
     using ::std::atomic_flag_clear_explicit;
-    typedef atomic<void*> atomic_address;
-    typedef atomic<void const*> atomic_const_address;
-    typedef atomic<void volatile*> atomic_volatile_address;
-    typedef atomic<void const volatile*> atomic_const_volatile_address;
 }
 
 #if (UP_COMPILER == UP_COMPILER_GCC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/cstdatomic_pause_gcc_x86_x64.inl>
+#       include <up/detail/atomic_pause_gcc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
 #elif (UP_COMPILER == UP_COMPILER_MSVC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/cstdatomic_pause_msvc_x86_x64.inl>
+#       include <up/detail/atomic_pause_msvc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif

@@ -26,11 +26,12 @@
 
 #ifndef UP_HAS_STDC_UNSAFE_EXIT
 
+#include <up/atomic.hpp>
 #include <up/cassert.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cthreads.hpp>
 #include <up/slist.hpp>
+#include <up/utility.hpp>
 
 namespace up
 {

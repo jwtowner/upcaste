@@ -26,7 +26,7 @@
 #define UP_CFLOAT_HPP
 
 #include <up/prolog.hpp>
-#include <cfloat>
+#include <float.h>
 
 #define FLT_DEGREES     5.7295779513082320876798154814105e+01f
 #define FLT_RADIANS     1.7453292519943295769236907684886e-02f

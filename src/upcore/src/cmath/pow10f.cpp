@@ -38,7 +38,7 @@ namespace up { namespace math
         constexpr int pow10f_table_size = static_cast<int>(sizeof(pow10f_table) / sizeof(pow10f_table[0]));
     }
 
-    LIBUPCOREAPI UPPURE
+    LIBUPCOREAPI
     float pow10f(int n) noexcept {
         bool negative;
         float r;

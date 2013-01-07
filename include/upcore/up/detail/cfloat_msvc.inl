@@ -49,7 +49,9 @@ namespace up { namespace detail
 #ifndef DECIMAL_DIG
 #   define DECIMAL_DIG 17
 #endif
-
+#ifndef FLT_EVAL_METHOD
+#   define FLT_EVAL_METHOD 0
+#endif
 #ifndef FLT_DECIMAL_DIG
 #   define FLT_DECIMAL_DIG 9
 #endif
@@ -59,7 +61,6 @@ namespace up { namespace detail
 #ifndef LDBL_DECIMAL_DIG
 #   define LDBL_DECIMAL_DIG 17
 #endif
-
 #ifndef FLT_HAS_SUBNORM
 #   define FLT_HAS_SUBNORM 1
 #endif
@@ -69,7 +70,6 @@ namespace up { namespace detail
 #ifndef LDBL_HAS_SUBNORM
 #   define LDBL_HAS_SUBNORM 1
 #endif
-
 #ifndef FLT_TRUE_MIN
 #   define FLT_TRUE_MIN 1.40129846E-45f
 #endif

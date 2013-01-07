@@ -26,9 +26,8 @@
 #define UP_CSTDLIB_HPP
 
 #include <up/allocator.hpp>
-#include <up/cerrno.hpp>
 #include <up/cstdint.hpp>
-#include <cstdlib>
+#include <stdlib.h>
 
 #if (UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC)
 #   include <up/detail/cstdlib_msvc.inl>
@@ -47,27 +46,31 @@
 #   endif
 #endif
 
+#undef abs
+#undef min
+#undef max
+
 namespace up
 {
 #ifndef UP_HAS_STDC_STRTOF
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     float strtof(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept;
 #else
-    using ::std::strtof;
+    using ::strtof;
 #endif
 
 #ifndef UP_HAS_STDC_STRTOD
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     double strtod(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept;
 #else
-    using ::std::strtod;
+    using ::strtod;
 #endif
 
 #ifndef UP_HAS_STDC_STRTOLD
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     long double strtold(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept;
 #else
-    using ::std::strtold;
+    using ::strtold;
 #endif
 
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
@@ -79,21 +82,21 @@ namespace up
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     long double fast_strtold(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept;
 
-    using ::std::strtol;
-    using ::std::strtoul;
+    using ::strtol;
+    using ::strtoul;
 
 #ifndef UP_HAS_STDC_STRTOLL
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     long long strtoll(char const* UPRESTRICT str, char** UPRESTRICT endptr, int base) noexcept;
 #else
-    using ::std::strtoll;
+    using ::strtoll;
 #endif
 
 #ifndef UP_HAS_STDC_STRTOULL
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     unsigned long long strtoull(char const* UPRESTRICT str, char** UPRESTRICT endptr, int base) noexcept;
 #else
-    using ::std::strtoull;
+    using ::strtoull;
 #endif
 
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
@@ -136,10 +139,10 @@ namespace up
         return fast_strtou64(str, endptr, base);
     }
 
-    using ::std::malloc;
-    using ::std::calloc;
-    using ::std::realloc;
-    using ::std::free;
+    using ::malloc;
+    using ::calloc;
+    using ::realloc;
+    using ::free;
 
 #ifndef UP_NO_EXCEPTIONS
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT
@@ -205,9 +208,9 @@ namespace up
         size_t alignment_;
     };
 
-    using ::std::abort;
-    using ::std::atexit;
-    using ::std::exit;
+    using ::abort;
+    using ::atexit;
+    using ::exit;
 
 #ifndef UP_HAS_STDC_QUICK_EXIT
     extern LIBUPCOREAPI UPNONNULL(1)
@@ -232,30 +235,29 @@ namespace up
 
     inline UPALWAYSINLINE UPNONNULLALL
     int syscmd(char const* cmd) noexcept {
-        return ::std::system(cmd);
+        return ::system(cmd);
     }
 
-    using ::std::getenv;
-    using ::std::rand;
-    using ::std::srand;
-    using ::std::bsearch;
-    using ::std::qsort;
-    using ::std::abs;
-    using ::std::labs;
-    using ::std::llabs;
-    using ::std::div_t;
-    using ::std::ldiv_t;
-    using ::std::lldiv_t;
-    using ::std::div;
-    using ::std::ldiv;
-    using ::std::lldiv;
-
+    using ::getenv;
+    using ::rand;
+    using ::srand;
+    using ::bsearch;
+    using ::qsort;
+    using ::abs;
+    using ::labs;
+    using ::llabs;
+    using ::div_t;
+    using ::ldiv_t;
+    using ::lldiv_t;
+    using ::div;
+    using ::ldiv;
+    using ::lldiv;
 #ifdef UP_HAS_STDC_WCHAR
-    using ::std::mblen;
-    using ::std::mbtowc;
-    using ::std::mbstowcs;
-    using ::std::wctomb;
-    using ::std::wcstombs;
+    using ::mblen;
+    using ::mbtowc;
+    using ::mbstowcs;
+    using ::wctomb;
+    using ::wcstombs;
 #endif
 }
 

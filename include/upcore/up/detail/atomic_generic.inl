@@ -22,10 +22,9 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_CSTDATOMIC_GENERIC_INL
-#define UP_DETAIL_CSTDATOMIC_GENERIC_INL
+#ifndef UP_DETAIL_ATOMIC_GENERIC_INL
+#define UP_DETAIL_ATOMIC_GENERIC_INL
 
-#include <up/cassert.hpp>
 #include <up/cstdalign.hpp>
 #include <up/type_traits.hpp>
 
@@ -58,17 +57,17 @@ namespace up
 
 #if (UP_COMPILER == UP_COMPILER_GCC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/cstdatomic_flag_gcc_x86_x64.inl>
-#       include <up/detail/cstdatomic_fence_gcc_x86_x64.inl>
-#       include <up/detail/cstdatomic_pause_gcc_x86_x64.inl>
+#       include <up/detail/atomic_flag_gcc_x86_x64.inl>
+#       include <up/detail/atomic_fence_gcc_x86_x64.inl>
+#       include <up/detail/atomic_pause_gcc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
 #elif (UP_COMPILER == UP_COMPILER_MSVC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/cstdatomic_flag_msvc_x86_x64.inl>
-#       include <up/detail/cstdatomic_fence_msvc_x86_x64.inl>
-#       include <up/detail/cstdatomic_pause_msvc_x86_x64.inl>
+#       include <up/detail/atomic_flag_msvc_x86_x64.inl>
+#       include <up/detail/atomic_fence_msvc_x86_x64.inl>
+#       include <up/detail/atomic_pause_msvc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
@@ -266,13 +265,13 @@ namespace up { namespace detail
 
 #if (UP_COMPILER == UP_COMPILER_GCC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/cstdatomic_storage_gcc_x86_x64.inl>
+#       include <up/detail/atomic_storage_gcc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
 #elif (UP_COMPILER == UP_COMPILER_MSVC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/cstdatomic_storage_msvc_x86_x64.inl>
+#       include <up/detail/atomic_storage_msvc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
@@ -323,12 +322,10 @@ namespace up { namespace detail
     } \
     UPALWAYSINLINE \
     T load(memory_order order = memory_order_seq_cst) const Volatile noexcept { \
-        UPASSERT((order != memory_order_release) && (order != memory_order_acq_rel)); \
         return this->storage_.load(order); \
     } \
     UPALWAYSINLINE \
     void store(const_reference desired, memory_order order = memory_order_seq_cst) Volatile noexcept { \
-        UPASSERT((order != memory_order_consume) && (order != memory_order_acquire) && (order != memory_order_acq_rel)); \
         this->storage_.store(desired, order); \
     }
 
@@ -431,6 +428,7 @@ namespace up { namespace detail
     }
     
 #ifndef LIBUPCORE_NO_EXTERN_TEMPLATES
+    LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<bool>;
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<void*>;
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<void const*>;
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<void volatile*>;
@@ -445,7 +443,6 @@ namespace up { namespace detail
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<unsigned int>;
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<unsigned long>;
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<unsigned long long>;
-    LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<bool>;
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<char>;
 #ifndef UP_NO_NATIVE_WCHAR_T
     LIBUPCOREEXTERN template struct LIBUPCOREAPI atomic_storage<wchar_t>;
@@ -640,10 +637,6 @@ namespace up
 #undef UP_DETAIL_DECLARE_ATOMIC_VOID_ADDRESS_SPECIALIZATION
 #undef UP_DETAIL_DECLARE_ATOMIC_INTEGRAL_SPECIALIZATION
 
-    typedef atomic<void*> atomic_address;
-    typedef atomic<void const*> atomic_const_address;
-    typedef atomic<void volatile*> atomic_volatile_address;
-    typedef atomic<void const volatile*> atomic_const_volatile_address;
     typedef atomic<bool> atomic_bool;
     typedef atomic<char> atomic_char;
     typedef atomic<signed char> atomic_schar;
@@ -690,7 +683,7 @@ namespace up
     typedef atomic<intmax_t> atomic_intmax_t;
     typedef atomic<uintmax_t> atomic_uintmax_t;
 
-#define UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS_IMPL(Volatile) \
+#define UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS(Volatile) \
     template <class T> \
     inline UPALWAYSINLINE \
     bool atomic_is_lock_free(atomic<T> const Volatile* a) noexcept { \
@@ -752,31 +745,27 @@ namespace up
         return a->compare_exchange_weak(*expected, desired, success_order, failure_order); \
     }
 
-#define UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS() \
-    UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS_IMPL(UP_DETAIL_NOT_VOLATILE)
-    UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS_IMPL(UP_DETAIL_VOLATILE)
-
-#define UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS_IMPL(AtomicType, ValueType, Volatile) \
+#define UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(Volatile) \
+    template <class T> \
     inline UPALWAYSINLINE \
-    ValueType atomic_fetch_add(AtomicType Volatile* a, ptrdiff_t operand) noexcept { \
+    T atomic_fetch_add(atomic<T*> Volatile* a, ptrdiff_t operand) noexcept { \
         return a->fetch_add(operand, memory_order_seq_cst); \
     } \
+    template <class T> \
     inline UPALWAYSINLINE \
-    ValueType atomic_fetch_add_explicit(AtomicType Volatile* a, ptrdiff_t operand, memory_order order) noexcept { \
+    T atomic_fetch_add_explicit(atomic<T*> Volatile* a, ptrdiff_t operand, memory_order order) noexcept { \
         return a->fetch_add(operand, order); \
     } \
+    template <class T> \
     inline UPALWAYSINLINE \
-    ValueType atomic_fetch_sub(AtomicType Volatile* a, ptrdiff_t operand) noexcept { \
+    T atomic_fetch_sub(atomic<T*> Volatile* a, ptrdiff_t operand) noexcept { \
         return a->fetch_sub(operand, memory_order_seq_cst); \
     } \
+    template <class T> \
     inline UPALWAYSINLINE \
-    ValueType atomic_fetch_sub_explicit(AtomicType Volatile* a, ptrdiff_t operand, memory_order order) noexcept { \
+    T atomic_fetch_sub_explicit(atomic<T*> Volatile* a, ptrdiff_t operand, memory_order order) noexcept { \
         return a->fetch_sub(operand, order); \
     }
-
-#define UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(AtomicType, ValueType) \
-    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS_IMPL(AtomicType, ValueType, UP_DETAIL_NOT_VOLATILE) \
-    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS_IMPL(AtomicType, ValueType, UP_DETAIL_VOLATILE)
 
 #define UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS_IMPL(AtomicType, ValueType, Volatile) \
     inline UPALWAYSINLINE \
@@ -824,11 +813,10 @@ namespace up
     UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS_IMPL(AtomicType, ValueType, UP_DETAIL_NOT_VOLATILE) \
     UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS_IMPL(AtomicType, ValueType, UP_DETAIL_VOLATILE)
 
-    UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS()
-    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(atomic_address, void*)
-    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(atomic_const_address, void const*)
-    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(atomic_volatile_address, void volatile*)
-    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(atomic_const_volatile_address, void const volatile*)
+    UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS(UP_DETAIL_NOT_VOLATILE)
+    UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS(UP_DETAIL_VOLATILE)
+    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(UP_DETAIL_NOT_VOLATILE)
+    UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS(UP_DETAIL_VOLATILE)
     UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS(atomic_schar, signed char)
     UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS(atomic_short, short)
     UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS(atomic_int, int)
@@ -853,9 +841,7 @@ namespace up
 #undef UP_DETAIL_VOLATILE
 #undef UP_DETAIL_NOT_VOLATILE
 #undef UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS
-#undef UP_DETAIL_DEFINE_ATOMIC_FREE_FUNCTIONS_IMPL
 #undef UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS
-#undef UP_DETAIL_DEFINE_ATOMIC_ADDRESS_FREE_FUNCTIONS_IMPL
 #undef UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS
 #undef UP_DETAIL_DEFINE_ATOMIC_INTEGERAL_FREE_FUNCTIONS_IMPL
 

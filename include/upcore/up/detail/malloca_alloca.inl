@@ -29,10 +29,10 @@
 #   error "Do not include this header directly. Instead include <up/cstdlib.hpp>"
 #endif
 
-#if (SIZE_MAX == 0xFFFFFFFFu)
-#   define UP_DETAIL_MALLOCA_MAGIC 0xDEADBEEFu
-#elif (SIZE_MAX == 0xFFFFFFFFFFFFFFFFull)
+#if SIZE_MAX >= 0xFFFFFFFFFFFFFFFFull
 #   define UP_DETAIL_MALLOCA_MAGIC 0xBADF00D0DEADBEEFull
+#else
+#   define UP_DETAIL_MALLOCA_MAGIC 0xDEADBEEFu
 #endif
 
 #define UP_DETAIL_MALLOCA_MAGIC_SIZE \

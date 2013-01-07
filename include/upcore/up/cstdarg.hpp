@@ -26,7 +26,7 @@
 #define UP_CSTDARG_HPP
 
 #include <up/prolog.hpp>
-#include <cstdarg>
+#include <stdarg.h>
 
 #ifndef va_copy
 #   define va_copy(dst, src) ((dst) = (src), (void)0)
@@ -34,7 +34,7 @@
 
 namespace up
 {
-    using ::std::va_list;
+    using ::va_list;
 }
 
 #endif

@@ -23,9 +23,9 @@
 //
 
 #include <up/math/float4.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/ctime.hpp>
 #include <up/test.hpp>
+#include <up/utility.hpp>
 #include <random>
 
 namespace math_float4

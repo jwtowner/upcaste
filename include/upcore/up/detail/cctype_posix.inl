@@ -31,7 +31,7 @@
 
 namespace up
 {
-    using ::std::isblank;
+    using ::isblank;
 #ifdef UP_HAS_POSIX_LOCALE
     using ::isalnum_l;
     using ::isalpha_l;

@@ -26,19 +26,27 @@
 #define UP_CSTDDEF_HPP
 
 #include <up/prolog.hpp>
-#include <cstddef>
+#include <stddef.h>
+
+#ifdef UP_HAS_POSIX_SSIZE
+#   include <sys/types.h>
+#elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
+    extern "C" { typedef ptrdiff_t ssize_t; }
+#else
+    extern "C" { typedef long ssize_t; }
+#endif
 
 namespace up
 {
-    using ::std::ptrdiff_t;
-    using ::std::size_t;
-    typedef ptrdiff_t ssize_t;
+    using ::ptrdiff_t;
+    using ::size_t;
+    using ::ssize_t;
 
 #ifndef UP_HAS_STDC_MAX_ALIGN
     union LIBUPCOREAPI max_align_t
     {
         int (max_align_t::*mfp)(int);
-        int max_align_t::* mp;
+        int max_align_t::*mp;
         int (*fp)(int);
         void* p;
         ptrdiff_t pt;
@@ -54,11 +62,11 @@ namespace up
         char c;
     };
 #else
-    using ::std::max_align_t;
+    using ::max_align_t;
 #endif
 
 #ifndef UP_NO_NULLPTR
-    using ::std::nullptr_t;
+    typedef decltype(nullptr) nullptr_t;
 #else
     class LIBUPCOREAPI nullptr_t
     {
@@ -82,7 +90,7 @@ namespace up
 #endif
 
 #if defined(UP_HAS_STDC_WCHAR) && defined(UP_NO_NATIVE_WCHAR_T)
-    using ::std::wchar_t;
+    using ::wchar_t;
 #endif
 }
 

@@ -146,9 +146,156 @@ AC_DEFUN(
 
 AC_MSG_NOTICE([------ Standard C/C++ Library Headers ------])
 
-# UP_HAS_STDCXX_ATOMIC_CXX11
+# UP_HAS_STDC_INTTYPES
 
-AC_MSG_CHECKING([for C++11 atomic compliance])
+AC_CHECK_HEADER(
+    [inttypes.h],
+    [AC_MSG_CHECKING([for inttypes.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <inttypes.h> ]],
+            [
+                imaxabs(-5);
+                imaxdiv(1000, 50);
+                strtoimax("123", 0, 0);
+                strtoumax("123", 0, 0);
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_INTTYPES)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDC_LOCALE
+
+AC_CHECK_HEADER(
+    [locale.h],
+    [AC_MSG_CHECKING([for locale.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <locale.h> ]],
+            [
+                setlocale(LC_ALL, "C");
+                setlocale(LC_COLLATE, "C");
+                setlocale(LC_CTYPE, "C");
+                setlocale(LC_MONETARY, "C");
+                setlocale(LC_NUMERIC, "C");
+                setlocale(LC_TIME, "C");
+                localeconv();
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_LOCALE)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDC_MATH_C99
+
+AC_CHECK_HEADER(
+    [math.h],
+    [AC_MSG_CHECKING([for math.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <math.h> ]],
+            [
+                acosh(1.0);
+                asinh(1.0);
+                atanh(1.0);
+                erf(1.0);
+                erfc(1.0);
+                lgamma(1.0);
+                tgamma(1.0);
+                nan("1234");
+                fpclassify(-1241.0);
+                signbit(-1.0);
+                rint(-66.43);
+                round(44.6);
+                trunc(612.512);
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_MATH_C99)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDC_THREADS
+
+AC_CHECK_HEADER(
+    [threads.h],
+    [AC_MSG_CHECKING([for threads.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <threads.h> ]],
+            [
+                thrd_yield();
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_THREADS)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDC_TIME
+
+AC_CHECK_HEADER(
+    [time.h],
+    [AC_MSG_CHECKING([for time.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <time.h> ]],
+            [
+                clock();
+                difftime(time_t(), time_t());
+                mktime(0);
+                time(0);
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_TIME)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDC_UCHAR
+
+AC_CHECK_HEADER(
+    [uchar.h],
+    [AC_MSG_CHECKING([for uchar.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <uchar.h> ]],
+            [
+                mbrtoc16(0, 0, 0, 0);
+                mbrtoc32(0, 0, 0, 0);
+                c16rtomb(0, 0, 0);
+                c32rtomb(0, 0, 0);
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_UCHAR)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDC_WCHAR
+
+AC_CHECK_HEADER([wchar.h])
+AC_CHECK_HEADER([wctype.h])
+
+AS_IF([test "${ac_cv_header_wchar_h+set}" = "set" -a "${ac_cv_header_wctype_h+set}" = "set"],
+    [AC_MSG_CHECKING([for wchar_t compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [
+                #include <wctype.h>
+                #include <wchar.h>
+                #include <stdlib.h>
+            ],
+            [
+                iswspace(L' ');
+                wcslen(L"hello");
+                wcstombs(0, 0, 0);
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_WCHAR)],
+        [AC_MSG_RESULT(no)])])
+
+# UP_HAS_STDCXX_ATOMIC
+
+AC_MSG_CHECKING([for C++11 <atomic> compliance])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [[ #include <atomic> ]],
@@ -235,12 +382,12 @@ AC_COMPILE_IFELSE(
         ]
     )],
     [AC_MSG_RESULT(yes)
-    AC_DEFINE(UP_HAS_STDCXX_ATOMIC_CXX11)],
+    AC_DEFINE(UP_HAS_STDCXX_ATOMIC)],
     [AC_MSG_RESULT(no)])
 
-# UP_HAS_STDCXX_TYPE_TRAITS_CXX11
+# UP_HAS_STDCXX_TYPE_TRAITS
 
-AC_MSG_CHECKING([for C++11 type_traits compliance])
+AC_MSG_CHECKING([for C++11 <type_traits> compliance])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [[ #include <type_traits> ]],
@@ -254,263 +401,9 @@ AC_COMPILE_IFELSE(
         ]
     )],
     [AC_MSG_RESULT(yes)
-    AC_DEFINE(UP_HAS_STDCXX_TYPE_TRAITS_CXX11)],
+    AC_DEFINE(UP_HAS_STDCXX_TYPE_TRAITS)],
     [AC_MSG_RESULT(no)])
 
-# UP_HAS_STDC_INTTYPES_CXX11
-
-have_cinttypes_cxx11="no"
-
-AC_CHECK_HEADER(
-    [cinttypes],
-    [AC_MSG_CHECKING([for cinttypes compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <cinttypes> ]],
-            [
-                std::imaxabs(-5);
-                std::imaxdiv(1000, 50);
-                std::strtoimax("123", 0, 0);
-                std::strtoumax("123", 0, 0);
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_INTTYPES_CXX11)
-        have_cinttypes_cxx11="yes"],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_INTTYPES_C99
-
-AS_IF([test "x${have_cinttypes_cxx11}" != "xyes"],
-    [AC_CHECK_HEADER(
-        [inttypes.h],
-        [AC_MSG_CHECKING([for inttypes.h compliance])
-        AC_COMPILE_IFELSE(
-            [AC_LANG_PROGRAM(
-                [[ #include <inttypes.h> ]],
-                [
-                    imaxabs(-5);
-                    imaxdiv(1000, 50);
-                    strtoimax("123", 0, 0);
-                    strtoumax("123", 0, 0);
-                ]
-            )],
-            [AC_MSG_RESULT(yes)
-            AC_DEFINE(UP_HAS_STDC_INTTYPES_C99)],
-            [AC_MSG_RESULT(no)])])])
-
-# UP_HAS_STDC_LOCALE
-
-AC_CHECK_HEADER(
-    [clocale],
-    [AC_MSG_CHECKING([for clocale compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <clocale> ]],
-            [
-                std::setlocale(LC_ALL, "C");
-                std::setlocale(LC_COLLATE, "C");
-                std::setlocale(LC_CTYPE, "C");
-                std::setlocale(LC_MONETARY, "C");
-                std::setlocale(LC_NUMERIC, "C");
-                std::setlocale(LC_TIME, "C");
-                std::localeconv();
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_LOCALE)],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_MATH_CXX11
-
-have_cmath_cxx11="no"
-AC_CHECK_HEADER(
-    [cmath],
-    [AC_MSG_CHECKING([for cmath compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <cmath> ]],
-            [
-                std::acosh(1.0);
-                std::asinh(1.0);
-                std::atanh(1.0);
-                std::erf(1.0);
-                std::erfc(1.0);
-                std::lgamma(1.0);
-                std::tgamma(1.0);
-                std::nan("1234");
-                std::fpclassify(-1241.0);
-                std::signbit(-1.0);
-                std::rint(-66.43);
-                std::round(44.6);
-                std::trunc(612.512);
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_MATH_CXX11)
-        have_cmath_cxx11="yes"],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_MATH_C99
-
-AS_IF([test "x${have_cmath_cxx11}" != "xyes"],
-    [AC_CHECK_HEADER(
-        [math.h],
-        [AC_MSG_CHECKING([for math.h compliance])
-        AC_COMPILE_IFELSE(
-            [AC_LANG_PROGRAM(
-                [[ #include <math.h> ]],
-                [
-                    acosh(1.0);
-                    asinh(1.0);
-                    atanh(1.0);
-                    erf(1.0);
-                    erfc(1.0);
-                    lgamma(1.0);
-                    tgamma(1.0);
-                    nan("1234");
-                    fpclassify(-1241.0);
-                    signbit(-1.0);
-                    rint(-66.43);
-                    round(44.6);
-                    trunc(612.512);
-                ]
-            )],
-            [AC_MSG_RESULT(yes)
-            AC_DEFINE(UP_HAS_STDC_MATH_C99)],
-            [AC_MSG_RESULT(no)])])])
-
-# UP_HAS_STDC_STDALIGN
-
-AC_CHECK_HEADER(
-    [cstdalign],
-    [AC_MSG_CHECKING([for cstdalign compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <cstdalign> ]],
-            [
-                size_t const x = alignof(double);
-                alignas(16) float y = 0.0f;
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_STDALIGN)],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_STDBOOL
-
-AC_CHECK_HEADER(
-    [cstdbool],
-    [AC_MSG_CHECKING([for cstdbool compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <cstdbool> ]],
-            [
-                bool x = true;
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_STDBOOL)],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_TIME
-
-AC_CHECK_HEADER(
-    [threads.h],
-    [AC_MSG_CHECKING([for threads.h compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <threads.h> ]],
-            [
-                thrd_yield();
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_THREADS)],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_TIME
-
-AC_CHECK_HEADER(
-    [ctime],
-    [AC_MSG_CHECKING([for ctime compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <ctime> ]],
-            [
-                std::clock();
-                std::difftime(std::time_t(), std::time_t());
-                std::mktime(0);
-                std::time(0);
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_TIME)],
-        [AC_MSG_RESULT(no)])])
-
-# UP_HAS_STDC_UCHAR
-
-have_cuchar_cxx11="no"
-AC_CHECK_HEADER(
-    [cuchar],
-    [AC_MSG_CHECKING([for cuchar compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[ #include <cuchar> ]],
-            [
-                std::mbrtoc16(0, 0, 0, 0);
-                std::mbrtoc32(0, 0, 0, 0);
-                std::c16rtomb(0, 0, 0);
-                std::c32rtomb(0, 0, 0);
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_UCHAR_CXX11)
-        have_cuchar_cxx11="yes"],
-        [AC_MSG_RESULT(no)])])
-
-AS_IF([test "x${have_cuchar_cxx11}" != "xyes"],
-    [AC_CHECK_HEADER(
-        [uchar.h],
-        [AC_MSG_CHECKING([for uchar.h compliance])
-        AC_COMPILE_IFELSE(
-            [AC_LANG_PROGRAM(
-                [[ #include <uchar.h> ]],
-                [
-                    mbrtoc16(0, 0, 0, 0);
-                    mbrtoc32(0, 0, 0, 0);
-                    c16rtomb(0, 0, 0);
-                    c32rtomb(0, 0, 0);
-                ]
-            )],
-            [AC_MSG_RESULT(yes)
-            AC_DEFINE(UP_HAS_STDC_UCHAR_C11)],
-            [AC_MSG_RESULT(no)])])])
-
-# UP_HAS_STDC_WCHAR
-
-AC_CHECK_HEADER([cwchar])
-AC_CHECK_HEADER([cwctype])
-
-if [test "${ac_cv_header_cwchar+set}" = "set" -a "${ac_cv_header_cwctype+set}" = "set"] ; then
-    AC_MSG_CHECKING([for wchar_t compliance])
-    AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [
-                #include <cwctype>
-                #include <cwchar>
-                #include <cstdlib>
-            ],
-            [
-                std::iswspace(L' ');
-                std::wcslen(L"hello");
-                std::wcstombs(0, 0, 0);
-            ]
-        )],
-        [AC_MSG_RESULT(yes)
-        AC_DEFINE(UP_HAS_STDC_WCHAR)],
-        [AC_MSG_RESULT(no)])
-fi
 
 #############################################################################
 # Standard C/C++ Library Features
@@ -523,7 +416,7 @@ AC_MSG_NOTICE([------ Standard C/C++ Library Features ------])
 AC_MSG_CHECKING([for alloca])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdlib> ]],
+        [[ #include <stdlib.h> ]],
         [[ void* p = alloca(256); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -535,7 +428,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for aligned_alloc])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdlib> ]],
+        [[ #include <stdlib.h> ]],
         [[ void* p = aligned_alloc(16, 256); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -547,8 +440,8 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for max_align_t])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstddef> ]],
-        [[ std::max_align_t x; ]]
+        [[ #include <stddef.h> ]],
+        [[ max_align_t x; ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_STDC_MAX_ALIGN)],
@@ -560,7 +453,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for snprintf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdio.h> ]],
         [[ snprintf(0, 0, "foo %d bar", 42); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -572,7 +465,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strtof])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdlib.h> ]],
         [[ strtof("44e+12", 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -584,7 +477,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strtod])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdlib.h> ]],
         [[ strtod("44e+12", 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -596,7 +489,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strtold])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdlib.h> ]],
         [[ strtold("44e+12", 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -608,7 +501,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strtoll])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdlib.h> ]],
         [[ strtoll("44", 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -620,7 +513,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strtoull])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdlib.h> ]],
         [[ strtoull("44", 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -632,7 +525,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for at_quick_exit and quick_exit])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdlib> ]],
+        [[ #include <stdlib.h> ]],
         [
             at_quick_exit(NULL);
             quick_exit(EXIT_SUCCESS);
@@ -647,7 +540,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for timespec_get])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <ctime> ]],
+        [[ #include <time.h> ]],
         [[ timespec_get(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -660,7 +553,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for _Exit])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdlib> ]],
+        [[ #include <stdlib.h> ]],
         [[ _Exit(EXIT_SUCCESS); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -672,7 +565,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcstof])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcstof(L"44e+12", 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -684,7 +577,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcstod])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcstod(L"44e+12", 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -696,7 +589,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcstold])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcstold(L"44e+12", 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -708,7 +601,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcstoll])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcstoll(L"44", 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -720,7 +613,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcstoull])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcstoull(L"44", 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -733,8 +626,8 @@ AC_MSG_CHECKING([for vfscanf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
         ],
         [
             va_list ap;
@@ -751,8 +644,8 @@ AC_MSG_CHECKING([for vscanf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
         ],
         [
             va_list ap;
@@ -769,8 +662,8 @@ AC_MSG_CHECKING([for vsscanf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
         ],
         [
             va_list ap;
@@ -787,8 +680,8 @@ AC_MSG_CHECKING([for vsnprintf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
         ],
         [
             va_list ap;
@@ -871,7 +764,7 @@ AC_MSG_CHECKING([for posix locale extensions])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <clocale>
+            #include <locale.h>
         ],
         [
             newlocale(LC_ALL, "C", 0);
@@ -890,8 +783,8 @@ AC_MSG_CHECKING([for asprintf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
         ],
         [[ asprintf(0, "upcaste"); ]]
     )],
@@ -905,8 +798,8 @@ AC_MSG_CHECKING([for vasprintf])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
         [
-            #include <cstdarg>
-            #include <cstdio>
+            #include <stdarg.h>
+            #include <stdio.h>
         ],
         [
             va_list ap;
@@ -922,7 +815,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for fseeko])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdio.h> ]],
         [[ fseeko(0, 0, SEEK_SET); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -934,7 +827,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for ftello])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdio.h> ]],
         [[ ftello(0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -946,7 +839,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for getdelim])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdio.h> ]],
         [[ getdelim(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -958,7 +851,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for getline])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdio.h> ]],
         [[ getline(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -970,7 +863,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for getwdelim])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ getwdelim(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -982,7 +875,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for getwline])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ getwline(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -994,7 +887,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for memalign])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdlib> ]],
+        [[ #include <stdlib.h> ]],
         [[ int r = posix_memalign(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1006,7 +899,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for fmemopen])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstdio> ]],
+        [[ #include <stdio.h> ]],
         [ 
             fmemopen(0, 0, "wb");
             open_memstream(0, 0);
@@ -1021,7 +914,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for memccpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ memccpy(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1033,7 +926,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wmemccpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wmemccpy(0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1045,7 +938,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for mbsnrtowcs])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ mbsnrtowcs(0, 0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1057,11 +950,23 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcsnrtombs])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcsnrtombs(0, 0, 0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_WCSNRTOMBS)],
+    [AC_MSG_RESULT(no)])
+
+# UP_HAS_POSIX_SSIZE
+
+AC_MSG_CHECKING([for ssize_t])
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[ #include <sys/types.h> ]],
+        [[ ssize_t x = 0; ]]
+    )],
+    [AC_MSG_RESULT(yes)
+    AC_DEFINE(UP_HAS_POSIX_SSIZE)],
     [AC_MSG_RESULT(no)])
 
 # UP_HAS_POSIX_STPCPY
@@ -1069,7 +974,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for stpcpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ stpcpy(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1081,7 +986,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for stpncpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ stpncpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1093,8 +998,8 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strdup])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
-        [[ strdup(0); ]]
+        [[ #include <string.h> ]],
+        [[ strdup("upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_STRDUP)],
@@ -1105,7 +1010,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strcasecmp])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ strcasecmp("upcaste", "upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1117,7 +1022,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strncasecmp])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ strncasecmp("upcaste", "upcaste", 7); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1129,7 +1034,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strnlen])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ strnlen("upcaste", 7); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1141,7 +1046,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strtok_r]) 
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ strtok_r(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1153,7 +1058,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcpcpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcpcpy(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1165,7 +1070,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcpncpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcpncpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1177,8 +1082,8 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcsdup])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
-        [[ wcsdup(0); ]]
+        [[ #include <wchar.h> ]],
+        [[ wcsdup(L"upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
     AC_DEFINE(UP_HAS_POSIX_WCSDUP)],
@@ -1189,7 +1094,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcscasecmp])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcscasecmp(L"upcaste", L"upcaste"); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1201,7 +1106,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcsncasecmp])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcsncasecmp(L"upcaste", L"upcaste", 7); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1213,7 +1118,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcsnlen])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcsnlen(L"hello world", 11); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1231,7 +1136,7 @@ AC_MSG_NOTICE([------ GNU C Library Functions ------])
 AC_MSG_CHECKING([for mempcpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ mempcpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1243,7 +1148,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wmempcpy])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wmempcpy(0, 0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1255,7 +1160,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for strndup])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [[ strndup(0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1267,7 +1172,7 @@ AC_COMPILE_IFELSE(
 AC_MSG_CHECKING([for wcsndup])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cwchar> ]],
+        [[ #include <wchar.h> ]],
         [[ wcsndup(0, 0); ]]
     )],
     [AC_MSG_RESULT(yes)
@@ -1285,7 +1190,7 @@ AC_MSG_NOTICE([------ BSD C Library Functions ------])
 AC_MSG_CHECKING([for memset_pattern])
 AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
-        [[ #include <cstring> ]],
+        [[ #include <string.h> ]],
         [
             memset_pattern4(0, 0, 0);
             memset_pattern8(0, 0, 0);

@@ -22,10 +22,10 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/hash.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/ctime.hpp>
+#include <up/hash.hpp>
 #include <up/test.hpp>
+#include <up/utility.hpp>
 #include <random>
 
 #if !defined(UP_NO_SIMD) && defined(UP_SIMD_SSE_4_2)

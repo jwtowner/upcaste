@@ -29,7 +29,6 @@
 #   error "Do not include this header directly. Instead include <up/sparsemap.hpp> or <up/sparseset.hpp>"
 #endif
 
-#include <up/cassert.hpp>
 #include <up/bitwise.hpp>
 #include <up/memory.hpp>
 #include <up/slist.hpp>

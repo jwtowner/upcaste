@@ -32,15 +32,15 @@
 #   error "Header file unavailable! Target configuration, compiler, or platform does not support wchar_t!"
 #endif
 
-#include <cwchar>
+#include <wchar.h>
 
 namespace up
 {
-    using ::std::wmemchr;
-    using ::std::wmemcmp;
-    using ::std::wmemcpy;
-    using ::std::wmemmove;
-    using ::std::wmemset;
+    using ::wmemchr;
+    using ::wmemcmp;
+    using ::wmemcpy;
+    using ::wmemmove;
+    using ::wmemset;
 
     extern LIBUPCOREAPI UPPURE UPNONNULL(1)
     wchar_t const* wmemrchr(wchar_t const* s, wchar_t c, size_t n) noexcept;
@@ -64,50 +64,50 @@ namespace up
     using ::wmempcpy;
 #endif
 
-    using ::std::mbstate_t;
-    using ::std::wint_t;
-    using ::std::btowc;
-    using ::std::fgetwc;
-    using ::std::fgetws;
-    using ::std::fwide;
-    using ::std::fwprintf;
-    using ::std::fwscanf;
-    using ::std::getwc;
-    using ::std::getwchar;
-    using ::std::mbrlen;
-    using ::std::mbrtowc;
-    using ::std::mbsinit;
-    using ::std::mbsrtowcs;
-    using ::std::putwc;
-    using ::std::putwchar;
-    using ::std::swprintf;
-    using ::std::swscanf;
-    using ::std::ungetwc;
-    using ::std::vfwprintf;
-    using ::std::vswprintf;
-    using ::std::vwprintf;
-    using ::std::wcrtomb;
-    using ::std::wcscat;
-    using ::std::wcschr;
-    using ::std::wcscmp;
-    using ::std::wcscoll;
-    using ::std::wcscpy;
-    using ::std::wcscspn;
-    using ::std::wcslen;
-    using ::std::wcsncat;
-    using ::std::wcsncmp;
-    using ::std::wcsncpy;
-    using ::std::wcspbrk;
-    using ::std::wcsrchr;
-    using ::std::wcsrtombs;
-    using ::std::wcsspn;
-    using ::std::wcsstr;
-    using ::std::wcstol;
-    using ::std::wcstoul;
-    using ::std::wcsxfrm;
-    using ::std::wctob;
-    using ::std::wprintf;
-    using ::std::wscanf;
+    using ::mbstate_t;
+    using ::wint_t;
+    using ::btowc;
+    using ::fgetwc;
+    using ::fgetws;
+    using ::fwide;
+    using ::fwprintf;
+    using ::fwscanf;
+    using ::getwc;
+    using ::getwchar;
+    using ::mbrlen;
+    using ::mbrtowc;
+    using ::mbsinit;
+    using ::mbsrtowcs;
+    using ::putwc;
+    using ::putwchar;
+    using ::swprintf;
+    using ::swscanf;
+    using ::ungetwc;
+    using ::vfwprintf;
+    using ::vswprintf;
+    using ::vwprintf;
+    using ::wcrtomb;
+    using ::wcscat;
+    using ::wcschr;
+    using ::wcscmp;
+    using ::wcscoll;
+    using ::wcscpy;
+    using ::wcscspn;
+    using ::wcslen;
+    using ::wcsncat;
+    using ::wcsncmp;
+    using ::wcsncpy;
+    using ::wcspbrk;
+    using ::wcsrchr;
+    using ::wcsrtombs;
+    using ::wcsspn;
+    using ::wcsstr;
+    using ::wcstol;
+    using ::wcstoul;
+    using ::wcsxfrm;
+    using ::wctob;
+    using ::wprintf;
+    using ::wscanf;
 
 #ifndef UP_HAS_POSIX_GETWDELIM
     extern LIBUPCOREAPI UPNONNULL(4)
@@ -123,35 +123,35 @@ namespace up
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     float wcstof(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr) noexcept;
 #else
-    using ::std::wcstof;
+    using ::wcstof;
 #endif
 
 #ifndef UP_HAS_STDC_WCSTOD
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     double wcstod(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr) noexcept;
 #else
-    using ::std::wcstod;
+    using ::wcstod;
 #endif
 
 #ifndef UP_HAS_STDC_WCSTOLD
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     long double wcstold(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr) noexcept;
 #else
-    using ::std::wcstold;
+    using ::wcstold;
 #endif
 
 #ifndef UP_HAS_STDC_WCSTOLL
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     long long wcstoll(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr, int base) noexcept;
 #else
-    using ::std::wcstoll;
+    using ::wcstoll;
 #endif
 
 #ifndef UP_HAS_STDC_WCSTOULL
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     unsigned long wcstoull(wchar_t const* UPRESTRICT nptr, wchar_t** UPRESTRICT endptr, int base) noexcept;
 #else
-    using ::std::wcstoull;
+    using ::wcstoull;
 #endif
 
 #ifndef UP_HAS_POSIX_MBSNRTOWCS

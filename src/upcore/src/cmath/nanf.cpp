@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#if !defined(UP_HAS_STDC_MATH_CXX11) && !defined(UP_HAS_STDC_MATH_C99)
+#ifndef UP_HAS_STDC_MATH_C99
 
 #include <up/cmath.hpp>
 #include <up/cstdlib.hpp>

@@ -27,15 +27,15 @@
 
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
-#include <cstring>
+#include <string.h>
 
 namespace up
 {
-    using ::std::memchr;
-    using ::std::memcmp;
-    using ::std::memcpy;
-    using ::std::memmove;
-    using ::std::memset;
+    using ::memchr;
+    using ::memcmp;
+    using ::memcpy;
+    using ::memmove;
+    using ::memset;
 
     extern LIBUPCOREAPI UPPURE UPNONNULL(1)
     void const* memrchr(void const* s, int c, size_t n) noexcept;
@@ -80,23 +80,23 @@ namespace up
     extern LIBUPCOREAPI UPNONNULL(1,2)
     void* memset_pattern32(void* UPRESTRICT s, void const* UPRESTRICT p, size_t n) noexcept;
     
-    using ::std::strcat;
-    using ::std::strchr;
-    using ::std::strcmp;
-    using ::std::strcpy;
-    using ::std::strcspn;
-    using ::std::strerror;
-    using ::std::strlen;
-    using ::std::strncat;
-    using ::std::strncmp;
-    using ::std::strncpy;
-    using ::std::strpbrk;
-    using ::std::strrchr;
-    using ::std::strspn;
-    using ::std::strstr;
-    using ::std::strtok;
-    using ::std::strcoll;
-    using ::std::strxfrm;
+    using ::strcat;
+    using ::strchr;
+    using ::strcmp;
+    using ::strcpy;
+    using ::strcspn;
+    using ::strerror;
+    using ::strlen;
+    using ::strncat;
+    using ::strncmp;
+    using ::strncpy;
+    using ::strpbrk;
+    using ::strrchr;
+    using ::strspn;
+    using ::strstr;
+    using ::strtok;
+    using ::strcoll;
+    using ::strxfrm;
 
 #ifndef UP_HAS_POSIX_STPCPY
     extern LIBUPCOREAPI UPNONNULL(1,2)

@@ -29,27 +29,13 @@
 #ifdef UP_HAS_STDC_WCHAR
 #   include <up/cwchar.hpp>
 #endif
-#if defined(UP_HAS_STDC_UCHAR_CXX11)
-#   include <cuchar>
-#elif defined(UP_HAS_STDC_UCHAR_C99)
+#ifdef UP_HAS_STDC_UCHAR
 #   include <uchar.h>
 #endif
 
 namespace up
 {
-#if defined(UP_HAS_STDC_UCHAR_CXX11)
-#ifdef UP_NO_NATIVE_CHAR16_T
-    using ::std::char16_t;
-#endif
-#ifdef UP_NO_NATIVE_CHAR32_T
-    using ::std::char32_t;
-#endif
-    using ::std::mbstate_t;
-    using ::std::c16rtomb;
-    using ::std::c32rtomb;
-    using ::std::mbrtoc16;
-    using ::std::mbrtoc32;
-#elif defined(UP_HAS_STDC_UCHAR_C99)
+#ifdef UP_HAS_STDC_UCHAR
 #ifdef UP_NO_NATIVE_CHAR16_T
     using ::char16_t;
 #endif

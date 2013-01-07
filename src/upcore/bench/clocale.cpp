@@ -25,8 +25,8 @@
 #include <up/cctype.hpp>
 #include <up/cwctype.hpp>
 #include <up/clocale.hpp>
-#include <up/cstdatomic.hpp>
 #include <up/test.hpp>
+#include <up/utility.hpp>
 #include <locale>
 
 namespace clocale

@@ -26,46 +26,53 @@
 #define UP_CSTDINT_HPP
 
 #include <up/prolog.hpp>
-#include <cstdint>
+
+#ifndef __STDC_CONSTANT_MACROS
+#   define __STDC_CONSTANT_MACROS
+#endif
+#ifndef __STDC_LIMIT_MACROS
+#   define __STDC_LIMIT_MACROS
+#endif
+
+#include <stdint.h>
 
 #ifndef SSIZE_MAX
 #   define SSIZE_MAX (SIZE_MAX/2)
 #endif
-
 #ifndef SSIZE_MIN
 #   define SSIZE_MIN (-SSIZE_MAX-1)
 #endif
 
 namespace up
 {
-    using ::std::int_least8_t;
-    using ::std::int_least16_t;
-    using ::std::int_least32_t;
-    using ::std::int_least64_t;
-    using ::std::uint_least8_t;
-    using ::std::uint_least16_t;
-    using ::std::uint_least32_t;
-    using ::std::uint_least64_t;
-    using ::std::int_fast8_t;
-    using ::std::int_fast16_t;
-    using ::std::int_fast32_t;
-    using ::std::int_fast64_t;
-    using ::std::uint_fast8_t;
-    using ::std::uint_fast16_t;
-    using ::std::uint_fast32_t;
-    using ::std::uint_fast64_t;
-    using ::std::int8_t;
-    using ::std::int16_t;
-    using ::std::int32_t;
-    using ::std::int64_t;
-    using ::std::uint8_t;
-    using ::std::uint16_t;
-    using ::std::uint32_t;
-    using ::std::uint64_t;
-    using ::std::intmax_t;
-    using ::std::uintmax_t;
-    using ::std::intptr_t;
-	using ::std::uintptr_t;
+    using ::int_least8_t;
+    using ::int_least16_t;
+    using ::int_least32_t;
+    using ::int_least64_t;
+    using ::uint_least8_t;
+    using ::uint_least16_t;
+    using ::uint_least32_t;
+    using ::uint_least64_t;
+    using ::int_fast8_t;
+    using ::int_fast16_t;
+    using ::int_fast32_t;
+    using ::int_fast64_t;
+    using ::uint_fast8_t;
+    using ::uint_fast16_t;
+    using ::uint_fast32_t;
+    using ::uint_fast64_t;
+    using ::int8_t;
+    using ::int16_t;
+    using ::int32_t;
+    using ::int64_t;
+    using ::uint8_t;
+    using ::uint16_t;
+    using ::uint32_t;
+    using ::uint64_t;
+    using ::intmax_t;
+    using ::uintmax_t;
+    using ::intptr_t;
+	using ::uintptr_t;
 }
 
 #endif

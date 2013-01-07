@@ -26,39 +26,83 @@
 #define UP_CMATH_HPP
 
 #include <up/cfloat.hpp>
-#include <up/cstdlib.hpp>
-#include <cmath>
+#include <math.h>
 
 namespace up { namespace math
 {
-    using ::std::abs;
-    using ::std::acos;
-    using ::std::asin;
-    using ::std::atan;
-    using ::std::atan2;
-    using ::std::ceil;
-    using ::std::cos;
-    using ::std::cosh;
-    using ::std::exp;
-    using ::std::fabs;
-    using ::std::floor;
-    using ::std::fmod;
-    using ::std::frexp;
-    using ::std::ldexp;
-    using ::std::log;
-    using ::std::log10;
-    using ::std::modf;
-    using ::std::pow;
-    using ::std::sin;
-    using ::std::sinh;
-    using ::std::sqrt;
-    using ::std::tan;
-    using ::std::tanh;
+    using ::acos;
+    using ::asin;
+    using ::atan;
+    using ::atan2;
+    using ::ceil;
+    using ::cos;
+    using ::cosh;
+    using ::exp;
+    using ::fabs;
+    using ::floor;
+    using ::fmod;
+    using ::frexp;
+    using ::ldexp;
+    using ::log;
+    using ::log10;
+    using ::modf;
+    using ::pow;
+    using ::sin;
+    using ::sinh;
+    using ::sqrt;
+    using ::tan;
+    using ::tanh;
+
+#if UP_STDC_EXTENSIONS != UP_STDC_EXTENSIONS_MSVC
+    inline UPALWAYSINLINE float acos(float x) noexcept { return ::acosf(x); }
+    inline UPALWAYSINLINE float asin(float x) noexcept { return ::asinf(x); }
+    inline UPALWAYSINLINE float atan(float x) noexcept { return ::atanf(x); }
+    inline UPALWAYSINLINE float atan2(float x, float y) noexcept { return ::atan2f(x, y); }
+    inline UPALWAYSINLINE float ceil(float x) noexcept { return ::ceilf(x); }
+    inline UPALWAYSINLINE float cos(float x) noexcept { return ::cosf(x); }
+    inline UPALWAYSINLINE float cosh(float x) noexcept { return ::coshf(x); }
+    inline UPALWAYSINLINE float exp(float x) noexcept { return ::expf(x); }
+    inline UPALWAYSINLINE float fabs(float x) noexcept { return ::fabsf(x); }
+    inline UPALWAYSINLINE float floor(float x) noexcept { return ::floorf(x); }
+    inline UPALWAYSINLINE float fmod(float x, float y) noexcept { return ::fmodf(x, y); }
+    inline UPALWAYSINLINE float frexp(float x, int* y) noexcept { return ::frexpf(x, y); }
+    inline UPALWAYSINLINE float ldexp(float x, int y) noexcept { return ::ldexpf(x, y); }
+    inline UPALWAYSINLINE float log(float x) noexcept { return ::logf(x); }
+    inline UPALWAYSINLINE float log10(float x) noexcept { return ::log10f(x); }
+    inline UPALWAYSINLINE float modf(float x, float* y) noexcept { return ::modff(x, y); }
+    inline UPALWAYSINLINE float pow(float x, float y) noexcept { return ::powf(x, y); }
+    inline UPALWAYSINLINE float sin(float x) noexcept { return ::sinf(x); }
+    inline UPALWAYSINLINE float sinh(float x) noexcept { return ::sinhf(x); }
+    inline UPALWAYSINLINE float sqrt(float x) noexcept { return ::sqrtf(x); }
+    inline UPALWAYSINLINE float tan(float x) noexcept { return ::tanf(x); }
+    inline UPALWAYSINLINE float tanh(float x) noexcept { return ::tanhf(x); }
+
+    inline UPALWAYSINLINE long double acos(long double x) noexcept { return ::acosl(x); }
+    inline UPALWAYSINLINE long double asin(long double x) noexcept { return ::asinl(x); }
+    inline UPALWAYSINLINE long double atan(long double x) noexcept { return ::atanl(x); }
+    inline UPALWAYSINLINE long double atan2(long double x, long double y) noexcept { return ::atan2l(x, y); }
+    inline UPALWAYSINLINE long double ceil(long double x) noexcept { return ::ceill(x); }
+    inline UPALWAYSINLINE long double cos(long double x) noexcept { return ::cosl(x); }
+    inline UPALWAYSINLINE long double cosh(long double x) noexcept { return ::coshl(x); }
+    inline UPALWAYSINLINE long double exp(long double x) noexcept { return ::expl(x); }
+    inline UPALWAYSINLINE long double fabs(long double x) noexcept { return ::fabsl(x); }
+    inline UPALWAYSINLINE long double floor(long double x) noexcept { return ::floorl(x); }
+    inline UPALWAYSINLINE long double fmod(long double x, long double y) noexcept { return ::fmodl(x, y); }
+    inline UPALWAYSINLINE long double frexp(long double x, int* y) noexcept { return ::frexpl(x, y); }
+    inline UPALWAYSINLINE long double ldexp(long double x, int y) noexcept { return ::ldexpl(x, y); }
+    inline UPALWAYSINLINE long double log(long double x) noexcept { return ::logl(x); }
+    inline UPALWAYSINLINE long double log10(long double x) noexcept { return ::log10l(x); }
+    inline UPALWAYSINLINE long double modf(long double x, long double* y) noexcept { return ::modfl(x, y); }
+    inline UPALWAYSINLINE long double pow(long double x, long double y) noexcept { return ::powl(x, y); }
+    inline UPALWAYSINLINE long double sin(long double x) noexcept { return ::sinl(x); }
+    inline UPALWAYSINLINE long double sinh(long double x) noexcept { return ::sinhl(x); }
+    inline UPALWAYSINLINE long double sqrt(long double x) noexcept { return ::sqrtl(x); }
+    inline UPALWAYSINLINE long double tan(long double x) noexcept { return ::tanl(x); }
+    inline UPALWAYSINLINE long double tanh(long double x) noexcept { return ::tanhl(x); }
+#endif
 }}
 
-#if defined(UP_HAS_STDC_MATH_CXX11)
-#   include <up/detail/cmath_cxx11.inl>
-#elif defined(UP_HAS_STDC_MATH_C99)
+#ifdef UP_HAS_STDC_MATH_C99
 #   include <up/detail/cmath_c99.inl>
 #else
 #   include <up/detail/cmath_generic.inl>
@@ -67,13 +111,15 @@ namespace up { namespace math
 namespace up { namespace math
 {
     extern LIBUPCOREAPI UPNONNULLALL double frexp10(double x, int* exp) noexcept;
+    extern LIBUPCOREAPI double pow10(int n) noexcept;
+
     extern LIBUPCOREAPI UPNONNULLALL float frexp10(float x, int* exp) noexcept;
+    extern LIBUPCOREAPI float pow10f(int n) noexcept;
+
     extern LIBUPCOREAPI UPNONNULLALL long double frexp10(long double x, int* exp) noexcept;
+    extern LIBUPCOREAPI long double pow10l(int n) noexcept;
 
-    extern LIBUPCOREAPI UPPURE double pow10(int n) noexcept;
-    extern LIBUPCOREAPI UPPURE float pow10f(int n) noexcept;
-    extern LIBUPCOREAPI UPPURE long double pow10l(int n) noexcept;
-
+    inline UPALWAYSINLINE double abs(double x) noexcept { return fabs(x); }
     inline UPALWAYSINLINE double acospi(double x) noexcept { return acos(x) * DBL_1_PI; }
     inline UPALWAYSINLINE double asinpi(double x) noexcept { return asin(x) * DBL_1_PI; }
     inline UPALWAYSINLINE double atanpi(double x) noexcept { return atan(x) * DBL_1_PI; }
@@ -149,6 +195,7 @@ namespace up { namespace math
         return t * t * (3.0 - (2.0 * t));
     }
     
+    inline UPALWAYSINLINE float abs(float x) noexcept { return fabs(x); }
     inline UPALWAYSINLINE float acospi(float x) noexcept { return acos(x) * FLT_1_PI; }
     inline UPALWAYSINLINE float asinpi(float x) noexcept { return asin(x) * FLT_1_PI; }
     inline UPALWAYSINLINE float atanpi(float x) noexcept { return atan(x) * FLT_1_PI; }
@@ -224,6 +271,7 @@ namespace up { namespace math
         return t * t * (3.0f - (2.0f * t));
     }
 
+    inline UPALWAYSINLINE long double abs(long double x) noexcept { return fabs(x); }
     inline UPALWAYSINLINE long double acospi(long double x) noexcept { return acos(x) * LDBL_1_PI; }
     inline UPALWAYSINLINE long double asinpi(long double x) noexcept { return asin(x) * LDBL_1_PI; }
     inline UPALWAYSINLINE long double atanpi(long double x) noexcept { return atan(x) * LDBL_1_PI; }
@@ -308,21 +356,21 @@ namespace up { namespace math { namespace detail
     struct UPHIDDEN math_rebind<double>
     {
         static UPALWAYSINLINE UPNONNULLALL double nan(char const* tagp) noexcept { return ::up::math::nan(tagp); };
-        static UPALWAYSINLINE UPPURE double pow10(int n) noexcept { return ::up::math::pow10(n); };
+        static UPALWAYSINLINE double pow10(int n) noexcept { return ::up::math::pow10(n); };
     };
 
     template <>
     struct UPHIDDEN math_rebind<float>
     {
         static UPALWAYSINLINE UPNONNULLALL float nan(char const* tagp) noexcept { return ::up::math::nanf(tagp); };
-        static UPALWAYSINLINE UPPURE float pow10(int n) noexcept { return ::up::math::pow10f(n); };
+        static UPALWAYSINLINE float pow10(int n) noexcept { return ::up::math::pow10f(n); };
     };
 
     template <>
     struct UPHIDDEN math_rebind<long double>
     {
         static UPALWAYSINLINE UPNONNULLALL long double nan(char const* tagp) noexcept { return ::up::math::nanl(tagp); };
-        static UPALWAYSINLINE UPPURE long double pow10(int n) noexcept { return ::up::math::pow10l(n); };
+        static UPALWAYSINLINE long double pow10(int n) noexcept { return ::up::math::pow10l(n); };
     };
 }}}
 
@@ -335,11 +383,10 @@ namespace up { namespace math
     }
 
     template <class T>
-    inline UPALWAYSINLINE UPPURE
+    inline UPALWAYSINLINE
     T pow10(int n) noexcept {
         return ::up::math::detail::math_rebind<T>::pow10(n);
     }
 }}
 
 #endif
-

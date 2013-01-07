@@ -31,22 +31,22 @@
 #   error "Header file unavailable! Target configuration, compiler, or platform does not support timing!"
 #endif
 
-#include <ctime>
+#include <time.h>
 
 namespace up
 {
-    using ::std::clock_t;
-    using ::std::time_t;
-    using ::std::tm;
-    using ::std::asctime;
-    using ::std::clock;
-    using ::std::ctime;
-    using ::std::difftime;
-    using ::std::gmtime;
-    using ::std::localtime;
-    using ::std::mktime;
-    using ::std::strftime;
-    using ::std::time;
+    using ::clock_t;
+    using ::time_t;
+    using ::tm;
+    using ::asctime;
+    using ::clock;
+    using ::ctime;
+    using ::difftime;
+    using ::gmtime;
+    using ::localtime;
+    using ::mktime;
+    using ::strftime;
+    using ::time;
 }
 
 #if UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC

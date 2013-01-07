@@ -25,6 +25,7 @@
 #include <up/cstdlib.hpp>
 #include <up/cstdalign.hpp>
 #include <up/cstring.hpp>
+#include <up/cerrno.hpp>
 #include <up/bitwise.hpp>
 
 namespace up

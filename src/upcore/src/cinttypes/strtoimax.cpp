@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#if !defined(UP_HAS_STDC_INTTYPES_C99) && !defined(UP_HAS_STDC_INTTYPES_CXX11)
+#ifndef UP_HAS_STDC_INTTYPES
 
 #include <up/cinttypes.hpp>
 

@@ -22,10 +22,10 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/cstdatomic.hpp>
 #include <up/densemap.hpp>
 #include <up/sparsemap.hpp>
 #include <up/test.hpp>
+#include <up/utility.hpp>
 
 #if UP_COMPILER == UP_COMPILER_MSVC
 #   pragma warning(disable:4702)

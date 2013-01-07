@@ -29,8 +29,6 @@
 #   error "Do not include this header file directly! Instead include <up/cstdio.hpp>"
 #endif
 
-#ifdef UP_HAS_STDC_WCHAR
-#include <wchar.h>
 namespace up
 {
     typedef fpos_t off_t;
@@ -48,7 +46,14 @@ namespace up
         return ::_ftelli64(stream);
     }
 #endif
+}
 
+#ifdef UP_HAS_STDC_WCHAR
+
+#include <wchar.h>
+
+namespace up
+{
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     FILE* fopen(wchar_t const* UPRESTRICT filename, wchar_t const* UPRESTRICT mode) noexcept {
         return ::_wfopen(filename, mode);
@@ -74,6 +79,7 @@ namespace up
         return ::_wtmpnam(s);
     }
 }
+
 #endif
 
 #endif

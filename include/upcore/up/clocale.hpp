@@ -31,12 +31,12 @@
 #   error "Header file unavailable! Target configuration, compiler, or platform does not support locales!"
 #endif
 
-#include <clocale>
+#include <locale.h>
 
 namespace up
 {
-    using ::std::lconv;
-    using ::std::localeconv;
+    using ::lconv;
+    using ::localeconv;
 }
 
 #if defined(UP_HAS_POSIX_LOCALE) && (UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC)

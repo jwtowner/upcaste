@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#if !defined(UP_HAS_STDC_MATH_CXX11)
+#ifndef UP_HAS_STDC_MATH_C99
 
 #include <up/cmath.hpp>
 #include <up/cstdlib.hpp>
@@ -32,7 +32,7 @@
 
 namespace up { namespace math
 {
-    LIBUPCOREAPI UPPURE
+    LIBUPCOREAPI
     bool signbit(float x) noexcept {
 #if (FLT_MANT_DIG == 24) && (FLT_RADIX == 2)
         ieee754_binary32 bin;

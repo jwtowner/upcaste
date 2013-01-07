@@ -217,7 +217,7 @@ namespace up { namespace filesystem
 
 #if defined(UP_HAS_UTF8_FILESYSTEM) || !defined(UP_HAS_STDC_LOCALE)
         if (!d) { 
-            return static_cast<ssize_t>(u8sntowcslen(s. n));
+            return static_cast<ssize_t>(u8sntowcslen(s, n));
         }
         char const* source = s
         size_t length = u8sntowcs(d, &source, n, dsz);

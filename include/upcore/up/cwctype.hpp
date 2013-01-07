@@ -31,30 +31,30 @@
 #   error "Header file unavailable! Target configuration, compiler, or platform does not support wchar_t!"
 #endif
 
-#include <cwctype>
+#include <wctype.h>
 
 namespace up
 {
-    using ::std::wctrans_t;
-    using ::std::wctype_t;
-    using ::std::wint_t;
-    using ::std::iswalnum;
-    using ::std::iswalpha;
-    using ::std::iswcntrl;
-    using ::std::iswctype;
-    using ::std::iswdigit;
-    using ::std::iswlower;
-    using ::std::iswgraph;
-    using ::std::iswprint;
-    using ::std::iswpunct;
-    using ::std::iswspace;
-    using ::std::iswupper;
-    using ::std::iswxdigit;
-    using ::std::towctrans;
-    using ::std::towlower;
-    using ::std::towupper;
-    using ::std::wctrans;
-    using ::std::wctype;
+    using ::wctrans_t;
+    using ::wctype_t;
+    using ::wint_t;
+    using ::iswalnum;
+    using ::iswalpha;
+    using ::iswcntrl;
+    using ::iswctype;
+    using ::iswdigit;
+    using ::iswlower;
+    using ::iswgraph;
+    using ::iswprint;
+    using ::iswpunct;
+    using ::iswspace;
+    using ::iswupper;
+    using ::iswxdigit;
+    using ::towctrans;
+    using ::towlower;
+    using ::towupper;
+    using ::wctrans;
+    using ::wctype;
 }
 
 #if defined(UP_HAS_POSIX_LOCALE) && (UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC)

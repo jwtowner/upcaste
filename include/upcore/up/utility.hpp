@@ -100,6 +100,13 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE
+    void sink_dependency(T const& value) UPNOEXCEPT(is_nothrow_copy_constructible<T>::value) {
+        T volatile sinkhole(value);
+        UPIGNORE(sinkhole);
+    }
+
+    template <class T>
+    inline UPALWAYSINLINE
     void swap(T& a, T& b)
     UPNOEXCEPT(is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value) {
         T t(::up::move(a));

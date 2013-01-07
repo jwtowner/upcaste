@@ -47,7 +47,7 @@ namespace up { namespace detail
     };
 }}
 
-#ifdef UP_HAS_STDCXX_TYPE_TRAITS_CXX11
+#ifdef UP_HAS_STDCXX_TYPE_TRAITS
 #   include <up/detail/type_traits_cxx11.inl>
 #else
 #   include <up/detail/type_traits_generic.inl>

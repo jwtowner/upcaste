@@ -22,23 +22,33 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_CSTDATOMIC_PAUSE_MSVC_X86_X64_INL
-#define UP_DETAIL_CSTDATOMIC_PAUSE_MSVC_X86_X64_INL
+#ifndef UP_DETAIL_ATOMIC_FENCE_GCC_X86_X64_INL
+#define UP_DETAIL_ATOMIC_FENCE_GCC_X86_X64_INL
 
-#ifndef UP_CSTDATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/cstdatomic.hpp>"
+#ifndef UP_ATOMIC_HPP
+#   error "Do not include this file directly, instead include <up/atomic.hpp>"
 #endif
 
 namespace up
 {
     inline UPALWAYSINLINE
-    void atomic_signal_pause() noexcept {
-        _mm_pause();
+    void atomic_signal_fence(memory_order order) noexcept {
+        if (order != memory_order_seq_cst) {
+            __asm__ __volatile__ ( "" : : : "memory" );
+        }
+        else {
+            __asm__ __volatile__ ( "mfence" : : : "memory" );
+        }
     }
-    
+
     inline UPALWAYSINLINE
-    void atomic_thread_pause() noexcept {
-        _mm_pause();
+    void atomic_thread_fence(memory_order order) noexcept {
+        if (order != memory_order_seq_cst) {
+            __asm__ __volatile__ ( "" : : : "memory" );
+        }
+        else {
+            __asm__ __volatile__ ( "mfence" : : : "memory" );
+        }
     }
 }
 

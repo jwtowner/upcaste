@@ -51,7 +51,7 @@ namespace up { namespace math
         constexpr int pow10_table_size = static_cast<int>(sizeof(pow10_table) / sizeof(pow10_table[0]));
     }
 
-    LIBUPCOREAPI UPPURE
+    LIBUPCOREAPI
     double pow10(int n) noexcept {
         bool negative;
         double r;

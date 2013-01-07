@@ -22,16 +22,16 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_CSTDATOMIC_HPP
-#define UP_CSTDATOMIC_HPP
+#ifndef UP_ATOMIC_HPP
+#define UP_ATOMIC_HPP
 
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
 
-#ifdef UP_HAS_STDCXX_ATOMIC_CXX11
-#   include <up/detail/cstdatomic_cxx11.inl>
+#ifdef UP_HAS_STDCXX_ATOMIC
+#   include <up/detail/atomic_cxx11.inl>
 #else
-#   include <up/detail/cstdatomic_generic.inl>
+#   include <up/detail/atomic_generic.inl>
 #endif
 
 #ifndef ATOMIC_COUNT_INIT
@@ -40,13 +40,6 @@
 
 namespace up
 {
-    template <class T>
-    inline UPALWAYSINLINE
-    void sink_dependency(T const& value) UPNOEXCEPT(is_nothrow_copy_constructible<T>::value) {
-        T volatile sinkhole(value);
-        UPIGNORE(sinkhole);
-    }
-
     typedef atomic_int_least32_t atomic_count32;
     typedef atomic_int_least64_t atomic_count64;
 #ifdef UP_ARCHITECTURE_32BIT

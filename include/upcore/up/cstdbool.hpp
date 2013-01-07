@@ -26,11 +26,7 @@
 #define UP_CSTDBOOL_HPP
 
 #include <up/prolog.hpp>
-
-#ifdef UP_HAS_STDC_STDBOOL
-#   include <cstdbool>
-#else
-#   define __bool_true_false_are_defined 1
-#endif
+#undef __bool_true_false_are_defined
+#define __bool_true_false_are_defined 1
 
 #endif

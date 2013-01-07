@@ -23,11 +23,10 @@
 //
 
 #include <up/bitwise.hpp>
-#include <up/cstdatomic.hpp>
+#include <up/ctime.hpp>
 #include <up/memory.hpp>
 #include <up/page.hpp>
 #include <up/region.hpp>
-#include <up/ctime.hpp>
 #include <up/test.hpp>
 #include <random>
 

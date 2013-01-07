@@ -29,10 +29,10 @@
 #   error "Do not include this header file directly! Instead include <up/cwctype.hpp>"
 #endif
 
-#ifdef UP_HAS_POSIX_LOCALE
 namespace up
 {
-    using ::std::iswblank;
+    using ::iswblank;
+#ifdef UP_HAS_POSIX_LOCALE
     using ::iswalnum_l;
     using ::iswalpha_l;
     using ::iswblank_l;
@@ -51,7 +51,7 @@ namespace up
     using ::towupper_l;
     using ::wctrans_l;
     using ::wctype_l;
-}
 #endif
+}
 
 #endif

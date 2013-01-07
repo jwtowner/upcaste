@@ -29,6 +29,14 @@
 #   error "Do not include this header directly. Instead include <up/cfloat.hpp>"
 #endif
 
+#ifndef DECIMAL_DIG
+#   define DECIMAL_DIG __DECIMAL_DIG__
+#endif
+
+#ifndef FLT_EVAL_METHOD
+#   define FLT_EVAL_METHOD __FLT_EVAL_METHOD__
+#endif
+
 #define FLT_INFINITY    __builtin_inff()
 #define FLT_NAN         __builtin_nanf("")
 #define DBL_INFINITY    __builtin_inf()

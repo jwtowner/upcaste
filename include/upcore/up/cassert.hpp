@@ -80,7 +80,7 @@ namespace up
 
 #endif
 
-#include <cassert>
+#include <assert.h>
 
 #undef UPASSERT
 #undef UPASSERT_THROW

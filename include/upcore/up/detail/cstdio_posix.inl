@@ -31,6 +31,10 @@
 
 namespace up
 {
+#if defined(UP_HAS_POSIX_FSEEKO) || defined(UP_HAS_POSIX_FTELLO)
+    using ::off_t;
+#endif
+
 #ifdef UP_HAS_POSIX_FSEEKO
     using ::fseeko;
 #endif

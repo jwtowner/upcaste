@@ -26,6 +26,6 @@
 #define UP_CLIMITS_HPP
 
 #include <up/prolog.hpp>
-#include <climits>
+#include <limits.h>
 
 #endif
