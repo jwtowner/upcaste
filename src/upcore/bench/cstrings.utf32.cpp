@@ -23,15 +23,11 @@
 //
 
 #include <up/cuchar.hpp>
-#include <up/ctime.hpp>
+#include <up/random.hpp>
 #include <up/test.hpp>
-#include <up/utility.hpp>
-#include <random>
 
 namespace cstrings_utf32
 {
-    std::default_random_engine random_engine(static_cast<up::uint32_t>(up::time(nullptr) & 0xFFFFFFFF));
-
     enum data_source_generate_type
     {
         data_source_generate_garbage,
@@ -75,21 +71,23 @@ namespace cstrings_utf32
     private:
 
         void generate() {
+            up::default_random_engine random_engine(static_cast<up::uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
+
             if (gen_type_ == data_source_generate_garbage) {
-                std::uniform_int_distribution<char32_t> dist(1, 0x017FFFF);
+                up::uniform_int_distribution<char32_t> dist(1, 0x017FFFF);
                 for (size_t i = 0; i < size_; ++i) {
                     data_[i] = static_cast<char32_t>(dist(random_engine));
                 }
             }
             else if (gen_type_ == data_source_generate_ascii) {
-                std::uniform_int_distribution<char32_t> dist(1, 0x7F);
+                up::uniform_int_distribution<char32_t> dist(1, 0x7F);
                 for (size_t i = 0; i < size_; ++i) {
                     data_[i] = static_cast<char32_t>(dist(random_engine));
                 }
             }
             else {
                 char32_t min_char = (gen_type_ == data_source_generate_unicode) ? 0x80 : 0x01;
-                std::uniform_int_distribution<char32_t> dist(min_char, 0x010FFFF);
+                up::uniform_int_distribution<char32_t> dist(min_char, 0x010FFFF);
                 for (size_t i = 0; i < size_; ++i) {
                     char32_t c = static_cast<char32_t>(dist(random_engine));
                     if (0xD800 <= c && c < 0xE000) {

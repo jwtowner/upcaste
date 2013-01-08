@@ -619,6 +619,7 @@ namespace up { namespace detail { namespace
             decimal_point_end = decimal_point + decimal_point_length;
         }
         else {
+            decimal_point_length = 1;
             decimal_point = STR(".");
             decimal_point_end = decimal_point + 1;
         }

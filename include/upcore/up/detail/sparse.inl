@@ -50,10 +50,10 @@ namespace up
         slist_node node;
         Key const key;
         Value value;
-        inline UPALWAYSINLINE sparserecord(Key const& k, Value const& v) : key(k), value(v) { ::up::slist_construct(&node); }
-        inline UPALWAYSINLINE sparserecord(Key&& k, Value const& v) : key(::up::move(k)), value(v) { ::up::slist_construct(&node); }
-        inline UPALWAYSINLINE sparserecord(Key const& k, Value&& v) : key(k), value(::up::move(v)) { ::up::slist_construct(&node); }
-        inline UPALWAYSINLINE sparserecord(Key&& k, Value&& v) : key(::up::move(k)), value(::up::move(v)) { ::up::slist_construct(&node); }
+        inline UPALWAYSINLINE sparserecord(Key const& k, Value const& v) : key(k), value(v) { ::up::slist_init(&node); }
+        inline UPALWAYSINLINE sparserecord(Key&& k, Value const& v) : key(::up::move(k)), value(v) { ::up::slist_init(&node); }
+        inline UPALWAYSINLINE sparserecord(Key const& k, Value&& v) : key(k), value(::up::move(v)) { ::up::slist_init(&node); }
+        inline UPALWAYSINLINE sparserecord(Key&& k, Value&& v) : key(::up::move(k)), value(::up::move(v)) { ::up::slist_init(&node); }
     };
 
     template <class Key, class Value = nat_t>

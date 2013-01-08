@@ -62,6 +62,7 @@
 #include <up/memory.hpp>
 #include <up/page.hpp>
 #include <up/prolog.hpp>
+#include <up/random.hpp>
 #include <up/region.hpp>
 #include <up/slist.hpp>
 #include <up/sparsemap.hpp>

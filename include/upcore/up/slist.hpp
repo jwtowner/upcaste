@@ -78,7 +78,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE
-    void slist_construct(slist_node* node) noexcept {
+    void slist_init(slist_node* node) noexcept {
         node->next = nullptr;
     }
 

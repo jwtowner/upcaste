@@ -82,7 +82,7 @@ namespace up { namespace
 
     void UPCDECL log_init() noexcept {
         mtx_init(&log_monitor, mtx_plain);
-        list_construct(&log_sinks_head);
+        list_init(&log_sinks_head);
         log_sequence = 0;
         verify(!atexit(&log_term));
     }
@@ -116,7 +116,6 @@ namespace up
 #else
         // TODO: use syslog
         fputs(record->message, stderr);
-        fputc('\n', stderr);
         fflush(stderr);
 #endif
     }
@@ -124,14 +123,12 @@ namespace up
     LIBUPCOREAPI
     void UPCDECL stdout_log_handler(log_record const* record, void*) {
         fputs(record->message, stdout);
-        fputc('\n', stdout);
         fflush(stdout);
     }
 
     LIBUPCOREAPI
     void UPCDECL stderr_log_handler(log_record const* record, void*) {
         fputs(record->message, stderr);
-        fputc('\n', stderr);
         fflush(stderr);
     }
 
@@ -197,7 +194,7 @@ namespace up
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    void log_event(unsigned int level, char const* format, ...) {
+    void log_eventf(unsigned int level, char const* format, ...) {
         assert(format);
 
         char message[4096];
@@ -216,7 +213,7 @@ namespace up
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    void log_event(char const* category_name, unsigned int level, char const* format, ...) {
+    void log_eventf(char const* category_name, unsigned int level, char const* format, ...) {
         assert(format);
 
         char message[4096];
@@ -235,7 +232,7 @@ namespace up
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    void log_event_with_call_site(char const* file, long line, unsigned int level, char const* format, ...) {
+    void log_eventf_with_call_site(char const* file, long line, unsigned int level, char const* format, ...) {
         assert(format);
 
         char message[4096];
@@ -254,7 +251,7 @@ namespace up
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    void log_event_with_call_site(char const* file, long line, char const* category_name, unsigned int level, char const* format, ...) {
+    void log_eventf_with_call_site(char const* file, long line, char const* category_name, unsigned int level, char const* format, ...) {
         assert(format);
 
         char message[4096];

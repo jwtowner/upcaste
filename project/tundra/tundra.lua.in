@@ -143,7 +143,10 @@ Build {
 
 		local uptest = StaticLibrary {
 			Name = "uptest",
-			Env = { CPPPATH = { "include/upcore", "include/uptest" }, },
+			Env = {
+                CPPPATH = { "include/upcore", "include/uptest" },
+                CXXOPTS = { "-fexceptions", "-frtti" },
+            },
 			Sources = { CXXSourceGlob "src/uptest/src" },
 		}
 

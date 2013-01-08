@@ -144,40 +144,6 @@ namespace up
     using ::realloc;
     using ::free;
 
-#ifndef UP_NO_EXCEPTIONS
-    extern LIBUPCOREAPI UPALLOC UPWARNRESULT
-    void* aligned_alloc_throw(size_t alignment, size_t size);
-
-    extern LIBUPCOREAPI UPALLOC UPWARNRESULT
-    void* malloc_throw(size_t size);
-
-    extern LIBUPCOREAPI UPALLOC UPWARNRESULT
-    void* calloc_throw(size_t nelem, size_t elsize);
-
-    extern LIBUPCOREAPI UPALLOC UPWARNRESULT
-    void* realloc_throw(void* ptr, size_t size);
-#else
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    void* aligned_alloc_throw(size_t alignment, size_t size) noexcept {
-        return aligned_alloc(alignment, size);
-    }
-
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    void* malloc_throw(size_t size) noexcept {
-        return malloc(size);
-    }
-
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    void* calloc_throw(size_t nelem, size_t elsize) noexcept {
-        return calloc(nelem, elsize);
-    }
-
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    void* realloc_throw(void* ptr, size_t size) noexcept {
-        return realloc(ptr, size);
-    }
-#endif
-
     class LIBUPCOREAPI malloc_allocator : public allocator
     {
     public:

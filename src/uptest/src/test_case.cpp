@@ -181,6 +181,7 @@ namespace up { namespace test
             }
         }
 #endif
+
         set_assert_handler(old_handler);
                 
 #if !defined(UP_GOLD) && !defined(UP_PLATINUM)
@@ -200,7 +201,7 @@ namespace up { namespace test
         listener.test_case_passed(*this);
         return result_;
     }
-        
+
     LIBUPTESTAPI
     void test_case::add_category(char const* category) {
         assert(category);

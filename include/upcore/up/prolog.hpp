@@ -101,6 +101,46 @@
 #endif
 
 //
+// preprocessor concatenation and stringizing
+//
+
+#ifndef UPCONCATENATE
+#   define UP_DETAIL_CONCATENATE_1(x, y) x##y
+#   define UP_DETAIL_CONCATENATE_2(x, y) UP_DETAIL_CONCATENATE_1(x, y) 
+#   define UPCONCATENATE(x, y) UP_DETAIL_CONCATENATE_2(x, y)
+#endif
+
+#ifndef UPSTRINGIZE
+#   define UP_DETAIL_STRINGIZE_1(x) #x
+#   define UP_DETAIL_STRINGIZE_2(x) UP_DETAIL_STRINGIZE_1(x)
+#   define UPSTRINGIZE(x) UP_DETAIL_STRINGIZE_2(x)
+#endif
+
+#if defined(UP_HAS_STDC_WCHAR) && !defined(UPWSTRINGIZE)
+#   define UP_DETAIL_WSTRINGIZE_1(x) #x
+#   define UP_DETAIL_WSTRINGIZE_2(x) UP_DETAIL_WSTRINGIZE_1(x)
+#   define UPWSTRINGIZE(x) UPCONCATENATE(L, UP_DETAIL_WSTRINGIZE_2(x))
+#endif
+
+#ifndef UP_TCHAR
+#   if defined(UP_HAS_STDC_WCHAR) && (UP_PLATFORM == UP_PLATFORM_WINDOWS) && defined(_UNICODE)
+#       define UP_TCHAR UP_TCHAR_WCHAR
+#   else
+#       define UP_TCHAR UP_TCHAR_CHAR
+#   endif
+#endif
+
+#if UP_TCHAR == UP_TCHAR_CHAR
+#   define UPTC(x) x
+#   define UPTS(x) x
+#   define UPTSTRINGIZE(x) UPSTRINGIZE(x)
+#elif UP_TCHAR == UP_TCHAR_WCHAR
+#   define UPTC(x) UPCONCATENATE(L, x)
+#   define UPTS(x) UPCONCATENATE(L, x)
+#   define UPTSTRINGIZE(x) UPWSTRINGIZE(x)
+#endif
+
+//
 // compiler compatability macros
 //
 
@@ -172,44 +212,19 @@
             private: enum_t e_; };
 #endif
 
-#ifndef UPCONCATENATE
-#   define UP_DETAIL_CONCATENATE_1(x, y) x##y
-#   define UP_DETAIL_CONCATENATE_2(x, y) UP_DETAIL_CONCATENATE_1(x, y) 
-#   define UPCONCATENATE(x, y) UP_DETAIL_CONCATENATE_2(x, y)
-#endif
-
-#ifndef UPSTRINGIZE
-#   define UP_DETAIL_STRINGIZE_1(x) #x
-#   define UP_DETAIL_STRINGIZE_2(x) UP_DETAIL_STRINGIZE_1(x)
-#   define UPSTRINGIZE(x) UP_DETAIL_STRINGIZE_2(x)
-#endif
-
-#if defined(UP_HAS_STDC_WCHAR) && !defined(UPWSTRINGIZE)
-#   define UP_DETAIL_WSTRINGIZE_1(x) #x
-#   define UP_DETAIL_WSTRINGIZE_2(x) UP_DETAIL_WSTRINGIZE_1(x)
-#   define UPWSTRINGIZE(x) UPCONCATENATE(L, UP_DETAIL_WSTRINGIZE_2(x))
-#endif
-
-//
-// tchar_t null-terminated string macros
-//
-
-#ifndef UP_TCHAR
-#   if defined(UP_HAS_STDC_WCHAR) && (UP_PLATFORM == UP_PLATFORM_WINDOWS) && defined(_UNICODE)
-#       define UP_TCHAR UP_TCHAR_WCHAR
-#   else
-#       define UP_TCHAR UP_TCHAR_CHAR
+#ifdef UP_NO_STATIC_ASSERT
+namespace up { namespace detail
+{
+    template <unsigned long long> struct static_assert_test { };
+    template <bool> struct static_assert_error;
+    template <> struct static_assert_error<true> { enum { value = true }; };
+}}
+#   define UPSTATIC_ASSERT(expression, message) \
+        typedef ::up::detail::static_assert_test<sizeof(::up::detail::static_assert_error<(expression) ? true : false>)> \
+        UPCONCATENATE(static_assert_line_, __LINE__)
+#   ifndef static_assert
+#       define static_assert UPSTATIC_ASSERT
 #   endif
-#endif
-
-#if UP_TCHAR == UP_TCHAR_CHAR
-#   define UPTC(x) x
-#   define UPTS(x) x
-#   define UPTSTRINGIZE(x) UPSTRINGIZE(x)
-#elif UP_TCHAR == UP_TCHAR_WCHAR
-#   define UPTC(x) UPCONCATENATE(L, x)
-#   define UPTS(x) UPCONCATENATE(L, x)
-#   define UPTSTRINGIZE(x) UPWSTRINGIZE(x)
 #endif
 
 //

@@ -25,13 +25,11 @@
 #include <up/cstdio.hpp>
 #include <up/cstdlib.hpp>
 #include <up/memory.hpp>
+#include <up/random.hpp>
 #include <up/test.hpp>
-#include <random>
 
 namespace cstdlib_strtoreal
 {
-    std::default_random_engine random_engine(static_cast<uint32_t>(up::time(nullptr) & UINT32_MAX));
-
     struct real_data_source
     {
         size_t num_strings;
@@ -40,7 +38,8 @@ namespace cstdlib_strtoreal
 
         real_data_source(size_t n, int b)
         : num_strings(n), base(b) {
-            std::uniform_real_distribution<double> value_dist(-FLT_MAX, FLT_MAX);
+            up::default_random_engine random_engine(static_cast<uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
+            up::uniform_real_distribution<double> value_dist(-FLT_MAX, FLT_MAX);
             char buffer[256];
             double value;
             int length;

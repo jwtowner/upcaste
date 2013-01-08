@@ -34,7 +34,7 @@
 
 namespace memory_hash
 {
-    /*std::default_random_engine random_engine(static_cast<up::uint32_t>(up::time(nullptr) & 0xFFFFFFFF));
+    /*up::default_random_engine random_engine(static_cast<up::uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
 
 	struct data_source
 	{

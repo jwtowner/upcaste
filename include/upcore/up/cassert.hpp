@@ -29,13 +29,6 @@
 
 namespace up
 {
-    namespace detail
-    {
-        template <unsigned long long> struct static_assert_test { };
-        template <bool> struct static_assert_error;
-        template <> struct static_assert_error<true> { enum { value = true }; };
-    }
-
     typedef bool (UPCDECL *assert_handler)(char const* file, long line, char const* condition);
 
     extern LIBUPCOREAPI UPNONNULLALL
@@ -68,14 +61,6 @@ namespace up
 #   define require_throw(expression, action) UPREQUIRE_THROW(expression, action)
 #   define require_approx(x, y, d) UPREQUIRE_APPROX(x, y, d)
 #   define require_approx_throw(x, y, d, action) UPREQUIRE_APPROX_THROW(x, y, d, action)
-#endif
-
-#define UPSTATIC_ASSERT(expression, message) \
-    typedef ::up::detail::static_assert_test<sizeof(::up::detail::static_assert_error<(expression) ? true : false>)> \
-    UPCONCATENATE(static_assert_line_, __LINE__)
-
-#if defined(UP_NO_STATIC_ASSERT) && !defined(static_assert)
-#   define static_assert UPSTATIC_ASSERT
 #endif
 
 #endif

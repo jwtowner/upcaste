@@ -23,15 +23,12 @@
 //
 
 #include <up/math/float4.hpp>
-#include <up/ctime.hpp>
+#include <up/random.hpp>
 #include <up/test.hpp>
-#include <up/utility.hpp>
 #include <random>
 
 namespace math_float4
 {
-    std::default_random_engine random_engine(static_cast<up::uint32_t>(up::time(nullptr) & 0xFFFFFFFF));
-
     class float4_source
 	{
 		size_t size_;
@@ -77,7 +74,8 @@ namespace math_float4
     private:
 
         void generate() {
-            std::uniform_real_distribution<float> dist(min_, max_);
+            up::default_random_engine random_engine(static_cast<up::uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
+            up::uniform_real_distribution<float> dist(min_, max_);
             for (size_t i = 0; i < size_; ++i) {
                 up::math::storea4(up::math::make<up::math::float4>(dist(random_engine), dist(random_engine), dist(random_engine), dist(random_engine)), i, input_);
             }

@@ -345,6 +345,7 @@
     <ClCompile Include="..\..\..\src\upcore\test\cmath.cpp" />
     <ClCompile Include="..\..\..\src\upcore\test\cwchar.cpp" />
     <ClCompile Include="..\..\..\src\upcore\test\ieee754.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\test\random.cpp" />
     <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp" />
     <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp">
       <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>

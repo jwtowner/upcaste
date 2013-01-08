@@ -77,6 +77,26 @@ namespace up
     }
 
     LIBUPCOREAPI
+    int page_get_default_size(size_t* page_size) noexcept {
+        if (!page_size) {
+            errno = EINVAL;
+            return -1;
+        }
+
+#if UP_BASESYSTEM == UP_BASESYSTEM_LINUX
+        long default_page_size = ::sysconf(_SC_PAGESIZE);
+        if (default_page_size <= 0) {
+            return -1;
+        }
+#else
+#   error "Platform not yet supported."
+#endif
+
+        *page_size = static_cast<size_t>(default_page_size);
+        return 0;
+    }
+
+    LIBUPCOREAPI
     ssize_t page_get_sizes(size_t* page_sizes, size_t max_page_sizes) noexcept {
 #if UP_BASESYSTEM == UP_BASESYSTEM_LINUX
         size_t count = 1;

@@ -23,20 +23,19 @@
 //
 
 #include <up/bitwise.hpp>
-#include <up/ctime.hpp>
 #include <up/memory.hpp>
 #include <up/page.hpp>
+#include <up/random.hpp>
 #include <up/region.hpp>
 #include <up/test.hpp>
-#include <random>
 
 namespace memory_allocators
 {
-    std::default_random_engine random_engine(static_cast<up::uint32_t>(up::time(nullptr) & UINT32_MAX));
+    up::default_random_engine random_engine(static_cast<up::uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
 
     template <size_t Size, size_t Count>
     UPNOINLINE void malloc_bench() {
-        std::uniform_int_distribution<uint32_t> dist(1, Size);
+        up::uniform_int_distribution<uint32_t> dist(1, Size);
         void* ptrs[Count];
 
         for (size_t i = 0; i < Count; ++i) {
@@ -55,7 +54,7 @@ namespace memory_allocators
     template <size_t Size, size_t Count>
     UPNOINLINE void malloc_allocator_bench() {
         up::allocator* alloc = up::malloc_allocator::instance();
-        std::uniform_int_distribution<uint32_t> dist(1, Size);
+        up::uniform_int_distribution<uint32_t> dist(1, Size);
         void* ptrs[Count];
 
         for (size_t i = 0; i < Count; ++i) {
@@ -73,7 +72,7 @@ namespace memory_allocators
 
     template <size_t Size, size_t Count>
     UPNOINLINE void linear_region_bench() {
-        std::uniform_int_distribution<uint32_t> dist(1, Size);
+        up::uniform_int_distribution<uint32_t> dist(1, Size);
         void* ptrs[Count];
 
         size_t page_size = up::linear_region_space(Size * Count, 1);
@@ -95,7 +94,7 @@ namespace memory_allocators
     
     template <size_t Size, size_t Count>
     UPNOINLINE void linear_region_allocator_bench() {
-        std::uniform_int_distribution<uint32_t> dist(1, Size);
+        up::uniform_int_distribution<uint32_t> dist(1, Size);
         void* ptrs[Count];
 
         size_t page_size = up::linear_region_space(Size * Count, 1);
@@ -119,7 +118,7 @@ namespace memory_allocators
 
     template <size_t Size, size_t Count>
     UPNOINLINE void heap_region_bench() {
-        std::uniform_int_distribution<uint32_t> dist(1, Size);
+        up::uniform_int_distribution<uint32_t> dist(1, Size);
         void* ptrs[Count];
 
         up::heap_region* r = up::heap_region_create();

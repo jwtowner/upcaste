@@ -109,7 +109,7 @@ namespace up { namespace test
         printf("  %s... SUCCESS\n", t.name());
             
         if (!impl_->log_buffer.empty()) {
-            printf("    ---\n%s\n    ---\n", impl_->log_buffer.c_str());
+            printf("\n    Log:\n--------\n%s\n--------\n\n", impl_->log_buffer.c_str());
         }
 
         std::string empty;
@@ -126,7 +126,7 @@ namespace up { namespace test
         printf("  %s... FAILURE\n", t.name());
             
         if (!impl_->log_buffer.empty()) {
-            printf("    ---\n%s\n    ---\n", impl_->log_buffer.c_str());
+            printf("\n    Log:\n--------\n%s\n--------\n\n", impl_->log_buffer.c_str());
         }
 
         std::string empty;
@@ -200,7 +200,6 @@ namespace up { namespace test
     void UPCDECL console_test_listener::logger_callback(log_record const* record, void* user_data) {
         console_test_listener* listener = static_cast<console_test_listener*>(user_data);
         listener->impl_->log_buffer.append(record->message);
-        listener->impl_->log_buffer.append(1, '\n');
     }
 
     UPHIDDEN

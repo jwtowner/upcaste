@@ -29,6 +29,10 @@
 #   error "Do not include this header directly. Instead include <up/cinttypes.hpp>"
 #endif
 
+#ifndef __STDC_FORMAT_MACROS
+#   define __STDC_FORMAT_MACROS
+#endif
+
 #include <inttypes.h>
 
 namespace up

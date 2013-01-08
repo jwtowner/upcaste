@@ -42,7 +42,7 @@ namespace list
     };
 
     void build_int_list(up::list_node* sentinel, int_node* store, int const* values, size_t n) {
-        up::list_construct(sentinel);
+        up::list_init(sentinel);
 
         for (size_t i = 0; i < n; ++i) {
             store[i].value = values[i];

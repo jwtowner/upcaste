@@ -42,7 +42,7 @@ namespace slist
     };
 
     void build_int_slist(up::slist_node* root, int_node* store, int const* values, size_t n) {
-        up::slist_construct(root);
+        up::slist_init(root);
         up::slist_node* tail = root;
         for (size_t i = 0; i < n; ++i) {
             store[i].value = values[i];

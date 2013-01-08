@@ -92,25 +92,25 @@ namespace up
     void log_event(unsigned int level, char const* message);
 
     extern LIBUPCOREAPI UPNONNULLALL
-    void log_event(unsigned int level, char const* format, ...);
+    void log_eventf(unsigned int level, char const* format, ...);
 
     extern LIBUPCOREAPI UPNONNULLALL
     void log_event(char const* category, unsigned int level, char const* message);
 
     extern LIBUPCOREAPI UPNONNULLALL
-    void log_event(char const* category, unsigned int level, char const* format, ...);
+    void log_eventf(char const* category, unsigned int level, char const* format, ...);
 
     extern LIBUPCOREAPI UPNONNULLALL
     void log_event_with_call_site(char const* file, long line, unsigned int level, char const* message);
 
     extern LIBUPCOREAPI UPNONNULLALL
-    void log_event_with_call_site(char const* file, long line, unsigned int level, char const* format, ...);
+    void log_eventf_with_call_site(char const* file, long line, unsigned int level, char const* format, ...);
     
     extern LIBUPCOREAPI UPNONNULLALL
     void log_event_with_call_site(char const* file, long line, char const* category, unsigned int level, char const* message);
     
     extern LIBUPCOREAPI UPNONNULLALL
-    void log_event_with_call_site(char const* file, long line, char const* category, unsigned int level, char const* format, ...);
+    void log_eventf_with_call_site(char const* file, long line, char const* category, unsigned int level, char const* format, ...);
 }
 
 #endif
@@ -145,7 +145,7 @@ namespace up
 #undef UP_LOG_CRITICAL
 
 #ifdef UP_LOG_ENABLED
-#   define UP_LOG(name, level, ...) ::up::log_event_with_call_site(__FILE__, __LINE__, name, level, __VA_ARGS__)
+#   define UP_LOG(name, level, ...) ::up::log_eventf_with_call_site(__FILE__, __LINE__, name, level, __VA_ARGS__)
 #else
 #   define UP_LOG(name, level, ...) { UPIGNORE(name); UPIGNORE(level); }
 #endif

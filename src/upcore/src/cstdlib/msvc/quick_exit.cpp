@@ -61,7 +61,7 @@ namespace up
         }
 
         void UPCDECL quick_exit_init() noexcept {
-            slist_construct(&quick_exit_entries);
+            slist_init(&quick_exit_entries);
             verify(thrd_success == mtx_init(&quick_exit_mutex, mtx_plain));
             verify(atexit(&quick_exit_term));
         }

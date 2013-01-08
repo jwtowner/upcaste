@@ -39,8 +39,6 @@ namespace up
         virtual UPALLOC UPWARNRESULT void* allocate(size_t n) noexcept = 0;
         virtual UPALLOC UPWARNRESULT void* allocate_zero(size_t n, size_t s) noexcept = 0;
         virtual void deallocate(void* p, size_t n = 0) noexcept = 0;
-        UPALLOC UPWARNRESULT void* allocate_throw(size_t n);
-        UPALLOC UPWARNRESULT void* allocate_zero_throw(size_t n, size_t s);
 
     protected:
 

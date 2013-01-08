@@ -24,8 +24,8 @@
 
 #include <up/cstdio.hpp>
 #include <up/memory.hpp>
+#include <up/random.hpp>
 #include <up/test.hpp>
-#include <random>
 
 namespace cstdio_printf
 {
@@ -337,11 +337,11 @@ namespace cstdio_printf
 
         data_source(size_t n)
         : count(n) {
-            std::default_random_engine random_engine(static_cast<uint32_t>(up::time(nullptr) & UINT32_MAX));
-            std::uniform_int_distribution<long> long_dist(LONG_MIN, LONG_MAX);
-            std::uniform_int_distribution<unsigned long> ulong_dist(0, ULONG_MAX);
-            std::uniform_int_distribution<long long> llong_dist(LLONG_MIN, LLONG_MAX);
-            std::uniform_real_distribution<double> double_dist(-FLT_MAX, FLT_MAX);
+            up::default_random_engine random_engine(static_cast<uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
+            up::uniform_int_distribution<long> long_dist(LONG_MIN, LONG_MAX);
+            up::uniform_int_distribution<unsigned long> ulong_dist(0, ULONG_MAX);
+            up::uniform_int_distribution<long long> llong_dist(LLONG_MIN, LLONG_MAX);
+            up::uniform_real_distribution<double> double_dist(-FLT_MAX, FLT_MAX);
 
             long_values = up::malloc_n<long>(count);
             ulong_values = up::malloc_n<unsigned long>(count);

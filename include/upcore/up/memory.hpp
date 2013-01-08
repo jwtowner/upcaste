@@ -893,21 +893,13 @@ namespace up
     template <class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     void* allocate(Alloc* a, size_t n) noexcept {
-#ifdef UP_NO_EXCEPTIONS
         return a->allocate(n);
-#else
-        return a->allocate_throw(n);
-#endif
     }
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate(Alloc* a) {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(a->allocate(sizeof(T)));
-#else
-        return static_cast<T*>(a->allocate_throw(sizeof(T)));
-#endif
     }
 
     template <class Alloc>
@@ -943,24 +935,16 @@ namespace up
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, typename enable_if<is_trivial<T>::value, nat_t>::type = nat_t()) {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(a->allocate_zero(1, sizeof(T)));
-#else
-        return static_cast<T*>(a->allocate_zero_throw(1, sizeof(T)));
-#endif
     }
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, typename enable_if<!is_trivial<T>::value, nat_t>::type = nat_t()) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T;
     }
 
@@ -969,14 +953,10 @@ namespace up
     template <class T, class Alloc, class... Args>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, Args&&... args) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<Args>(args)...);
     }
 
@@ -985,70 +965,50 @@ namespace up
     template <class T, class Alloc, class A1>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, A1&& a1) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1));
     }
 
     template <class T, class Alloc, class A1, class A2>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, A1&& a1, A2&& a2) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2));
     }
 
     template <class T, class Alloc, class A1, class A2, class A3>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, A1&& a1, A2&& a2, A3&& a3) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3));
     }
 
     template <class T, class Alloc, class A1, class A2, class A3, class A4>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, A1&& a1, A2&& a2, A3&& a3, A4&& a4) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4));
     }
 
     template <class T, class Alloc, class A1, class A2, class A3, class A4, class A5>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, A1&& a1, A2&& a2, A3&& a3, A4&& a4, A5&& a5) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = a->allocate(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = a->allocate_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4), ::up::forward<A5>(a5));
     }
 
@@ -1074,11 +1034,7 @@ namespace up
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_n(Alloc* a, size_t n) {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(a->allocate(n * sizeof(T)));
-#else
-        return static_cast<T*>(a->allocate_throw(n * sizeof(T)));
-#endif
     }
 
     template <class Alloc, class T>
@@ -1090,24 +1046,16 @@ namespace up
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct_n(Alloc* a, typename enable_if<is_trivial<T>::value, size_t>::type n) noexcept {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(a->allocate_zero(n, sizeof(T)));
-#else
-        return static_cast<T*>(a->allocate_zero_throw(n, sizeof(T)));
-#endif
     }
 
     template <class T, class Alloc>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct_n(Alloc* a, typename enable_if<!is_trivial<T>::value, size_t>::type n) {
-#ifdef UP_NO_EXCEPTIONS
         T* const p = static_cast<T*>(a->allocate(n * sizeof(T)));
         if (!p) {
             return nullptr;
         }
-#else
-        T* const p = static_cast<T*>(a->allocate_throw(n * sizeof(T)));
-#endif
         ::up::uninitialized_construct_n(p, n);
         return p;
     }
@@ -1123,34 +1071,22 @@ namespace up
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc() {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(::up::malloc(sizeof(T)));
-#else
-        return static_cast<T*>(::up::malloc_throw(sizeof(T)));
-#endif
     }
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(typename enable_if<is_trivial<T>::value, nat_t>::type = nat_t()) {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(::up::calloc(1, sizeof(T)));
-#else
-        return static_cast<T*>(::up::calloc_throw(1, sizeof(T)));
-#endif
     }
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(typename enable_if<!is_trivial<T>::value, nat_t>::type = nat_t()) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = ::up::malloc_throw(sizeof(T));
-#endif
         return ::new(p) T;
     }
 
@@ -1159,14 +1095,10 @@ namespace up
     template <class T, class... Args>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(Args&&... args) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = ::up::malloc_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<Args>(args)...);
     }
 
@@ -1175,71 +1107,50 @@ namespace up
     template <class T, class A1>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(A1&& a1) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p  = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p  = ::up::malloc_throw(sizeof(T));
-
-#endif
         return ::new(p) T(::up::forward<A1>(a1));
     }
 
     template <class T, class A1, class A2>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(A1&& a1, A2&& a2) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = ::up::malloc_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2));
     }
 
     template <class T, class A1, class A2, class A3>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(A1&& a1, A2&& a2, A3&& a3) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = ::up::malloc_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3));
     }
 
     template <class T, class A1, class A2, class A3, class A4>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(A1&& a1, A2&& a2, A3&& a3, A4&& a4) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = ::up::malloc_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4));
     }
 
     template <class T, class A1, class A2, class A3, class A4, class A5>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(A1&& a1, A2&& a2, A3&& a3, A4&& a4, A5&& a5) {
-#ifdef UP_NO_EXCEPTIONS
         void* const p = ::up::malloc(sizeof(T));
         if (!p) {
             return nullptr;
         }
-#else
-        void* const p = ::up::malloc_throw(sizeof(T));
-#endif
         return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4), ::up::forward<A5>(a5));
     }
 
@@ -1265,11 +1176,7 @@ namespace up
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_n(size_t n) {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(::up::malloc(n * sizeof(T)));
-#else
-        return static_cast<T*>(::up::malloc_throw(n * sizeof(T)));
-#endif
     }
 
     template <class T>
@@ -1281,24 +1188,16 @@ namespace up
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct_n(typename enable_if<is_trivial<T>::value, size_t>::type n) noexcept {
-#ifdef UP_NO_EXCEPTIONS
         return static_cast<T*>(::up::calloc(n, sizeof(T)));
-#else
-        return static_cast<T*>(::up::calloc_throw(n, sizeof(T)));
-#endif
     }
 
     template <class T>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct_n(typename enable_if<!is_trivial<T>::value, size_t>::type n) {
-#ifdef UP_NO_EXCEPTIONS
         T* const p = static_cast<T*>(::up::malloc(n * sizeof(T)));
         if (!p) {
             return nullptr;
         }
-#else
-        T* const p = static_cast<T*>(::up::malloc_throw(n * sizeof(T)));
-#endif
         ::up::uninitialized_construct_n(p, n);
         return p;
     }

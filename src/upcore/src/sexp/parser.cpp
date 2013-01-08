@@ -40,8 +40,8 @@ namespace up { namespace sexp
         }
         
         verify(sexp_success == lexer_construct(&par->lex, nullptr, 0));
-        slist_construct(&par->open_stack);
-        slist_construct(&par->unread_stack);
+        slist_init(&par->open_stack);
+        slist_init(&par->unread_stack);
         par->prev_column = 0;
         par->prev_line = 0;
         par->error_handler = &parser_default_error_handler;
@@ -97,11 +97,11 @@ namespace up { namespace sexp
 
     LIBUPCOREAPI UPNONNULLALL
     void parser_default_error_handler(char const* filename, uintmax_t line, uintmax_t column, char const* message) noexcept {
-        log_event("sexp", log_level_error, "%s(%lu,%lu): error - %s", filename, static_cast<unsigned long>(line), static_cast<unsigned long>(column), message);
+        log_eventf("sexp", log_level_error, "%s(%lu,%lu): error - %s", filename, static_cast<unsigned long>(line), static_cast<unsigned long>(column), message);
     }
 
     LIBUPCOREAPI UPNONNULLALL
     void parser_default_warning_handler(char const* filename, uintmax_t line, uintmax_t column, char const* message) noexcept {
-        log_event("sexp", log_level_warning, "%s(%lu,%lu): warning - %s", filename, static_cast<unsigned long>(line), static_cast<unsigned long>(column), message);
+        log_eventf("sexp", log_level_warning, "%s(%lu,%lu): warning - %s", filename, static_cast<unsigned long>(line), static_cast<unsigned long>(column), message);
     }
 }}

@@ -23,26 +23,10 @@
 //
 
 #include <up/allocator.hpp>
-#include <up/cassert.hpp>
-#include <new>
 
 namespace up
 {
     LIBUPCOREAPI
     allocator::~allocator() noexcept {
-    }
-
-    LIBUPCOREAPI UPALLOC UPWARNRESULT
-    void* allocator::allocate_throw(size_t n) {
-        void* const retval = allocate(n);
-        assert_throw(retval, throw std::bad_alloc());
-        return retval;
-    }
-
-    LIBUPCOREAPI UPALLOC UPWARNRESULT
-    void* allocator::allocate_zero_throw(size_t n, size_t s) {
-        void* const retval = allocate_zero(n, s);
-        assert_throw(retval, throw std::bad_alloc());
-        return retval;
     }
 }

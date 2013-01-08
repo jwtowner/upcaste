@@ -24,13 +24,12 @@
 
 #include <up/bitwise.hpp>
 #include <up/ctime.hpp>
+#include <up/random.hpp>
 #include <up/test.hpp>
-#include <up/utility.hpp>
-#include <random>
 
 namespace bitwise
 {
-    std::default_random_engine random_engine(static_cast<uint32_t>(up::time(nullptr) & UINT32_MAX));
+    up::default_random_engine random_engine(static_cast<uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
     constexpr size_t count = 100000;
 
     inline UPALWAYSINLINE UPPURE
@@ -72,7 +71,7 @@ namespace bitwise
 
     template <class T, T Max>
     UPNOINLINE void ceil2_bench() {
-        std::uniform_int_distribution<T> dist(0, Max);
+        up::uniform_int_distribution<T> dist(0, Max);
         for (size_t i = 0; i < count; ++i) {
             T value = up::ceil2(dist(random_engine));
             up::sink_dependency(&value);
@@ -81,7 +80,7 @@ namespace bitwise
 
     template <class T, T Max>
     UPNOINLINE void oldceil2_bench() {
-        std::uniform_int_distribution<T> dist(0, Max);
+        up::uniform_int_distribution<T> dist(0, Max);
         for (size_t i = 0; i < count; ++i) {
             T value = oldceil2(dist(random_engine));
             up::sink_dependency(&value);

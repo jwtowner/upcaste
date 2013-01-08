@@ -142,6 +142,9 @@
     <Filter Include="src\cthreads\posix">
       <UniqueIdentifier>{6071a42d-a190-41bd-a8da-a7fbef159a58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\random">
+      <UniqueIdentifier>{94b32c06-53ff-454b-bb25-d0c82a5c8d71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\upcore\gen\generatemath.bat">
@@ -363,13 +366,7 @@
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_alloc.cpp">
       <Filter>src\cstdlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_alloc_throw.cpp">
-      <Filter>src\cstdlib</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_malloc_allocator.cpp">
-      <Filter>src\cstdlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\calloc_throw.cpp">
       <Filter>src\cstdlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\fast_strtod.cpp">
@@ -396,13 +393,7 @@
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloc_allocator.cpp">
       <Filter>src\cstdlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloc_throw.cpp">
-      <Filter>src\cstdlib</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloca_freea.cpp">
-      <Filter>src\cstdlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\realloc_throw.cpp">
       <Filter>src\cstdlib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\strtod.cpp">
@@ -1540,6 +1531,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cassert.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\random\generate_random_seed.cpp">
+      <Filter>src\random</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

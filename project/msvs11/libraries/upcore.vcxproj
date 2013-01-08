@@ -380,6 +380,7 @@
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\random\generate_random_seed.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\sparse.cpp">
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
@@ -585,15 +586,7 @@
       <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_alloc_throw.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\aligned_malloc_allocator.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\calloc_throw.cpp">
       <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
     </ClCompile>
@@ -629,15 +622,7 @@
       <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloc_throw.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstdlib\malloca_freea.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstdlib\realloc_throw.cpp">
       <AssemblerListingLocation>$(IntDir)src\cstdlib\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstdlib\</ObjectFileName>
     </ClCompile>

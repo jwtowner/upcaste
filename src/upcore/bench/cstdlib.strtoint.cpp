@@ -24,13 +24,11 @@
 
 #include <up/cstdlib.hpp>
 #include <up/memory.hpp>
+#include <up/random.hpp>
 #include <up/test.hpp>
-#include <random>
 
 namespace cstdlib_strtoint
 {
-    std::default_random_engine random_engine(static_cast<uint32_t>(up::time(nullptr) & UINT32_MAX));
-
     struct integer_data_source
     {
         size_t num_strings;
@@ -39,9 +37,10 @@ namespace cstdlib_strtoint
 
         integer_data_source(size_t n, int b)
         : num_strings(n), base(b) {
-            std::uniform_int_distribution<size_t> length_dist(2, 9);
-            std::uniform_int_distribution<int> sign_dist(0, 3);
-            std::uniform_int_distribution<int> digit_dist(0, base);
+            up::default_random_engine random_engine(static_cast<uint_least32_t>(up::time(nullptr) & UINT_LEAST32_MAX));
+            up::uniform_int_distribution<size_t> length_dist(2, 9);
+            up::uniform_int_distribution<int> sign_dist(0, 3);
+            up::uniform_int_distribution<int> digit_dist(0, base);
             size_t length;
             char* ptr, * end_ptr;
             int sign, digit;

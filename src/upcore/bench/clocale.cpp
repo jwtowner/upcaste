@@ -107,7 +107,7 @@ namespace clocale
         c_locale_isspace a2("en_US.utf8");
         UP_TEST_RUN_BENCHMARK("isspace - 'UTF-8'", 1, iterations, a2);
         
-        c_locale_l_isspace b2("en_US.utf8");
+        c_locale_isspace_l b2("en_US.utf8");
         UP_TEST_RUN_BENCHMARK("isspace_l - 'UTF-8'", 1, iterations, b2);
     
         cxx_locale_isspace c2("en_US.utf8");

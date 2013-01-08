@@ -85,7 +85,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE
-    void list_construct(list_node* node) noexcept {
+    void list_init(list_node* node) noexcept {
         node->prev = node->next = node;
     }
 

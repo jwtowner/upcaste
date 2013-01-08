@@ -25,6 +25,7 @@
 #ifndef UP_BITWISE_HPP
 #define UP_BITWISE_HPP
 
+#include <up/cstddef.hpp>
 #include <up/climits.hpp>
 #if UP_COMPILER == UP_COMPILER_GCC
 #   include <up/detail/bitwise_gcc.inl>
@@ -130,6 +131,35 @@ namespace up
         return (logceil2(x) + logceil2(y)) > (sizeof(unsigned long long) * CHAR_BIT);
     }
 }
+   
+namespace up { namespace detail
+{
+    template <unsigned long long X, size_t R>
+    struct static_logfloor2_impl
+    {
+        static constexpr size_t value = (X & ((unsigned long long)(1) << R)) ? R : static_logfloor2_impl<X, R - 1>::value;
+    };
+
+    template <unsigned long long X>
+    struct static_logfloor2_impl<X, 0>
+    {
+        static constexpr size_t value = 0;
+    };
+
+    template <size_t R>
+    struct static_logfloor2_impl<0, R>
+    {
+        static constexpr size_t value = R + 1;
+    };
+}}
+
+namespace up
+{
+    template <class UIntType, unsigned long long X>
+    struct UPVISIBLE static_logfloor2
+    {
+        static constexpr size_t value = detail::static_logfloor2_impl<X, ((sizeof(UIntType) * CHAR_BIT) - 1)>::value;
+    };
+}
 
 #endif
-
