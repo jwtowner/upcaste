@@ -53,7 +53,7 @@ namespace up { namespace math
         }
         e2 = static_cast<int>(raw.ieee.exponent) - ieee754_binary96_bias;
         if (e2 == (ieee754_binary96_bias + 1)) {
-            return raw.ieee.mantissa ? LDBL_NAN : x;
+            return (!raw.ieee_nan.one || raw.ieee_nan.quiet_nan || raw.ieee_nan.mantissa) ? LDBL_NAN : x;
         }
 #elif (LDBL_MANT_DIG == 113) && (FLT_RADIX == 2)
         ieee754_binary128 raw;

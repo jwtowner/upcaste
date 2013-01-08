@@ -29,6 +29,12 @@
 #include <up/test/test_case.hpp>
 #include <up/test/test_suite.hpp>
 
+#ifdef UP_NO_EXCEPTIONS
+#   define UP_DETAIL_TEST_CASE_EXCEPTIONS_ENABLED false
+#else
+#   define UP_DETAIL_TEST_CASE_EXCEPTIONS_ENABLED true
+#endif
+
 #define UP_DETAIL_TEST_CASE_NAME(name) UPCONCATENATE(name, UPCONCATENATE(_test_case_, __LINE__))
 #define UP_DETAIL_TEST_CASE_INSTANCE_NAME(name) UPCONCATENATE(UP_DETAIL_TEST_CASE_NAME(name), _instance)
 
@@ -37,6 +43,7 @@
     { \
     public: \
         UP_DETAIL_TEST_CASE_NAME(name)() : base(UPSTRINGIZE(name), __FILE__, __LINE__) { \
+            ::up::test::test_case::exceptions_enabled(UP_DETAIL_TEST_CASE_EXCEPTIONS_ENABLED); \
             ::up::test::test_suite* fixture = ::up::test::test_suite::instance().find_or_create_fixture(file_name()); \
             fixture->add_test(this, false); \
             { __VA_ARGS__; } \

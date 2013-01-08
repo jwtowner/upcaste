@@ -47,11 +47,12 @@ namespace up { namespace test
 {
     namespace
     {
-#ifdef UP_NO_EXCEPTIONS
+#ifndef UP_NO_EXCEPTIONS
+        thread_local bool current_exceptions_enabled;
+#endif
         thread_local jmp_buf current_jump_buffer;
         thread_local test_error* current_failure;
-#endif
-
+        
         bool UPCDECL redirect_assertion_handler(char const* file, long line, char const* condition) {
 #if (UP_PLATFORM == UP_PLATFORM_WINDOWS)
             if (::IsDebuggerPresent()) {
@@ -60,11 +61,13 @@ namespace up { namespace test
 #endif
 
 #ifndef UP_NO_EXCEPTIONS
-            throw test_error(file, line, condition);
-#else
+            if (current_exceptions_enabled) {
+                throw test_error(file, line, condition);
+            }
+#endif
+
             current_failure = malloc_construct<test_error>(file, line, condition);
             longjmp(current_jump_buffer, 1);
-#endif
         }
 
         typedef std::vector<char const*> category_container;
@@ -99,6 +102,9 @@ namespace up { namespace test
     LIBUPTESTAPI
     test_result const& test_case::run(test_listener& listener, test_filter& filter) {
         timespec start, stop, elapsed;
+        assert_handler old_handler;
+        unsigned int i;
+        bool is_error;
 
         if (!filter.matches(*this)) {
             listener.test_case_ignored(*this);
@@ -106,13 +112,18 @@ namespace up { namespace test
             return result_;
         }
             
-        assert_handler old_handler = set_assert_handler(&redirect_assertion_handler);
+        old_handler = set_assert_handler(&redirect_assertion_handler);
             
 #ifndef UP_NO_EXCEPTIONS
+        current_exceptions_enabled = exceptions_enabled_;
+        if (!exceptions_enabled_) {
+            goto use_setjmp_longjmp;
+        }
+
         try {
             verify(!clock_gettime(CLOCK_MONOTONIC, &start));
                 
-            for (unsigned int i = 0; i < iterations_; ++i) {
+            for (i = 0; i < iterations_; ++i) {
                 do_run();
             }
 
@@ -123,7 +134,7 @@ namespace up { namespace test
             verify(!clock_gettime(CLOCK_MONOTONIC, &stop));
             verify(!timespec_subtract(&start, &stop, &elapsed));
 
-            bool is_error = strcmp(file_name(), error.file_name()) != 0;
+            is_error = strcmp(file_name(), error.file_name()) != 0;
             if ((!expects_error_ && is_error) || (!expects_assertion_ && !is_error)) {
                 set_assert_handler(old_handler);
                 result_.fail(&elapsed);
@@ -153,11 +164,17 @@ namespace up { namespace test
                 return result_;
             }
         }
-#else
+
+        goto done;
+
+    use_setjmp_longjmp:
+
+#endif
+
         if (setjmp(current_jump_buffer) == 0) {
             verify(!clock_gettime(CLOCK_MONOTONIC, &start));
                 
-            for (unsigned int i = 0; i < iterations_; ++i) {                
+            for (i = 0; i < iterations_; ++i) {                
                 do_run();
             }
 
@@ -172,7 +189,7 @@ namespace up { namespace test
             destruct_free(current_failure);
             current_failure = nullptr;
 
-            bool is_error = strcmp(file_name(), error.file_name()) != 0;
+            is_error = strcmp(file_name(), error.file_name()) != 0;
             if ((!expects_error_ && is_error) || (!expects_assertion_ && !is_error)) {
                 set_assert_handler(old_handler);
                 result_.fail(&elapsed);
@@ -180,23 +197,25 @@ namespace up { namespace test
                 return result_;
             }
         }
+
+#ifndef UP_NO_EXCEPTIONS
+    done:
 #endif
 
         set_assert_handler(old_handler);
                 
-#if !defined(UP_GOLD) && !defined(UP_PLATINUM)
         if (expects_error_) {
             result_.fail(&elapsed);
             listener.test_case_failed(*this, test_error(file_name(), line_number(), "Invalid Error", "Expected an exception or assertion error originating from a different source file"));
             return result_;
         }
-#endif
+
         if (expects_assertion_) {
             result_.fail(&elapsed);
             listener.test_case_failed(*this, test_error(file_name(), line_number(), "Invalid Assertion", "Expected an assertion originating from the test case"));
             return result_;
         }
-            
+
         result_.pass(&elapsed);
         listener.test_case_passed(*this);
         return result_;

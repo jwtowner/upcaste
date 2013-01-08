@@ -51,7 +51,7 @@ namespace bitwise
         x |= x >> 4;
         x |= x >> 8;
         x |= x >> 16;
-#if (ULONG_MAX > 0xFFFFFFFF)
+#if (ULONG_MAX > 0xFFFFFFFF) || defined(UP_LONG_PTR_64)
         x |= x >> 32;
 #endif
         return ++x;

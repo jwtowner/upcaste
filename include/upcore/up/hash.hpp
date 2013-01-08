@@ -71,7 +71,7 @@ namespace up
 
     inline UPALWAYSINLINE UPCONSTEXPR
     uint32_t hash32_accumulate(uint32_t hashcode, unsigned long key) noexcept {
-#if (ULONG_MAX <= UINT32_MAX)
+#if (ULONG_MAX <= UINT32_MAX) && !defined(UP_LONG_PTR_64)
         return (hashcode ^ static_cast<uint32_t>(key)) * hashprime32;
 #else
         return hash32_accumulate(hashcode, static_cast<uint32_t>(key & UINT32_MAX), static_cast<uint32_t>((key >> 32) & UINT32_MAX));
@@ -128,7 +128,7 @@ namespace up
         return hashcode ^ (hashcode >> 32);
     }
 
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
     constexpr size_t hashprime = hashprime32;
     constexpr size_t hashseed = hashseed32;
     inline UPALWAYSINLINE UPNONNULLALL size_t hash_accumulate(size_t hashcode, void const* key, size_t n) noexcept { return hash32_accumulate(hashcode, key, n); }

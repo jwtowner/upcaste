@@ -278,7 +278,7 @@ namespace up
 
     inline UPALWAYSINLINE UPPURE UPNONNULL(1)
     size_t strhash(char const* s) noexcept {
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return strhash32(s);
 #else
         return strhash64(s);
@@ -287,7 +287,7 @@ namespace up
 
     inline UPALWAYSINLINE UPPURE UPNONNULL(1)
     size_t strnhash(char const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return strnhash32(s, n);
 #else
         return strnhash64(s, n);

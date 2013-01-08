@@ -427,7 +427,7 @@ namespace up
 
     inline UPALWAYSINLINE
     size_t u16shash(char16_t const* s) noexcept {
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return u16shash32(s);
 #else
         return u16shash64(s);
@@ -436,7 +436,7 @@ namespace up
 
     inline UPALWAYSINLINE
     size_t u16snhash(char16_t const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return u16snhash32(s, n);
 #else
         return u16snhash64(s, n);
@@ -606,7 +606,7 @@ namespace up
     
     inline UPALWAYSINLINE
     size_t u32shash(char32_t const* s) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return u32shash32(s);
 #else
         return u32shash64(s);
@@ -615,7 +615,7 @@ namespace up
 
     inline UPALWAYSINLINE
     size_t u32snhash(char32_t const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return u32snhash32(s, n);
 #else
         return u32snhash64(s, n);

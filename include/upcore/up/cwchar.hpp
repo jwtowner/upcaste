@@ -353,7 +353,7 @@ namespace up
 
     inline UPALWAYSINLINE UPPURE UPNONNULL(1)
     size_t wcshash(wchar_t const* s) noexcept {
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return wcshash32(s);
 #else
         return wcshash64(s);
@@ -362,7 +362,7 @@ namespace up
     
     inline UPALWAYSINLINE UPPURE UPNONNULL(1)
     size_t wcsnhash(wchar_t const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT32_MAX)
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return wcsnhash32(s, n);
 #else
         return wcsnhash64(s, n);

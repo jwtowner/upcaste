@@ -113,7 +113,7 @@ namespace up
 
     inline UPALWAYSINLINE UPNONNULL(1) UPWARNRESULT
     long fast_strtol(char const* UPRESTRICT str, char** UPRESTRICT endptr, int base) noexcept {
-#if LONG_MAX <= INT_LEAST32_MAX
+#if (LONG_MAX <= INT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return fast_strtoi32(str, endptr, base);
 #else
         return fast_strtoi64(str, endptr, base);
@@ -122,7 +122,7 @@ namespace up
 
     inline UPALWAYSINLINE UPNONNULL(1) UPWARNRESULT
     unsigned long fast_strtoul(char const* UPRESTRICT str, char** UPRESTRICT endptr, int base) noexcept {
-#if ULONG_MAX <= UINT_LEAST32_MAX
+#if (ULONG_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         return fast_strtou32(str, endptr, base);
 #else
         return fast_strtou64(str, endptr, base);

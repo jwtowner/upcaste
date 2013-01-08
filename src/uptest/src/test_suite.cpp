@@ -53,7 +53,7 @@ namespace up { namespace test
         struct test_compare
         {
             bool operator()(char const* x, char const* y) const noexcept {
-                return strcmp(y, x) < 0;
+                return strcmp(x, y) < 0;
             }
         };
             

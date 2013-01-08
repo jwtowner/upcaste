@@ -29,6 +29,43 @@
 
 namespace prng
 {
+    UP_TEST_CASE(generate_canonical) {
+        up::xorshift64_engine<uint_least32_t, 13, 7, 17> engine32;
+        up::xorshift64_engine<uint_least64_t, 13, 7, 17> engine64;
+        long double sum;
+        double d;
+        float f;
+        size_t i;
+        
+        for (sum = 0.0l, i = 1; i <= 32768; sum += f, ++i) {
+            f = ::up::generate_canonical<float, FLT_MANT_DIG>(engine32);
+            require((0.0f <= f) && (f < 1.0f));
+        }
+
+        require_approx(sum / 32768.0l, 0.5l, 0.01l);
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += f, ++i) {
+            f = ::up::generate_canonical<float, FLT_MANT_DIG>(engine64);
+            require((0.0f <= f) && (f < 1.0f));
+        }
+
+        require_approx(sum / 32768.0l, 0.5l, 0.01l);
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += d, ++i) {
+            d = ::up::generate_canonical<double, DBL_MANT_DIG>(engine32);
+            require((0.0 <= d) && (d < 1.0));
+        }
+
+        require_approx(sum / 32768.0l, 0.5l, 0.01l);
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += d, ++i) {
+            d = ::up::generate_canonical<float, DBL_MANT_DIG>(engine64);
+            require((0.0 <= d) && (d < 1.0));
+        }
+
+        require_approx(sum / 32768.0l, 0.5l, 0.01l);
+    }
+
     UP_TEST_CASE(generate_random_seed) {
         uint_least32_t seed;
         uint_least32_t seq[4];
@@ -60,6 +97,7 @@ namespace prng
         require(engine.min() == ((UINT_FAST32_MAX > 0xFFFFFFFF) ? 1 : 0))
         require(engine.max() == UINT_FAST32_MAX);
 
+#ifdef UP_DEBUG
         up::log_event(up::log_level_info, "First 128 values...\n\n");
         for (size_t i = 1; i <= 128; ++i)  {
             up::log_eventf(up::log_level_info, "%#.8" PRIxFAST32 " ", static_cast<uintmax_t>(engine()));
@@ -67,6 +105,9 @@ namespace prng
                 up::log_event(up::log_level_info, "\n");
             }
         }
+#else
+        engine.discard(128);
+#endif
 
 #if UINT_FAST32_MAX == 0xFFFFFFFF
         require(engine() == 0xfb699180);
@@ -80,6 +121,7 @@ namespace prng
         require(engine.min() == 0)
         require(engine.max() == UINT_FAST32_MAX);
         
+#ifdef UP_DEBUG
         up::log_event(up::log_level_info, "First 128 values...\n\n");
         for (size_t i = 1; i <= 128; ++i)  {
             up::log_eventf(up::log_level_info, "%#.8" PRIxFAST32 " ", static_cast<uintmax_t>(engine()));
@@ -87,6 +129,9 @@ namespace prng
                 up::log_event(up::log_level_info, "\n");
             }
         }
+#else
+        engine.discard(128);
+#endif
 
 #if UINT_FAST32_MAX == 0xFFFFFFFF
         require(engine() == 0xc72a4e0a);
@@ -243,5 +288,60 @@ namespace prng
         }
 
         require_approx(sum / (INT_MAX / 8.0l), (ULLONG_MAX / 2.0l), 4.0e+14);
+    }
+
+    UP_TEST_CASE(uniform_float_distribution) {
+        up::default_random_engine engine;
+        long double sum;
+        float x;
+        size_t i;
+
+        static_assert(up::is_same<float, up::uniform_real_distribution<float>::result_type>::value, "unexpected type");
+
+        up::uniform_real_distribution<float> dist0(0.0f, 0.0f);
+        require((dist0.a() == 0.0f) && (dist0.b() == 0.0f));
+        require((dist0.min() == 0.0f) && (dist0.max() == 0.0f));
+
+        for (sum = 0.0l, i = 1; i <= 1024; sum += x, ++i) {
+            x = dist0(engine);
+            require(x == 0.0f);
+        }
+
+        require_approx(sum / 1024.0l, 0.0l, LDBL_EPSILON);
+
+        up::uniform_real_distribution<float> dist1;
+        require((dist1.a() == 0.0f) && (dist1.b() == 1.0f));
+        require((dist1.min() == 0.0f) && (dist1.max() == 1.0f));
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += x, ++i) {
+            x = dist1(engine);
+            require((0.0f <= x) && (x < 1.0f));
+        }
+
+        require_approx(sum / 32768.0l, 0.5l, 0.01l);
+
+        up::uniform_real_distribution<float> dist2(-128.0f, 128.0f);
+        require((dist2.a() == -128.0f) && (dist2.b() == 128.0f));
+        require((dist2.min() == -128.0f) && (dist2.max() == 128.0f));
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += x, ++i) {
+            x = dist2(engine);
+            require((-128.0f <= x) && (x < 128.0f));
+        }
+
+        require_approx(sum / 32768.0l, 0.0l, 1.0l);
+
+        /*
+        up::uniform_real_distribution<float> dist3(-(FLT_MAX / 2.0f), (FLT_MAX / 2.0f));
+        require((dist3.a() == -(FLT_MAX / 2.0f)) && (dist3.b() == (FLT_MAX / 2.0f)));
+        require((dist3.min() == -(FLT_MAX / 2.0f)) && (dist3.max() == (FLT_MAX / 2.0f)));
+
+        for (sum = 0.0l, i = 1; i <= (INT_MAX / 8); sum += x, ++i) {
+            x = dist3(engine);
+            require((-(FLT_MAX / 2.0f) <= x) && (x < (FLT_MAX / 2.0f)));
+        }
+
+        require_approx(sum / (INT_MAX / 8.0l), 0.0l, 1e+14);
+        */
     }
 }

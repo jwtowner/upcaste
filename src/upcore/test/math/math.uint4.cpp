@@ -109,6 +109,14 @@ namespace math_uint4
         require(all(isequal(d, broadcast<uint4>(4))));
     }
 
+    UP_TEST_CASE(comparison) {
+        uint4 a = make<uint4>(10, 20, 30, 50);
+        require(!all(isgreater(a, make<uint4>(11, 21, 31, 51))));
+        require(!all(isgreaterequal(a, make<uint4>(11, 21, 31, 51))));
+        require(all(isless(a, make<uint4>(11, 21, 31, 51))));
+        require(all(islessequal(a, make<uint4>(10, 21, 30, 51))));
+    }
+
     UP_TEST_CASE(arithmetic) {
         uint4 a = make<uint4>(10, 20, 30, 50);
 
@@ -141,24 +149,27 @@ namespace math_uint4
         b = add_sat(uniform<uint4>::max, a);
         require(all(isequal(b, broadcast<uint4>(UINT32_MAX))));
     }
-/*
+
     UP_TEST_CASE(sub_sat) {
-        int4 a = make<int4>(-1, -2, 3, 5);
-        int4 b;
+        uint4 a = make<uint4>(0, 1, 3, 5);
+        uint4 b;
 
-        b = sub_sat(a, uniform<int4>::max);
-        require(all(isequal(b, make<int4>(INT32_MIN, INT32_MIN, -INT32_MAX + 3, -INT32_MAX + 5))));
+        b = sub_sat(a, uniform<uint4>::max);
+        require(all(isequal(b, broadcast<uint4>(0))));
 
-        b = sub_sat(a, uniform<int4>::min);
-        require(all(isequal(b, make<int4>(INT32_MAX, INT32_MAX - 1, INT32_MAX, INT32_MAX))));
+        b = sub_sat(a, make<uint4>(UINT32_MAX, 50, UINT32_MAX, 50));
+        require(all(isequal(b, broadcast<uint4>(0))));
 
-        b = sub_sat(uniform<int4>::max, uniform<int4>::min);
-        require(all(isequal(b, make<int4>(INT32_MAX, INT32_MAX, INT32_MAX, INT32_MAX))));
+        b = sub_sat(a, make<uint4>(1, 0, 1, 3));
+        require(all(isequal(b, make<uint4>(0, 1, 2, 2))));
 
-        b = sub_sat(uniform<int4>::min, uniform<int4>::max);
-        require(all(isequal(b, make<int4>(INT32_MIN, INT32_MIN, INT32_MIN, INT32_MIN))));
+        b = sub_sat(uniform<uint4>::max, uniform<uint4>::max);
+        require(all(isequal(b, broadcast<uint4>(0))));
+
+        b = sub_sat(uniform<uint4>::max, a);
+        require(all(isequal(b, make<uint4>(UINT32_MAX, UINT32_MAX - 1, UINT32_MAX - 3, UINT32_MAX - 5))));
     }
-*/
+
     UP_TEST_CASE(abs_diff) {
         uint4 a = make<uint4>(1, 2, 0, 5);
         uint4 b = make<uint4>(10, 8, 5, 20);
@@ -255,4 +266,3 @@ namespace math_uint4
         require(all(isequal(c, c_expected)));
     }
 }
-

@@ -46,16 +46,16 @@ namespace cstdlib
         require((256 == up::fast_strtol(" 0x100goo ", &endptr, 0)) && (errno == 0) && !strcmp(endptr, "goo "));
         require((512 == up::fast_strtol(" 0x200goo ", &endptr, 16)) && (errno == 0) && !strcmp(endptr, "goo "));
         require((-1024 == up::fast_strtol(" -400goo ", &endptr, 16)) && (errno == 0) && !strcmp(endptr, "goo "));
-        require((LONG_MIN == up::fast_strtol("-2147483648", nullptr, 0)) && (errno == 0));
-        require((LONG_MAX == up::fast_strtol("+2147483647", nullptr, 0)) && (errno == 0));
-        require((LONG_MIN == up::fast_strtol("-2147483648", nullptr, 10)) && (errno == 0));
-        require((LONG_MAX == up::fast_strtol("2147483647", nullptr, 10)) && (errno == 0));
+        require((-2147483647L - 1L == up::fast_strtol("-2147483648", nullptr, 0)) && (errno == 0));
+        require((2147483647L == up::fast_strtol("+2147483647", nullptr, 0)) && (errno == 0));
+        require((-2147483647L - 1L == up::fast_strtol("-2147483648", nullptr, 10)) && (errno == 0));
+        require((2147483647L == up::fast_strtol("2147483647", nullptr, 10)) && (errno == 0));
 
         errno = 0;
-        require((LONG_MIN == up::fast_strtol("-3947483647", nullptr, 10)) && (errno == ERANGE));
+        require((LONG_MIN ==up::fast_strtol("-9191419223372099999999999", nullptr, 10)) && (errno == ERANGE));
 
         errno = 0;
-        require((LONG_MAX == up::fast_strtol("3947483647", nullptr, 10)) && (errno == ERANGE));
+        require((LONG_MAX == up::fast_strtol("9191419223372099999999999", nullptr, 10)) && (errno == ERANGE));
 
         errno = 0;
         require((0 == up::fast_strtol("+-", &endptr, 10)) && (errno == EINVAL) && !strcmp(endptr, "+-"));

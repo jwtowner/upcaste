@@ -58,8 +58,8 @@ namespace up
 
             // apply the new locale
             for (i = LC_MIN + 1; i <= LC_MAX; ++i) {
-                if (locobj->locinfo->lc_category[i].locale) {
-                    result = ::setlocale(i, locobj->locinfo->lc_category[i].locale);
+                if (new_locale->locinfo->lc_category[i].locale) {
+                    result = ::setlocale(i, new_locale->locinfo->lc_category[i].locale);
                 }
                 else {
                     result = ::setlocale(i, "C");

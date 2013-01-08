@@ -41,7 +41,7 @@ namespace up
         uintptr_t address;
 
         hashcode1 = hashcode;
-#if SIZE_MAX <= UINT32_MAX
+#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
         hashcode2 = n;
 #else
         hashcode2 = static_cast<uint32_t>(n & UINT32_MAX) ^ static_cast<uint32_t>((n >> 32) & UINT32_MAX);

@@ -46,6 +46,7 @@ namespace up { namespace test
 
         test_case(char const* name, char const* file, long line);
         void add_category(char const* category);
+        void exceptions_enabled(bool enabled) noexcept;
         void expects_assertion(bool value) noexcept;
         void expects_error(bool value) noexcept;
         void iterations(unsigned int count) noexcept;
@@ -55,6 +56,7 @@ namespace up { namespace test
 
         char const* file_name_;
         long line_number_;
+        bool exceptions_enabled_;
         bool expects_assertion_;
         bool expects_error_;
         unsigned int iterations_;
@@ -69,6 +71,11 @@ namespace up { namespace test
     inline UPHIDDENINLINE
     long test_case::line_number() const noexcept {
         return line_number_;
+    }
+
+    inline UPHIDDENINLINE
+    void test_case::exceptions_enabled(bool enabled) noexcept {
+        exceptions_enabled_ = enabled;
     }
 
     inline UPHIDDENINLINE

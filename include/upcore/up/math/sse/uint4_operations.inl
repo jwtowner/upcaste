@@ -517,29 +517,32 @@ namespace up { namespace math
     }
 
     inline UPALWAYSINLINE uint4 isgreater(uint4_cval1_t v1, uint4_cval2_t v2) noexcept {
-        int4 m = _mm_cmpgt_epi32(v1.m, v2.m);
-        int4 t1 = _mm_srai_epi32(v1.m, 31);
-        int4 t2 = _mm_srai_epi32(v2.m, 31);
-        int4 s = _mm_xor_si128(t1, t2);
-        t2 = _mm_andnot_si128(t2, t1);
-        s = _mm_andnot_si128(s, m);
-        uint4 r = { _mm_or_si128(t2, s) };
+        int4 t1 = _mm_xor_si128(v1.m, uniform<int4>::min);
+        int4 t2 = _mm_xor_si128(v2.m, uniform<int4>::min);
+        uint4 r = { _mm_cmpgt_epi32(t1, t2) };
         return r;
     }
 
     inline UPALWAYSINLINE uint4 isgreaterequal(uint4_cval1_t v1, uint4_cval2_t v2) noexcept {
-        uint4 r = isgreater(v2, v1);
-        r.m = _mm_andnot_si128(r.m, as<int4>(uniform<uint4>::mask_xyzw));
+        int4 t1 = _mm_xor_si128(v1.m, uniform<int4>::min);
+        int4 t2 = _mm_xor_si128(v2.m, uniform<int4>::min);
+        t2 = _mm_cmpgt_epi32(t2, t1);
+        uint4 r = { _mm_andnot_si128(t2, as<int4>(uniform<uint4>::mask_xyzw)) };
         return r;
     }
 
     inline UPALWAYSINLINE uint4 isless(uint4_cval1_t v1, uint4_cval2_t v2) noexcept {
-        return isgreater(v2, v1);
+        int4 t1 = _mm_xor_si128(v1.m, uniform<int4>::min);
+        int4 t2 = _mm_xor_si128(v2.m, uniform<int4>::min);
+        uint4 r = { _mm_cmplt_epi32(t1, t2) };
+        return r;
     }
 
     inline UPALWAYSINLINE uint4 islessequal(uint4_cval1_t v1, uint4_cval2_t v2) noexcept {
-        uint4 r = isgreater(v1, v2);
-        r.m = _mm_andnot_si128(r.m, as<int4>(uniform<uint4>::mask_xyzw));
+        int4 t1 = _mm_xor_si128(v1.m, uniform<int4>::min);
+        int4 t2 = _mm_xor_si128(v2.m, uniform<int4>::min);
+        t2 = _mm_cmplt_epi32(t2, t1);
+        uint4 r = { _mm_andnot_si128(t2, as<int4>(uniform<uint4>::mask_xyzw)) };
         return r;
     }
 
@@ -607,17 +610,11 @@ namespace up { namespace math
     }
 
     inline UPALWAYSINLINE uint4 add_sat(uint4_cval1_t v1, uint4_cval2_t v2) noexcept {
-        int4 sum = _mm_add_epi32(v1.m, v2.m);
-        int4 mask = _mm_or_si128(v1.m, v2.m);
-        mask = _mm_andnot_si128(sum, mask);
-#ifdef UP_SIMD_SSE_4_1
-        uint4 r = { _mm_castps_si128(_mm_blendv_ps(_mm_castsi128_ps(sum), as<float4>(uniform<uint4>::max), _mm_castsi128_ps(mask))) };
-#else
-        mask = _mm_srai_epi32(mask, 31);
-        int4 a = _mm_and_si128(as<int4>(uniform<uint4>::max), mask);
-        int4 b = _mm_andnot_si128(mask, sum);
-        uint4 r = { _mm_or_si128(a, b) };
-#endif
+        int4 s = _mm_add_epi32(v1.m, v2.m);
+        int4 xv = _mm_xor_si128(v1.m, uniform<int4>::min);
+        int4 xs = _mm_xor_si128(s, uniform<int4>::min);
+        xs = _mm_cmplt_epi32(xs, xv);
+        uint4 r = { _mm_or_si128(s, xs) };
         return r;
     }
 
@@ -626,17 +623,12 @@ namespace up { namespace math
     }
 
     inline UPALWAYSINLINE uint4 sub_sat(uint4_cval1_t v1, uint4_cval2_t v2) noexcept {
-        int4 sum = _mm_sub_epi32(v1.m, v2.m);
-        int4 mask = _mm_or_si128(v1.m, v2.m);
-        mask = _mm_andnot_si128(sum, mask);
-#ifdef UP_SIMD_SSE_4_1
-        uint4 r = { _mm_castps_si128(_mm_blendv_ps(_mm_castsi128_ps(sum), as<float4>(uniform<int4>::min), _mm_castsi128_ps(mask))) };
-#else
-        mask = _mm_srai_epi32(mask, 31);
-        int4 a = _mm_and_si128(uniform<int4>::min, mask);
-        int4 b = _mm_andnot_si128(mask, sum);
-        uint4 r = { _mm_or_si128(a, b) };
-#endif
+        int4 s = _mm_sub_epi32(v1.m, v2.m);
+        int4 xv = _mm_xor_si128(v1.m, uniform<int4>::min);
+        int4 xs = _mm_xor_si128(s, uniform<int4>::min);
+        xv = _mm_cmplt_epi32(xv, xs);
+        xv = _mm_andnot_si128(xv, as<int4>(uniform<uint4>::mask_xyzw));
+        uint4 r = { _mm_and_si128(s, xv) };
         return r;
     }
 
