@@ -539,7 +539,7 @@ namespace up { namespace detail { namespace
                 goto start_fraction;
             }
             exponent_char = (flags & print_flag_upper) ? CHR('E') : CHR('e');
-            exponent_zeropad = 2 - (work_tail - exp_head);
+            exponent_zeropad = 2;
         }
         else {
             // a,A conversion style, hexadecimal significand and binary exponent
@@ -567,7 +567,7 @@ namespace up { namespace detail { namespace
         // the exponent always contains at least one digits for a,A style conversions
         // and at least two digits for e,E,g,G style conversion, and only as many
         // more digits as necessary to represent the exponent
-        for ( ; exponent_zeropad > 0; --exponent_zeropad) {
+        for (exponent_zeropad -= (work_tail - exp_head); exponent_zeropad > 0; --exponent_zeropad) {
             *(--exp_head) = CHR('0');
         }
 

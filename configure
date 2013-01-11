@@ -3007,7 +3007,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: ------ Standard C/C++ Library Headers ------" >&5
 $as_echo "$as_me: ------ Standard C/C++ Library Headers ------" >&6;}
 
-# UP_HAS_STDC_INTTYPES
+# UP_HAS_STDC_FENV
 
 
 ac_ext=cpp
@@ -3398,6 +3398,50 @@ fi
 
 done
 
+
+ac_fn_cxx_check_header_mongrel "$LINENO" "fenv.h" "ac_cv_header_fenv_h" "$ac_includes_default"
+if test "x$ac_cv_header_fenv_h" = xyes; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for fenv.h compliance" >&5
+$as_echo_n "checking for fenv.h compliance... " >&6; }
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+ #include <fenv.h>
+int
+main ()
+{
+
+                feclearexcept(FE_ALL_EXCEPT);
+                fesetexceptflag(0, FE_ALL_EXCEPT);
+                fegetexceptflag(0, FE_ALL_EXCEPT);
+                feraiseexcept(FE_ALL_EXCEPT);
+                fetestexcept(FE_ALL_EXCEPT);
+                fesetenv(FE_DFL_ENV);
+                fegetenv(0);
+                feholdexcept(0);
+                feupdateenv(0);
+                fegetround();
+                fesetround(FE_TONEAREST);
+
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+        $as_echo "#define UP_HAS_STDC_FENV 1" >>confdefs.h
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+
+
+
+# UP_HAS_STDC_INTTYPES
 
 ac_fn_cxx_check_header_mongrel "$LINENO" "inttypes.h" "ac_cv_header_inttypes_h" "$ac_includes_default"
 if test "x$ac_cv_header_inttypes_h" = xyes; then :

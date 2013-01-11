@@ -126,7 +126,7 @@ namespace up { namespace sexp
                 scale = (scale * mantissa_shift) + ((REAL)digit);
             }
 
-            scale = up::math::pow(mantissa_shift, scale);
+            scale = math::pow(mantissa_shift, scale);
         }
 
         // compute final value, testing for overflow/underflow

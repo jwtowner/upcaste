@@ -158,6 +158,29 @@
 #endif
 
 //
+// compiler language pragmas
+//
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 4))
+#   define UP_DETAIL_STDC_FENV_ACCESS_ON \
+        _Pragma("GCC push_options") \
+        _Pragma("GCC optimize(\"-fsignaling-nans -frounding-math\")")
+#   define UP_DETAIL_STDC_FENV_ACCESS_OFF \
+        _Pragma("GCC pop_options")
+#elif (__GNUC__ == 4) && (__GNUC_MINOR__ == 4)
+#   define UP_DETAIL_STDC_FENV_ACCESS_ON \
+        _Pragma("GCC push_options") \
+        _Pragma("GCC optimize(\"-fno-fast-math\")")
+#   define UP_DETAIL_STDC_FENV_ACCESS_OFF \
+        _Pragma("GCC pop_options")
+#else
+#   define UP_DETAIL_STDC_FENV_ACCESS_ON
+#   define UP_DETAIL_STDC_FENV_ACCESS_OFF
+#endif
+
+#define UP_STDC_FENV_ACCESS(arg) UP_DETAIL_STDC_FENV_ACCESS_##arg
+#define UP_STDC_FP_CONTRACT(arg)
+
+//
 // compiler built-ins
 //
 #define UPABORT __builtin_trap

@@ -23,6 +23,7 @@
 //
 
 #include <up/cinttypes.hpp>
+#include <up/cmath.hpp>
 #include <up/log.hpp>
 #include <up/random.hpp>
 #include <up/test.hpp>
@@ -330,18 +331,58 @@ namespace prng
         }
 
         require_approx(sum / 32768.0l, 0.0l, 1.0l);
+    }
 
-        /*
-        up::uniform_real_distribution<float> dist3(-(FLT_MAX / 2.0f), (FLT_MAX / 2.0f));
-        require((dist3.a() == -(FLT_MAX / 2.0f)) && (dist3.b() == (FLT_MAX / 2.0f)));
-        require((dist3.min() == -(FLT_MAX / 2.0f)) && (dist3.max() == (FLT_MAX / 2.0f)));
+    UP_TEST_CASE(uniform_double_distribution) {
+        up::default_random_engine engine;
+        long double sum;
+        double x;
+        size_t i;
 
-        for (sum = 0.0l, i = 1; i <= (INT_MAX / 8); sum += x, ++i) {
-            x = dist3(engine);
-            require((-(FLT_MAX / 2.0f) <= x) && (x < (FLT_MAX / 2.0f)));
+        static_assert(up::is_same<double, up::uniform_real_distribution<double>::result_type>::value, "unexpected type");
+
+        up::uniform_real_distribution<double> dist0(0.0, 0.0);
+        require((dist0.a() == 0.0) && (dist0.b() == 0.0));
+        require((dist0.min() == 0.0) && (dist0.max() == 0.0));
+
+        for (sum = 0.0l, i = 1; i <= 1024; sum += x, ++i) {
+            x = dist0(engine);
+            require(x == 0.0);
         }
 
-        require_approx(sum / (INT_MAX / 8.0l), 0.0l, 1e+14);
-        */
+        require_approx(sum / 1024.0l, 0.0l, LDBL_EPSILON);
+
+        up::uniform_real_distribution<double> dist1;
+        require((dist1.a() == 0.0) && (dist1.b() == 1.0));
+        require((dist1.min() == 0.0) && (dist1.max() == 1.0));
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += x, ++i) {
+            x = dist1(engine);
+            require((0.0 <= x) && (x < 1.0));
+        }
+
+        require_approx(sum / 32768.0l, 0.5l, 0.01l);
+
+        up::uniform_real_distribution<double> dist2(-128.0, 128.0);
+        require((dist2.a() == -128.0) && (dist2.b() == 128.0));
+        require((dist2.min() == -128.0) && (dist2.max() == 128.0));
+
+        for (sum = 0.0l, i = 1; i <= 32768; sum += x, ++i) {
+            x = dist2(engine);
+            require((-128.0 <= x) && (x < 128.0));
+        }
+
+        require_approx(sum / 32768.0l, 0.0l, 1.0l);
+
+        up::uniform_real_distribution<double> dist3(-FLT_MAX, FLT_MAX);
+        require((dist3.a() == -FLT_MAX) && (dist3.b() == FLT_MAX));
+        require((dist3.min() == -FLT_MAX) && (dist3.max() == FLT_MAX));
+
+        for (sum = 0.0l, i = 1; i <= INT_MAX; sum += x, ++i) {
+            x = dist3(engine);
+            require((-FLT_MAX <= x) && (x < FLT_MAX));
+        }
+
+        require_approx(sum / INT_MAX, 0.0l, FLT_MAX);
     }
 }

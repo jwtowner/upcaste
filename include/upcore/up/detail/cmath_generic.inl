@@ -146,6 +146,7 @@ namespace up { namespace math
     extern LIBUPCOREAPI double remquo(double x, double y, int* q) noexcept;
     extern LIBUPCOREAPI double scalbln(double x, long y) noexcept;
     extern LIBUPCOREAPI double scalbn(double x, int y) noexcept;
+    extern LIBUPCOREAPI double rint(double x) noexcept;
     extern LIBUPCOREAPI double tgamma(double x) noexcept;
 
     extern LIBUPCOREAPI float acosh(float x) noexcept;
@@ -159,6 +160,7 @@ namespace up { namespace math
     extern LIBUPCOREAPI float nexttoward(float x, long double y) noexcept;
     extern LIBUPCOREAPI float remainder(float x, float y) noexcept;
     extern LIBUPCOREAPI float remquo(float x, float y, int* q) noexcept;
+    extern LIBUPCOREAPI float rint(float x) noexcept;
     extern LIBUPCOREAPI float scalbln(float x, long y) noexcept;
     extern LIBUPCOREAPI float scalbn(float x, int y) noexcept;
     extern LIBUPCOREAPI float tgamma(float x) noexcept;
@@ -174,6 +176,7 @@ namespace up { namespace math
     extern LIBUPCOREAPI long double nexttoward(long double x, long double y) noexcept;
     extern LIBUPCOREAPI long double remainder(long double x, long double y) noexcept;
     extern LIBUPCOREAPI long double remquo(long double x, long double y, int* q) noexcept;
+    extern LIBUPCOREAPI long double rint(long double x) noexcept;
     extern LIBUPCOREAPI long double scalbln(long double x, long y) noexcept;
     extern LIBUPCOREAPI long double scalbn(long double x, int y) noexcept;
     extern LIBUPCOREAPI long double tgamma(long double x) noexcept;
@@ -198,7 +201,6 @@ namespace up { namespace math
     inline UPALWAYSINLINE double logb(double x) noexcept { return log(fabs(x)) / DBL_LN2; }
     inline UPALWAYSINLINE long lrint(double x) noexcept { return static_cast<long>(x); }
     inline UPALWAYSINLINE long lround(double x) noexcept { return static_cast<long>(floor(x + 0.5)); }
-    inline UPALWAYSINLINE double rint(double x) noexcept { return floor(x); }
     inline UPALWAYSINLINE double round(double x) noexcept { return floor(x + 0.5); }
     inline UPALWAYSINLINE double trunc(double x) noexcept { return copysign(floor(fabs(x)), x); }
     
@@ -218,7 +220,6 @@ namespace up { namespace math
     inline UPALWAYSINLINE float logb(float x) noexcept { return log(fabs(x)) / FLT_LN2; }
     inline UPALWAYSINLINE long lrint(float x) noexcept { return static_cast<long>(x); }
     inline UPALWAYSINLINE long lround(float x) noexcept { return static_cast<long>(floor(x + 0.5f)); }
-    inline UPALWAYSINLINE float rint(float x) noexcept { return floor(x); }
     inline UPALWAYSINLINE float round(float x) noexcept { return floor(x + 0.5f); }
     inline UPALWAYSINLINE float trunc(float x) noexcept { return copysign(floor(fabs(x)), x); }
 
@@ -238,7 +239,6 @@ namespace up { namespace math
     inline UPALWAYSINLINE long double logb(long double x) noexcept { return log(fabs(x)) / LDBL_LN2; }
     inline UPALWAYSINLINE long lrint(long double x) noexcept { return static_cast<long>(x); }
     inline UPALWAYSINLINE long lround(long double x) noexcept { return static_cast<long>(floor(x + 0.5l)); }
-    inline UPALWAYSINLINE long double rint(long double x) noexcept { return floor(x); }
     inline UPALWAYSINLINE long double round(long double x) noexcept { return floor(x + 0.5l); }
     inline UPALWAYSINLINE long double trunc(long double x) noexcept { return copysign(floor(fabs(x)), x); }
 }}

@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{05929c02-5216-11e2-a057-000c2978b81b}</ProjectGuid>
+    <ProjectGuid>{a23e22a8-5b97-11e2-8d25-7d8ff4b8ed2a}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>uptest</RootNamespace>
     <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>

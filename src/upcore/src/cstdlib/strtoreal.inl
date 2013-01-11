@@ -29,16 +29,18 @@
 #include <up/cmath.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cstring.hpp>
+#include <up/cstdio.hpp>
 
 namespace up
 {
     LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
-    RTYPE NAME(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept {
+    REAL NAME(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept {
         DECLARE_RADIX_VARIABLES
         char const* ptr, * startptr, * prevptr, * estartptr, * eprevptr;
-        RTYPE value, mantissa, scale, mantissa_shift, fraction_shift, exponent_base;
-        unsigned char digit, exponent, mantissa_range;
-        bool negative, inverse;
+        REAL value, mantissa, scale, mantissa_shift, fraction_shift;
+        unsigned char digit, exponent_char, mantissa_range;
+        int exponent, exponent_max;
+        bool sign, inverse;
         size_t tag_length;
         char* tag;
 
@@ -48,9 +50,9 @@ namespace up
         for (ptr = str; ISSPACE(*ptr); ++ptr) ;
 
         // determine sign, if any
-        negative = false;
+        sign = false;
         if (*ptr == '-') {
-            negative = true;
+            sign = true;
             ++ptr;
         }
         else if (*ptr == '+') {
@@ -63,28 +65,28 @@ namespace up
             if (!fast_strncasecmp(ptr, "inity", 5)) {
                 ptr += 5;
             }
-            value = INFINITY_VALUE;
+            value = REAL_INFINITY;
             goto finished;
         }
         else if (fast_iseqlower(*ptr, 'n') && fast_iseqlower(*(ptr + 1), 'a') && fast_iseqlower(*(ptr + 2), 'n')) {
             ptr += 3;
             if (*ptr != '(') {
-                value = NAN_VALUE;
+                value = REAL_NAN;
             }
             else {
                 startptr = ++ptr;
                 ptr = strchr(ptr, ')');
-                if (!ptr) {
+                if (UPUNLIKELY(!ptr)) {
                     goto error;
                 }
                 tag_length = ptr++ - startptr;
                 tag = static_cast<char*>(malloca(tag_length + 1));
-                if (!tag) {
-                    value = NAN_VALUE;
+                if (UPUNLIKELY(!tag)) {
+                    value = REAL_NAN;
                     goto finished;
                 }
                 *static_cast<char*>(mempcpy(tag, startptr, tag_length)) = '\0';
-                value = NAN_TAG(tag);
+                value = math::nan<REAL>(tag);
                 freea(tag);
             }
             goto finished;
@@ -92,20 +94,21 @@ namespace up
 
         // setup default state
         inverse = false;
-        scale = ONE_VALUE;
-        mantissa = ZERO_VALUE;
-        mantissa_shift = TEN_VALUE;
+        scale = REAL_ONE;
+        mantissa = REAL_ZERO;
+        mantissa_shift = REAL_TEN;
         mantissa_range = 0;
-        exponent_base = TEN_VALUE;
-        exponent = 'e';
+        exponent_max = REAL_MAX_10_EXP;
+        exponent_char = 'e';
+        exponent = 0;
         INIT_RADIX_VARIABLES
         
         // determine hexadecimal base
         if ((*ptr == '0') && fast_iseqlower(*(ptr + 1), 'x')) {
-            mantissa_shift = SIXTEEN_VALUE;
+            mantissa_shift = REAL_SIXTEEN;
             mantissa_range = 6;
-            exponent_base = TWO_VALUE;
-            exponent = 'p';
+            exponent_max = REAL_MAX_EXP;
+            exponent_char = 'p';
             ptr += 2;
         }
 
@@ -119,7 +122,7 @@ namespace up
                 }
                 digit += 10;
             }
-            mantissa = (mantissa * mantissa_shift) + static_cast<RTYPE>(digit);
+            mantissa = (mantissa * mantissa_shift) + static_cast<REAL>(digit);
         }
 
         // read in optional fraction after radix character
@@ -134,13 +137,13 @@ namespace up
                     }
                     digit += 10;
                 }
-                mantissa += static_cast<RTYPE>(digit) / fraction_shift;
+                mantissa += static_cast<REAL>(digit) / fraction_shift;
                 fraction_shift *= mantissa_shift;
             }
         }
 
         // read in optional exponent
-        if (fast_iseqlower(*ptr, exponent) && ((ptr != startptr) || (ptr == prevptr))) {
+        if (fast_iseqlower(*ptr, exponent_char) && ((ptr != startptr) || (ptr == prevptr))) {
             eprevptr = ptr++;
             if (*ptr == '-') {
                 inverse = true;
@@ -149,47 +152,55 @@ namespace up
             else if (*ptr == '+') {
                 ++ptr;
             }
-            
-            scale = ZERO_VALUE;
 
             for (estartptr = ptr; ; ++ptr) {
                 digit = *ptr - '0';
                 if (digit >= 10) {
                     break;
                 }
-                scale = (scale * TEN_VALUE) + static_cast<RTYPE>(digit);
+                exponent = (exponent * 10) + static_cast<int>(digit);
+                if (UPUNLIKELY(exponent > exponent_max)) {
+                    // overflow occurred, consume rest of input
+                    for (++ptr; static_cast<char>(*ptr - '0') < 10; ++ptr) ;
+                    value = inverse ? REAL_MIN : REAL_INFINITY;
+                    errno = ERANGE;
+                    goto finished;
+                }
             }
 
-            if (ptr != estartptr) {
-                scale = math::pow(exponent_base, scale);
-            }
-            else {
-                scale = ONE_VALUE;
+            if (UPUNLIKELY(ptr == estartptr)) {
+                inverse = false;
                 ptr = eprevptr;
             }
-        }
-
-        // compute final value if conversion occured, testing for overflow/underflow
-        if (ptr != startptr) {
-            value = inverse ? (mantissa / scale) : (mantissa * scale);
-            if ((value <= EPSILON_VALUE) && (mantissa > EPSILON_VALUE)) {
-                value = EPSILON_VALUE;
-                errno = ERANGE;
-            }
-            else if (value > MAX_VALUE) {
-                value = INFINITY_VALUE;
-                errno = ERANGE;
+            
+            if (inverse) {
+                exponent = -exponent;
             }
 
-            goto finished;
+            if (exponent_char == 'e') {
+                scale = math::pow10<REAL>(exponent);
+            }
+            else {
+                scale = math::pow(REAL_TWO, exponent);
+            }
         }
-       
-    error:
 
-        value = ZERO_VALUE;
-        errno = EINVAL;
-        negative = false;
-        ptr = str;
+        if (UPUNLIKELY(ptr == startptr)) {
+            goto error;
+        }
+
+        // conversion from text successful, compute final value
+        value = mantissa * scale;
+        if ((value < REAL_MIN) && (mantissa >= REAL_MIN)) {
+            // underflow occurred
+            value = REAL_MIN;
+            errno = ERANGE;
+        }
+        else if ((value > REAL_MAX) && (mantissa <= REAL_MAX)) {
+            // overflow occurred
+            value = REAL_INFINITY;
+            errno = ERANGE;
+        }
 
     finished:
 
@@ -198,6 +209,14 @@ namespace up
             *endptr = const_cast<char*>(ptr);
         }
 
-        return negative ? -value : value;
+        return sign ? -value : value;
+
+    error:
+
+        value = REAL_ZERO;
+        errno = EINVAL;
+        sign = false;
+        ptr = str;
+        goto finished;
     }
 }

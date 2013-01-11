@@ -47,11 +47,9 @@ namespace up { namespace test
 {
     namespace
     {
-#ifndef UP_NO_EXCEPTIONS
-        thread_local bool current_exceptions_enabled;
-#endif
         thread_local jmp_buf current_jump_buffer;
         thread_local test_error* current_failure;
+        thread_local bool current_exceptions_enabled;
         
         bool UPCDECL redirect_assertion_handler(char const* file, long line, char const* condition) {
 #if (UP_PLATFORM == UP_PLATFORM_WINDOWS)
@@ -95,30 +93,54 @@ namespace up { namespace test
     }
 
     LIBUPTESTAPI
+    void test_case::add_category(char const* category) {
+        assert(category);
+
+        category_container::const_iterator itr, end;
+        for ( itr  = impl_->categories.begin(), end = impl_->categories.end();
+            itr != end;
+            ++itr
+        ) {
+            if ((*itr == category) || !strcmp(*itr, category)) {
+                return;
+            }
+        }
+
+        if (itr != impl_->categories.end()) {
+            impl_->categories.push_back(category);
+        }
+    }
+
+    LIBUPTESTAPI
     unsigned int test_case::test_count(test_filter& filter) const {
         return filter.matches(*this) ? 1 : 0;
     }
 
     LIBUPTESTAPI
     test_result const& test_case::run(test_listener& listener, test_filter& filter) {
-        timespec start, stop, elapsed;
-        assert_handler old_handler;
-        unsigned int i;
-        bool is_error;
-
         if (!filter.matches(*this)) {
             listener.test_case_ignored(*this);
             result_.ignore();
             return result_;
         }
             
-        old_handler = set_assert_handler(&redirect_assertion_handler);
-            
 #ifndef UP_NO_EXCEPTIONS
-        current_exceptions_enabled = exceptions_enabled_;
-        if (!exceptions_enabled_) {
-            goto use_setjmp_longjmp;
+        if (exceptions_enabled_) {
+            return run_except(listener);
         }
+#endif
+
+        return run_setjmp(listener);
+    }
+
+    test_result const& test_case::run_except(test_listener& listener) {
+        timespec start, stop, elapsed;
+        assert_handler old_handler;
+        unsigned int i;
+        bool is_error;
+        
+        current_exceptions_enabled = true;
+        old_handler = set_assert_handler(&redirect_assertion_handler);
 
         try {
             verify(!clock_gettime(CLOCK_MONOTONIC, &start));
@@ -165,11 +187,18 @@ namespace up { namespace test
             }
         }
 
-        goto done;
+        set_assert_handler(old_handler);
+        return run_finalize(listener, &elapsed);
+    }
 
-    use_setjmp_longjmp:
+    test_result const& test_case::run_setjmp(test_listener& listener) {
+        timespec start, stop, elapsed;
+        assert_handler old_handler;
+        unsigned int i;
+        bool is_error;
 
-#endif
+        current_exceptions_enabled = false;
+        old_handler = set_assert_handler(&redirect_assertion_handler);
 
         if (setjmp(current_jump_buffer) == 0) {
             verify(!clock_gettime(CLOCK_MONOTONIC, &start));
@@ -198,46 +227,42 @@ namespace up { namespace test
             }
         }
 
-#ifndef UP_NO_EXCEPTIONS
-    done:
-#endif
-
         set_assert_handler(old_handler);
-                
+        return run_finalize(listener, &elapsed);
+    }
+
+    test_result const& test_case::run_finalize(test_listener& listener, timespec const* elapsed) {
         if (expects_error_) {
-            result_.fail(&elapsed);
-            listener.test_case_failed(*this, test_error(file_name(), line_number(), "Invalid Error", "Expected an exception or assertion error originating from a different source file"));
+            result_.fail(elapsed);
+            listener.test_case_failed(
+                *this,
+                test_error(
+                    file_name(),
+                    line_number(),
+                    "Invalid Error",
+                    "Expected an exception or assertion error originating from a different source file"
+                )
+            );
             return result_;
         }
 
         if (expects_assertion_) {
-            result_.fail(&elapsed);
-            listener.test_case_failed(*this, test_error(file_name(), line_number(), "Invalid Assertion", "Expected an assertion originating from the test case"));
+            result_.fail(elapsed);
+            listener.test_case_failed(
+                *this,
+                test_error(
+                    file_name(),
+                    line_number(),
+                    "Invalid Assertion",
+                    "Expected an assertion originating from the test case"
+                )
+            );
             return result_;
         }
 
-        result_.pass(&elapsed);
+        result_.pass(elapsed);
         listener.test_case_passed(*this);
         return result_;
-    }
-
-    LIBUPTESTAPI
-    void test_case::add_category(char const* category) {
-        assert(category);
-
-        category_container::const_iterator itr, end;
-        for ( itr  = impl_->categories.begin(), end = impl_->categories.end();
-            itr != end;
-            ++itr
-        ) {
-            if ((*itr == category) || !strcmp(*itr, category)) {
-                return;
-            }
-        }
-
-        if (itr != impl_->categories.end()) {
-            impl_->categories.push_back(category);
-        }
     }
 }}
 

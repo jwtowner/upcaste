@@ -22,6 +22,16 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-//
-// TODO
-//
+#ifndef UP_CFENV_HPP
+#define UP_CFENV_HPP
+
+#include <up/prolog.hpp>
+#if defined UP_HAS_STDC_FENV
+#   include <up/detail/cfenv_c99.inl>
+#elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
+#   include <up/detail/cfenv_msvc.inl>
+#else
+#   error "No fenv.h compatability layer for target platform."
+#endif
+
+#endif

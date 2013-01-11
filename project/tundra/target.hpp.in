@@ -33,6 +33,7 @@
 // Standard C/C++ Library Headers
 //
 
+#undef UP_HAS_STDC_FENV
 #undef UP_HAS_STDC_INTTYPES
 #undef UP_HAS_STDC_LOCALE
 #undef UP_HAS_STDC_MATH_C99

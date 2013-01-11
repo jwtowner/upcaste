@@ -1,7 +1,7 @@
 - Change `cstdio.hpp` to use our portable version of printf/scanf when in use with MSVC.
 - Fix the formatting of floats in `printf` / `fast_printf` variants.
 - Implement `scanf` / `fast_scanf` variants.
-- Implement `memset_pattern16` and `memset_pattern16` and update `uninitialized_fill_n`.
+- Implement `memset_pattern2` and `memset_pattern16` and update `uninitialized_fill_n`.
 - Add implementations for wide-character versions of `printf`/`scanf` functions.
 - Add support for the C floating-point environment and implment `cfenv.hpp`.
 - Optimize and test the s-expression parser/lexer more thoroughly.
@@ -19,10 +19,8 @@
 - Add perfect hashing library which can auto-generate an optimized C++ hashing function source file for a given key set.
 - Add Clang/LLVM compiler support.
 - Improve the benchmarking code in uptest to output more useful metrics, and get rid of the useless ones like the iteration/size count--maybe make it customizable via a format string or flags.
-- Add a simplified random number library to upcore... no need to go overboard, just fast basic integer and floating point normal distributions.
 - Add a command line arguments parsing library to upcore.
 - Make sure function attributes in `cuchar.hpp` match the ones in `cstring.hpp`.
 - Fix u16sncpy and u32sncpy.
 - Audit Windows implementation of thread-local locales for memory leaks and proper use of LC_GLOBAL_LOCALE.
-
 

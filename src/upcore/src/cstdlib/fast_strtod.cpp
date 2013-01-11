@@ -22,21 +22,27 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#define NAME fast_strtod
-#define RTYPE double
-#define ZERO_VALUE 0.0
-#define ONE_VALUE 1.0
-#define TWO_VALUE 2.0
-#define TEN_VALUE 10.0
-#define SIXTEEN_VALUE 16.0
-#define EPSILON_VALUE DBL_EPSILON
-#define MAX_VALUE DBL_MAX
-#define INFINITY_VALUE DBL_INFINITY
-#define NAN_VALUE DBL_NAN
-#define NAN_TAG(tag) math::nan(tag)
-#define ISSPACE(c) ((c != '\0') && (c <= ' '))
-#define ISRADIX(s) (*s == '.')
-#define RADIX_LENGTH 1
+#define NAME                    fast_strtod
+#define REAL                    double
+#define REAL_ZERO               0.0
+#define REAL_ONE                1.0
+#define REAL_TWO                2.0
+#define REAL_TEN                10.0
+#define REAL_SIXTEEN            16.0
+#define REAL_EPSILON            DBL_EPSILON
+#define REAL_INFINITY           DBL_INFINITY
+#define REAL_NAN                DBL_NAN
+#define REAL_DIG                DBL_DIG
+#define REAL_MANT_DIG           DBL_MANT_DIG
+#define REAL_MAX                DBL_MAX
+#define REAL_MAX_10_EXP         DBL_MAX_10_EXP
+#define REAL_MAX_EXP            DBL_MAX_EXP
+#define REAL_MIN                DBL_MIN
+#define REAL_MIN_10_EXP         DBL_MIN_10_EXP
+#define REAL_MIN_EXP            DBL_MIN_EXP
+#define ISSPACE(c)              ((c != '\0') && (c <= ' '))
+#define ISRADIX(s)              (*s == '.')
+#define RADIX_LENGTH            1
 #define DECLARE_RADIX_VARIABLES
 #define INIT_RADIX_VARIABLES
 #include "strtoreal.inl"

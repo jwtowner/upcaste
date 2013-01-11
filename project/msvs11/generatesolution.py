@@ -59,7 +59,7 @@ library_linkage = ['Shared', 'Static']
 ###                          MISCELLANEOUS
 ###---==============================================================---
 
-def get_project_filepath(project_name, project_info):    
+def get_project_filepath(project_name, project_info):
     return os.path.join(project_groups[project_info[0]], project_name + '.vcxproj')
 
 def get_sorted_directory_items(dirpath):
@@ -106,14 +106,14 @@ def get_project_include_dirs(name, info):
 ###---==============================================================---
 ###                 MSVS2010 PROJECT FILE GENERATION
 ###---==============================================================---
-    
+
 def build_project_files(project_uuids):
     for project_name, project_info in projects.items():
         build_project_file(project_name, project_uuids[project_name], project_info)
-        
+
 def build_project_file(project_name, project_uuid, project_info):
     project_filepath = get_project_filepath(project_name, project_info)
-    
+
     # generate *.vcxproj file
     with open(project_filepath, 'wt') as output:
         output.write('<?xml version=\"1.0\" encoding=\"utf-8\"?>\n')
@@ -130,7 +130,7 @@ def build_project_file(project_name, project_uuid, project_info):
         output.write('  <Import Project=\"$(VCTargetsPath)\Microsoft.Cpp.targets\" />\n')
         build_project_extension_targets(output)
         output.write('</Project>\n')
-    
+
     # generate *.vcxproj.filters file
     with open(project_filepath + '.filters', 'wt') as output:
         output.write('<?xml version="1.0" encoding="utf-8"?>\n')
@@ -138,7 +138,7 @@ def build_project_file(project_name, project_uuid, project_info):
         build_project_directory_filters(output, project_info)
         build_project_file_filters(output, project_info)
         output.write('</Project>\n')
-        
+
 def build_project_globals(output, project_name, project_uuid):
     output.write('  <PropertyGroup Label=\"Globals\">\n')
     output.write('    <ProjectGuid>{{{0}}}</ProjectGuid>\n'.format(project_uuid))
@@ -146,7 +146,7 @@ def build_project_globals(output, project_name, project_uuid):
     output.write('    <RootNamespace>{0}</RootNamespace>\n'.format(project_name))
     output.write('    <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>\n')
     output.write('  </PropertyGroup>\n')
-        
+
 def build_project_configuration_itemgroup(output):
     output.write('  <ItemGroup Label=\"ProjectConfigurations\">\n')
     for linkage in library_linkage:
@@ -157,7 +157,7 @@ def build_project_configuration_itemgroup(output):
                 output.write('      <Platform>{0}</Platform>\n'.format(arch))
                 output.write('    </ProjectConfiguration>\n')
     output.write('  </ItemGroup>\n')
-    
+
 def build_project_configuration_propertygroup(output, project_info):
     for linkage in library_linkage:
         for config in configurations:
@@ -174,7 +174,7 @@ def build_project_configuration_propertygroup(output, project_info):
             output.write('    <UseDebugLibraries>{0}</UseDebugLibraries>\n'.format('true' if config == 'Debug' else 'false'))
             output.write('    <WholeProgramOptimization>{0}</WholeProgramOptimization>\n'.format('false' if config == 'Debug' else 'true'))
             output.write('  </PropertyGroup>\n')
-            
+
 def build_project_extension_settings(output):
     output.write('  <ImportGroup Label=\"ExtensionSettings\">\n')
     output.write('  </ImportGroup>\n')
@@ -182,8 +182,8 @@ def build_project_extension_settings(output):
 def build_project_extension_targets(output):
     output.write('  <ImportGroup Label=\"ExtensionTargets\">\n')
     output.write('  </ImportGroup>\n')
-    
-def build_project_propertysheet_imports(output, project_info):    
+
+def build_project_propertysheet_imports(output, project_info):
     for linkage in library_linkage:
         for config in configurations:
             output.write('  <ImportGroup Condition=\"\'$(Configuration)\'==\'{0}-{1}\'\" Label=\"PropertySheets\">\n'.format(linkage, config))
@@ -197,11 +197,30 @@ def build_project_propertysheet_imports(output, project_info):
             elif (project_info[0] == LIBRARY_PROJECT) and (linkage == 'Shared'):
                 output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Target.DynamicLibrary.props\" />\n')
             elif (project_info[0] == LIBRARY_PROJECT) and (linkage == 'Static'):
-                output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Target.StaticLibrary.props\" />\n')                                
+                output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Target.StaticLibrary.props\" />\n')
             output.write('  </ImportGroup>\n')
 
 def build_project_item_definition_groups(output, project_name, project_info):
-   for linkage in library_linkage:
+    # Definition files in src base directory are considered for use with linking
+    definition_files = dict()
+    vcxproj_dir = os.path.join(solution_dir, project_groups[project_info[0]])
+    project_src_root_dir = os.path.join(src_root_dir, project_info[1])
+    for src_dir in project_info[2]:
+        src_dir = os.path.join(project_src_root_dir, src_dir)
+        for item in os.listdir(src_dir):
+            itempath = os.path.join(src_dir, item)
+            if os.path.isfile(itempath) and not os.path.islink(itempath):
+                root, ext = os.path.splitext(itempath)
+                if (ext == '.def'):
+                    relinputfilepath = ntpath.normpath(os.path.relpath(itempath, vcxproj_dir))
+                    _, def_tag = os.path.splitext(root.lower())
+                    if def_tag == '.x64':
+                        definition_files['x64'] = relinputfilepath
+                    elif def_tag == '.x86':
+                        definition_files['Win32'] = relinputfilepath
+
+    # Build item definition groups for each linkage type (static, shared)
+    for linkage in library_linkage:
         for config in configurations:
             output.write('  <ItemDefinitionGroup Condition=\"\'$(Configuration)\'==\'{0}-{1}\'\">\n'.format(linkage, config))
             output.write('    <ClCompile>\n')
@@ -223,9 +242,13 @@ def build_project_item_definition_groups(output, project_name, project_info):
                         dependencies = dependencies + 'OpenCL.lib;'
                 if project_name == 'upsystem':
                     dependencies = dependencies + 'OpenCL.lib;'
-                if len(dependencies) > 0:
+                if (len(dependencies) > 0) or (len(definition_files) > 0):
                     output.write('    <Link>\n')
-                    output.write('      <AdditionalDependencies>{0}%(AdditionalDependencies)</AdditionalDependencies>\n'.format(dependencies))
+                    if len(dependencies) > 0:
+                            output.write('      <AdditionalDependencies>{0}%(AdditionalDependencies)</AdditionalDependencies>\n'.format(dependencies))
+                    if len(definition_files) > 0:
+                        for (platform, filepath) in definition_files.iteritems():
+                            output.write('      <ModuleDefinitionFile Condition=\"\'$(Platform)\'==\'{0}\'\">{1}</ModuleDefinitionFile>'.format(platform, filepath))
                     output.write('    </Link>\n')
                 else:
                     output.write('    <Link />\n')
@@ -260,28 +283,36 @@ def build_project_items_recursive(output, dirpath, vcxproj_dir, project_src_root
         if not ignore_for_compilation:
             ext = ext.lower()
             if (ext == '.c') or (ext == '.cc') or (ext == '.cpp') or (ext == '.cxx'):
+                # C/C++ source file
                 output.write('    <ClCompile Include=\"{0}\" >\n'.format(relinputfilepath))
-		output.write('        <AssemblerListingLocation>$(IntDir){0}%(FileName).asm</AssemblerListingLocation>\n'.format(reloutputpath))
-		output.write('        <ObjectFileName>$(IntDir){0}</ObjectFileName>\n'.format(reloutputpath))
-		output.write('    </ClCompile>\n')
+                output.write('        <AssemblerListingLocation>$(IntDir){0}%(FileName).asm</AssemblerListingLocation>\n'.format(reloutputpath))
+                output.write('        <ObjectFileName>$(IntDir){0}</ObjectFileName>\n'.format(reloutputpath))
+                output.write('    </ClCompile>\n')
                 continue
-            elif (ext == '.asm'):
-                output.write('    <CustomBuild Include=\"{0}\">\n'.format(relinputfilepath))
-                if os.path.basename(root).lower().find('x64') != -1:
-                    output.write('      <Command Condition=\"\'$(Platform)\'==\'x64\'\">ml64 -c \"-Fl$(IntDir){0}%(FileName).lst\" \"-Fo$(IntDir)%(FileName).obj\" \"%(FullPath)\"</Command>\n'.format(reloutputpath))
-                    output.write('      <Message Condition=\"\'$(Platform)\'==\'x64\'\">Assembling \"{0}\" ...</Message>\n'.format(relinputfilepath))
-                    output.write('      <Outputs Condition=\"\'$(Platform)\'==\'x64\'\">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>\n')
-                else:
-                    output.write('      <Command Condition=\"\'$(Platform)\'==\'Win32\'\">ml -c \"-Fl$(IntDir){0}%(FileName).lst\" \"-Fo$(IntDir)%(FileName).obj\" \"%(FullPath)\"</Command>\n'.format(reloutputpath))
-                    output.write('      <Message Condition=\"\'$(Platform)\'==\'Win32\'\">Assembling \"{0}\" ...</Message>\n'.format(relinputfilepath))
-                    output.write('      <Outputs Condition=\"\'$(Platform)\'==\'Win32\'\">$(IntDir)%(FileName).obj;%(Outputs)</Outputs>\n')
-                output.write('      <FileType>Document</FileType>\n')
-                output.write('    </CustomBuild>\n')
-                continue
+            elif (ext == '.asm') or (ext == '.masm'):
+                # MASM assembly file, get the tag in the filename to determine target platform
+                asm_platform = None
+                _, asm_tag = os.path.splitext(root.lower())
+                if asm_tag == '.x64':
+                    asm_ml = 'ML64'
+                    asm_platform = 'x64'
+                elif asm_tag == '.x86':
+                    asm_ml = 'ML'
+                    asm_platform = 'Win32'
+                if asm_platform != None:
+                    # generate custom build step
+                    asm_command = '@ECHO OFF\r\nIF NOT EXIST "$(IntDir){0}" MKDIR "$(IntDir){0}"\r\n'.format(reloutputpath)
+                    asm_command += '{0} /c /W3 /WX /Sa \"/Fl$(IntDir){1}%(FileName).lst\" \"/Fo$(IntDir){1}%(FileName).obj\" \"%(FullPath)\"'.format(asm_ml, reloutputpath)
+                    output.write('    <CustomBuild Include=\"{0}\">\n'.format(relinputfilepath))
+                    output.write('      <Command Condition=\"\'$(Platform)\'==\'{0}\'\">{1}</Command>\n'.format(asm_platform, asm_command))
+                    output.write('      <Outputs Condition=\"\'$(Platform)\'==\'{0}\'\">$(IntDir){1}%(FileName).obj;%(Outputs)</Outputs>\n'.format(asm_platform, reloutputpath))
+                    output.write('      <FileType>Document</FileType>\n')
+                    output.write('    </CustomBuild>\n')
+                    continue
         output.write('    <None Include=\"{0}\" />\n'.format(relinputfilepath))
     for subdirpath in dirs:
         build_project_items_recursive(output, subdirpath, vcxproj_dir, project_src_root_dir, (os.path.basename(subdirpath) in common_ignore_dirs) or ignore_for_compilation)
-            
+
 def build_project_directory_filters(output, project_info):
     output.write('  <ItemGroup>\n')
     if (project_info[0] == TEST_PROJECT) or (project_info[0] == BENCHMARK_PROJECT):
@@ -322,7 +353,7 @@ def build_project_file_filters_recursive(output, dirpath, root_dir, vcxproj_dir,
             ext = ext.lower()
             if (ext == '.c') or (ext == '.cc') or (ext == '.cpp') or (ext == '.cxx'):
                 filter_type = 'ClCompile'
-            elif (ext == '.asm'):
+            elif (ext == '.asm') or (ext == '.masm'):
                 filter_type = 'CustomBuild'
         output.write('    <{0} Include=\"{1}\">\n'.format(filter_type, ntpath.normpath(relfilepath)))
         output.write('      <Filter>{0}</Filter>\n'.format(ntpath.normpath(os.path.relpath(dirpath, root_dir))))
@@ -331,7 +362,7 @@ def build_project_file_filters_recursive(output, dirpath, root_dir, vcxproj_dir,
         build_project_file_filters_recursive(output, subdirpath, root_dir, vcxproj_dir, (os.path.basename(subdirpath) in common_ignore_dirs) or ignore_for_compilation)
 
 ###---==============================================================---
-###                 MSVS2010 SOLUTION FILE GENERATION
+###                 MSVS2012 SOLUTION FILE GENERATION
 ###---==============================================================---
 
 cxx_project_uuid = '8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942'
@@ -371,13 +402,13 @@ def build_solution_folder(output, dirpath, nested_project_uuids):
         output.write('\tEndProjectSection\n')
 
     output.write('EndProject\n')
-    
+
     # recursively add sub-directories as nested solution folders
     if len(dirs) >= 1:
         for dir in dirs:
             sub_folder_uuid = build_solution_folder(output, dir, nested_project_uuids)
             nested_project_uuids.append((sub_folder_uuid, folder_uuid))
-    
+
     return folder_uuid
 
 def build_solution_projects(output, project_uuids, nested_project_uuids):
@@ -385,7 +416,7 @@ def build_solution_projects(output, project_uuids, nested_project_uuids):
     src_folder_uuid = uuid.uuid1()
     output.write('Project(\"{{{0}}}\") = \"{1}\", \"{1}\", \"{{{2}}}\"\n'.format(solution_folder_uuid, 'src', src_folder_uuid))
     output.write('EndProject\n')
-    
+
     # build project group folders for libraries, tests, benchmarks, etc.
     project_group_uuids = dict()
     for project_type, sub_folder_name in project_groups.items():
@@ -394,11 +425,11 @@ def build_solution_projects(output, project_uuids, nested_project_uuids):
         project_group_uuids[project_type] = sub_folder_uuid
         output.write('Project(\"{{{0}}}\") = \"{1}\", \"{1}\", \"{{{2}}}\"\n'.format(solution_folder_uuid, sub_folder_name, sub_folder_uuid))
         output.write('EndProject\n')
-        
+
     # build project entries, nesting them within the project group folders
     for project_name in projects:
         project_uuids[project_name] = uuid.uuid1()
-    
+
     for project_name, project_info in projects.items():
         project_uuid = project_uuids[project_name]
         nested_project_uuids.append((project_uuid, project_group_uuids[project_info[0]]))
@@ -429,7 +460,7 @@ def build_solution_project_configuration_platforms(output, project_uuids):
                         output.write('\t\t{{{0}}}.{1}-{2}|{3}.ActiveCfg = {1}-{2}|{3}\n'.format(project_uuid, linkage, config, arch))
                         output.write('\t\t{{{0}}}.{1}-{2}|{3}.Build.0 = {1}-{2}|{3}\n'.format(project_uuid, linkage, config, arch))
         output.write('\tEndGlobalSection\n')
-    
+
 def build_solution_nested_projects(output, nested_projects):
     if len(nested_projects) >= 1:
         output.write('\tGlobalSection(NestedProjects) = preSolution\n')
@@ -453,7 +484,7 @@ def clean_all():
         clean_unlink(project_file)
         clean_unlink(project_file + '.filters')
         clean_unlink(project_file + '.user')
-        
+
 def clean_unlink(path):
     if os.path.isdir(path):
         clean_directory(path)

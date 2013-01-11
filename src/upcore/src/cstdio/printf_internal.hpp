@@ -81,16 +81,16 @@ namespace up { namespace detail
     };
 
     extern UPHIDDEN UPNONNULLALL
-    ptrdiff_t print_format_flush(print_info* UPRESTRICT info) noexcept;
-
-    extern UPHIDDEN UPNONNULLALL
-    bool print_format_string(print_info* UPRESTRICT info, char const* UPRESTRICT s, int width, int precision, unsigned int flags) noexcept;
+    int fast_print_format(print_info* UPRESTRICT info, char const* UPRESTRICT format) noexcept;
 
     extern UPHIDDEN UPNONNULLALL
     int print_format(print_info* UPRESTRICT info, char const* UPRESTRICT format) noexcept;
 
     extern UPHIDDEN UPNONNULLALL
-    int fast_print_format(print_info* UPRESTRICT info, char const* UPRESTRICT format) noexcept;
+    ptrdiff_t print_format_flush(print_info* UPRESTRICT info) noexcept;
+
+    extern UPHIDDEN UPNONNULL(1)
+    bool print_format_string(print_info* UPRESTRICT info, char const* UPRESTRICT s, int width, int precision, unsigned int flags) noexcept;
 
     inline UPALWAYSINLINE UPNONNULL(1)
     bool print_format_char(print_info* UPRESTRICT info, char*& cursor, char*& end, char ch) noexcept {

@@ -146,6 +146,32 @@ AC_DEFUN(
 
 AC_MSG_NOTICE([------ Standard C/C++ Library Headers ------])
 
+# UP_HAS_STDC_FENV
+
+AC_CHECK_HEADER(
+    [fenv.h],
+    [AC_MSG_CHECKING([for fenv.h compliance])
+    AC_COMPILE_IFELSE(
+        [AC_LANG_PROGRAM(
+            [[ #include <fenv.h> ]],
+            [
+                feclearexcept(FE_ALL_EXCEPT);
+                fesetexceptflag(0, FE_ALL_EXCEPT);
+                fegetexceptflag(0, FE_ALL_EXCEPT);
+                feraiseexcept(FE_ALL_EXCEPT);
+                fetestexcept(FE_ALL_EXCEPT);
+                fesetenv(FE_DFL_ENV);
+                fegetenv(0);
+                feholdexcept(0);
+                feupdateenv(0);
+                fegetround();
+                fesetround(FE_TONEAREST);
+            ]
+        )],
+        [AC_MSG_RESULT(yes)
+        AC_DEFINE(UP_HAS_STDC_FENV)],
+        [AC_MSG_RESULT(no)])])
+
 # UP_HAS_STDC_INTTYPES
 
 AC_CHECK_HEADER(

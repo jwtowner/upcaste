@@ -50,15 +50,18 @@ namespace up
     template <class RealType, size_t bits, class Engine>
     UPHIDDENINLINE
     RealType generate_canonical(Engine& engine) {
-        constexpr size_t logR = static_logfloor2<uintmax_t, (uintmax_t)Engine::result_range + (uintmax_t)1>::value;
+        constexpr uintmax_t iR = (uintmax_t)Engine::result_range + (uintmax_t)1;
+        constexpr size_t max_logR = numeric_limits<typename Engine::result_type>::digits;
+        constexpr size_t logR = (iR > 0) ? static_logfloor2<uintmax_t, iR>::value : max_logR;
         constexpr size_t digits = numeric_limits<RealType>::digits;
         constexpr size_t b = (digits < bits) ? digits : bits;
         constexpr size_t k = (b / logR) + (b % logR != 0) + (b == 0);
-        const RealType R = (RealType)Engine::result_range + (RealType)1;
-        RealType S = (RealType)(engine() - Engine::result_min);
-        RealType R_k = R;
-        
-        for (size_t i = 1; i < k; ++i, R_k *= R) {
+        RealType const R = (RealType)Engine::result_range + (RealType)1;
+        RealType R_k, S;
+        size_t i;
+
+        S = (RealType)(engine() - Engine::result_min);
+        for (i = 1, R_k = R; i < k; ++i, R_k *= R) {
             S += (RealType)(engine() - Engine::result_min) * R_k;
         }
 
@@ -118,43 +121,87 @@ namespace up { namespace detail
         static constexpr size_t engine_bits = static_logfloor2<WorkType, engine_range>::value;
         static constexpr size_t engine_max_bits = numeric_limits<EngineType>::digits;
         static constexpr size_t work_max_bits = numeric_limits<WorkType>::digits;
+        static constexpr size_t max_bucket_count = (sizeof(WorkType) + (sizeof(EngineType) - 1)) / sizeof(EngineType);
+        static constexpr bool fast_path = ((Engine::result_range + static_cast<EngineType>(1)) == 0) && (max_bucket_count <= 2);
 
 #if UP_COMPILER == UP_COMPILER_MSVC
 #   pragma warning(pop)
 #endif
 
+        static_assert(engine_max_bits >= engine_bits, "invalid engine_bits"); 
+        static_assert(work_max_bits >= engine_max_bits, "invalid engine_max_bits"); 
+        static_assert(max_bucket_count > 0, "invalid max_bucket_count"); 
+
         UPALWAYSINLINE
         uniform_int_generator(Engine& engine_, WorkType work_range_)
         : engine(engine_),
         work_range(work_range_),
-        work_bits((work_range_ > 0) ? ::up::logceil2(work_range_) : work_max_bits),
-        bucket_size((work_bits + (engine_bits - 1)) / engine_bits),
-        bucket_bits(work_bits / bucket_size) {
+        work_bits((work_range_ > 0) ? static_cast<size_t>(::up::logceil2(work_range_)) : work_max_bits),
+        bucket_count((work_bits + (engine_bits - 1)) / engine_bits),
+        bucket_bits(work_bits / bucket_count) {
         }
 
         UPALWAYSINLINE
         WorkType generate() {
-            return generate(integral_constant<bool, engine_range != 0>());
+            return generate(integral_constant<size_t, fast_path ? (max_bucket_count - 1) : 2>());
         }
 
         UPALWAYSINLINE
-        WorkType generate(false_type) {
-            EngineType const bucket_mask = (bucket_bits > 0)
-                ? (EngineType(~0) >> (engine_max_bits - bucket_bits))
-                : EngineType(0);
-            
-            WorkType work;
+        WorkType generate(integral_constant<size_t, 0>) {
+            EngineType const bucket_mask = EngineType(~0) >> (engine_max_bits - bucket_bits);
+            WorkType sample;
 
             do {
-                work = engine() & bucket_mask;
+                sample = engine() & bucket_mask;
+            }
+            while ((sample >= work_range) && (work_range > 0));
+
+            return sample;
+        }
+
+        UPALWAYSINLINE
+        WorkType generate(integral_constant<size_t, 1>) {
+            WorkType work, bucket_range, upper_bucket_range;
+            EngineType sample, bucket_mask, upper_bucket_mask;
+
+            upper_bucket_mask = EngineType(~0) >> (engine_max_bits - bucket_bits);
+            upper_bucket_range = (engine_range >> bucket_bits) << bucket_bits;
+
+            if (bucket_count <= 1) {
+                do {
+                    work = engine() & upper_bucket_mask;
+                }
+                while ((work >= work_range) && (work_range > 0));
+                return work;
+            }
+
+            if ((work_bits % bucket_count) > 0) {
+                bucket_range = (bucket_bits < (work_max_bits - 1))
+                    ? (engine_range >> (bucket_bits + 1)) << (bucket_bits + 1)
+                    : 0;
+                bucket_mask = (bucket_bits < (engine_max_bits - 1))
+                    ? (EngineType(~0) >> (engine_max_bits - (bucket_bits + 1))) 
+                    : EngineType(~0);
+                ++bucket_bits;
+            }
+            else {
+                bucket_range = upper_bucket_range;
+                bucket_mask = upper_bucket_mask;
+            }
+
+            do {
+                do { sample = engine(); } while (sample >= upper_bucket_range);
+                work = sample & upper_bucket_mask;
+                do { sample = engine(); } while (sample >= bucket_range);
+                work = (work << bucket_bits) | (sample & bucket_mask);
             }
             while ((work >= work_range) && (work_range > 0));
 
             return work;
         }
-        
+
         UPALWAYSINLINE
-        WorkType generate(true_type) {
+        WorkType generate(integral_constant<size_t, 2>) {
             WorkType upper_bucket_range;
             if (bucket_bits < work_max_bits) {
                 upper_bucket_range = (engine_range >> bucket_bits) << bucket_bits;
@@ -163,8 +210,8 @@ namespace up { namespace detail
                 upper_bucket_range = 0;
             }
 
-            if ((engine_range - upper_bucket_range) > (upper_bucket_range / bucket_size)) {
-                bucket_bits = work_bits / ++bucket_size;
+            if ((engine_range - upper_bucket_range) > (upper_bucket_range / bucket_count)) {
+                bucket_bits = work_bits / ++bucket_count;
                 if (bucket_bits < work_max_bits) {
                     upper_bucket_range = (engine_range >> bucket_bits) << bucket_bits;
                 }
@@ -173,7 +220,7 @@ namespace up { namespace detail
                 }
             }
 
-            size_t const upper_bucket_size = bucket_size - (work_bits % bucket_size);
+            size_t const upper_bucket_count = bucket_count - (work_bits % bucket_count);
 
             EngineType const upper_bucket_mask = (bucket_bits > 0)
                 ? (EngineType(~0) >> (engine_max_bits - bucket_bits))
@@ -193,7 +240,7 @@ namespace up { namespace detail
             do {
                 work = 0;
 
-                for (size_t k = 0; k < upper_bucket_size; ++k) {
+                for (size_t k = 0; k < upper_bucket_count; ++k) {
                     do {
                         sample = engine() - Engine::result_min;
                     }
@@ -209,7 +256,7 @@ namespace up { namespace detail
                     work += sample & upper_bucket_mask;
                 }
 
-                for (size_t k = upper_bucket_size; k < bucket_size; ++k) {
+                for (size_t k = upper_bucket_count; k < bucket_count; ++k) {
                     do {
                         sample = engine() - Engine::result_min;
                     }
@@ -235,7 +282,7 @@ namespace up { namespace detail
         Engine& engine;
         WorkType const work_range;
         size_t const work_bits;
-        size_t bucket_size;
+        size_t bucket_count;
         size_t bucket_bits;
     };
 }}

@@ -28,7 +28,7 @@
 
 namespace up { namespace detail
 {
-    UPHIDDEN UPNONNULLALL
+    UPHIDDEN UPNONNULL(1)
     bool NAME(INFO* UPRESTRICT info, CHAR const* UPRESTRICT s, int width, int precision, unsigned int flags) noexcept {
         int padlength, slength;
         CHAR* cursor, * end;

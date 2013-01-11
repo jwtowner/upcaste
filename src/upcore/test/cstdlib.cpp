@@ -94,6 +94,8 @@ namespace cstdlib
         require((15667883.0 == up::fast_strtod("0XEF12AB", &endptr)) && (errno == 0) && !strcmp(endptr, ""));
         require((5.13405190144e+11 == up::fast_strtod("0xef12abp+15a", &endptr)) && (errno == 0) && !strcmp(endptr, "a"));
         require((478.145843505859375 == up::fast_strtod("0XEF12ABP-15b", &endptr)) && (errno == 0) && !strcmp(endptr, "b"));
+        require((DBL_PI_4 == up::fast_strtod(UPSTRINGIZE(DBL_PI_4), &endptr)) && (errno == 0) && !strcmp(endptr, ""));
+        require((-DBL_PI_4 == up::fast_strtod(UPSTRINGIZE(-DBL_PI_4), &endptr)) && (errno == 0) && !strcmp(endptr, ""));
         require(up::math::isinf(up::fast_strtod("inf", nullptr)) && (errno == 0));
         require(up::math::isinf(up::fast_strtod(" Inf ", nullptr)) && (errno == 0));
         require(up::math::isinf(up::fast_strtod("-INFa",  &endptr)) && (errno == 0) && !strcmp(endptr, "a"));

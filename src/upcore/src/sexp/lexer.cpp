@@ -1038,7 +1038,7 @@ namespace up { namespace sexp
         return retval;
     }
 
-    LIBUPCOREAPI UPNONNULLALL
+    LIBUPCOREAPI
     int lexer_read(lexer* UPRESTRICT lex, token* UPRESTRICT tok) noexcept {
         char const* start;
         uintmax_t column, line;

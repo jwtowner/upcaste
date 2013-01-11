@@ -46,7 +46,7 @@ namespace up
         unsigned long time_remaining, wait_result;
         int result;
 
-        if (!duration && (duration->tv_sec < 0) && (duration->tv_nsec < 0) && (duration->tv_nsec > 1000000000)) {
+        if (!duration || (duration->tv_sec < 0) || (duration->tv_nsec < 0) || (duration->tv_nsec > 1000000000)) {
             errno = EINVAL;
             return -1;
         }

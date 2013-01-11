@@ -33,6 +33,7 @@ namespace up
         char* undo_buffer[LC_MAX], *result;
         locale_t new_locale, local_locale;
 
+        memset(undo_buffer, 0, sizeof(undo_buffer));
         call_once(&detail::global_locale_once, &detail::global_locale_init);
         verify(-1 != ::_configthreadlocale(_ENABLE_PER_THREAD_LOCALE));
 

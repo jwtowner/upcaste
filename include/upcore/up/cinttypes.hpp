@@ -26,13 +26,12 @@
 #define UP_CINTTYPES_HPP
 
 #include <up/cstdint.hpp>
-
 #if defined UP_HAS_STDC_INTTYPES
 #   include <up/detail/cinttypes_c99.inl>
 #elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
 #   include <up/detail/cinttypes_msvc.inl>
 #else
-#   error "No inttypes compatability layer for target platform."
+#   error "No inttypes.h compatability layer for target platform."
 #endif
 
 #endif

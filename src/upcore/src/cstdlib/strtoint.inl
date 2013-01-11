@@ -100,19 +100,20 @@ namespace up
             }
 
             new_value = (value * shift_value) + static_cast<UTYPE>(digit);
-            if ((value <= new_value) && (new_value <= max_value)) {
-                value = new_value;
-                continue;
+            if (UPUNLIKELY((new_value < value) || (new_value > max_value))) {
+                // overflow occurred, consume rest of input
+                for ( ++nptr; (static_cast<UCHAR>(*nptr - '0') < digit_range)
+                    || (static_cast<UCHAR>((*nptr & 0xDF) - 'A') < letter_range); ++nptr) ;
+                value = overflow_value;
+                errno = ERANGE;
+                break;
             }
 
-            for (++nptr; (static_cast<UCHAR>(*nptr - '0') < digit_range) || (static_cast<UCHAR>((*nptr & 0xDF) - 'A') < letter_range); ++nptr) ;
-            value = overflow_value;
-            errno = ERANGE;
-            break;
+            value = new_value;
         }
 
         // check for no conversion
-        if (nptr == startptr) {
+        if (UPUNLIKELY(nptr == startptr)) {
             nptr = str;
             errno = EINVAL;
         }

@@ -54,6 +54,9 @@ namespace up { namespace test
 
     private:
 
+        test_result const& run_except(test_listener& listener);
+        test_result const& run_setjmp(test_listener& listener);
+        test_result const& run_finalize(test_listener& listener, timespec const* elapsed);
         char const* file_name_;
         long line_number_;
         bool exceptions_enabled_;

@@ -52,6 +52,11 @@
 //
 // C++11 feature detection
 //
+#if (_MSC_VER < 1700)
+#   define UP_NO_RANGE_BASED_FOR
+#   define UP_NO_FORWARD_DECLARED_ENUMS
+#   define UP_NO_SCOPED_ENUMS
+#endif
 #if (_MSC_VER < 1600)
 #   define UP_NO_AUTO_DECLARATIONS
 #   define UP_NO_AUTO_MULTIDECLARATIONS
@@ -61,7 +66,6 @@
 #   define UP_NO_RVALUE_REFERENCES
 #   define UP_NO_STATIC_ASSERT
 #endif
-
 #define UP_NO_ALIGNAS
 #define UP_NO_ALIGNOF
 #define UP_NO_CONSTEXPR
@@ -78,7 +82,6 @@
 #define UP_NO_NOEXCEPT_FUNCTION_PTR
 #define UP_NO_RAW_LITERALS
 #define UP_NO_REFERENCE_QUALIFIED_FUNCTIONS
-#define UP_NO_SCOPED_ENUMS
 #define UP_NO_SFINAE_EXPR
 #define UP_NO_TEMPLATE_ALIASES
 #define UP_NO_THREAD_LOCAL
@@ -127,6 +130,7 @@
 #   define UP_HAS_STDCXX_TYPE_TRAITS
 #endif
 
+#undef  UP_HAS_STDC_FENV
 #undef  UP_HAS_STDC_INTTYPES
 #define UP_HAS_STDC_LOCALE
 #undef  UP_HAS_STDC_MATH_C99
@@ -220,6 +224,31 @@
 #   define UP_TT_IS_POLYMORPHIC(T) __is_polymorphic(T)
 #   define UP_TT_IS_UNION(T) __is_union(T)
 #endif
+
+//
+// compiler language pragmas
+//
+#define UP_DETAIL_STDC_FENV_ACCESS_ON \
+    __pragma(float_control(push)) \
+    __pragma(float_control(precise, on)) \
+    __pragma(float_control(except, on)) \
+    __pragma(fenv_access(on))
+
+#define UP_DETAIL_STDC_FENV_ACCESS_OFF \
+    __pragma(fenv_access(off)) \
+    __pragma(float_control(pop))
+
+#define UP_STDC_FENV_ACCESS(arg) \
+    UP_DETAIL_STDC_FENV_ACCESS_##arg
+
+#define UP_DETAIL_STDC_FP_CONTRACT_ON \
+    __pragma(fp_contract(on))
+
+#define UP_DETAIL_STDC_FP_CONTRACT_OFF \
+    __pragma(fp_contract(off))
+
+#define UP_STDC_FP_CONTRACT(arg) \
+    UP_DETAIL_STDC_FP_CONTRACT_##arg
 
 //
 // compiler built-ins
