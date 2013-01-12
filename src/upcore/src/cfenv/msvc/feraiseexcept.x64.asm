@@ -28,7 +28,7 @@ INCLUDE fenv.inc
 ;; int feraiseexcept(int excepts);
 ;;
 ;; Raise each of the specified exception flags one at a time in sequence,
-;; placing the address for the next instruction after the trigger one
+;; placing the address for the next instruction after the triggering one
 ;; into RAX, allowing exception/signal handlers to skip over the offending
 ;; instruction (this is mostly for debugging purposes).
 ;;

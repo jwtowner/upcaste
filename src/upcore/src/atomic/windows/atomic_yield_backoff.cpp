@@ -22,28 +22,47 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_ATOMIC_FENCE_MSVC_X86_X64_INL
-#define UP_DETAIL_ATOMIC_FENCE_MSVC_X86_X64_INL
+#include <up/atomic.hpp>
+#include <up/cassert.hpp>
+#include <up/cthreads.hpp>
 
-#ifndef UP_ATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/atomic.hpp>"
-#endif
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
+#include <Windows.h>
 
 namespace up
 {
-    inline UPALWAYSINLINE
-    void atomic_signal_fence(memory_order) noexcept {
-        _ReadWriteBarrier();
-    }
+    LIBUPCOREAPI UPNONNULLALL
+    void atomic_yield_backoff(unsigned int* spin_count) noexcept {
+        assert(spin_count);
 
-    inline UPALWAYSINLINE
-    void atomic_thread_fence(memory_order order) noexcept {
-        _ReadWriteBarrier();
-        if (order == memory_order_seq_cst) {
-            _mm_mfence();
-            _ReadWriteBarrier();
+        unsigned int count = *spin_count;
+        
+        if (count < 16) {
+            if (!count) {
+                count = 1;
+            }
+            for (unsigned int c = count; c > 0; --c) {
+                atomic_yield();
+            }
+            count <<= 1;
         }
+        else if (count < 18) {
+            SwitchToThread();
+            ++count;
+        }
+        else if (count < 22) {
+            Sleep(0);
+            ++count;
+        }
+        else if (count < 64) {
+            Sleep(1);
+            ++count;
+        }
+        else {
+            Sleep(10);
+        }
+
+        *spin_count = count;
     }
 }
-
-#endif

@@ -22,6 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include <up/cfenv.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cmath.hpp>
 #include <up/test.hpp>
@@ -102,4 +103,48 @@ namespace cmath
         significand = up::math::frexp10(LDBL_NAN, &exponent);
         require(up::math::isnan(significand));
     }
+
+    UP_STDC_FENV_ACCESS(ON)
+
+    UP_TEST_CASE(lrint) {
+        int old_round_mode = up::fegetround();
+        
+        // round-to-nearest
+        require(0 == up::fesetround(FE_TONEAREST));
+        require(FE_TONEAREST == up::fegetround());
+        require(2 == up::math::lrint(2.4));
+        require(3 == up::math::lrint(2.6));
+        require(-2 == up::math::lrint(-2.4));
+        require(-3 == up::math::lrint(-2.6));
+
+        // round-downward
+        require(0 == up::fesetround(FE_DOWNWARD));
+        require(FE_DOWNWARD == up::fegetround());
+        require(2 == up::math::lrint(2.4));
+        require(2 == up::math::lrint(2.6));
+        require(-3 == up::math::lrint(-2.4));
+        require(-3 == up::math::lrint(-2.6));
+
+        // round-upward
+        require(0 == up::fesetround(FE_UPWARD));
+        require(FE_UPWARD == up::fegetround());
+        require(3 == up::math::lrint(2.4));
+        require(3 == up::math::lrint(2.6));
+        require(-2 == up::math::lrint(-2.4));
+        require(-2 == up::math::lrint(-2.6));
+
+        // round-toward-zero
+        require(0 == up::fesetround(FE_TOWARDZERO));
+        require(FE_TOWARDZERO == up::fegetround());
+        require(2 == up::math::lrint(2.4));
+        require(2 == up::math::lrint(2.6));
+        require(-2 == up::math::lrint(-2.4));
+        require(-2 == up::math::lrint(-2.6));
+
+        // cleanup
+        require(0 == up::fesetround(old_round_mode));
+        require(old_round_mode == up::fegetround());
+    }
+
+    UP_STDC_FENV_ACCESS(OFF)
 }

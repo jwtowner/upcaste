@@ -32,21 +32,14 @@
 namespace up
 {
     inline UPALWAYSINLINE
-    void atomic_signal_fence(memory_order order) noexcept {
-        if (order != memory_order_seq_cst) {
-            __asm__ __volatile__ ( "" : : : "memory" );
-        }
-        else {
-            __asm__ __volatile__ ( "mfence" : : : "memory" );
-        }
+    void atomic_signal_fence(memory_order) noexcept {
+        __asm__ __volatile__ ( "" : : : "memory" );
     }
 
     inline UPALWAYSINLINE
     void atomic_thread_fence(memory_order order) noexcept {
-        if (order != memory_order_seq_cst) {
-            __asm__ __volatile__ ( "" : : : "memory" );
-        }
-        else {
+        __asm__ __volatile__ ( "" : : : "memory" );
+        if (order == memory_order_seq_cst) {
             __asm__ __volatile__ ( "mfence" : : : "memory" );
         }
     }

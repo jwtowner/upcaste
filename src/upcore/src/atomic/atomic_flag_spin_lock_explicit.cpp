@@ -22,24 +22,39 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_ATOMIC_PAUSE_MSVC_X86_X64_INL
-#define UP_DETAIL_ATOMIC_PAUSE_MSVC_X86_X64_INL
-
-#ifndef UP_ATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/atomic.hpp>"
-#endif
+#include <up/atomic.hpp>
 
 namespace up
 {
-    inline UPALWAYSINLINE
-    void atomic_signal_pause() noexcept {
-        _mm_pause();
+    LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_explicit(atomic_flag* flag, memory_order order) noexcept {
+#ifndef UP_HAS_STDCXX_ATOMIC
+        if (flag->test_and_set(order)) {
+            do {
+                atomic_yield();
+            }
+            while (flag->test_test_and_set(order));
+        }
+#else
+        while (flag->test_and_set(order)) {
+            atomic_yield();
+        }
+#endif
     }
-    
-    inline UPALWAYSINLINE
-    void atomic_thread_pause() noexcept {
-        _mm_pause();
+
+    LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_explicit(atomic_flag volatile* flag, memory_order order) noexcept {
+#ifndef UP_HAS_STDCXX_ATOMIC
+        if (flag->test_and_set(order)) {
+            do {
+                atomic_yield();
+            }
+            while (flag->test_test_and_set(order));
+        }
+#else
+        while (flag->test_and_set(order)) {
+            atomic_yield();
+        }
+#endif
     }
 }
-
-#endif

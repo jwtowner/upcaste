@@ -24,6 +24,7 @@
 
 #include "clocale_internal.hpp"
 #include <up/cstdlib.hpp>
+#include <up/atomic.hpp>
 
 namespace up { namespace detail
 {
@@ -35,12 +36,14 @@ namespace up { namespace detail
     namespace
     {
         void UPCDECL global_locale_term() noexcept {
-            verify(thrd_success == mtx_lock(&global_locale_guard));
+            atomic_thread_fence(memory_order_seq_cst);
             ::_free_locale(global_locale);
             global_locale = nullptr;
-            verify(thrd_success == mtx_unlock(&global_locale_guard));
+#ifndef UP_HAS_MSVC_XTHREADS
+            // thread system is shut-down, causes access exception
             tss_delete(local_locale_key);
             mtx_destroy(&global_locale_guard);
+#endif
         }
 
         void UPCDECL local_locale_dtor(void* data) noexcept {
@@ -54,7 +57,7 @@ namespace up { namespace detail
         assert(config != -1);
         global_locale = ::_get_current_locale();
         verify(-1 != ::_configthreadlocale(config));
-        verify(thrd_success == mtx_init(&global_locale_guard, mtx_plain));
+        verify(thrd_success == mtx_init(&global_locale_guard, mtx_plain | mtx_recursive));
         verify(thrd_success == tss_create(&local_locale_key, &local_locale_dtor));
         verify(!atexit(&global_locale_term));
     }

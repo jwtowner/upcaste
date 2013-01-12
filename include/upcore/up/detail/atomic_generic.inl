@@ -25,7 +25,7 @@
 #ifndef UP_DETAIL_ATOMIC_GENERIC_INL
 #define UP_DETAIL_ATOMIC_GENERIC_INL
 
-#include <up/cstdalign.hpp>
+#include <up/cstring.hpp>
 #include <up/type_traits.hpp>
 
 #ifndef ATOMIC_VAR_INIT
@@ -57,17 +57,17 @@ namespace up
 
 #if (UP_COMPILER == UP_COMPILER_GCC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/atomic_flag_gcc_x86_x64.inl>
 #       include <up/detail/atomic_fence_gcc_x86_x64.inl>
-#       include <up/detail/atomic_pause_gcc_x86_x64.inl>
+#       include <up/detail/atomic_flag_gcc_x86_x64.inl>
+#       include <up/detail/atomic_yield_gcc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
 #elif (UP_COMPILER == UP_COMPILER_MSVC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/atomic_flag_msvc_x86_x64.inl>
 #       include <up/detail/atomic_fence_msvc_x86_x64.inl>
-#       include <up/detail/atomic_pause_msvc_x86_x64.inl>
+#       include <up/detail/atomic_flag_msvc_x86_x64.inl>
+#       include <up/detail/atomic_yield_msvc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
@@ -76,11 +76,17 @@ namespace up
 #endif
 
 #define UP_DETAIL_DEFINE_ATOMIC_FLAG_FREE_FUNCTIONS(Volatile) \
-    extern LIBUPCOREAPI \
+    extern LIBUPCOREAPI UPNONNULLALL \
     void atomic_flag_spin_lock_explicit(atomic_flag Volatile* flag, memory_order order) noexcept; \
-    inline UPALWAYSINLINE \
+    extern LIBUPCOREAPI UPNONNULLALL \
+    void atomic_flag_spin_lock_backoff_explicit(atomic_flag Volatile* flag, memory_order order) noexcept; \
+    inline UPALWAYSINLINE UPNONNULLALL \
     void atomic_flag_spin_lock(atomic_flag Volatile* flag) noexcept { \
         atomic_flag_spin_lock_explicit(flag, memory_order_seq_cst); \
+    } \
+    inline UPALWAYSINLINE UPNONNULLALL \
+    void atomic_flag_spin_lock_backoff(atomic_flag Volatile* flag) noexcept { \
+        atomic_flag_spin_lock_backoff_explicit(flag, memory_order_seq_cst); \
     } \
     inline UPALWAYSINLINE \
     void atomic_flag_clear(atomic_flag Volatile* flag) noexcept { \
@@ -97,14 +103,6 @@ namespace up
     inline UPALWAYSINLINE \
     bool atomic_flag_test_and_set_explicit(atomic_flag Volatile* flag, memory_order order) noexcept { \
         return flag->test_and_set(order); \
-    } \
-    inline UPALWAYSINLINE \
-    bool atomic_flag_test_test_and_set(atomic_flag Volatile* flag) noexcept { \
-        return flag->test_test_and_set(); \
-    } \
-    inline UPALWAYSINLINE \
-    bool atomic_flag_test_test_and_set_explicit(atomic_flag Volatile* flag, memory_order order) noexcept { \
-        return flag->test_test_and_set(order); \
     }
 
 namespace up
@@ -117,7 +115,10 @@ namespace up
 
 namespace up { namespace detail
 {
-    struct atomic_int128_t
+    extern LIBUPCOREAPI
+    atomic_flag* atomic_storage_spin_lock(void const volatile* storage_ptr) noexcept;
+
+    struct LIBUPCOREAPI atomic_int128_t
     {
 #if (UP_BYTE_ORDER == UP_LITTLE_ENDIAN)
         long long low;
@@ -150,25 +151,25 @@ namespace up { namespace detail
 #define UP_DETAIL_ATOMIC_STORAGE_DEFAULT_OPERATIONS(Volatile) \
     UPALWAYSINLINE \
     Value load(memory_order) const Volatile noexcept { \
-        lock_type lock(this); \
+        lock_guard lock(this); \
         return value_; \
     } \
     UPALWAYSINLINE \
     void store(const_reference desired, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
+        lock_guard lock(this); \
         value_ = desired; \
     } \
     UPALWAYSINLINE \
     Value exchange(const_reference desired, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        Value result = value_; \
+        lock_guard lock(this); \
+        Value result(value_); \
         value_ = desired; \
         return result; \
     } \
     UPALWAYSINLINE \
     bool compare_exchange_strong(reference expected, const_reference desired, memory_order, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        if (expected == value_) { \
+        lock_guard lock(this); \
+        if (compare<Value>(expected, value_)) { \
             value_ = desired; \
             return true; \
         } \
@@ -179,8 +180,8 @@ namespace up { namespace detail
     } \
     UPALWAYSINLINE \
     bool compare_exchange_weak(reference expected, const_reference desired, memory_order, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        if (expected == value_) { \
+        lock_guard lock(this); \
+        if (compare<Value>(expected, value_)) { \
             value_ = desired; \
             return true; \
         } \
@@ -191,37 +192,37 @@ namespace up { namespace detail
     } \
     UPALWAYSINLINE \
     Value fetch_add(const_operand_reference operand, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        Value result = value_; \
-        value_ = (Value)(((addition_lvalue_type)value_) + operand); \
+        lock_guard lock(this); \
+        Value result(value_); \
+        value_ = Value(((addition_lvalue_type)value_) + operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_sub(const_operand_reference operand, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        Value result = value_; \
-        value_ = (Value)(((addition_lvalue_type)value_) - operand); \
+        lock_guard lock(this); \
+        Value result(value_); \
+        value_ = Value(((addition_lvalue_type)value_) - operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_and(const_operand_reference operand, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        Value result = value_; \
-        value_ = (Value)(((bitwise_lvalue_type)value_) & operand); \
+        lock_guard lock(this); \
+        Value result(value_); \
+        value_ = Value(((bitwise_lvalue_type)value_) & operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_or(const_operand_reference operand, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        Value result = value_; \
-        value_ = (Value)(((bitwise_lvalue_type)value_) | operand); \
+        lock_guard lock(this); \
+        Value result(value_); \
+        value_ = Value(((bitwise_lvalue_type)value_) | operand); \
         return result; \
     } \
     UPALWAYSINLINE \
     Value fetch_xor(const_operand_reference operand, memory_order) Volatile noexcept { \
-        lock_type lock(this); \
-        Value result = value_; \
-        value_ = (Value)(((bitwise_lvalue_type)value_) ^ operand); \
+        lock_guard lock(this); \
+        Value result(value_); \
+        value_ = Value(((bitwise_lvalue_type)value_) ^ operand); \
         return result; \
     }
 
@@ -240,25 +241,46 @@ namespace up { namespace detail
         typedef typename conditional<is_pointer<Value>::value && is_void<typename remove_pointer<Value>::type>::value, unsigned char*, Value>::type addition_lvalue_type;
         typedef typename conditional<is_pointer<Value>::value, uintptr_t, Value>::type bitwise_lvalue_type;
         static constexpr bool is_lock_free = false;
-        UPALWAYSINLINE UPCONSTEXPR atomic_storage() noexcept : locked_(ATOMIC_FLAG_INIT) { }
-        UPALWAYSINLINE UPCONSTEXPR atomic_storage(const_reference v) noexcept : value_(v), locked_(ATOMIC_FLAG_INIT) { }
+        UPDEFAULTNOEXCEPTCTOR(atomic_storage);
+        UPALWAYSINLINE UPCONSTEXPR atomic_storage(const_reference v) noexcept : value_(v) { }
         UP_DETAIL_ATOMIC_STORAGE_DEFAULT_OPERATIONS(UP_DETAIL_NOT_VOLATILE)
         UP_DETAIL_ATOMIC_STORAGE_DEFAULT_OPERATIONS(UP_DETAIL_VOLATILE)
 
     private:
 
-        struct lock_type
+        struct lock_guard
         {
-            UPNONCOPYABLE(lock_type);
-        public:
-            UPALWAYSINLINE lock_type(atomic_storage const volatile* s) noexcept : storage_(s) { ::up::atomic_flag_spin_lock_explicit(&storage_->locked_, memory_order_acquire); }
-            UPALWAYSINLINE ~lock_type() noexcept { ::up::atomic_flag_clear_explicit(&storage_->locked_, memory_order_release); }
-        private:
-            atomic_storage const volatile* const storage_;
+            atomic_flag* flag_ptr;
+
+            UPALWAYSINLINE
+            lock_guard(atomic_storage const volatile* storage) noexcept
+            : flag_ptr(::up::detail::atomic_storage_spin_lock(storage)) {
+                ::up::atomic_flag_spin_lock_backoff_explicit(flag_ptr, memory_order_acquire);
+            }
+
+            UPALWAYSINLINE
+            ~lock_guard() noexcept {
+                ::up::atomic_flag_clear_explicit(flag_ptr, memory_order_release);
+            }
         };
 
-        value_type volatile value_;
-        mutable atomic_flag volatile locked_;
+        template <class U>
+        static UPALWAYSINLINE
+        typename enable_if<is_fundamental<U>::value, bool>::type
+        compare(const_reference x, const_reference y) noexcept {
+            return x == y;
+        }
+
+        template <class U>
+        static UPALWAYSINLINE
+        typename enable_if<!is_fundamental<U>::value, bool>::type
+        compare(const_reference x, const_reference y) noexcept {
+            return ::up::memcmp(&x, &y, sizeof(U)) == 0;
+        }
+
+    private:
+
+        value_type value_;
     };
 #undef UP_DETAIL_ATOMIC_STORAGE_DEFAULT_OPERATIONS
 }}
@@ -289,7 +311,7 @@ namespace up { namespace detail
 #define UP_DETAIL_ATOMIC_BASE_OPERATIONS(Volatile) \
     UPALWAYSINLINE \
     bool is_lock_free() const Volatile noexcept { \
-        return storage_type::is_lock_free; \
+        return atomic_storage<T>::is_lock_free; \
     } \
     UPALWAYSINLINE \
     T operator=(const_reference t) Volatile noexcept { \
@@ -460,16 +482,14 @@ namespace up { namespace detail
     {
         UPNONCOPYABLE(atomic_base);
     protected:
-        typedef atomic_storage<T> storage_type;
+        atomic_storage<T> storage_;
     public:
-        typedef typename storage_type::reference reference;
-        typedef typename storage_type::const_reference const_reference;
-        UPDEFAULTCTOR(atomic_base);
+        typedef typename atomic_storage<T>::reference reference;
+        typedef typename atomic_storage<T>::const_reference const_reference;
+        UPDEFAULTNOEXCEPTCTOR(atomic_base);
         UPALWAYSINLINE UPCONSTEXPR atomic_base(const_reference t) noexcept : storage_(t) { }
         UP_DETAIL_ATOMIC_BASE_OPERATIONS(UP_DETAIL_NOT_VOLATILE)
         UP_DETAIL_ATOMIC_BASE_OPERATIONS(UP_DETAIL_VOLATILE)
-    protected:
-        storage_type storage_;
     };
 
 #ifndef LIBUPCORE_NO_EXTERN_TEMPLATES
@@ -508,7 +528,7 @@ namespace up { namespace detail
     {
         UPNONCOPYABLE(atomic_address_base);
     public:
-        UPDEFAULTCTOR(atomic_address_base);
+        UPDEFAULTNOEXCEPTCTOR(atomic_address_base);
         UPALWAYSINLINE UPCONSTEXPR atomic_address_base(T2* t) noexcept : atomic_base<T2*>(t) { }
         UP_DETAIL_ATOMIC_ADDRESS_BASE_OPERATIONS(UP_DETAIL_NOT_VOLATILE)
         UP_DETAIL_ATOMIC_ADDRESS_BASE_OPERATIONS(UP_DETAIL_VOLATILE)
@@ -527,8 +547,8 @@ namespace up { namespace detail
         UPNONCOPYABLE(atomic_integral_base);
     public:
         typedef typename atomic_base<T2>::const_reference const_reference;
-        typedef typename atomic_base<T2>::storage_type::const_operand_reference const_operand_reference;
-        UPDEFAULTCTOR(atomic_integral_base);
+        typedef typename atomic_storage<T2>::const_operand_reference const_operand_reference;
+        UPDEFAULTNOEXCEPTCTOR(atomic_integral_base);
         UPALWAYSINLINE UPCONSTEXPR atomic_integral_base(const_reference t) noexcept : atomic_base<T2>(t) { }
         UP_DETAIL_ATOMIC_INTEGRAL_BASE_OPERATIONS(UP_DETAIL_NOT_VOLATILE)
         UP_DETAIL_ATOMIC_INTEGRAL_BASE_OPERATIONS(UP_DETAIL_VOLATILE)
@@ -571,8 +591,8 @@ namespace up
     {
         UPNONCOPYABLE(atomic);
     public:
-        UPDEFAULTCTOR(atomic);
-        UPALWAYSINLINE UPCONSTEXPR atomic(U u) : ::up::detail::atomic_base<U>(u) { }
+        UPDEFAULTNOEXCEPTCTOR(atomic);
+        UPALWAYSINLINE UPCONSTEXPR atomic(U u) noexcept : ::up::detail::atomic_base<U>(u) { }
     };
 
     template <>
@@ -580,8 +600,8 @@ namespace up
     {
         UPNONCOPYABLE(atomic);
     public:
-        UPDEFAULTCTOR(atomic);
-        UPALWAYSINLINE UPCONSTEXPR atomic(bool b) : ::up::detail::atomic_base<bool>(b) { }
+        UPDEFAULTNOEXCEPTCTOR(atomic);
+        UPALWAYSINLINE UPCONSTEXPR atomic(bool b) noexcept : ::up::detail::atomic_base<bool>(b) { }
     };
 
     template <class U>
@@ -589,24 +609,24 @@ namespace up
     {
         UPNONCOPYABLE(atomic);
     public:
-        UPDEFAULTCTOR(atomic);
-        UPALWAYSINLINE UPCONSTEXPR atomic(U* a) : ::up::detail::atomic_address_base<U*, U>(a) { }
+        UPDEFAULTNOEXCEPTCTOR(atomic);
+        UPALWAYSINLINE UPCONSTEXPR atomic(U* a) noexcept : ::up::detail::atomic_address_base<U*, U>(a) { }
     };
 
 #define UP_DETAIL_DECLARE_ATOMIC_VOID_ADDRESS_SPECIALIZATION(U) \
     template <> struct LIBUPCOREAPI atomic<U> : public ::up::detail::atomic_address_base<U, unsigned char> { \
         UPNONCOPYABLE(atomic); \
     public: \
-        UPDEFAULTCTOR(atomic); \
-        UPALWAYSINLINE UPCONSTEXPR atomic(U a) : ::up::detail::atomic_address_base<U, unsigned char>(a) { } \
+        UPDEFAULTNOEXCEPTCTOR(atomic); \
+        UPALWAYSINLINE UPCONSTEXPR atomic(U a) noexcept : ::up::detail::atomic_address_base<U, unsigned char>(a) { } \
     };
 
 #define UP_DETAIL_DECLARE_ATOMIC_INTEGRAL_SPECIALIZATION(U) \
     template <> struct LIBUPCOREAPI atomic<U> : public ::up::detail::atomic_integral_base<U> { \
         UPNONCOPYABLE(atomic); \
     public: \
-        UPDEFAULTCTOR(atomic); \
-        UPALWAYSINLINE UPCONSTEXPR atomic(U u) : ::up::detail::atomic_integral_base<U>(u) { } \
+        UPDEFAULTNOEXCEPTCTOR(atomic); \
+        UPALWAYSINLINE UPCONSTEXPR atomic(U i) noexcept : ::up::detail::atomic_integral_base<U>(i) { } \
     };
 
     UP_DETAIL_DECLARE_ATOMIC_VOID_ADDRESS_SPECIALIZATION(void*);

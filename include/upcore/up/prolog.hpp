@@ -157,9 +157,11 @@
 #endif
 
 #ifdef UP_NO_DEFAULTED_FUNCTIONS
-#   define UPDEFAULTCTOR(type) inline UPHIDDENINLINE type() { }
+#   define UPDEFAULTCTOR(type) UPALWAYSINLINE type() { }
+#   define UPDEFAULTNOEXCEPTCTOR(type) UPALWAYSINLINE type() noexcept { }
 #else
-#   define UPDEFAULTCTOR(type) inline UPHIDDENINLINE type() = default
+#   define UPDEFAULTCTOR(type) UPALWAYSINLINE type() = default
+#   define UPDEFAULTNOEXCEPTCTOR(type) UPALWAYSINLINE type() noexcept = default
 #endif
 
 #ifdef UP_NO_DELETED_FUNCTIONS
@@ -170,7 +172,8 @@
 #else
 #   define UPNONCOPYABLE(type) \
         type(type const&) = delete; \
-        type& operator=(type const&) = delete
+        type& operator=(type const&) = delete; \
+        type& operator=(type const&) volatile = delete
 #endif
 
 #ifndef UP_NO_EXCEPTIONS

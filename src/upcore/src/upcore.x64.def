@@ -23,7 +23,8 @@
 ;;
 
 ;;
-;; Additional upcore exports for MASM64 assembled symbols.
+;; Additional upcore exports for symbols originating from MASM64
+;; assembled objects.
 ;;
 
 LIBRARY upcore.dll

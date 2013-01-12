@@ -51,7 +51,6 @@ namespace up
     inline UPALWAYSINLINE UPPURE thrd_t thrd_current() noexcept { return ::_Thrd_current(); }
     inline UPALWAYSINLINE UPNORETURN void thrd_exit(int res) noexcept { ::_Thrd_exit(res); }
     inline UPALWAYSINLINE void thrd_yield() noexcept { return ::_Thrd_yield(); }
-    inline UPALWAYSINLINE void thrd_sleep(timespec const* duration) noexcept { ::_Thrd_sleep(reinterpret_cast<xtime const*>(duration)); }
     extern LIBUPCOREAPI int thrd_sleep(timespec const* duration, timespec* remaining) noexcept;
 
     typedef ::_Once_flag once_flag;

@@ -22,6 +22,10 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include <up/prolog.hpp>
+
+#ifndef UP_HAS_STDC_FENV
+
 #include <up/bitwise.hpp>
 #include <up/atomic.hpp>
 #include <up/cfenv.hpp>
@@ -43,8 +47,6 @@
 namespace cfenv
 {
     UP_STDC_FENV_ACCESS(ON)
-
-#ifndef UP_HAS_STDC_FENV
 
     namespace
     {
@@ -177,6 +179,7 @@ namespace cfenv
     UP_TEST_CASE(exceptions_masked) {
         void (UPCDECL * old_handler)(int) = up::signal(SIGFPE, &fpe_signal_handler);
         ::AddVectoredExceptionHandler(ULONG_MAX, &fpe_vectored_handler);
+        require(0 == up::fesetenv(FE_DFL_ENV));
         raise_and_test_masked();
         ::RemoveVectoredExceptionHandler(&fpe_vectored_handler);
         up::signal(SIGFPE, old_handler);
@@ -187,6 +190,7 @@ namespace cfenv
         ::AddVectoredExceptionHandler(ULONG_MAX, &fpe_vectored_handler);
 
         // enable exceptions
+        require(0 == up::fesetenv(FE_DFL_ENV));
         require(0 == up::fegetexcept());
         require(0 == up::feenableexcept(FE_ALL_EXCEPT));
 
@@ -196,6 +200,29 @@ namespace cfenv
         require(FE_ALL_EXCEPT == up::fedisableexcept(FE_ALL_EXCEPT));
         require(0 == up::fegetexcept());
         
+        ::RemoveVectoredExceptionHandler(&fpe_vectored_handler);
+        up::signal(SIGFPE, old_handler);
+    }
+
+    UP_TEST_CASE(exceptions_dfl_env) {
+        void (UPCDECL * old_handler)(int) = up::signal(SIGFPE, &fpe_signal_handler);
+        ::AddVectoredExceptionHandler(ULONG_MAX, &fpe_vectored_handler);
+        up::fenv_t old_env;
+
+        // install default environment
+        require(0 == up::fegetexcept());
+        require(0 == up::fegetenv(&old_env));
+        require(0 == up::feenableexcept(FE_ALL_EXCEPT));
+        require(FE_ALL_EXCEPT == up::fegetexcept());
+        require(0 == up::fesetenv(FE_DFL_ENV));
+        require(0 == up::fegetexcept());
+        
+        raise_and_test_masked();
+
+        // install original environment
+        require(0 == up::fesetenv(&old_env));
+        require(0 == up::fegetexcept());
+
         ::RemoveVectoredExceptionHandler(&fpe_vectored_handler);
         up::signal(SIGFPE, old_handler);
     }
@@ -224,7 +251,7 @@ namespace cfenv
 
 #endif
 
-#endif
-
     UP_STDC_FENV_ACCESS(OFF)
 }
+
+#endif

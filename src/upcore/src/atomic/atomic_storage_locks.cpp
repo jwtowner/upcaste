@@ -22,28 +22,48 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_ATOMIC_FENCE_MSVC_X86_X64_INL
-#define UP_DETAIL_ATOMIC_FENCE_MSVC_X86_X64_INL
+#include <up/prolog.hpp>
 
-#ifndef UP_ATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/atomic.hpp>"
-#endif
+#ifndef UP_HAS_STDCXX_ATOMIC
 
-namespace up
+#include <up/atomic.hpp>
+#include <up/cstdint.hpp>
+
+namespace up { namespace detail
 {
-    inline UPALWAYSINLINE
-    void atomic_signal_fence(memory_order) noexcept {
-        _ReadWriteBarrier();
+    namespace
+    {
+        constexpr size_t storage_lock_count = 16;
+
+        struct alignas(UP_MAX_CACHE_LINE_SIZE) storage_spin_lock
+        {
+            atomic_flag flag;
+            char cache_line_pad[UP_MAX_CACHE_LINE_SIZE - sizeof(atomic_flag)];
+        };
+
+#if UP_COMPILER == UP_COMPILER_GCC
+        storage_spin_lock storage_locks[storage_lock_count] __attribute__((section(".bss")));
+#elif UP_COMPILER == UP_COMPILER_MSVC
+#       pragma bss_seg()
+        storage_spin_lock storage_locks[storage_lock_count];
+#endif
     }
 
-    inline UPALWAYSINLINE
-    void atomic_thread_fence(memory_order order) noexcept {
-        _ReadWriteBarrier();
-        if (order == memory_order_seq_cst) {
-            _mm_mfence();
-            _ReadWriteBarrier();
-        }
+    LIBUPCOREAPI
+    atomic_flag* atomic_storage_spin_lock(void const volatile* storage_ptr) noexcept {
+        uintptr_t key = reinterpret_cast<uintptr_t>(storage_ptr);
+#if (UINTPTR_MAX > 0xFFFFFFFF) || defined(UP_LONG_PTR_64)
+        key ^= key >> 7;
+        key ^= key << 19;
+        key ^= key >> 17;
+#else
+        key ^= key >> 5;
+        key ^= key << 15;
+        key ^= key >> 17;
+#endif
+        size_t index = static_cast<size_t>(key & (storage_lock_count - 1));
+        return &storage_locks[index].flag;
     }
-}
+}}
 
 #endif

@@ -22,28 +22,23 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_ATOMIC_FENCE_MSVC_X86_X64_INL
-#define UP_DETAIL_ATOMIC_FENCE_MSVC_X86_X64_INL
-
-#ifndef UP_ATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/atomic.hpp>"
-#endif
+#include <up/atomic.hpp>
 
 namespace up
 {
-    inline UPALWAYSINLINE
-    void atomic_signal_fence(memory_order) noexcept {
-        _ReadWriteBarrier();
+    LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_backoff_explicit(atomic_flag* flag, memory_order order) noexcept {
+        unsigned int spin_count = 0;
+        while (flag->test_and_set(order)) {
+            atomic_yield_backoff(&spin_count);
+        }
     }
 
-    inline UPALWAYSINLINE
-    void atomic_thread_fence(memory_order order) noexcept {
-        _ReadWriteBarrier();
-        if (order == memory_order_seq_cst) {
-            _mm_mfence();
-            _ReadWriteBarrier();
+    LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_backoff_explicit(atomic_flag volatile* flag, memory_order order) noexcept {
+        unsigned int spin_count = 0;
+        while (flag->test_and_set(order)) {
+            atomic_yield_backoff(&spin_count);
         }
     }
 }
-
-#endif

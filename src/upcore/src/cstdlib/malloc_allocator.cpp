@@ -22,15 +22,42 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#include <up/atomic.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cstdalign.hpp>
+#include <new>
 
 namespace up
 {
+    // Use double-checked locking pattern to initialize the
+    // allocator instance from static storage. Note that we
+    // never want the destructor for the default instance
+    // of malloc_allocator to be called, as other subsystems
+    // may keep a pointer to it and access it directly, even
+    // from within atexit handlers.
+
+    namespace
+    {
+        alignas(UP_MAX_CACHE_LINE_SIZE) char instance_storage[sizeof(malloc_allocator)];
+        atomic<malloc_allocator*> instance_ptr(0);
+        atomic_flag lock_flag = ATOMIC_FLAG_INIT;
+    }
+
     LIBUPCOREAPI
     malloc_allocator* malloc_allocator::instance() noexcept {
-        static malloc_allocator instance_;
-        return &instance_;
+        malloc_allocator* alloc = instance_ptr.load(memory_order_consume);
+        if (alloc) {
+            return alloc;
+        }
+
+        atomic_flag_spin_lock_explicit(&lock_flag, memory_order_acquire);
+        alloc = instance_ptr.load(memory_order_consume);
+        if (!alloc) {
+            alloc = ::new(&instance_storage) malloc_allocator;
+            instance_ptr.store(alloc, memory_order_release);
+        }
+        atomic_flag_clear_explicit(&lock_flag, memory_order_release);
+        return alloc;
     }
 
     LIBUPCOREAPI

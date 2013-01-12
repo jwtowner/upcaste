@@ -30,6 +30,7 @@
 #include <up/cstring.hpp>
 #include <up/cstdio.hpp>
 #include <up/memory.hpp>
+#include <up/log.hpp>
 #include <algorithm>
 #include <vector>
 
@@ -50,7 +51,7 @@ namespace up { namespace test
         thread_local jmp_buf current_jump_buffer;
         thread_local test_error* current_failure;
         thread_local bool current_exceptions_enabled;
-        
+
         bool UPCDECL redirect_assertion_handler(char const* file, long line, char const* condition) {
 #if (UP_PLATFORM == UP_PLATFORM_WINDOWS)
             if (::IsDebuggerPresent()) {
@@ -68,8 +69,19 @@ namespace up { namespace test
             longjmp(current_jump_buffer, 1);
         }
 
-        typedef std::vector<char const*> category_container;
+
+#if UP_COMPILER == UP_COMPILER_MSVC
+        void UPCDECL redirect_purecall_handler() {
+            if (::IsDebuggerPresent()) {
+                ::DebugBreak();
+            }
+            log_event(log_level_critical, "Pure virtual call detected, aborting...");
+            abort();
+        }
+#endif
     }
+
+    typedef std::vector<char const*> category_container;
 
     struct UPHIDDEN test_case_impl
     {
@@ -124,23 +136,29 @@ namespace up { namespace test
             return result_;
         }
             
-#ifndef UP_NO_EXCEPTIONS
-        if (exceptions_enabled_) {
-            return run_except(listener);
-        }
+        current_exceptions_enabled = true;
+        assert_handler old_assert_handler = set_assert_handler(&redirect_assertion_handler);
+#if UP_COMPILER == UP_COMPILER_MSVC
+        _purecall_handler old_purecall_handler = _set_purecall_handler(&redirect_purecall_handler);
 #endif
 
-        return run_setjmp(listener);
+#ifndef UP_NO_EXCEPTIONS
+        test_result const& result = exceptions_enabled_ ? run_except(listener) : run_setjmp(listener);
+#else
+        test_result const& result = run_setjmp(listener);
+#endif
+
+#if UP_COMPILER == UP_COMPILER_MSVC
+        _set_purecall_handler(old_purecall_handler);
+#endif
+        set_assert_handler(old_assert_handler);
+        return result;
     }
 
     test_result const& test_case::run_except(test_listener& listener) {
         timespec start, stop, elapsed;
-        assert_handler old_handler;
         unsigned int i;
         bool is_error;
-        
-        current_exceptions_enabled = true;
-        old_handler = set_assert_handler(&redirect_assertion_handler);
 
         try {
             verify(!clock_gettime(CLOCK_MONOTONIC, &start));
@@ -158,7 +176,6 @@ namespace up { namespace test
 
             is_error = strcmp(file_name(), error.file_name()) != 0;
             if ((!expects_error_ && is_error) || (!expects_assertion_ && !is_error)) {
-                set_assert_handler(old_handler);
                 result_.fail(&elapsed);
                 listener.test_case_failed(*this, error);
                 return result_;
@@ -169,7 +186,6 @@ namespace up { namespace test
             verify(!timespec_subtract(&start, &stop, &elapsed));
 
             if (!expects_error_) {
-                set_assert_handler(old_handler);
                 result_.fail(&elapsed);
                 listener.test_case_failed(*this, test_error(file_name(), line_number(), "Unexpected Exception", error.what()));
                 return result_;
@@ -180,25 +196,19 @@ namespace up { namespace test
             verify(!timespec_subtract(&start, &stop, &elapsed));
 
             if (!expects_error_) {
-                set_assert_handler(old_handler);
                 result_.fail(&elapsed);
                 listener.test_case_failed(*this, test_error(file_name(), line_number(), "Unexpected Exception", "Unknown"));
                 return result_;
             }
         }
 
-        set_assert_handler(old_handler);
         return run_finalize(listener, &elapsed);
     }
 
     test_result const& test_case::run_setjmp(test_listener& listener) {
         timespec start, stop, elapsed;
-        assert_handler old_handler;
         unsigned int i;
         bool is_error;
-
-        current_exceptions_enabled = false;
-        old_handler = set_assert_handler(&redirect_assertion_handler);
 
         if (setjmp(current_jump_buffer) == 0) {
             verify(!clock_gettime(CLOCK_MONOTONIC, &start));
@@ -220,14 +230,12 @@ namespace up { namespace test
 
             is_error = strcmp(file_name(), error.file_name()) != 0;
             if ((!expects_error_ && is_error) || (!expects_assertion_ && !is_error)) {
-                set_assert_handler(old_handler);
                 result_.fail(&elapsed);
                 listener.test_case_failed(*this, error);
                 return result_;
             }
         }
 
-        set_assert_handler(old_handler);
         return run_finalize(listener, &elapsed);
     }
 

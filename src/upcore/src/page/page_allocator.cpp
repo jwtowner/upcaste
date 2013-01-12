@@ -23,40 +23,63 @@
 //
 
 #include <up/page.hpp>
+#include <up/atomic.hpp>
 #include <up/cassert.hpp>
 #include <up/cstdlib.hpp>
 #include <up/cerrno.hpp>
 #include <up/cthreads.hpp>
+#include <new>
 
 namespace up
 {
+    // Use double-checked locking pattern to initialize the
+    // allocator instance from static storage. Note that we
+    // never want the destructor for the default instance
+    // of page_allocator to be called, as other subsystems
+    // may keep a pointer to it and access it directly, even
+    // from within atexit handlers.
+
     namespace
     {
-        once_flag page_allocator_once = ONCE_FLAG_INIT;
+        alignas(UP_MAX_CACHE_LINE_SIZE) char instance_storage[sizeof(page_allocator)];
+        atomic<page_allocator*> instance_ptr(0);
+        atomic_flag lock_flag = ATOMIC_FLAG_INIT;
+        once_flag native_page_once = ONCE_FLAG_INIT;
         size_t native_page_size = 0;
         size_t native_page_mask = SIZE_MAX;
 
-        void UPCDECL page_allocator_init() noexcept {
+        void UPCDECL native_page_init() noexcept {
             verify(!page_get_default_size(&native_page_size));
             native_page_mask = native_page_size - 1;
         }
     }
 
     LIBUPCOREAPI
+    page_allocator* page_allocator::instance() noexcept {
+        page_allocator* alloc = instance_ptr.load(memory_order_consume);
+        if (alloc) {
+            return alloc;
+        }
+
+        atomic_flag_spin_lock_explicit(&lock_flag, memory_order_acquire);
+        alloc = instance_ptr.load(memory_order_consume);
+        if (!alloc) {
+            alloc = ::new(&instance_storage) page_allocator;
+            instance_ptr.store(alloc, memory_order_release);
+        }
+        atomic_flag_clear_explicit(&lock_flag, memory_order_release);
+        return alloc;
+    }
+
+    LIBUPCOREAPI
     size_t page_allocator::page_size() noexcept {
-        call_once(&page_allocator_once, &page_allocator_init);
+        call_once(&native_page_once, &native_page_init);
         return native_page_size;
     }
 
     LIBUPCOREAPI
-    page_allocator* page_allocator::instance() noexcept {
-        static page_allocator instance_;
-        call_once(&page_allocator_once, &page_allocator_init);
-        return &instance_;
-    }
-
-    LIBUPCOREAPI
     page_allocator::page_allocator() noexcept {
+        call_once(&native_page_once, &native_page_init);
     }
     
     LIBUPCOREAPI

@@ -30,6 +30,7 @@
 #include <up/cstdlib.hpp>
 #include <up/cstring.hpp>
 #include <up/cthreads.hpp>
+#include <up/atomic.hpp>
 #include <up/list.hpp>
 
 #if (UP_BASESYSTEM == UP_BASESYSTEM_WINDOWS)
@@ -76,8 +77,12 @@ namespace up { namespace
     unsigned long log_sequence;
 
     void UPCDECL log_term() noexcept {
+        atomic_thread_fence(memory_order_seq_cst);
         list_clear<log_sink_node, &log_sink_node::node>(&log_sinks_head, malloc_allocator::instance());
+#ifndef UP_HAS_MSVC_XTHREADS
+        // thread system is shut-down, causes access exception
         mtx_destroy(&log_monitor);
+#endif
     }
 
     void UPCDECL log_init() noexcept {

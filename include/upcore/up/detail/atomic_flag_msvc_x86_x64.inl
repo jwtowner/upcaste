@@ -30,7 +30,7 @@
 #endif
 
 #ifndef ATOMIC_FLAG_INIT
-#   define ATOMIC_FLAG_INIT 0
+#   define ATOMIC_FLAG_INIT { 0 }
 #endif
 
 #define UP_DETAIL_ATOMIC_FLAG_OPERATIONS(Volatile) \
@@ -38,44 +38,42 @@
     void clear(memory_order order = memory_order_seq_cst) Volatile noexcept { \
         if (order != memory_order_seq_cst) { \
             _ReadWriteBarrier(); \
-            state_ = 0; \
+            state = 0; \
         } \
         else { \
-            _InterlockedExchange8(&state_, 0); \
+            _InterlockedExchange8(&state, 0); \
         } \
     } \
     UPALWAYSINLINE \
     bool test_and_set(memory_order = memory_order_seq_cst) Volatile noexcept { \
-        return _InterlockedCompareExchange8(&state_, 1, 0) == 1; \
+        return _InterlockedCompareExchange8(&state, 1, 0) == 1; \
     } \
     UPALWAYSINLINE \
     bool test_test_and_set(memory_order order = memory_order_seq_cst) Volatile noexcept { \
         if (order != memory_order_seq_cst) { \
-            char result = state_; \
+            char s = state; \
             _ReadWriteBarrier(); \
-            if (result == 1) { \
+            if (s == 1) { \
                 return true; \
             } \
         } \
-        return test_and_set(order); \
+        return _InterlockedCompareExchange8(&state, 1, 0) == 1; \
     }
 
 namespace up
 {
     struct LIBUPCOREAPI atomic_flag
     {
-        UPNONCOPYABLE(atomic_flag);
-
-    public:
-        
-        UPDEFAULTCTOR(atomic_flag);
-        UPALWAYSINLINE UPCONSTEXPR atomic_flag(bool state) noexcept : state_(state ? 1 : 0) { }
+        char state;
+#if !defined(UP_NO_DEFAULTED_FUNCTIONS) && !defined(UP_NO_DELETED_FUNCTIONS) \
+    && !defined(UP_NO_INITIALIZER_LISTS) && !defined(UP_NO_CONSTEXPR)
+        atomic_flag() = default;
+        atomic_flag(atomic_flag const&) = delete;
+        atomic_flag operator=(atomic_flag const&) = delete;
+        atomic_flag operator=(atomic_flag const&) volatile = delete;
+#endif
         UP_DETAIL_ATOMIC_FLAG_OPERATIONS(UP_DETAIL_NOT_VOLATILE)
         UP_DETAIL_ATOMIC_FLAG_OPERATIONS(UP_DETAIL_VOLATILE)
-
-    private:
-
-        char volatile state_;
     };
 }
 

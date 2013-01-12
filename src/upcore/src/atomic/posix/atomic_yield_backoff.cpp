@@ -22,24 +22,51 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_DETAIL_ATOMIC_PAUSE_GCC_X86_X64_INL
-#define UP_DETAIL_ATOMIC_PAUSE_GCC_X86_X64_INL
-
-#ifndef UP_ATOMIC_HPP
-#   error "Do not include this file directly, instead include <up/atomic.hpp>"
-#endif
+#include <up/atomic.hpp>
+#include <up/cassert.hpp>
+#include <pthread.h>
+#include <sched.h>
+#include <time.h>
 
 namespace up
 {
-    inline UPALWAYSINLINE
-    void atomic_signal_pause() noexcept {
-        __asm__ __volatile__ ( "pause" : : : "memory" );
-    }
-    
-    inline UPALWAYSINLINE
-    void atomic_thread_pause() noexcept {
-       __asm__ __volatile__ ( "pause" : : : "memory" );
+    LIBUPCOREAPI UPNONNULLALL
+    void atomic_yield_backoff(unsigned int* spin_count) noexcept {
+        assert(spin_count);
+
+        unsigned int count = *spin_count;
+        timespec ts;
+        
+        if (count < 16) {
+            if (!count) {
+                count = 1;
+            }
+            for (unsigned int c = count; c > 0; --c) {
+                atomic_yield();
+            }
+            count <<= 1;
+        }
+        else if (count < 18) {
+            ::sched_yield();
+            ++count;
+        }
+        else if (count < 22) {
+            ts.tv_sec = 0;
+            ts.tv_nsec = 0;
+            while (::nanosleep(&ts, &ts) == -1) ;
+            ++count;
+        }
+        else if (count < 64) {
+            ts.tv_sec = 0;
+            ts.tv_nsec = 1000000;
+            while (::nanosleep(&ts, &ts) == -1) ;
+        }
+        else {
+            ts.tv_sec = 0;
+            ts.tv_nsec = 10000000;
+            while (::nanosleep(&ts, &ts) == -1) ;
+        }
+
+        *spin_count = count;
     }
 }
-
-#endif

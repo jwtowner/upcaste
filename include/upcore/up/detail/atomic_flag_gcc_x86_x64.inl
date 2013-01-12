@@ -30,7 +30,7 @@
 #endif
 
 #ifndef ATOMIC_FLAG_INIT
-#   define ATOMIC_FLAG_INIT 0
+#   define ATOMIC_FLAG_INIT { 0 }
 #endif
 
 #define UP_DETAIL_ATOMIC_FLAG_OPERATIONS(Volatile) \
@@ -38,10 +38,15 @@
     void clear(memory_order order = memory_order_seq_cst) Volatile noexcept { \
         if (order != memory_order_seq_cst) { \
             __asm__ __volatile__ ( "" : : : "memory" ); \
-            state_ = 0; \
+            state = 0; \
         } \
         else { \
-            __asm__ __volatile__ ( "lock; xchgb %1, %0" : "+m" (state_) : "r" (0) : "%1", "memory" ); \
+            __asm__ __volatile__ ( \
+                "lock; xchgb %1, %0" \
+                : "+m" (state) \
+                : "r" ((char)0) \
+                : "%1", "memory" \
+            ); \
         } \
     } \
     UPALWAYSINLINE \
@@ -50,9 +55,9 @@
         bool result; \
         __asm__ __volatile__ ( \
             "lock; cmpxchgb %[desired], %[state]\n\t" \
-            "setzb %[result]" \
-            : [state] "+m" (state_), "+a" (expected), [result] "=q" (result) \
-            : [desired] "q" (char(1)) \
+            "setb %[result]" \
+            : [state] "+m" (state), "+a" (expected), [result] "=q" (result) \
+            : [desired] "q" ((char)1) \
             : "cc", "memory" \
         ); \
         return result; \
@@ -60,9 +65,9 @@
     UPALWAYSINLINE \
     bool test_test_and_set(memory_order order = memory_order_seq_cst) Volatile noexcept { \
         if (order != memory_order_seq_cst) { \
-            char result = state_; \
+            char s = state; \
             __asm__ __volatile__ ( "" : : : "memory" ); \
-            if (result == 1) { \
+            if (s == 1) { \
                 return true; \
             } \
         } \
@@ -73,18 +78,16 @@ namespace up
 {
     struct LIBUPCOREAPI atomic_flag
     {
-        UPNONCOPYABLE(atomic_flag);
-
-    public:
-        
-        UPDEFAULTCTOR(atomic_flag);
-        UPALWAYSINLINE UPCONSTEXPR atomic_flag(bool state) noexcept : state_(state ? 1 : 0) { }
+        char state;
+#if !defined(UP_NO_DEFAULTED_FUNCTIONS) && !defined(UP_NO_DELETED_FUNCTIONS) \
+    && !defined(UP_NO_INITIALIZER_LISTS) && !defined(UP_NO_CONSTEXPR)
+        atomic_flag() = default;
+        atomic_flag(atomic_flag const&) = delete;
+        atomic_flag operator=(atomic_flag const&) = delete;
+        atomic_flag operator=(atomic_flag const&) volatile = delete;
+#endif
         UP_DETAIL_ATOMIC_FLAG_OPERATIONS(UP_DETAIL_NOT_VOLATILE)
         UP_DETAIL_ATOMIC_FLAG_OPERATIONS(UP_DETAIL_VOLATILE)
-
-    private:
-
-        char volatile state_;
     };
 }
 

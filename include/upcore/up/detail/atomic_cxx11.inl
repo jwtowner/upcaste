@@ -116,17 +116,49 @@ namespace up
     using ::std::atomic_flag_test_and_set_explicit;
     using ::std::atomic_flag_clear;
     using ::std::atomic_flag_clear_explicit;
+
+    extern LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_explicit(atomic_flag* flag, memory_order order) noexcept;
+
+    extern LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_explicit(atomic_flag volatile* flag, memory_order order) noexcept;
+
+    extern LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_backoff_explicit(atomic_flag* flag, memory_order order) noexcept;
+
+    extern LIBUPCOREAPI UPNONNULLALL
+    void atomic_flag_spin_lock_backoff_explicit(atomic_flag volatile* flag, memory_order order) noexcept;
+
+    inline UPALWAYSINLINE UPNONNULLALL
+    void atomic_flag_spin_lock(atomic_flag* flag) noexcept {
+        atomic_flag_spin_lock_explicit(flag, memory_order_seq_cst);
+    }
+
+    inline UPALWAYSINLINE UPNONNULLALL
+    void atomic_flag_spin_lock(atomic_flag volatile* flag) noexcept {
+        atomic_flag_spin_lock_explicit(flag, memory_order_seq_cst);
+    }
+
+    inline UPALWAYSINLINE UPNONNULLALL
+    void atomic_flag_spin_lock_backoff(atomic_flag* flag) noexcept {
+        atomic_flag_spin_lock_backoff_explicit(flag, memory_order_seq_cst);
+    }
+
+    inline UPALWAYSINLINE UPNONNULLALL
+    void atomic_flag_spin_lock_backoff(atomic_flag volatile* flag) noexcept {
+        atomic_flag_spin_lock_backoff_explicit(flag, memory_order_seq_cst);
+    }
 }
 
 #if (UP_COMPILER == UP_COMPILER_GCC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/atomic_pause_gcc_x86_x64.inl>
+#       include <up/detail/atomic_yield_gcc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
 #elif (UP_COMPILER == UP_COMPILER_MSVC)
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
-#       include <up/detail/atomic_pause_msvc_x86_x64.inl>
+#       include <up/detail/atomic_yield_msvc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
