@@ -35,11 +35,12 @@ namespace up
         unsigned char const* usrc = reinterpret_cast<unsigned char const*>(*src);
         unsigned char const* const usrc_end = usrc + nu8;
         char32_t* dst_start = dst, * dst_end = dst + n;
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
+        unsigned char octet;
+        size_t codepoint;
+        ssize_t i, length;
 
-        for ( ; (dst < dst_end) && (usrc < usrc_end); ++dst, ++usrc) {
-            codepoint = *usrc;
+        for ( ; (dst < dst_end) && (usrc < usrc_end); ++dst) {
+            codepoint = *usrc++;
             
             // ascii fast-path
             if (codepoint < 0x80) {
@@ -54,29 +55,24 @@ namespace up
             // fully decode and validate utf-8 sequence
             length = detail::u8_sequence_length_table[codepoint];
             if (length > 1) {
-                if ((usrc + length) > usrc_end) {
-                    break;
-                }
-                for (i = length - 1; i > 0; --i) {
-                    octet = *(++usrc);
+                for (i = length - 1; (i > 0) && (usrc < usrc_end); --i, ++usrc) {
+                    octet = *usrc;
                     if (!detail::u8_is_trail(octet)) {
                         break;
                     }
                     codepoint = (codepoint << 6) + octet;
                 }
-                codepoint -= detail::u8_offset_table[length];
-                if (!i && detail::u32_from_u8_is_valid(codepoint, length)) {
-                    *dst = static_cast<char32_t>(codepoint);
-                    continue;
+
+                if (!i) {
+                    codepoint -= detail::u8_offset_table[length];
+                    if (detail::u32_from_u8_is_valid(codepoint, length)) {
+                        *dst = static_cast<char32_t>(codepoint);
+                        continue;
+                    }
                 }
             }
 
-            // illegal octect sequence, recover from error
-            usrc = detail::u8s_recover(usrc, usrc_end);
-            if (!usrc) {
-                break;
-            }
-            --usrc;
+            // illegal sequence detected
             *dst = detail::u32_replacement_character;
         }
 

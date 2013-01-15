@@ -33,43 +33,34 @@ namespace up
         assert(s);
     
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
-        size_t count = 0;
+        unsigned char octet;
+        ssize_t i, length;
+        size_t retval = 0;
 
         for (;;) {
-            // read start of next character
-            codepoint = *u8s;
-            if (!codepoint) {
+            // read start of next character sequence
+            octet = *u8s;
+            if (!octet) {
                 break;
             }
-            ++count;
+            ++retval;
             ++u8s;
 
             // ascii fast-path
-            length = detail::u8_sequence_length_table[codepoint];
+            length = detail::u8_sequence_length_table[octet];
             if (length <= 1) {
                 continue;
             }
 
-            // fully validate unicode codepoint
-            for (i = length - 1; i > 0; ++u8s, --i) {
+            // decode rest of utf-8 sequence
+            for (i = length - 1; i > 0; --i, ++u8s) {
                 octet = *u8s;
                 if (!detail::u8_is_trail(octet)) {
-                    break;
-                }
-                codepoint = (codepoint << 6) + octet;
-            }
-
-            codepoint -= detail::u8_offset_table[length];
-            if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
-                u8s = detail::u8s_recover(u8s);
-                if (!u8s) {
                     break;
                 }
             }
         }
         
-        return count;
+        return retval;
     }
 }

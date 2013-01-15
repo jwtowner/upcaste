@@ -212,6 +212,20 @@ namespace up
     extern LIBUPCOREAPI UPPURE UPNONNULL(1)
     size_t wcsnlen(wchar_t const* s, size_t n) noexcept;
 #endif
+}
+
+#if UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
+#   include <up/detail/cwchar_msvc.inl>
+#elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_POSIX
+#   include <up/detail/cwchar_posix.inl>
+#else
+#   error No wchar extensions compatability layer for target platform.
+#endif
+
+namespace up
+{
+    extern LIBUPCOREAPI UPALLOC UPWARNRESULT
+    wchar_t* wcsndup(wchar_t const* s, size_t n, allocator* alloc) noexcept;
 
     inline UPALWAYSINLINE UPPURE UPNONNULL(1)
     wchar_t const* wcsnchr(wchar_t const* s, wchar_t c, size_t n) noexcept {
@@ -369,13 +383,5 @@ namespace up
 #endif
     }
 }
-
-#if UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
-#   include <up/detail/cwchar_msvc.inl>
-#elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_POSIX
-#   include <up/detail/cwchar_posix.inl>
-#else
-#   error No wchar extensions compatability layer for target platform.
-#endif
 
 #endif

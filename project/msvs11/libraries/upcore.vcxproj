@@ -365,8 +365,6 @@
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8serr.cpp" />
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snerr.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\log.cpp">
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>

@@ -31,11 +31,12 @@ namespace up
     LIBUPCOREAPI
     size_t u8stou16slen(char const* s) noexcept {
         assert(s);
-    
+
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
-        size_t count = 0;
+        unsigned char octet;
+        ssize_t i, length;
+        size_t codepoint;
+        size_t retval = 0;
 
         for (;;) {
             // read start of next character
@@ -43,7 +44,7 @@ namespace up
             if (!codepoint) {
                 break;
             }
-            ++count;
+            ++retval;
             ++u8s;
 
             // ascii fast-path
@@ -52,8 +53,8 @@ namespace up
                 continue;
             }
 
-            // fully validate unicode codepoint
-            for (i = length - 1; i > 0; ++u8s, --i) {
+            // fully validate utf-8 sequence
+            for (i = length - 1; i > 0; --i, ++u8s) {
                 octet = *u8s;
                 if (!detail::u8_is_trail(octet)) {
                     break;
@@ -61,19 +62,15 @@ namespace up
                 codepoint = (codepoint << 6) + octet;
             }
 
-            codepoint -= detail::u8_offset_table[length];
-            if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
-                length = 0;
-                u8s = detail::u8s_recover(u8s);
-                if (!u8s) {
-                    break;
+            if (!i) {
+                codepoint -= detail::u8_offset_table[length];
+                if (detail::u32_from_u8_is_valid(codepoint, length)) {
+                    // 4-byte utf-8 characters always map to a utf-16 surrogate pair
+                    retval += (length & 4) >> 2;
                 }
             }
-            
-            // 4-byte utf-8 characters always map to a utf-16 surrogate pair
-            count += (length & 4) >> 2;
         }
         
-        return count;
+        return retval;
     }
 }

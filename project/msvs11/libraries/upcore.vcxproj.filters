@@ -1688,11 +1688,5 @@
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_end.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8serr.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snerr.cpp">
-      <Filter>src\cuchar</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

@@ -33,12 +33,8 @@ namespace up
     char* strndup(char const* s, size_t n) noexcept {
         assert(s);
 
-        size_t sz = strlen(s);
-        if (sz > n) {
-            sz = n;
-        }
-
-        void* d = malloc(sz + 1);
+        size_t const sz = strnlen(s, n);
+        void* const d = malloc(sz + 1);
         if (!d) {
             return nullptr;
         }
@@ -52,12 +48,8 @@ namespace up
     char* strndup(char const* UPRESTRICT s, size_t n, allocator* UPRESTRICT alloc) noexcept {
         assert(s && alloc);
 
-        size_t sz = strlen(s);
-        if (sz > n) {
-            sz = n;
-        }
-
-        void* d = alloc->allocate(sz + 1);
+        size_t const sz = strnlen(s, n);
+        void* const d = alloc->allocate(sz + 1);
         if (!d) {
             return nullptr;
         }

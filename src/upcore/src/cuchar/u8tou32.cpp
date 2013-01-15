@@ -31,49 +31,48 @@ namespace up
     LIBUPCOREAPI
     int u8tou32(char32_t* UPRESTRICT u32, char const* UPRESTRICT s, size_t n) noexcept {
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
+        unsigned char const* u8s_end = u8s + n;
+        unsigned char octet;
+        size_t codepoint;
+        ssize_t i, length;
         
-        codepoint = (n > 0) ? (u8s ? *u8s : 0xFF) : 0x00;
+        // read initial octet and determine sequence length
+        codepoint = (u8s && (n > 0)) ? *u8s : 0;
         length = detail::u8_sequence_length_table[codepoint];
-        if (n < static_cast<size_t>(length)) {
-            assert(n < SIZE_MAX);
-            goto error;
-        }
-
-        // ascii fast-path
         if (length <= 1) {
-            goto done;
+            // ascii fast path
+            if (u32) {
+                *u32 = static_cast<char32_t>(codepoint);
+            }
+
+            return static_cast<int>(length);
         }
 
         // fully decode and validate unicode code point
-        for (i = length - 1; i > 0; --i) {
-            octet = *(++u8s);
+        for (i = length - 1, ++u8s; (i > 0) && (u8s < u8s_end); --i, ++u8s) {
+            octet = *u8s;
             if (!detail::u8_is_trail(octet)) {
-                goto error;
+                break;
             }
             codepoint = (codepoint << 6) + octet;
         }
 
-        codepoint -= detail::u8_offset_table[length];
-        if (!detail::u32_from_u8_is_valid(codepoint, length)) {
-            goto error;
+        if (!i) {
+            codepoint -= detail::u8_offset_table[length];
+            if (detail::u32_from_u8_is_valid(codepoint, length)) {
+                if (u32) {
+                    *u32 = static_cast<char32_t>(codepoint);
+                }
+                return static_cast<int>(length);
+            }
         }
 
-    done:
-
-        if (u32) {
-            *u32 = static_cast<char32_t>(codepoint);
-        }
-        
-        return static_cast<int>(length);
-
-    error:
-
+        // illegal sequence detected
         if (u32) {
             *u32 = detail::u32_replacement_character;
         }
 
-        return -1;
+        // return negated length of maximal subsequence
+        return static_cast<int>(reinterpret_cast<unsigned char const*>(s) - u8s);
     }
 }

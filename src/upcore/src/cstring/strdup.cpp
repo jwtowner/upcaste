@@ -37,7 +37,7 @@ namespace up
         assert(s);
 
         size_t const sz = strlen(s) + 1;
-        void* d = malloc(sz);
+        void* const d = malloc(sz);
         if (!d) {
             return nullptr;
         }

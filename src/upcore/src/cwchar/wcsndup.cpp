@@ -24,7 +24,7 @@
 
 #include <up/prolog.hpp>
 
-#if defined(UP_HAS_STDC_WCHAR) && !defined(UP_HAS_GNU_WCSNDUP) 
+#ifdef UP_HAS_STDC_WCHAR
 
 #include <up/cwchar.hpp>
 #include <up/cassert.hpp>
@@ -33,23 +33,36 @@
 
 namespace up
 {
+#ifndef UP_HAS_GNU_WCSNDUP
     LIBUPCOREAPI UPALLOC UPWARNRESULT
     wchar_t* wcsndup(wchar_t const* s, size_t n) noexcept {
-        assert(s);
+        assert(s || !n);
 
-        size_t sz = wcslen(s);
-        if (sz > n) {
-            sz = n;
-        }
-
+        size_t const sz = wcsnlen(s, n);
         size_t const wsz = sz * sizeof(wchar_t);
-        wchar_t* d = static_cast<wchar_t*>(malloc(wsz + sizeof(wchar_t)));
-        if (!d) {
+        wchar_t* r = static_cast<wchar_t*>(malloc(wsz + sizeof(wchar_t)));
+        if (!r) {
             return nullptr;
         }
 
-        d[sz] = L'\0';
-        return static_cast<wchar_t*>(memcpy(d, s, wsz));
+        *static_cast<wchar_t*>(mempcpy(r, s, wsz)) = L'\0';
+        return r;
+    }
+#endif
+
+    LIBUPCOREAPI UPALLOC UPWARNRESULT
+    wchar_t* wcsndup(wchar_t const* s, size_t n, allocator* alloc) noexcept {
+        assert((s || !n) && alloc);
+
+        size_t const sz = wcsnlen(s, n);
+        size_t const wsz = sz * sizeof(wchar_t);
+        wchar_t* r = static_cast<wchar_t*>(alloc->allocate(wsz + sizeof(wchar_t)));
+        if (!r) {
+            return nullptr;
+        }
+
+        *static_cast<wchar_t*>(mempcpy(r, s, wsz)) = L'\0';
+        return r;
     }
 }
 

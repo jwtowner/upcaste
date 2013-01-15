@@ -37,20 +37,20 @@ namespace up
         }
 
         // unicode normal-path
-        char c_buffer[u8_cur_max];
-        int c_buffer_length = u32tou8(c_buffer, u32);
-        if (c_buffer_length == -1) {
+        char buffer[u8_cur_max];
+        int buffer_length = u32tou8(buffer, u32);
+        if (buffer_length <= -1) {
             return nullptr;
         }
 
         // search for character sequence in 's'
-        char const* c_end = c_buffer + c_buffer_length;
+        char const* buffer_end = buffer + buffer_length;
         char const* result = nullptr;
         
         for ( ; *s; ++s) {
-            char const* c = c_buffer;
-            for (char const* s2 = s; (c < c_end) && !(*s2 - *c); ++s2, ++c) ;
-            if (c == c_end) {
+            char const* b = buffer;
+            for (char const* s2 = s; (b < buffer_end) && !(*s2 - *b); ++s2, ++b) ;
+            if (b == buffer_end) {
                 result = s;
             }
         }

@@ -34,47 +34,34 @@ namespace up
     
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
         unsigned char const* u8s_end = u8s + n;
-        uint_fast32_t codepoint, octet;
-        int_fast32_t i, length;
-        size_t count = 0;
+        unsigned char octet;
+        ssize_t i, length;
+        size_t retval = 0;
 
         while (u8s < u8s_end) {
-            codepoint = *(u8s++);
-            if (!codepoint) {
+            // read start of next character sequence
+            octet = *u8s;
+            if (!octet) {
                 break;
             }
+            ++u8s;
+            ++retval;
 
             // ascii fast-path
-            ++count;
-            length = detail::u8_sequence_length_table[codepoint];
+            length = detail::u8_sequence_length_table[octet];
             if (length <= 1) {
                 continue;
             }
 
-            // ensure we won't read beyond the end
-            if ((u8s + length - 1) > u8s_end) {
-                break;
-            }
-
-            // fully validate unicode codepoint
-            for (i = length - 1; i > 0; ++u8s, --i) {
+            // decode rest of utf-8 sequence
+            for (i = length - 1; (i > 0) && (u8s < u8s_end); ++u8s, --i) {
                 octet = *u8s;
                 if (!detail::u8_is_trail(octet)) {
-                    break;
-                }
-
-                codepoint = (codepoint << 6) + octet;
-            }
-
-            codepoint -= detail::u8_offset_table[length];
-            if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
-                u8s = detail::u8s_recover(u8s, u8s_end);
-                if (!u8s) {
                     break;
                 }
             }
         }
         
-        return count;
+        return retval;
     }
 }

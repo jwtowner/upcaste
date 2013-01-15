@@ -97,21 +97,12 @@ namespace up { namespace sexp { namespace
     )
     noexcept {
         char32_t ch32 = *reinterpret_cast<unsigned char const*>(cursor);
-        if (ch32 <= 0x7F) {
+        if (ch32 < 0x80) {
             ++cursor;
         }
         else {
-            size_t const length = last - cursor;
             int const octet_count = u8tou32(&ch32, cursor, last - cursor); 
-            if (octet_count > 0) {
-                cursor += octet_count;
-            }
-            else {
-                cursor = u8snerr(cursor, length);
-                if (!cursor) {
-                    cursor = last;
-                }
-            }
+            cursor += (octet_count > 0) ? octet_count : -octet_count;
         }
         *ch = ch32;
         return cursor;
@@ -1258,15 +1249,7 @@ namespace up { namespace sexp
                 char32_t ch32;
                 size_t const length = lex->last - lex->prev_cursor;
                 int const octet_count = u8tou32(&ch32, lex->prev_cursor, length);
-                if (octet_count > 0) {
-                    lex->cursor = lex->prev_cursor + octet_count;
-                }
-                else {
-                    lex->cursor = u8snerr(lex->prev_cursor, length);
-                    if (!lex->cursor) {
-                        lex->cursor = lex->last;
-                    }
-                }
+                lex->cursor += (octet_count > 0) ? octet_count : -octet_count;
                 if ((ch32 == 0x0085) || ((ch32 | 0x0001) == 0x2029)) {
                     lex->column = 0;
                     ++lex->line;

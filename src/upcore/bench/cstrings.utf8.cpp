@@ -146,15 +146,7 @@ namespace cstrings_utf8
                 break;
             }
             ++count;
-            if (length > 0) {
-                char_ptr += length;
-            }
-            else {
-                char_ptr = up::u8serr(char_ptr);
-                if (!char_ptr) {
-                    break;
-                }
-            }
+            char_ptr += (length > 0) ? length : -length;
         }
         
         ds.result(count);
@@ -172,15 +164,7 @@ namespace cstrings_utf8
                 break;
             }
             ++count;
-            if (length > 0) {
-                char_ptr += length;
-            }
-            else {
-                char_ptr = up::u8snerr(char_ptr, end_ptr - char_ptr);
-                if (!char_ptr) {
-                    break;
-                }
-            }
+            char_ptr += (length > 0) ? length : -length;
         }
         
         ds.result(count);
@@ -198,15 +182,7 @@ namespace cstrings_utf8
                 break;
             }
             ++count;
-            if (length > 0) {
-                char_ptr += length;
-            }
-            else {
-                char_ptr = up::u8snerr(char_ptr, end_ptr - char_ptr);
-                if (!char_ptr) {
-                    break;
-                }
-            }
+            char_ptr += (length > 0) ? length : -length;
         }
         
         ds.result(count);

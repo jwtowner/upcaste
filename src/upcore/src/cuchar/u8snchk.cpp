@@ -34,10 +34,13 @@ namespace up
         char const* end_ptr = s + n;
         while (s < end_ptr) {
             int length = u8nlen(s, end_ptr - s);
+            if (!length) {
+                break;
+            }
             if (length < 0) {
                 return s;
             }
-            s += (length > 0) ? length : 1;
+            s += length;
         }
         
         return nullptr;

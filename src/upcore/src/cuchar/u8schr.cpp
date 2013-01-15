@@ -39,7 +39,7 @@ namespace up
         // unicode normal-path
         char buffer[u8_cur_max];
         int buffer_length = u32tou8(buffer, u32);
-        if (buffer_length == -1) {
+        if (buffer_length <= -1) {
             return nullptr;
         }
         

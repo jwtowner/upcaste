@@ -30,27 +30,35 @@ namespace up
     LIBUPCOREAPI
     int u8len(char const* s) noexcept {
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t octet, codepoint;
-        int_fast32_t i, length;
+        unsigned char octet;
+        char32_t codepoint;
+        int i, length;
         
-        codepoint = u8s ? *u8s : 0xFF;
+        // read initial octet and determine sequence length
+        codepoint = u8s ? *u8s : 0;
         length = detail::u8_sequence_length_table[codepoint];
-
-        // ascii fast-path
         if (length <= 1) {
+            // ascii fast-path
             return length;
         }
 
-        // fully validate unicode code point
-        for (i = length - 1; i > 0; --i) {
-            octet = *(++u8s);
+        // fully decode and validate utf-8 sequence
+        for (i = length - 1, ++u8s; i > 0; --i, ++u8s) {
+            octet = *u8s;
             if (!detail::u8_is_trail(octet)) {
-                return -1;
+                goto error;
             }
             codepoint = (codepoint << 6) + octet;
         }
 
         codepoint -= detail::u8_offset_table[length];
-        return detail::u32_from_u8_is_valid(codepoint, length) ? static_cast<int>(length) : -1;
+        if (detail::u32_from_u8_is_valid(codepoint, length)) {
+            return length;
+        }
+
+    error:
+
+        // return negated length of maximal subsequence
+        return static_cast<int>(reinterpret_cast<unsigned char const*>(s) - u8s);
     }
 }

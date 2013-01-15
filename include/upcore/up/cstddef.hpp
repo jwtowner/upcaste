@@ -39,10 +39,6 @@
 namespace up
 {
     class allocator;
-    class page_allocator;
-    class malloc_allocator;
-    class aligned_malloc_allocator;
-
     using ::ptrdiff_t;
     using ::size_t;
     using ::ssize_t;
