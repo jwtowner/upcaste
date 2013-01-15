@@ -26,6 +26,7 @@
 #include <up/test/test_error.hpp>
 #include <up/test/test_filter.hpp>
 #include <up/test/test_listener.hpp>
+#include <up/cfenv.hpp>
 #include <up/csetjmp.hpp>
 #include <up/cstring.hpp>
 #include <up/cstdio.hpp>
@@ -130,17 +131,24 @@ namespace up { namespace test
 
     LIBUPTESTAPI
     test_result const& test_case::run(test_listener& listener, test_filter& filter) {
+#if UP_COMPILER == UP_COMPILER_MSVC
+        _purecall_handler old_purecall_handler;
+#endif
+        assert_handler old_assert_handler;
+        fenv_t old_env;
+
         if (!filter.matches(*this)) {
             listener.test_case_ignored(*this);
             result_.ignore();
             return result_;
         }
-            
-        current_exceptions_enabled = true;
-        assert_handler old_assert_handler = set_assert_handler(&redirect_assertion_handler);
+        
 #if UP_COMPILER == UP_COMPILER_MSVC
-        _purecall_handler old_purecall_handler = _set_purecall_handler(&redirect_purecall_handler);
+        old_purecall_handler = _set_purecall_handler(&redirect_purecall_handler);
 #endif
+        current_exceptions_enabled = exceptions_enabled_;
+        old_assert_handler = set_assert_handler(&redirect_assertion_handler);
+        fegetenv(&old_env);
 
 #ifndef UP_NO_EXCEPTIONS
         test_result const& result = exceptions_enabled_ ? run_except(listener) : run_setjmp(listener);
@@ -148,10 +156,12 @@ namespace up { namespace test
         test_result const& result = run_setjmp(listener);
 #endif
 
+        fesetenv(&old_env);
+        set_assert_handler(old_assert_handler);
 #if UP_COMPILER == UP_COMPILER_MSVC
         _set_purecall_handler(old_purecall_handler);
 #endif
-        set_assert_handler(old_assert_handler);
+
         return result;
     }
 

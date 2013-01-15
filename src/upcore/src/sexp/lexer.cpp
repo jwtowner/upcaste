@@ -51,36 +51,37 @@ namespace up { namespace sexp { namespace
 
     token_number_info const default_number_info =
     {
-        0, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 10
+        0, exactness_unspecified, precision_unspecified, 10
     };
 
     token_number_info const exact_number_info =
     {
-        2, static_cast<uint_least8_t>(exactness_exact), static_cast<uint_least8_t>(precision_unspecified), 10
+        2, exactness_exact, precision_unspecified, 10
     };
 
     token_number_info const inexact_number_info =
     {
-        2, static_cast<uint_least8_t>(exactness_inexact), static_cast<uint_least8_t>(precision_unspecified), 10
+        2, exactness_inexact, precision_unspecified, 10
     };
     
     token_number_info const binary_number_info =
     {
-        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 2
+        2, exactness_unspecified, precision_unspecified, 2
     };
     
-    token_number_info const octal_number_info = {
-        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 8
+    token_number_info const octal_number_info =
+    {
+        2, exactness_unspecified, precision_unspecified, 8
     };
     
     token_number_info const decimal_number_info =
     {
-        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 10
+        2, exactness_unspecified, precision_unspecified, 10
     };
     
     token_number_info const hexadecimal_number_info =
     {
-        2, static_cast<uint_least8_t>(exactness_unspecified), static_cast<uint_least8_t>(precision_unspecified), 16 
+        2, exactness_unspecified, precision_unspecified, 16 
     };
 
     inline UPALWAYSINLINE UPPURE
@@ -89,23 +90,41 @@ namespace up { namespace sexp { namespace
     }
 
     inline UPALWAYSINLINE
+    const char* lexer_u8tou32(
+        uint_least32_t* UPRESTRICT ch,
+        const char* UPRESTRICT cursor,
+        const char* UPRESTRICT last
+    )
+    noexcept {
+        char32_t ch32 = *reinterpret_cast<unsigned char const*>(cursor);
+        if (ch32 <= 0x7F) {
+            ++cursor;
+        }
+        else {
+            size_t const length = last - cursor;
+            int const octet_count = u8tou32(&ch32, cursor, last - cursor); 
+            if (octet_count > 0) {
+                cursor += octet_count;
+            }
+            else {
+                cursor = u8snerr(cursor, length);
+                if (!cursor) {
+                    cursor = last;
+                }
+            }
+        }
+        *ch = ch32;
+        return cursor;
+    }
+
+    inline UPALWAYSINLINE
     uint_least32_t lexer_get_char(lexer* lex) noexcept {
-        char const* cursor = lex->cursor;
-        char32_t ch = ueof;
-        int octet_count;
-        size_t length;
-
-        assert(cursor <= lex->last);
-        length = lex->last - cursor;
-
-        if (length > 0) {
-            lex->prev_cursor = cursor;
-            octet_count = u8tou32(&ch, cursor, length); 
-            cursor += (octet_count > 0) ? octet_count : 1;
-            lex->cursor = cursor;
+        uint_least32_t ch = ueof;
+        if (lex->cursor < lex->last) {
+            lex->prev_cursor = lex->cursor;
+            lex->cursor = lexer_u8tou32(&ch, lex->cursor, lex->last);
             ++lex->column;
         }
-
         return ch;
     }
 
@@ -127,16 +146,15 @@ namespace up { namespace sexp { namespace
         char const* cursor = start;
         char const* prev_cursor = lex->prev_cursor;
         uintmax_t column = lex->column;
-        char32_t ch;
-        int octet_count;
+        uint_least32_t ch;
 
         while (cursor < last) {
-            octet_count = u8tou32(&ch, cursor, last - cursor); 
+            prev_cursor = cursor;
+            cursor = lexer_u8tou32(&ch, cursor, last);
             if (lexer_fast_is_delimiter(ch)) {
+                cursor = prev_cursor;
                 break;
             }
-            prev_cursor = cursor;
-            cursor += (octet_count > 0) ? octet_count : 1;
             ++column;
         }
 
@@ -158,8 +176,7 @@ namespace up { namespace sexp { namespace
     bool lexer_read_delimited_token(lexer* UPRESTRICT lex, char const* UPRESTRICT s, size_t n) noexcept {
         char const* const last = lex->last;
         char const* cursor = lex->cursor;
-        char32_t ch;
-        int octet_count;
+        uint_least32_t ch;
 
         if ((static_cast<size_t>(last - cursor) < n) || (fast_strncasecmp(cursor, s, n) != 0)) {
             return false;
@@ -167,8 +184,8 @@ namespace up { namespace sexp { namespace
 
         cursor += n;
         if (cursor < last) {
-            octet_count = u8tou32(&ch, cursor, last - cursor); 
-            if ((octet_count < 0) || !lexer_fast_is_delimiter(ch)) {
+            lexer_u8tou32(&ch, cursor, last);
+            if (!lexer_fast_is_delimiter(ch)) {
                 return false;
             }
         }
@@ -184,25 +201,23 @@ namespace up { namespace sexp { namespace
         char const* cursor = lex->cursor;
         char const* prev_cursor = lex->cursor;
         uintmax_t column = lex->column;
-        char32_t ch = ueof;
-        int octet_count;
+        uint_least32_t ch = ueof;
 
         if ((static_cast<size_t>(last - cursor) < n) || (fast_strncasecmp(cursor, s, n) != 0)) {
             return false;
         }
 
-        column += n;
+        prev_cursor = cursor + n - 1;
         cursor += n;
-        prev_cursor = cursor - 1;
-
+        column += n;
+        
         if (cursor < last) {
-            octet_count = u8tou32(&ch, cursor, last - cursor);
             prev_cursor = cursor;
-            cursor += (octet_count > 0) ? octet_count : 1;
-            ++column;
+            cursor = lexer_u8tou32(&ch, cursor, last);
             if (!lexer_fast_is_delimiter(ch)) {
                 return false;
             }
+            ++column;
         }
         
         lex->cursor = cursor;
@@ -212,18 +227,17 @@ namespace up { namespace sexp { namespace
         return true;
     }
 
+    inline UPALWAYSINLINE
     uint_least32_t lexer_read_digits_part(lexer* UPRESTRICT lex, int radix) noexcept {
         char const* const last = lex->last;
         char const* cursor = lex->cursor;
         char const* prev_cursor = lex->cursor;
         uintmax_t column = lex->column;
-        char32_t ch, retval = ueof;
-        int octet_count;
+        uint_least32_t ch, retval = ueof;
 
         while (cursor < last) {
-            octet_count = u8tou32(&ch, cursor, last - cursor); 
             prev_cursor = cursor;
-            cursor += (octet_count > 0) ? octet_count : 1;
+            cursor = lexer_u8tou32(&ch, cursor, last);
             ++column;
             if (!isudigit(ch, radix)) {
                 retval = ch;
@@ -237,6 +251,7 @@ namespace up { namespace sexp { namespace
         return retval;
     }
     
+    inline UPALWAYSINLINE
     unsigned int lexer_read_unquote(lexer* UPRESTRICT lex, unsigned int unquote, unsigned int unquote_splicing) noexcept {
         uint_least32_t ch = lexer_get_char(lex);
         if (ch == '@') {
@@ -262,8 +277,8 @@ namespace up { namespace sexp { namespace
         char const* prev_cursor = lex->prev_cursor;
         uintmax_t column = lex->column;
         uintmax_t line = lex->line;
-        int octet_count, retval;
-        char32_t ch;
+        uint_least32_t ch;
+        int retval;
 
         tok->category = category_symbol;
         tok->type = token_escaped_identifier;
@@ -276,9 +291,8 @@ namespace up { namespace sexp { namespace
                 retval = sexp_badsyntax;
                 break;
             }
-            octet_count = u8tou32(&ch, cursor, last - cursor); 
             prev_cursor = cursor;
-            cursor += (octet_count > 0) ? octet_count : 1;
+            cursor = lexer_u8tou32(&ch, cursor, last);
             ++column;
             if (ch == '|') {
                 break;
@@ -291,7 +305,7 @@ namespace up { namespace sexp { namespace
                 }
                 continue;
             }
-            if ((('\n' <= ch) & (ch <= '\f')) | (ch == 0x0085) | ((ch | 0x0001) == 0x2029)) {
+            if ((('\n' <= ch) && (ch <= '\f')) || (ch == 0x0085) || ((ch | 0x0001) == 0x2029)) {
                 column = 0;
                 ++line;
                 continue;
@@ -337,7 +351,7 @@ namespace up { namespace sexp { namespace
 
         do {
             ch = lexer_get_char(lex);
-            if ((ch == '\r') | (ch == '\n') | (ch == 0x0085) | ((ch | 0x0001) == 0x2029)) {
+            if ((('\n' <= ch) && (ch <= '\f')) || (ch == 0x0085) || ((ch | 0x0001) == 0x2029)) {
                 lexer_unget_char(lex, ch);
                 break;
             }
@@ -349,6 +363,7 @@ namespace up { namespace sexp { namespace
         return sexp_success;
     }
 
+    inline UPALWAYSINLINE
     int lexer_match_boolean(lexer* UPRESTRICT lex, token* UPRESTRICT tok, char const* s, size_t n, bool value) noexcept {
         if (!lexer_read_delimited_token(lex, s, n)) {
             if (lexer_read_until_delimiter(lex) > 0) {
@@ -357,7 +372,6 @@ namespace up { namespace sexp { namespace
                 return sexp_badsyntax;
             }
         }
-
         tok->category = category_number;
         tok->type = token_boolean;
         tok->bool_value = value;
@@ -496,44 +510,55 @@ namespace up { namespace sexp { namespace
     }
 
     int lexer_match_string(lexer* UPRESTRICT lex, token* UPRESTRICT tok, char const* start) noexcept {
-        uint_least32_t ch;
+        char const* cursor, * prev_cursor, * last;
+        uintmax_t column, line;
         unsigned int category, type;
+        uint_least32_t ch = ueof, prev_ch;
         int retval;
 
+        cursor = lex->cursor;
+        prev_cursor = lex->prev_cursor;
+        last = lex->last;
+        column = lex->column;
+        line = lex->line;
         category = category_string;
         type = token_string;
         retval = sexp_success;
 
-        for (;;) {
-            ch = lexer_get_char(lex);
-            if (ch == '\r') {
-                lex->column = 0;
-                ++lex->line;
-                if ((lex->cursor < lex->last) && (*lex->cursor == '\n')) {
-                    ++lex->cursor;
-                }
-                continue;
+        while (cursor < last) {
+            prev_ch = ch;
+            prev_cursor = cursor;
+            cursor = lexer_u8tou32(&ch, cursor, last);
+            ++column;
+            if ((ch == '\"') && (prev_ch != '\\')) {
+                goto finished;
             }
-            if ((('\n' <= ch) & (ch <= '\f')) | (ch == 0x0085) | ((ch | 0x0001) == 0x2029)) {
-                lex->column = 0;
-                ++lex->line;
-                continue;
-            }
-            if (ch == '\"') {
-                break;
-            }
-            if (ch == '\\') {
+            else if (ch == '\\') {
                 type = token_escaped_string;
-                ch = lexer_get_char(lex);
             }
-            if (ch == ueof) {
-                category = category_error;
-                type = token_unclosed_string;
-                retval = sexp_badsyntax;
-                break;
+            else if (ch == '\r') {
+                column = 0;
+                ++line;
+                if ((cursor < last) && (*cursor == '\n')) {
+                    ++cursor;
+                }
+            }
+            else if ((('\n' <= ch) && (ch <= '\f')) || (ch == 0x0085) || ((ch | 0x0001) == 0x2029)) {
+                column = 0;
+                ++line;
             }
         }
 
+        category = category_error;
+        type = token_unclosed_string;
+        retval = sexp_badsyntax;
+
+    finished:
+
+        lex->cursor = cursor;
+        lex->prev_cursor = prev_cursor;
+        lex->line = line;
+        lex->column = column;
         tok->category = category;
         tok->type = type;
         tok->text = start;
@@ -544,9 +569,8 @@ namespace up { namespace sexp { namespace
     int lexer_match_raw_string(lexer* UPRESTRICT lex, token* UPRESTRICT tok, char const* start) noexcept {
         char const* cursor, * prev_cursor, * last, * tag;
         size_t i, tag_length, start_length;
-        int octet_count;
+        uint_least32_t ch;
         uintmax_t line;
-        char32_t ch;
         bool match;
 
         tag = cursor = lex->cursor;
@@ -560,16 +584,15 @@ namespace up { namespace sexp { namespace
             }
 
             prev_cursor = cursor;
-            octet_count = u8tou32(&ch, cursor, last - cursor);
-            cursor += (octet_count > 0) ? octet_count : 1;
-
+            cursor = lexer_u8tou32(&ch, cursor, last);
+            
             if (ch == '\r') {
                 if ((cursor < last) && (*cursor == '\n')) {
                     ++cursor;
                 }
                 break;
             }
-            else if ((('\n' <= ch) & (ch <= '\f')) | (ch == 0x0085) | ((ch | 0x0001) == 0x2029)) {
+            else if ((('\n' <= ch) && (ch <= '\f')) || (ch == 0x0085) || ((ch | 0x0001) == 0x2029)) {
                 break;
             }
         }
@@ -601,8 +624,7 @@ namespace up { namespace sexp { namespace
                 goto eof;
             }
 
-            octet_count = u8tou32(&ch, cursor, last - cursor);
-            cursor += (octet_count > 0) ? octet_count : 1;
+            cursor = lexer_u8tou32(&ch, cursor, last);
 
             if (ch == '\r') {
                 ch = '\n';
@@ -611,7 +633,7 @@ namespace up { namespace sexp { namespace
                 }
             }
 
-            if ((('\n' <= ch) & (ch <= '\f')) | (ch == 0x0085) | ((ch | 0x0001) == 0x2029)) {
+            if ((('\n' <= ch) && (ch <= '\f')) || (ch == 0x0085) || ((ch | 0x0001) == 0x2029)) {
                 ++line;
                 if (match) {
                     break;
@@ -676,74 +698,107 @@ namespace up { namespace sexp { namespace
         return sexp_badsyntax;
     }
 
-    unsigned int lexer_match_number_part(
+    uint_least32_t lexer_match_number_part(
         lexer* UPRESTRICT lex,
-        int radix,
         uint_least32_t first_ch,
-        uint_least32_t* result
+        unsigned int* UPRESTRICT number_type,
+        token_number_info* UPRESTRICT number_info
     )
     noexcept {
-        uint_least32_t const exponent = (radix > 14) ? 'P' : 'E';
         uint_least32_t ch = first_ch;
-        unsigned int type = token_none;
+        unsigned int type, precision;
+        int base;
 
         // read in optional number sign
-        if ((ch == '+') | (ch == '-')) {
+        if ((ch == '+') || (ch == '-')) {
             ch = lexer_get_char(lex);
-            if ((ch == 'i') && lexer_read_token_part(lex, "nf.0", 4, result)) {
-                return token_real;
+            if ((ch == 'i') && lexer_read_token_part(lex, "nf.0", 4, &ch)) {
+                *number_type = token_real;
+                return ch;
             }
-            else if ((ch == 'n') && lexer_read_token_part(lex, "an.0", 4, result)) {
-                return token_real;
+            else if ((ch == 'n') && lexer_read_token_part(lex, "an.0", 4, &ch)) {
+                *number_type = token_real;
+                return ch;
             }
         }
-        
+
         // read in digits before decimal place
-        if (isudigit(ch, radix)) {
-            ch = lexer_read_digits_part(lex, radix);
+        base = number_info->radix;
+        type = token_none;
+        if (isudigit(ch, base)) {
+            ch = lexer_read_digits_part(lex, base);
             type = token_integer;
 
             // check for ratio divisor
             if (ch == '/') {
                 // match integer divisor
                 ch = lexer_get_char(lex);
-                if (!isudigit(ch, radix)) {
-                    *result = ch;
-                    return token_identifier;
+                if (!isudigit(ch, base)) {
+                    *number_type = token_identifier;
+                    return ch;
                 }
 
-                ch = lexer_read_digits_part(lex, radix);
+                ch = lexer_read_digits_part(lex, base);
                 type = token_rational;
             }
         }
 
-        // check for decimal place or ratio divisor
-        if ((type != token_rational) & (ch == '.')) {
-            // match fraction digits
-            ch = lexer_read_digits_part(lex, radix);
-            type = token_real;
-        }
-
-        // check for exponent
-        if ((type != token_identifier) & ((ch == '#') | ((ch & 0xFFFFFF5F) == exponent))) {
-            // match exponent sign
-            ch = lexer_get_char(lex);
-            if ((ch == '+') | (ch == '-')) {
-                ch = lexer_get_char(lex);
+        // only decimal numbers can have a radix point or exponent
+        if (base == 10) {
+            // check for decimal place or ratio divisor
+            if ((type != token_rational) && (ch == '.')) {
+                // match fraction digits
+                ch = lexer_read_digits_part(lex, 10);
+                type = token_real;
             }
 
-            // match exponent digits
-            if (!isudigit(ch, radix)) {
-                *result = ch;
-                return token_identifier;
-            }
+            if (type != token_identifier) {
+                // check for exponent
+                switch (ch) {
+                case 'e': case 'E':
+                case 'd': case 'D':
+                    precision = precision_double;
+                    break;
+                case 's': case 'S':
+                    precision = precision_half;
+                    break;
+                case 'f': case 'F':
+                    precision = precision_single;
+                    break;
+                case 'l': case 'L':
+                    precision = precision_extended;
+                    break;
+                default:
+                    precision = precision_unspecified;
+                    break;
+                }
 
-            ch = lexer_read_digits_part(lex, radix);
-            type = token_real;
+                if (precision != precision_unspecified) {
+                    // match exponent sign
+                    ch = lexer_get_char(lex);
+                    if ((ch == '+') || (ch == '-')) {
+                        ch = lexer_get_char(lex);
+                    }
+
+                    // match exponent digits
+                    if (!isudigit(ch)) {
+                        *number_type = token_identifier;
+                        return ch;
+                    }
+
+                    ch = lexer_read_digits_part(lex, 10);
+                    type = token_real;
+
+                    // save precision if it's greater than current
+                    if (number_info->precision < precision) {
+                        number_info->precision = precision;
+                    }
+                }
+            }
         }
 
-        *result = ch;
-        return type;
+        *number_type = type;
+        return ch;
     }
 
     int lexer_match_number(
@@ -753,29 +808,40 @@ namespace up { namespace sexp { namespace
         uint_least32_t first_ch
     )
     noexcept {
-        unsigned int type, imaginary_type;
         uint_least32_t ch = first_ch;
+        unsigned int type, imaginary_type;
+        bool at_style, i_style;
 
         // match real part
-        type = lexer_match_number_part(lex, number_info.radix, ch, &ch);
+        ch = lexer_match_number_part(lex, ch, &type, &number_info);
         if (type == token_identifier) {
             lexer_unget_char(lex, ch);
             return lexer_match_identifier(lex, tok);
         }
 
-        // match imaginary number
-        if ((ch == '+') | (ch == '-')) {
-            type = token_identifier;
-            imaginary_type = lexer_match_number_part(lex, number_info.radix, ch, &ch);
+        // match imaginary part
+        at_style = false;
+        if (ch == '@') {
+            at_style = true;
+            ch = lexer_get_char(lex);
+        }
+
+        if (at_style || (ch == '+') || (ch == '-')) {
+            ch = lexer_match_number_part(lex, ch, &imaginary_type, &number_info);
             if (imaginary_type == token_identifier) {
                 lexer_unget_char(lex, ch);
                 return lexer_match_identifier(lex, tok);
             }
+            type = token_identifier;
         }
-
-        if ((ch & 0xFFFFFF5F) == 'I') {
+        
+        i_style = ((ch & 0xFFFFFF5F) == 'I') ? true : false;
+        if (!at_style && i_style) {
             type = token_complex;
             ch = lexer_get_char(lex);
+        }
+        else if (at_style && !i_style) {
+            type = token_complex;
         }
 
         // match delimiter, completing the number token
@@ -790,6 +856,19 @@ namespace up { namespace sexp { namespace
         tok->type = type;
         tok->number_info = number_info;
         return sexp_success;
+    }
+
+    int lexer_match_dot(lexer* UPRESTRICT lex, token* UPRESTRICT tok) noexcept {
+        uint_least32_t ch = lexer_get_char(lex);
+        lexer_unget_char(lex, ch);
+
+        if ((ch == '#') || lexer_fast_is_delimiter(ch)) {
+            tok->category = category_infix;
+            tok->type = token_dot;
+            return sexp_success;
+        }
+
+        return lexer_match_number(lex, tok, default_number_info, '.');
     }
 
     int lexer_match_exactness_or_number(lexer* UPRESTRICT lex, token* UPRESTRICT tok, token_number_info number_info) noexcept {
@@ -995,7 +1074,7 @@ namespace up { namespace sexp
 {
     LIBUPCOREAPI UPPURE
     bool lexer_is_delimiter(uint_least32_t uc) noexcept {
-        return (isuascii(uc) && ascii_delimiter_table[uc]) || !isugraph(uc);
+        return ((uc < 0x80) && ascii_delimiter_table[uc]) || !isugraph(uc);
     }
 
     LIBUPCOREAPI
@@ -1040,11 +1119,11 @@ namespace up { namespace sexp
 
     LIBUPCOREAPI
     int lexer_read(lexer* UPRESTRICT lex, token* UPRESTRICT tok) noexcept {
-        char const* start;
-        uintmax_t column, line;
-        uint_least32_t ch = ueof;
         int retval = sexp_success;
-
+        uintmax_t column, line;
+        char const* start;
+        uint_least32_t ch;
+        
         if (!lex || !tok) {
             return sexp_badarg;
         }
@@ -1053,7 +1132,17 @@ namespace up { namespace sexp
             start = lex->cursor;
             column = lex->column;
             line = lex->line;
-            ch = lexer_get_char(lex);
+
+            if (start >= lex->last) {
+                tok->category = category_none;
+                tok->type = token_none;
+                retval = sexp_eof;
+                goto finalize;
+            }
+
+            ++lex->column;
+            lex->prev_cursor = start;
+            ch = *reinterpret_cast<unsigned char const*>(lex->cursor++);
 
             switch (ch) {
             case '\0': case 0x01: case 0x02:
@@ -1157,23 +1246,32 @@ namespace up { namespace sexp
             case 'z':  case '~':
                 retval = lexer_match_identifier(lex, tok);
                 goto finalize;
-            case '+':  case '-':  case '.':
+            case '+':  case '-':
             case '0':  case '1':  case '2':  case '3':  case '4':
             case '5':  case '6':  case '7':  case '8':  case '9':
                 retval = lexer_match_number(lex, tok, default_number_info, ch);
                 goto finalize;
+            case '.':
+                retval = lexer_match_dot(lex, tok);
+                goto finalize;
             default:
-                if (ch == ueof) {
-                    tok->category = category_none;
-                    tok->type = token_none;
-                    retval = sexp_eof;
-                    goto finalize;
+                char32_t ch32;
+                size_t const length = lex->last - lex->prev_cursor;
+                int const octet_count = u8tou32(&ch32, lex->prev_cursor, length);
+                if (octet_count > 0) {
+                    lex->cursor = lex->prev_cursor + octet_count;
                 }
-                else if ((ch == 0x0085) | ((ch | 0x0001) == 0x2029)) {
+                else {
+                    lex->cursor = u8snerr(lex->prev_cursor, length);
+                    if (!lex->cursor) {
+                        lex->cursor = lex->last;
+                    }
+                }
+                if ((ch32 == 0x0085) || ((ch32 | 0x0001) == 0x2029)) {
                     lex->column = 0;
                     ++lex->line;
                 }
-                else if (isugraph(ch)) {
+                else if (isugraph(ch32)) {
                     retval = lexer_match_identifier(lex, tok);
                     goto finalize;
                 }

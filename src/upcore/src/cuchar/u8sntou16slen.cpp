@@ -39,13 +39,15 @@ namespace up
         size_t count = 0;
 
         while (u8s < u8s_end) {
-            codepoint = *(u8s++);
+            // read start of next character
+            codepoint = *u8s;
             if (!codepoint) {
                 break;
             }
+            ++count;
+            ++u8s;
 
             // ascii fast-path
-            ++count;
             length = ::up::detail::u8_sequence_length_table[codepoint];
             if (length <= 1) {
                 continue;
@@ -62,14 +64,16 @@ namespace up
                 if (!::up::detail::u8_is_trail(octet)) {
                     break;
                 }
-
                 codepoint = (codepoint << 6) + octet;
             }
 
             codepoint -= ::up::detail::u8_offset_table[length];
             if ((i > 0) || !::up::detail::u32_from_u8_is_valid(codepoint, length)) {
-                u8s -= (length - i - 1);
                 length = 0;
+                u8s = detail::u8s_recover(u8s, u8s_end);
+                if (!u8s) {
+                    break;
+                }
             }
             
             // 4-byte utf-8 characters always map to a utf-16 surrogate pair

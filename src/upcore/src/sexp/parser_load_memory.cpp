@@ -23,23 +23,26 @@
 //
 
 #include <up/sexp.hpp>
-#include <up/cassert.hpp>
 #include <up/cstring.hpp>
 
 namespace up { namespace sexp
 {
     LIBUPCOREAPI
-    int parser_load_memory(parser* UPRESTRICT par, char const* UPRESTRICT filename, char const* UPRESTRICT text, size_t length) noexcept {
+    int parser_load_memory(
+        parser* UPRESTRICT par,
+        char const* UPRESTRICT filename,
+        char const* UPRESTRICT text,
+        size_t length
+    )
+    noexcept {
         if (!par) {
             return sexp_badarg;
         }
 
         allocator* const alloc = par->alloc;
-        assert(alloc);
-
-        lexer lex;
         char* filename_copy = nullptr;
         size_t filename_length = 0;
+        lexer lex;
         int retval;
 
         retval = lexer_construct(&lex, text, length);
@@ -49,21 +52,16 @@ namespace up { namespace sexp
 
         if (filename) {
             filename_length = strlen(filename);
-            if (filename_length > 0) {
-                filename_copy = static_cast<char*>(alloc->allocate(filename_length + 1));
-                if (!filename_copy) {
-                    return sexp_nomem;
-                }
-                memcpy(filename_copy, filename, filename_length + 1);
+            filename_copy = strndup(filename, filename_length, alloc);
+            if (!filename_copy) {
+                return sexp_nomem;
             }
         }
 
         if (par->loaded) {
             retval = parser_unload(par);
             if (retval != sexp_success) {
-                if (filename_copy) {
-                    alloc->deallocate(filename_copy, filename_length + 1);
-                }
+                alloc->deallocate(filename_copy, filename_length + 1);
                 return retval;
             }
         }

@@ -37,7 +37,6 @@ namespace up
             if (length < 0) {
                 return s;
             }
-            
             s += (length > 0) ? length : 1;
         }
         

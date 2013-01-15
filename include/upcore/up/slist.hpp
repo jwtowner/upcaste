@@ -25,8 +25,8 @@
 #ifndef UP_SLIST_HPP
 #define UP_SLIST_HPP
 
-#include <up/cstdint.hpp>
 #include <up/allocator.hpp>
+#include <up/cstdint.hpp>
 #include <up/type_traits.hpp>
 
 namespace up

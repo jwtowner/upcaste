@@ -61,16 +61,19 @@ namespace up
                     codepoint = (codepoint << 6) + octet;
                 }
                 codepoint -= detail::u8_offset_table[length];
-                if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
-                    codepoint = detail::u32_replacement_character;
+                if (!i && detail::u32_from_u8_is_valid(codepoint, length)) {
+                    *dst = static_cast<char32_t>(codepoint);
+                    continue;
                 }
             }
-            else {
-                codepoint = detail::u32_replacement_character;
+
+            // illegal octect sequence, recover from error
+            usrc = detail::u8s_recover(usrc);
+            if (!usrc) {
+                break;
             }
-            
-            // store utf-32 codepoint
-            *dst = static_cast<char32_t>(codepoint);
+            --usrc;
+            *dst = detail::u32_replacement_character;
         }
 
         *src = reinterpret_cast<char const*>(usrc);

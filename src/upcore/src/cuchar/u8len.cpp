@@ -30,9 +30,12 @@ namespace up
     LIBUPCOREAPI
     int u8len(char const* s) noexcept {
         unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t octet, codepoint = u8s ? *u8s : 0xFF; 
-        int_fast32_t i, length = detail::u8_sequence_length_table[codepoint];
+        uint_fast32_t octet, codepoint;
+        int_fast32_t i, length;
         
+        codepoint = u8s ? *u8s : 0xFF;
+        length = detail::u8_sequence_length_table[codepoint];
+
         // ascii fast-path
         if (length <= 1) {
             return length;
@@ -44,7 +47,6 @@ namespace up
             if (!detail::u8_is_trail(octet)) {
                 return -1;
             }
-            
             codepoint = (codepoint << 6) + octet;
         }
 

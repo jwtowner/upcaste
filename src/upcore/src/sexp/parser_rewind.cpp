@@ -39,8 +39,8 @@ namespace up { namespace sexp
         allocator* const alloc = par->alloc;
         assert(alloc);
 
-        slist_clear<parser_token, &parser_token::node>(&par->open_stack, alloc);
-        slist_clear<parser_token, &parser_token::node>(&par->unread_stack, alloc);
+        slist_clear<parser_token_block, &parser_token_block::node>(&par->open_stack, alloc);
+        slist_clear<parser_token_block, &parser_token_block::node>(&par->unread_stack, alloc);
 
         verify(sexp_success == lexer_rewind(&par->lex));
         par->prev_column = 0;

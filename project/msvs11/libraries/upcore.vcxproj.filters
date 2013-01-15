@@ -163,6 +163,12 @@
     <Filter Include="src\slist">
       <UniqueIdentifier>{35b5711a-5bea-11e2-a9d8-000c2978b81b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\sexp\posix">
+      <UniqueIdentifier>{7c157bbc-2843-4dfa-b206-fb013ec0aafb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sexp\windows">
+      <UniqueIdentifier>{5ecf9bb7-5796-4ac8-a6ee-4baeda1bbf75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\src\upcore\gen\generatemath.bat">
@@ -1666,6 +1672,27 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\upcore\src\atomic\atomic_extern_templates.cpp">
       <Filter>src\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\posix\parser_load_file.cpp">
+      <Filter>src\sexp\posix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\windows\parser_load_file.cpp">
+      <Filter>src\sexp\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_rest.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_next.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_end.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8serr.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snerr.cpp">
+      <Filter>src\cuchar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

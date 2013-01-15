@@ -365,10 +365,17 @@
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8serr.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u8snerr.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\log.cpp">
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
     </ClCompile>
+    <None Include="..\..\..\src\upcore\src\sexp\posix\parser_load_file.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_next.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_rest.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_skip_end.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\windows\parser_load_file.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\sparse.cpp">
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>

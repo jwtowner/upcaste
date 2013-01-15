@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Shared-Debug|Win32">
@@ -342,54 +342,55 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\upcore\bench\sexp.cpp" />
     <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp" />
-    <ClCompile Include="..\..\..\src\upcore\bench\bitwise.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\bitwise.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\clocale.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\clocale.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\container.maps.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\container.maps.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\cstdio.printf.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstdio.printf.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\cstdlib.strtoint.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstdlib.strtoint.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\cstdlib.strtoreal.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstdlib.strtoreal.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf16.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf16.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf32.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf32.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf8.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\cstrings.utf8.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\math.float4.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\math.float4.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\memory.allocators.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\memory.allocators.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\bench\memory.hash.cpp" >
-        <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
-        <ObjectFileName>$(IntDir)bench\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\bench\memory.hash.cpp">
+      <AssemblerListingLocation>$(IntDir)bench\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)bench\</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

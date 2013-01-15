@@ -78,8 +78,8 @@ namespace up { namespace sexp
         allocator* const alloc = par->alloc;
         assert(alloc);
 
-        slist_clear<parser_token, &parser_token::node>(&par->open_stack, alloc);
-        slist_clear<parser_token, &parser_token::node>(&par->unread_stack, alloc);
+        slist_clear<parser_token_block, &parser_token_block::node>(&par->open_stack, alloc);
+        slist_clear<parser_token_block, &parser_token_block::node>(&par->unread_stack, alloc);
 
         if (par->buffer_allocated) {
             alloc->deallocate(par->buffer, par->buffer_length);
@@ -96,12 +96,40 @@ namespace up { namespace sexp
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    void parser_default_error_handler(char const* filename, uintmax_t line, uintmax_t column, char const* message) noexcept {
-        log_eventf("sexp", log_level_error, "%s(%lu,%lu): error - %s", filename, static_cast<unsigned long>(line), static_cast<unsigned long>(column), message);
+    void parser_default_error_handler(
+        char const* filename,
+        uintmax_t line,
+        uintmax_t column,
+        char const* message
+    )
+    noexcept {
+        log_eventf(
+            "up.sexp",
+            log_level_error,
+            "%s(%lu,%lu): error - %s\n",
+            filename,
+            static_cast<unsigned long>(line),
+            static_cast<unsigned long>(column),
+            message
+        );
     }
 
     LIBUPCOREAPI UPNONNULLALL
-    void parser_default_warning_handler(char const* filename, uintmax_t line, uintmax_t column, char const* message) noexcept {
-        log_eventf("sexp", log_level_warning, "%s(%lu,%lu): warning - %s", filename, static_cast<unsigned long>(line), static_cast<unsigned long>(column), message);
+    void parser_default_warning_handler(
+        char const* filename,
+        uintmax_t line,
+        uintmax_t column,
+        char const* message
+    )
+    noexcept {
+        log_eventf(
+            "up.sexp",
+            log_level_warning,
+            "%s(%lu,%lu): warning - %s\n",
+            filename,
+            static_cast<unsigned long>(line),
+            static_cast<unsigned long>(column),
+            message
+        );
     }
 }}

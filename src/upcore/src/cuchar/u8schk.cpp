@@ -32,7 +32,7 @@ namespace up
         assert(s);
 
         for (;;) {
-            int length = ::up::u8len(s);
+            int length = u8len(s);
             if (!length) {
                 break;
             }

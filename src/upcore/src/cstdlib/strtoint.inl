@@ -78,7 +78,7 @@ namespace up
 
         shift_value = base;
 
-        // determine allowed digit/letter ranges
+        // determine allowed character ranges for base
         if (base < 10) {
             digit_range = static_cast<UCHAR>(base);
             letter_range = 0;

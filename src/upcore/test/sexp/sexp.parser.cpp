@@ -34,18 +34,35 @@ char const* sample =
 "                                                                   \n"
 "(define [palindrome? x]                                            \n"
 "  (define (check 'left 'right)                                     \n"
-"    (if (>= 'left 'right)                                          \n"
-"        #true                                                      \n"
+"    (if (>= 'left 'right)                                          \v"
+"        #true                                                    \r\n"
 "        (and (char=? (string-ref x 'left) (string-ref x 'right))   \n"
 "             (check (add1 'left) (sub1 'right)))))                 \n"
+"             #| (check (add1 'right)                               \n"
+"                       (sub1 'left))))) |#                         \n"
 "  (check 0 (sub1 (string-length x))))                              \n"
 "                                                                   \n"
+"; test our palindrome function                                     \n"
 "(let [(arg (car (command-line-arguments)))]                        \n"
 "  (display                                                         \n"
 "   (string-append arg                                              \n"
 "    (if [palindrome? arg]                                          \n"
 "     \" is a palindrome\\n\"                                       \n"
 "     \" isn't a palindrome\\n\"))))                                \n";
+
+char const* invalid_sample =
+"(define matrix?                            \n"
+"  (lambda [x)]                             \n" // <-- closing list mismatch
+"    (and (vector? x)                       \n"
+"         (> (vector-length x) 0)           \n"
+"         (vector? (vector-ref x 0)))))     \n";
+
+char const* invalid_sample2 =
+"(define matrix?                            \n"
+"  (lambda (x)                              \n"
+"    (and (vector? x)                       \n"
+"         (> (vector-length x) 0)           \n"
+"         (vector? (vector-ref x 0))))      \n"; // <-- premature end of file
 
 }
 
@@ -63,22 +80,80 @@ namespace sexp_parser
         require(retval == up::sexp::sexp_success);
     }
 
-    UP_TEST_CASE(load_memory) {
-        up::sexp::token tok;
+    UP_TEST_CASE(load_and_verify_memory) {
         up::sexp::parser par;
         int retval;
 
-        retval = up::sexp::parser_construct(&par, nullptr);
+        retval = up::sexp::parser_construct(&par);
         require(retval == up::sexp::sexp_success);
 
         retval = up::sexp::parser_load_memory(&par, "sample.scm", sample, up::strlen(sample));
         require(retval == up::sexp::sexp_success);
 
-        do {
-            retval = up::sexp::parser_read(&par, &tok);
-            require((retval == up::sexp::sexp_success) || (retval == up::sexp::sexp_eof));
-        }
-        while (retval != up::sexp::sexp_eof);
+        retval = up::sexp::parser_skip_end(&par);
+        require(retval == up::sexp::sexp_success);
+        require(!up::sexp::parser_has_error_occurred(&par));
+
+        retval = up::sexp::parser_destruct(&par);
+        require(retval == up::sexp::sexp_success);
+    }
+
+    UP_TEST_CASE(load_and_verify_invalid_memory) {
+        up::sexp::parser par;
+        int retval;
+
+        retval = up::sexp::parser_construct(&par);
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_load_memory(&par, "sample.scm", invalid_sample, up::strlen(invalid_sample));
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_skip_end(&par);
+        require(retval == up::sexp::sexp_success);
+        require(up::sexp::parser_has_error_occurred(&par));
+
+        retval = up::sexp::parser_load_memory(&par, "sample2.scm", invalid_sample2, up::strlen(invalid_sample2));
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_skip_end(&par);
+        require(retval == up::sexp::sexp_success);
+        require(up::sexp::parser_has_error_occurred(&par));
+
+        retval = up::sexp::parser_destruct(&par);
+        require(retval == up::sexp::sexp_success);
+    }
+
+    UP_TEST_CASE(load_and_verify_small_file) {
+        up::sexp::parser par;
+        int retval;
+
+        retval = up::sexp::parser_construct(&par, up::malloc_allocator::instance());
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_load_file(&par, "../../share/upcore/modela.sexp");
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_skip_end(&par);
+        require(retval == up::sexp::sexp_success);
+        require(!up::sexp::parser_has_error_occurred(&par));
+
+        retval = up::sexp::parser_destruct(&par);
+        require(retval == up::sexp::sexp_success);
+    }
+
+    UP_TEST_CASE(load_and_verify_large_file) {
+        up::sexp::parser par;
+        int retval;
+
+        retval = up::sexp::parser_construct(&par, up::malloc_allocator::instance());
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_load_file(&par, "../../share/upcore/modele.sexp");
+        require(retval == up::sexp::sexp_success);
+
+        retval = up::sexp::parser_skip_end(&par);
+        require(retval == up::sexp::sexp_success);
+        require(!up::sexp::parser_has_error_occurred(&par));
 
         retval = up::sexp::parser_destruct(&par);
         require(retval == up::sexp::sexp_success);

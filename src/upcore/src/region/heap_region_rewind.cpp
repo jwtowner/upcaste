@@ -24,6 +24,7 @@
 
 #include "heap_region_internal.hpp"
 #include <up/cassert.hpp>
+#include <up/cstdalign.hpp>
 
 namespace up
 {

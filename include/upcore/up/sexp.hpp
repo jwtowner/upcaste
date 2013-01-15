@@ -25,7 +25,7 @@
 #ifndef UP_SEXP_HPP
 #define UP_SEXP_HPP
 
-#include <up/allocator.hpp>
+#include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
 #include <up/slist.hpp>
 
@@ -36,10 +36,11 @@ namespace up { namespace sexp
     constexpr int sexp_badsyntax = -2;
     constexpr int sexp_badstate = -3;
     constexpr int sexp_badarg = -4;
-    constexpr int sexp_nomatch = -5;
-    constexpr int sexp_nomem = -6;
-    constexpr int sexp_overflow = -7;
-    constexpr int sexp_underflow = -8;
+    constexpr int sexp_ioerror = -5;
+    constexpr int sexp_nomatch = -6;
+    constexpr int sexp_nomem = -7;
+    constexpr int sexp_overflow = -8;
+    constexpr int sexp_underflow = -9;
 
     constexpr unsigned int list_parenthesis             = 0;
     constexpr unsigned int list_bracket                 = 1;
@@ -50,8 +51,10 @@ namespace up { namespace sexp
     constexpr unsigned int exactness_inexact            = 2;
 
     constexpr unsigned int precision_unspecified        = 0;
-    constexpr unsigned int precision_single             = 1;
-    constexpr unsigned int precision_double             = 2;
+    constexpr unsigned int precision_half               = 1;
+    constexpr unsigned int precision_single             = 2;
+    constexpr unsigned int precision_double             = 3;
+    constexpr unsigned int precision_extended           = 4;
 
     constexpr unsigned int category_none                = 0x0000;
     constexpr unsigned int category_infix               = 0x0001;
@@ -109,10 +112,10 @@ namespace up { namespace sexp
 
     struct LIBUPCOREAPI token_number_info
     {
-        uint_least8_t prefix_length;
-        uint_least8_t exactness;
-        uint_least8_t precision;
-        int_least8_t radix;
+        unsigned int prefix_length:8;
+        unsigned int exactness:8;
+        unsigned int precision:8;
+        unsigned int radix:8;
     };
 
     struct LIBUPCOREAPI token_raw_info
@@ -239,10 +242,17 @@ namespace up { namespace sexp
 
     typedef void (*parser_error_handler)(char const* file, uintmax_t line, uintmax_t column, char const* message);
 
-    struct LIBUPCOREAPI parser_token
+#ifdef UP_ARCHITECTURE_64BIT
+    constexpr size_t parser_token_block_max_tokens = 6;
+#else
+    constexpr size_t parser_token_block_max_tokens = 10;
+#endif
+
+    struct LIBUPCOREAPI parser_token_block
     {
         slist_node node;
-        token tok;
+        size_t count;
+        token tokens[parser_token_block_max_tokens];
     };
 
     struct LIBUPCOREAPI parser
@@ -277,7 +287,7 @@ namespace up { namespace sexp
     };
 
     extern LIBUPCOREAPI
-    int parser_construct(parser* UPRESTRICT par, allocator* UPRESTRICT alloc) noexcept;
+    int parser_construct(parser* UPRESTRICT par, allocator* UPRESTRICT alloc = nullptr) noexcept;
 
     extern LIBUPCOREAPI
     int parser_destruct(parser* par) noexcept;
@@ -349,6 +359,15 @@ namespace up { namespace sexp
 
     extern LIBUPCOREAPI
     int parser_expect_symbol(parser* UPRESTRICT par, char const* id, token* UPRESTRICT token) noexcept;
+
+    extern LIBUPCOREAPI
+    int parser_skip_end(parser* UPRESTRICT par) noexcept;
+
+    extern LIBUPCOREAPI
+    int parser_skip_next(parser* UPRESTRICT par) noexcept;
+
+    extern LIBUPCOREAPI
+    int parser_skip_rest(parser* UPRESTRICT par) noexcept;
 
     extern LIBUPCOREAPI
     int parser_error(parser* UPRESTRICT par, char const* UPRESTRICT format, ...) noexcept;

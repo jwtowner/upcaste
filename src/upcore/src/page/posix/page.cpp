@@ -180,7 +180,7 @@ namespace up
             }
         }
 
-        return ::mmap(nullptr, n, prot, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+        return ::mmap(nullptr, n, prot, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
     }
 
     LIBUPCOREAPI

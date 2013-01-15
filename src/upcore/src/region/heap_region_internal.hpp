@@ -26,6 +26,7 @@
 #define UP_MEMORY_HEAP_REGION_INTERNAL_HPP
 
 #include <up/region.hpp>
+#include <up/allocator.hpp>
 
 namespace up { namespace detail
 {

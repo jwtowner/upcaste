@@ -25,8 +25,8 @@
 #ifndef UP_REGION_HPP
 #define UP_REGION_HPP
 
-#include <up/allocator.hpp>
-#include <up/cstdalign.hpp>
+#include <up/cstddef.hpp>
+#include <up/cstdint.hpp>
 
 namespace up
 {

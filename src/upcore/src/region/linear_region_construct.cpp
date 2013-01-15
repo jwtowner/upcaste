@@ -24,6 +24,7 @@
 
 #include "linear_region_internal.hpp"
 #include <up/cerrno.hpp>
+#include <up/cstdalign.hpp>
 #include <new>
 
 namespace up

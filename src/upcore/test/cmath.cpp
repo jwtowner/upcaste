@@ -107,8 +107,10 @@ namespace cmath
     UP_STDC_FENV_ACCESS(ON)
 
     UP_TEST_CASE(lrint) {
-        int old_round_mode = up::fegetround();
-        
+        up::fenv_t old_env;
+        require(0 == up::fegetenv(&old_env));                
+        require(0 == up::fesetenv(FE_DFL_ENV));
+
         // round-to-nearest
         require(0 == up::fesetround(FE_TONEAREST));
         require(FE_TONEAREST == up::fegetround());
@@ -142,8 +144,7 @@ namespace cmath
         require(-2 == up::math::lrint(-2.6));
 
         // cleanup
-        require(0 == up::fesetround(old_round_mode));
-        require(old_round_mode == up::fegetround());
+        require(0 == up::fesetenv(&old_env));
     }
 
     UP_STDC_FENV_ACCESS(OFF)

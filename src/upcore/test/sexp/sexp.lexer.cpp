@@ -784,7 +784,8 @@ namespace sexp_lexer
 
     UP_TEST_CASE(read_complex) {
         char const* text =
-            "+i -i +4i -99i +44/3i 1+i 1-i 1.5e+5+44.0e-4i .5-44.0e-4i +4-44/3i 55e4-.4i ";
+            "+i -i +4i -99i +44/3i 1+i 1-i 1.5e+5+44.0e-4i .5-44.0e-4i +4-44/3i 55e4-.4i "
+            "1.5e+5@44.0e-4 1.5e+5@44.0e-4i @44.0e-4";
 
         up::sexp::lexer lex;
         up::sexp::token tok;
@@ -836,6 +837,16 @@ namespace sexp_lexer
         result = up::sexp::lexer_read(&lex, &tok);
         require((result == up::sexp::sexp_success) && (tok.type == up::sexp::token_complex) && !up::strncmp(tok.text, "55e4-.4i", tok.length));
         require((tok.number_info.prefix_length == 0) && (tok.number_info.exactness == up::sexp::exactness_unspecified) && (tok.number_info.radix == 10));
+
+        result = up::sexp::lexer_read(&lex, &tok);
+        require((result == up::sexp::sexp_success) && (tok.type == up::sexp::token_complex) && !up::strncmp(tok.text, "1.5e+5@44.0e-4", tok.length));
+        require((tok.number_info.prefix_length == 0) && (tok.number_info.exactness == up::sexp::exactness_unspecified) && (tok.number_info.radix == 10));
+
+        result = up::sexp::lexer_read(&lex, &tok);
+        require((result == up::sexp::sexp_success) && (tok.type == up::sexp::token_identifier) && !up::strncmp(tok.text, "1.5e+5@44.0e-4i", tok.length));
+
+        result = up::sexp::lexer_read(&lex, &tok);
+        require((result == up::sexp::sexp_success) && (tok.type == up::sexp::token_identifier) && !up::strncmp(tok.text, "@44.0e-4i", tok.length));
 
         result = up::sexp::lexer_read(&lex, &tok);
         require(result == up::sexp::sexp_eof);

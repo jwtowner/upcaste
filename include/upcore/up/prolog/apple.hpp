@@ -45,6 +45,7 @@
 #       define UP_ARCHITECTURE         UP_ARCHITECTURE_ARM
 #       define UP_MAX_CACHE_LINE_SIZE  32
 #       define UP_MIN_TLB_PAGE_SIZE    1024
+#       define UP_EXPENSIVE_BRANCHING
 #       if defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__)
 #           define UP_ARCHITECTURE_ARM_VERSION 7
 #       elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
@@ -58,10 +59,12 @@
 #       define UP_ARCHITECTURE         UP_ARCHITECTURE_POWER
 #       define UP_MAX_CACHE_LINE_SIZE  32
 #       define UP_MIN_TLB_PAGE_SIZE    4096
+#       define UP_EXPENSIVE_BRANCHING
 #   elif TARGET_CPU_PPC64
 #       define UP_ARCHITECTURE         UP_ARCHITECTURE_POWER64
 #       define UP_MAX_CACHE_LINE_SIZE  128
 #       define UP_MIN_TLB_PAGE_SIZE    4096
+#       define UP_EXPENSIVE_BRANCHING
 #   elif TARGET_CPU_X86
 #       define UP_ARCHITECTURE         UP_ARCHITECTURE_X86
 #       define UP_MAX_CACHE_LINE_SIZE  64

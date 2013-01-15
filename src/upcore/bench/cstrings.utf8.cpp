@@ -145,8 +145,16 @@ namespace cstrings_utf8
             if (length == 0) {
                 break;
             }
-            char_ptr += (length > 0) ? length : 1;
             ++count;
+            if (length > 0) {
+                char_ptr += length;
+            }
+            else {
+                char_ptr = up::u8serr(char_ptr);
+                if (!char_ptr) {
+                    break;
+                }
+            }
         }
         
         ds.result(count);
@@ -163,8 +171,16 @@ namespace cstrings_utf8
             if (length == 0) {
                 break;
             }
-            char_ptr += (length > 0) ? length : 1;
             ++count;
+            if (length > 0) {
+                char_ptr += length;
+            }
+            else {
+                char_ptr = up::u8snerr(char_ptr, end_ptr - char_ptr);
+                if (!char_ptr) {
+                    break;
+                }
+            }
         }
         
         ds.result(count);
@@ -181,8 +197,16 @@ namespace cstrings_utf8
             if (length == 0) {
                 break;
             }
-            char_ptr += (length > 0) ? length : 1;
             ++count;
+            if (length > 0) {
+                char_ptr += length;
+            }
+            else {
+                char_ptr = up::u8snerr(char_ptr, end_ptr - char_ptr);
+                if (!char_ptr) {
+                    break;
+                }
+            }
         }
         
         ds.result(count);
@@ -247,12 +271,10 @@ namespace cstrings_utf8
         
         require(u8memlen_result == u8memnlen_result);
         require(u8memlen_result >= u8len_result);
-        
         require(u8len_result == u8nlen_result);
         require(u8len_result == u8tou32_result);
         require(u8len_result == u8slen_u32_result);
         require(u8len_result == u8snlen_u32_result);
-        
         require(u8slen_u16_result == u8snlen_u16_result);
     }
     

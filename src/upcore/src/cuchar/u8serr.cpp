@@ -23,37 +23,29 @@
 //
 
 #include <up/cuchar.hpp>
+#include <up/cassert.hpp>
 #include "cuchar_internal.inl"
 
 namespace up
 {        
     LIBUPCOREAPI
-    int u8nlen(char const* s, size_t n) noexcept {
-        unsigned char const* u8s = reinterpret_cast<unsigned char const*>(s);
-        uint_fast32_t octet, codepoint;
-        int_fast32_t i, length;
-        
-        codepoint = (n > 0) ? (u8s ? *u8s : 0xFF) : 0x00;
-        length = detail::u8_sequence_length_table[codepoint];
-        
-        // ascii fast-path
-        if (length <= 1) {
-            return length;
-        }
-        if (n < static_cast<size_t>(length)) {
-            return -1;
-        }
+    char const* u8serr(char const* s) noexcept {
+        assert(s);
 
-        // fully validate unicode code point
-        for (i = length - 1; i > 0; --i) {
-            octet = *(++u8s);
-            if (!detail::u8_is_trail(octet)) {
-                return -1;
+        for (;;) {
+            int length = u8len(s);
+            if (!length) {
+                break;
             }
-            codepoint = (codepoint << 6) + octet;
+            else if (length > 0) {
+                return s;
+            }
+            do {
+                ++s;
+            }
+            while (detail::u8_is_trail(*reinterpret_cast<unsigned char const*>(s)));
         }
-
-        codepoint -= detail::u8_offset_table[length];
-        return detail::u32_from_u8_is_valid(codepoint, length) ? static_cast<int>(length) : -1;
+        
+        return nullptr;
     }
 }

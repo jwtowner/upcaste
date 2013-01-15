@@ -22,16 +22,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/prolog.hpp>
-
-#ifndef UP_HAS_GNU_STRNDUP
-
 #include <up/cassert.hpp>
 #include <up/cstring.hpp>
 #include <up/cstdlib.hpp>
 
 namespace up
 {
+#ifndef UP_HAS_GNU_STRNDUP
     LIBUPCOREAPI UPALLOC UPWARNRESULT
     char* strndup(char const* s, size_t n) noexcept {
         assert(s);
@@ -41,14 +38,31 @@ namespace up
             sz = n;
         }
 
-        char* d = static_cast<char*>(malloc(sz + 1));
+        void* d = malloc(sz + 1);
         if (!d) {
             return nullptr;
         }
 
-        d[sz] = '\0';
-        return static_cast<char*>(memcpy(d, s, sz));
+        *static_cast<char*>(mempcpy(d, s, sz)) = '\0';
+        return static_cast<char*>(d);
+    }
+#endif
+
+    LIBUPCOREAPI UPALLOC UPWARNRESULT
+    char* strndup(char const* UPRESTRICT s, size_t n, allocator* UPRESTRICT alloc) noexcept {
+        assert(s && alloc);
+
+        size_t sz = strlen(s);
+        if (sz > n) {
+            sz = n;
+        }
+
+        void* d = alloc->allocate(sz + 1);
+        if (!d) {
+            return nullptr;
+        }
+
+        *static_cast<char*>(mempcpy(d, s, sz)) = '\0';
+        return static_cast<char*>(d);
     }
 }
-
-#endif

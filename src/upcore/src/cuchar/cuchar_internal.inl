@@ -163,6 +163,16 @@ namespace up { namespace detail
     // Internal utility functions
     //
     
+    inline UPALWAYSINLINE UPNONNULLALL
+    unsigned char const* u8s_recover(unsigned char const* u8s) noexcept {
+        return reinterpret_cast<unsigned char const*>(::up::u8serr(reinterpret_cast<char const*>(u8s)));
+    }
+
+    inline UPALWAYSINLINE UPNONNULLALL
+    unsigned char const* u8s_recover(unsigned char const* u8s, unsigned char const* u8s_end) noexcept {
+        return reinterpret_cast<unsigned char const*>(::up::u8snerr(reinterpret_cast<char const*>(u8s), u8s_end - u8s));
+    }
+
     template <class T>
     inline UPALWAYSINLINE
     bool u8_is_trail(T c) noexcept {

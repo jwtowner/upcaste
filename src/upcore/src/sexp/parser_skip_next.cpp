@@ -23,41 +23,23 @@
 //
 
 #include <up/sexp.hpp>
-#include <up/cassert.hpp>
 
 namespace up { namespace sexp
 {
     LIBUPCOREAPI
-    int parser_unload(parser* par) noexcept {
-        if (!par) {
-            return sexp_badarg;
+    int parser_skip_next(parser* UPRESTRICT par) noexcept {
+        int retval;
+        token tok;
+
+        do {
+            retval = parser_read(par, &tok);
         }
+        while (retval == sexp_badsyntax);
 
-        allocator* const alloc = par->alloc;
-        assert(alloc);
-
-        verify(sexp_success == lexer_construct(&par->lex, nullptr, 0));
-        slist_clear<parser_token_block, &parser_token_block::node>(&par->open_stack, alloc);
-        slist_clear<parser_token_block, &parser_token_block::node>(&par->unread_stack, alloc);
-
-        if (par->buffer_allocated) {
-            alloc->deallocate(par->buffer, par->buffer_length);
-            par->buffer = nullptr;
-            par->buffer_length = 0;
-            par->buffer_allocated = false;
+        if ((retval == sexp_success) && (tok.category == category_open)) {
+            return parser_skip_rest(par);
         }
-
-        if (par->filename) {
-            alloc->deallocate(par->filename, par->filename_length + 1);
-            par->filename = nullptr;
-            par->filename_length = 0;
-        }
-
-        par->prev_column = 0;
-        par->prev_line = 0;
-        par->error_count = 0;
-        par->warning_count = 0;
-        par->loaded = false;
-        return sexp_success;
+        
+        return (retval > sexp_badsyntax) ? sexp_success : retval;
     }
 }}

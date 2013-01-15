@@ -38,16 +38,12 @@ namespace up
         virtual ~allocator() noexcept;
         virtual UPALLOC UPWARNRESULT void* allocate(size_t n) noexcept = 0;
         virtual UPALLOC UPWARNRESULT void* allocate_zero(size_t n, size_t s) noexcept = 0;
-        virtual void deallocate(void* p, size_t n = 0) noexcept = 0;
+        virtual void deallocate(void* p, size_t n) noexcept = 0;
 
     protected:
 
         UPHIDDENINLINE allocator() noexcept { }
     };
-
-    class page_allocator;
-    class malloc_allocator;
-    class aligned_malloc_allocator;
 }
 
 #endif

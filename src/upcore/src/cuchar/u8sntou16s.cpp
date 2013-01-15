@@ -65,13 +65,19 @@ namespace up
                     codepoint = (codepoint << 6) + octet;
                 }
                 codepoint -= detail::u8_offset_table[length];
-                if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
-                    codepoint = detail::u32_replacement_character;
+                if (!i && detail::u32_from_u8_is_valid(codepoint, length)) {
+                    goto encode;
                 }
             }
-            else {
-                codepoint = detail::u16_replacement_character;
+
+            usrc = detail::u8s_recover(usrc, usrc_end);
+            if (!usrc) {
+                usrc = usrc_end;
             }
+            --usrc;
+            codepoint = detail::u32_replacement_character;
+
+        encode:
             
             // encode utf-16 sequence
             if (codepoint < 0x10000) {

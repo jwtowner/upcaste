@@ -39,14 +39,19 @@ namespace up { namespace sexp
         allocator* const alloc = par->alloc;
         assert(alloc);
 
-        parser_token* token_node = static_cast<parser_token*>(alloc->allocate(sizeof(parser_token)));
-        if (!token_node) {
-            parser_error(par, "out of memory");
-            return sexp_nomem;
+        slist_node* node = slist_peek_front(&par->unread_stack);
+        parser_token_block* block = slist_cast<parser_token_block*>(node, &parser_token_block::node);
+        if (!node || (block->count >= parser_token_block_max_tokens)) {
+            block = static_cast<parser_token_block*>(alloc->allocate(sizeof(parser_token_block)));
+            if (!block) {
+                parser_error(par, "out of memory");
+                return sexp_nomem;
+            }
+            slist_push_front(&par->unread_stack, slist_cast<slist_node*>(block, &parser_token_block::node));
+            block->count = 0;
         }
         
-        token_node->tok = *tok;
-        slist_push_front(&par->unread_stack, slist_cast<slist_node*>(token_node, &parser_token::node));
+        block->tokens[block->count++] = *tok;
         return sexp_success;
     }
 }}

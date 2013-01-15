@@ -137,7 +137,21 @@ namespace up
     extern LIBUPCOREAPI UPNONNULL(2,3)
     char* strtok_r(char* UPRESTRICT s, char const* UPRESTRICT delim, char** UPRESTRICT state) noexcept;
 #endif
+}
 
+#if UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
+#   include <up/detail/cstring_msvc.inl>
+#elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_POSIX
+#   include <up/detail/cstring_posix.inl>
+#else
+#   error "No string extensions compatability layer for target platform."
+#endif
+
+namespace up
+{
+    extern LIBUPCOREAPI UPALLOC UPWARNRESULT
+    char* strndup(char const* UPRESTRICT s, size_t n, allocator* UPRESTRICT alloc) noexcept;
+   
     inline UPALWAYSINLINE UPPURE UPNONNULL(1)
     char const* strnchr(char const* s, int c, size_t n) noexcept {
         return static_cast<char const*>(memchr(s, c, n));
@@ -306,13 +320,5 @@ namespace up
     extern LIBUPCOREAPI UPNONNULL(1,2)
     size_t fast_strxfrm(char* UPRESTRICT s1, char const* UPRESTRICT s2, size_t n) noexcept;
 }
-
-#if UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
-#   include <up/detail/cstring_msvc.inl>
-#elif UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_POSIX
-#   include <up/detail/cstring_posix.inl>
-#else
-#   error "No string extensions compatability layer for target platform."
-#endif
 
 #endif

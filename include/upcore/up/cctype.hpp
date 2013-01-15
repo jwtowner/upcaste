@@ -61,11 +61,6 @@ namespace up
     using ::toupper;
 
     inline UPALWAYSINLINE UPPURE
-    int fast_isascii(int c) noexcept {
-        return c <= 0x7F;
-    }
-
-    inline UPALWAYSINLINE UPPURE
     int fast_isblank(int c) noexcept {
         return (c == ' ') | (c == '\t');
     }
@@ -157,6 +152,7 @@ namespace up
 
     inline UPALWAYSINLINE UPPURE
     int fast_todigit(int c, int base) noexcept {
+#ifdef UP_EXPENSIVE_BRANCHING
         unsigned int nvalue = c - ((unsigned int)'0');
         unsigned int avalue = (c | 0x20) - ((unsigned int)'a');
         unsigned int nmask = (nvalue <= ((unsigned int)('9' - '0')));
@@ -164,11 +160,46 @@ namespace up
         unsigned int result = (nvalue & (~nmask + 1)) | ((avalue + 10) & (~amask + 1)) | ((nmask | amask) - 1);
         unsigned int rmask = (result < ((unsigned int)base));
         return (int)((result & (~rmask + 1)) | (rmask - 1));
+#else
+        unsigned int digit_range = base;
+        unsigned int letter_range = 0;
+        if (base > 10) {
+            digit_range = 10;
+            letter_range = base - 10;
+        }
+        unsigned int digit = ((unsigned int)c) - ((unsigned int)'0');
+        if (digit < digit_range) {
+            return (int)digit;
+        }
+        digit = ((((unsigned int)c) | 0x20) - ((unsigned int)'a'));
+        if (digit < letter_range) {
+            return (int)(digit + 10);
+        }
+        return -1;
+#endif
     }
 
     inline UPALWAYSINLINE UPPURE
     int fast_isdigit(int c, int base) noexcept {
+#ifdef UP_EXPENSIVE_BRANCHING
         return (0 <= fast_todigit(c, base));
+#else
+        unsigned int digit_range = base;
+        unsigned int letter_range = 0;
+        if (base > 10) {
+            digit_range = 10;
+            letter_range = base - 10;
+        }
+        unsigned int digit = ((unsigned int)c) - ((unsigned int)'0');
+        if (digit < digit_range) {
+            return 1;
+        }
+        digit = ((((unsigned int)c) | 0x20) - ((unsigned int)'a'));
+        if (digit < letter_range) {
+            return 1;
+        }
+        return 0;
+#endif
     }
 
     inline UPALWAYSINLINE UPPURE

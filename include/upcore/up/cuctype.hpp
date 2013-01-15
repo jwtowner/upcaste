@@ -39,11 +39,6 @@ namespace up
     extern LIBUPCOREAPI UPPURE int isuspace(uint_least32_t uc) noexcept;
 
     inline UPALWAYSINLINE UPPURE
-    int isuascii(uint_least32_t uc) noexcept {
-        return uc < 0x80;
-    }
-
-    inline UPALWAYSINLINE UPPURE
     int isudigit(uint_least32_t uc) noexcept {
         return (uc - ((uint_least32_t)'0')) <= ((uint_least32_t)('9' - '0'));
     }
@@ -72,6 +67,7 @@ namespace up
 
     inline UPALWAYSINLINE UPPURE
     int toudigit(uint_least32_t uc, int base) noexcept {
+#ifdef UP_EXPENSIVE_BRANCHING
         uint_least32_t nvalue = uc - ((uint_least32_t)'0');
         uint_least32_t avalue = (uc | 0x20) - ((uint_least32_t)'a');
         uint_least32_t nmask = (nvalue <= ((uint_least32_t)('9' - '0')));
@@ -79,11 +75,46 @@ namespace up
         uint_least32_t result = (nvalue & (~nmask + 1)) | ((avalue + 10) & (~amask + 1)) | ((nmask | amask) - 1);
         uint_least32_t rmask = (result < ((uint_least32_t)base));
         return (int)((result & (~rmask + 1)) | (rmask - 1));
+#else
+        uint_least32_t digit_range = base;
+        uint_least32_t letter_range = 0;
+        if (base > 10) {
+            digit_range = 10;
+            letter_range = base - 10;
+        }
+        uint_least32_t digit = uc - '0';
+        if (digit < digit_range) {
+            return (int)digit;
+        }
+        digit = ((uc | 0x20) - 'a');
+        if (digit < letter_range) {
+            return (int)(digit + 10);
+        }
+        return -1;
+#endif
     }
 
     inline UPALWAYSINLINE UPPURE
     int isudigit(uint_least32_t uc, int base) noexcept {
+#ifdef UP_EXPENSIVE_BRANCHING
         return (0 <= toudigit(uc, base));
+#else
+        uint_least32_t digit_range = base;
+        uint_least32_t letter_range = 0;
+        if (base > 10) {
+            digit_range = 10;
+            letter_range = base - 10;
+        }
+        uint_least32_t digit = uc - '0';
+        if (digit < digit_range) {
+            return 1;
+        }
+        digit = ((uc | 0x20) - 'a');
+        if (digit < letter_range) {
+            return 1;
+        }
+        return 0;
+#endif
     }
 }
 

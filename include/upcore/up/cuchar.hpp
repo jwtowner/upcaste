@@ -76,11 +76,17 @@ namespace up
     //
 
     extern LIBUPCOREAPI
+    char const* u8serr(char const* s) noexcept;
+    
+    extern LIBUPCOREAPI
+    char const* u8snerr(char const* s, size_t n) noexcept;
+
+    extern LIBUPCOREAPI
     char const* u8schk(char const* s) noexcept;
     
     extern LIBUPCOREAPI
     char const* u8snchk(char const* s, size_t n) noexcept;
-    
+   
     extern LIBUPCOREAPI
     int u8len(char const* s) noexcept;
     

@@ -68,7 +68,10 @@ namespace up
 
             codepoint -= detail::u8_offset_table[length];
             if ((i > 0) || !detail::u32_from_u8_is_valid(codepoint, length)) {
-                u8s -= (length - i - 1);
+                u8s = detail::u8s_recover(u8s, u8s_end);
+                if (!u8s) {
+                    break;
+                }
             }
         }
         
