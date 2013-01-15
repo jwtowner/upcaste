@@ -73,46 +73,46 @@ namespace up
     typedef unsigned short fexcept_t;
 
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL feclearexcept(int excepts);
+    int UPCDECL feclearexcept(int excepts);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fegetexceptflag(fexcept_t* flagp, int excepts);
+    int UPCDECL fegetexceptflag(fexcept_t* flagp, int excepts);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL feraiseexcept(int excepts);
+    int UPCDECL feraiseexcept(int excepts);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fesetexceptflag(fexcept_t const* flagp, int excepts);
+    int UPCDECL fesetexceptflag(fexcept_t const* flagp, int excepts);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fetestexcept(int excepts);
+    int UPCDECL fetestexcept(int excepts);
 
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL feenableexcept(int excepts);
+    int UPCDECL feenableexcept(int excepts);
 
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fedisableexcept(int excepts);
+    int UPCDECL fedisableexcept(int excepts);
 
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fegetexcept();
+    int UPCDECL fegetexcept();
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fegetround();
+    int UPCDECL fegetround();
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fesetround(int round);
+    int UPCDECL fesetround(int round);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fegetenv(fenv_t* envp);
+    int UPCDECL fegetenv(fenv_t* envp);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL feholdexcept(fenv_t* envp);
+    int UPCDECL feholdexcept(fenv_t* envp);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL fesetenv(fenv_t const* envp);
+    int UPCDECL fesetenv(fenv_t const* envp);
     
     extern "C" LIBUPCOREAPI
-    int UPFASTCALL feupdateenv(fenv_t const* envp);
+    int UPCDECL feupdateenv(fenv_t const* envp);
 }
 
 #endif

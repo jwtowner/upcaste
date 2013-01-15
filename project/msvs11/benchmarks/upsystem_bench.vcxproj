@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{33a0cbae-5bea-11e2-a9d8-000c2978b81b}</ProjectGuid>
+    <ProjectGuid>{3e7aac86-5f3f-11e2-a615-000c2978b81b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>upsystem_bench</RootNamespace>
     <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>

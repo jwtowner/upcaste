@@ -22,43 +22,32 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
 
 ;;
-;; int feclearexcept(int excepts);
+;; int fegetexcept(void);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Get current exception control mask for both the x87 FPU and the
+;; SSE control/status register.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
-
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
+ALIGN 4
+PUBLIC _fegetexcept
+_fegetexcept PROC
     
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-
-    ; done, return success
-    xor         rax, rax
+    stmxcsr     DWORD PTR [esp-8]
+    fnstcw      WORD PTR [esp-2]
+    mov         eax, DWORD PTR [esp-8]
+    shr         eax, MXSCR_EXCEPT_SHIFT
+    or          ax, WORD PTR [esp-2]
+    not         eax
+    and         eax, FE_ALL_EXCEPT
     ret
 
-feclearexcept ENDP
+_fegetexcept ENDP
 
 END

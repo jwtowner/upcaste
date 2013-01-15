@@ -22,43 +22,38 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
 
 ;;
-;; int feclearexcept(int excepts);
+;; int fegetenv(fenv_t* envp);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Use the fnstenv and stmxcsr instruction pairs to capture the
+;; current floating-point environment. Note that we have to reload
+;; the environment after capturing it because the x87 FPU masks
+;; the exceptions in the control word on executing fnstenv.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
+ALIGN 4
+PUBLIC _fegetenv
+_fegetenv PROC
 
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
-    
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-
-    ; done, return success
-    xor         rax, rax
+    mov         ecx, DWORD PTR [esp+4]
+    test        ecx, ecx
+    jz          _invalid_envp
+    fnstenv     [ecx]
+    stmxcsr     [ecx].fenv.mxcsr
+    xor         eax, eax
+    fldenv      [ecx]
     ret
 
-feclearexcept ENDP
+_invalid_envp:
+    mov         eax, -1
+    ret
+
+_fegetenv ENDP
 
 END

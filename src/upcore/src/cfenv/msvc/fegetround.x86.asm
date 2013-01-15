@@ -22,43 +22,31 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
 
 ;;
-;; int feclearexcept(int excepts);
+;; int fegetround(void);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Get the current rounding mode, note that we only check the SSE
+;; control/status register. We except the x87 FPU rounding mode to
+;; be the same.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
+ALIGN 4
+PUBLIC _fegetround
+_fegetround PROC
 
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
-    
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-
-    ; done, return success
-    xor         rax, rax
+    xor         eax, eax
+    stmxcsr     DWORD PTR [esp-4]
+    mov         eax, DWORD PTR [esp-4]
+    shr         eax, MXSCR_ROUND_SHIFT
+    and         eax, FE_TOWARDZERO
     ret
 
-feclearexcept ENDP
+_fegetround ENDP
 
 END

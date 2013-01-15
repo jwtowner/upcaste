@@ -39,12 +39,14 @@ INCLUDE fenv.inc
 ALIGN 8
 PUBLIC fegetround
 fegetround PROC
+
     xor         rax, rax
     stmxcsr     DWORD PTR [rsp-4]
     mov         eax, DWORD PTR [rsp-4]
     shr         eax, MXSCR_ROUND_SHIFT
     and         eax, FE_TOWARDZERO
     ret
+
 fegetround ENDP
 
 END

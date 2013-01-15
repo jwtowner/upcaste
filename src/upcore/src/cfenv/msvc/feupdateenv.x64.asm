@@ -42,6 +42,7 @@ EXTRN feraiseexcept:PROC
 ALIGN 8
 PUBLIC feupdateenv
 feupdateenv PROC
+
     test        rcx, rcx
     jz          _invalid_envp
     xor         rax, rax
@@ -56,9 +57,11 @@ feupdateenv PROC
     call        feraiseexcept
     add         rsp, 48h
     ret
+
 _invalid_envp:
     mov         rax, -1
     ret
+
 feupdateenv ENDP
 
 END

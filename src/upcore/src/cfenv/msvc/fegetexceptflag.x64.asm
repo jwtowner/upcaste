@@ -41,6 +41,7 @@ INCLUDE fenv.inc
 ALIGN 8
 PUBLIC fegetexceptflag
 fegetexceptflag PROC
+
     test        rcx, rcx
     jz          _invalid_flagp
     fnstsw      ax
@@ -51,9 +52,11 @@ fegetexceptflag PROC
     mov         WORD PTR [rcx], dx
     xor         rax, rax
     ret
+
 _invalid_flagp:
     mov         rax, -1
     ret
+
 fegetexceptflag ENDP
 
 END

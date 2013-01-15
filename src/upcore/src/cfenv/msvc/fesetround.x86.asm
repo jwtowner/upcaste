@@ -22,43 +22,54 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
 
 ;;
-;; int feclearexcept(int excepts);
+;; int fesetround(int round);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Set the rounding mode for both the x87 FPU and the SSE
+;; control/status register.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
-
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
+ALIGN 4
+PUBLIC _fesetround
+_fesetround PROC
     
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
+    ; make sure input flags are valid
+    mov         ecx, DWORD PTR [esp + 4]
+    test        ecx, 0FFFFF3FFh
+    jnz         _invalid_rounding_mode
+    
+    ; apply x87 FPU rounding mode
+    fnstcw      WORD PTR [esp - 2]
+    mov         ax, WORD PTR [esp - 2]
+    and         ax, FE_CTRL_NOROUND
+    or          ax, cx
+    mov         WORD PTR [esp - 2], ax
+    fldcw       WORD PTR [esp - 2]
 
-    ; done, return success
-    xor         rax, rax
+    ; apply SSE rounding mode
+    stmxcsr     DWORD PTR [esp - 8]
+    shl         ecx, MXSCR_ROUND_SHIFT
+    mov         eax, DWORD PTR [esp - 8]
+    and         eax, MXSCR_NOROUND
+    or          eax, ecx
+    mov         DWORD PTR [esp - 8], eax
+    ldmxcsr     DWORD PTR [esp - 8]
+
+    ; return success code
+    xor         eax, eax
     ret
 
-feclearexcept ENDP
+    ; return error code
+_invalid_rounding_mode:
+    mov         eax, -1
+    ret
+
+_fesetround ENDP
 
 END

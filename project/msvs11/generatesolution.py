@@ -295,14 +295,16 @@ def build_project_items_recursive(output, dirpath, vcxproj_dir, project_src_root
                 _, asm_tag = os.path.splitext(root.lower())
                 if asm_tag == '.x64':
                     asm_ml = 'ML64'
+                    asm_options = '/c /W3 /WX /Sa'
                     asm_platform = 'x64'
                 elif asm_tag == '.x86':
                     asm_ml = 'ML'
+                    asm_options = '/c /W3 /WX /safeseh /Sa'
                     asm_platform = 'Win32'
                 if asm_platform != None:
                     # generate custom build step
                     asm_command = '@ECHO OFF\r\nIF NOT EXIST "$(IntDir){0}" MKDIR "$(IntDir){0}"\r\n'.format(reloutputpath)
-                    asm_command += '{0} /c /W3 /WX /Sa \"/Fl$(IntDir){1}%(FileName).lst\" \"/Fo$(IntDir){1}%(FileName).obj\" \"%(FullPath)\"'.format(asm_ml, reloutputpath)
+                    asm_command += '{0} {1} \"/Fl$(IntDir){2}%(FileName).lst\" \"/Fo$(IntDir){2}%(FileName).obj\" \"%(FullPath)\"'.format(asm_ml, asm_options, reloutputpath)
                     output.write('    <CustomBuild Include=\"{0}\">\n'.format(relinputfilepath))
                     output.write('      <Command Condition=\"\'$(Platform)\'==\'{0}\'\">{1}</Command>\n'.format(asm_platform, asm_command))
                     output.write('      <Outputs Condition=\"\'$(Platform)\'==\'{0}\'\">$(IntDir){1}%(FileName).obj;%(Outputs)</Outputs>\n'.format(asm_platform, reloutputpath))

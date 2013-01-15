@@ -147,6 +147,7 @@ namespace cfenv
             case EXCEPTION_FLT_INVALID_OPERATION:
             case EXCEPTION_FLT_OVERFLOW:
             case EXCEPTION_FLT_UNDERFLOW:
+            case STATUS_FLOAT_MULTIPLE_TRAPS:
                 // inform the standard C signal handler mechanism
                 up::raise(SIGFPE);
 

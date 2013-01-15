@@ -22,43 +22,24 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
-INCLUDE fenv.inc
-
 ;;
-;; int feclearexcept(int excepts);
-;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Additional exports for symbols originating from MASM assembled objects.
 ;;
 
-.CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
+LIBRARY upcore.dll
 
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
-    
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-
-    ; done, return success
-    xor         rax, rax
-    ret
-
-feclearexcept ENDP
-
-END
+EXPORTS
+feclearexcept
+fedisableexcept
+feenableexcept
+fegetenv
+fegetexcept
+fegetexceptflag
+fegetround
+feholdexcept
+fesetenv
+fesetexceptflag
+fesetround
+feraiseexcept
+fetestexcept
+feupdateenv

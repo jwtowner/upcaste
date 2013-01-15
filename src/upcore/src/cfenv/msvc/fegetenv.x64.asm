@@ -42,6 +42,7 @@ INCLUDE fenv.inc
 ALIGN 8
 PUBLIC fegetenv
 fegetenv PROC
+
     test        rcx, rcx
     jz          _invalid_envp
     fnstenv     [rcx]
@@ -49,9 +50,11 @@ fegetenv PROC
     xor         rax, rax
     fldenv      [rcx]
     ret
+
 _invalid_envp:
     mov         rax, -1
     ret
+
 fegetenv ENDP
 
 END

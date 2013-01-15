@@ -39,6 +39,7 @@ INCLUDE fenv.inc
 ALIGN 8
 PUBLIC fetestexcept
 fetestexcept PROC
+
     xor         rax, rax
     stmxcsr     DWORD PTR [rsp-4]
     fnstsw      ax
@@ -46,6 +47,7 @@ fetestexcept PROC
     or          eax, DWORD PTR [rsp-4]
     and         eax, ecx
     ret
+
 fetestexcept ENDP
 
 END

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Shared-Debug|Win32">
@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{33a0ca50-5bea-11e2-a9d8-000c2978b81b}</ProjectGuid>
+    <ProjectGuid>{3e7aaad8-5f3f-11e2-a615-000c2978b81b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>upcore_tests</RootNamespace>
     <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>
@@ -342,123 +342,126 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\upcore\test\atomic.cpp" />
     <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp" />
-    <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\atomic.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cctype.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cfenv.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cctype.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cfloat.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cfenv.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\clocale.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cfloat.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cmath.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\clocale.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cstdio.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cmath.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cstdlib.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cstdio.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cstring.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cstdlib.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cwchar.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cstring.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\densemap.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\cwchar.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\ieee754.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\densemap.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\list.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\ieee754.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\random.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\list.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\slist.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\random.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\sparsemap.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\slist.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\sparseset.cpp">
-      <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\sparsemap.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.posix.cpp">
-      <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\sparseset.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.windows.cpp">
-      <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.posix.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.operations.cpp">
-      <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.windows.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.wfilepath.posix.cpp">
-      <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.operations.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.wfilepath.windows.cpp">
-      <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.wfilepath.posix.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.woperations.cpp">
-      <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.wfilepath.windows.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\math\math.float4.cpp">
-      <AssemblerListingLocation>$(IntDir)test\math\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\math\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.woperations.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\filesystem\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\filesystem\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\math\math.int4.cpp">
-      <AssemblerListingLocation>$(IntDir)test\math\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\math\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\math\math.float4.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\math\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\math\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\math\math.uint4.cpp">
-      <AssemblerListingLocation>$(IntDir)test\math\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\math\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\math\math.int4.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\math\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\math\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.lexer.cpp">
-      <AssemblerListingLocation>$(IntDir)test\sexp\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\sexp\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\math\math.uint4.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\math\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\math\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.parser.cpp">
-      <AssemblerListingLocation>$(IntDir)test\sexp\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\sexp\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.lexer.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\sexp\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\sexp\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.token.cpp">
-      <AssemblerListingLocation>$(IntDir)test\sexp\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)test\sexp\</ObjectFileName>
+    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.parser.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\sexp\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\sexp\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.token.cpp" >
+        <AssemblerListingLocation>$(IntDir)test\sexp\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)test\sexp\</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

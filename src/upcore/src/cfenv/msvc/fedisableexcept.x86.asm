@@ -22,43 +22,49 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
 
 ;;
-;; int feclearexcept(int excepts);
+;; int fedisableexcept(int excepts);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Disable the exception mask for both the x87 FPU and the
+;; SSE control/status register, returing the inclusive-or of
+;; the control masks for both.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
+ALIGN 4
+PUBLIC _fedisableexcept
+_fedisableexcept PROC
 
-    ; mask and invert the excepts argument
+    push        ebx
+    push        edi
+    mov         ecx, DWORD PTR [esp+12]
     and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
-    
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-
-    ; done, return success
-    xor         rax, rax
+    stmxcsr     DWORD PTR [esp-8]
+    mov         edi, ecx
+    fstcw       WORD PTR [esp-2]
+    mov         edx, DWORD PTR [esp-8]
+    mov         bx, WORD PTR [esp-2]
+    mov         eax, edx
+    shl         edi, MXSCR_EXCEPT_SHIFT
+    shr         eax, MXSCR_EXCEPT_SHIFT
+    or          ax, bx
+    or          edx, edi
+    or          bx, cx
+    mov         DWORD PTR [esp-8], edx
+    mov         WORD PTR [esp-2], bx
+    not         eax
+    ldmxcsr     DWORD PTR [esp-8]
+    and         eax, FE_ALL_EXCEPT
+    fldcw       WORD PTR [esp-2]
+    pop         edi
+    pop         ebx
     ret
 
-feclearexcept ENDP
+_fedisableexcept ENDP
 
 END

@@ -22,43 +22,56 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
 
 ;;
-;; int feclearexcept(int excepts);
+;; int fesetexceptflag(fexcept_t const* flagp, int excepts);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Set the exception status flags for both the x87 FPU and the
+;; SSE control/status register.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
-
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
-
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
+ALIGN 4
+PUBLIC _fesetexceptflag
+_fesetexceptflag PROC
     
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
+    ; test flagp argument for validity
+    mov         ecx, DWORD PTR [esp + 4]
+    test        ecx, ecx
+    jz          _invalid_flagp
 
-    ; done, return success
-    xor         rax, rax
+    ; mask out status flags to set
+    mov         edx, DWORD PTR [esp + 8]
+    mov         ax, WORD PTR [ecx]
+    and         edx, FE_ALL_EXCEPT
+    and         eax, edx
+    not         edx
+
+    ; set exception flags in x87 FPU
+    fnstenv     [esp - SIZEOF fenv]
+    and         [esp - SIZEOF fenv].fenv.status_word, dx
+    or          [esp - SIZEOF fenv].fenv.status_word, ax
+    fldenv      [esp - SIZEOF fenv]
+
+    ; set exception flags in SSE control/status register
+    stmxcsr     [esp - SIZEOF fenv].fenv.mxcsr
+    and         [esp - SIZEOF fenv].fenv.mxcsr, edx
+    or          [esp - SIZEOF fenv].fenv.mxcsr, eax
+    ldmxcsr     [esp - SIZEOF fenv].fenv.mxcsr
+
+    ; done, return zero
+    xor         eax, eax
     ret
 
-feclearexcept ENDP
+    ; return error code
+_invalid_flagp:
+    mov         eax, -1
+    ret
+
+_fesetexceptflag ENDP
 
 END

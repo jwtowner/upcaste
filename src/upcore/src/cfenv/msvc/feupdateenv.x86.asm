@@ -22,43 +22,46 @@
 ;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ;;
 
+.686P
+.XMM
+.MODEL FLAT
 INCLUDE fenv.inc
+EXTRN _fesetenv:PROC
+EXTRN _feraiseexcept:PROC
 
 ;;
-;; int feclearexcept(int excepts);
+;; int feupdateenv(fenv_t const* envp);
 ;;
-;; Use the fnstenv/fldenv and stmxcsr/ldmxcsr instruction pairs to
-;; clear the exception status flags for x87 FPU and SSE respectively.
-;;
-;; Input:
-;;          ecx = excepts
-;; Output:
-;;          eax = 0
+;; Saves the current exception status, applies the given environment, and
+;; then raises the previously saved exceptions.
 ;;
 
 .CODE
-ALIGN 8
-PUBLIC feclearexcept
-feclearexcept PROC
+ALIGN 4
+PUBLIC _feupdateenv
+_feupdateenv PROC
 
-    ; mask and invert the excepts argument
-    and         ecx, FE_ALL_EXCEPT
-    not         ecx
+    mov         ecx, DWORD PTR [esp + 4]
+    test        ecx, ecx
+    jz          _invalid_envp
 
-    ; clear exception flags in x87 FPU
-    fnstenv     [rsp - SIZEOF fenv]
-    and         [rsp - SIZEOF fenv].fenv.status_word, cx
-    fldenv      [rsp - SIZEOF fenv]
-    
-    ; clear exception flags in SSE control/status register
-    stmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-    and         [rsp - SIZEOF fenv].fenv.mxcsr, ecx
-    ldmxcsr     [rsp - SIZEOF fenv].fenv.mxcsr
-
-    ; done, return success
-    xor         rax, rax
+    xor         eax, eax
+    fnstsw      ax
+    stmxcsr     DWORD PTR [esp - 4]
+    or          eax, DWORD PTR [esp - 4]
+    and         eax, FE_ALL_EXCEPT
+    push        eax
+    push        ecx
+    call        _fesetenv
+    add         esp, 4h
+    call        _feraiseexcept
+    add         esp, 4h
     ret
 
-feclearexcept ENDP
+_invalid_envp:
+    mov         eax, -1
+    ret
+
+_feupdateenv ENDP
 
 END

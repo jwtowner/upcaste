@@ -1,25 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="driver">
-      <UniqueIdentifier>{33b9f82c-5bea-11e2-a9d8-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{3e95d5d8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test">
-      <UniqueIdentifier>{33b9fd72-5bea-11e2-a9d8-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{3e95d9d4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\filesystem">
-      <UniqueIdentifier>{33be6272-5bea-11e2-a9d8-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{3e9ad0d8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\math">
-      <UniqueIdentifier>{33c033e0-5bea-11e2-a9d8-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{3e9cbace-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\sexp">
-      <UniqueIdentifier>{33c14b04-5bea-11e2-a9d8-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{3e9dee26-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp">
       <Filter>driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\atomic.cpp">
+      <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp">
       <Filter>test</Filter>
@@ -107,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.token.cpp">
       <Filter>test\sexp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\atomic.cpp">
-      <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
