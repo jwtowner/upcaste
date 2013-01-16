@@ -48,7 +48,7 @@ namespace up
         return (hashcode >= dense_deleted) ? (hashcode + 2) : hashcode;
     }
 
-    template <class Key, class Value = nat_t>
+    template <class Key, class Value>
     struct UPVISIBLE denserecord
     {
         typedef Key key_type;
@@ -63,22 +63,17 @@ namespace up
         UPALWAYSINLINE void value(Value&& v) noexcept { *value_ptr = ::up::move(v); }
     };
 
-    template <class Key>
-    struct UPVISIBLE denserecord<Key, nat_t>
-    {
-        typedef Key key_type;
-        typedef nat_t value_type;
-        Key const* key_ptr;
-        UPALWAYSINLINE bool valid() const noexcept { return key_ptr != nullptr; }
-        UPALWAYSINLINE Key const& key() const noexcept { return *key_ptr; }
-    };
-
     template <class Key, class Value = nat_t>
     struct UPVISIBLE denseresult
     {
-        typedef Key key_type;
-        typedef Value value_type;
         denserecord<Key, Value> record;
+        bool success;
+    };
+
+    template <class Record>
+    struct UPVISIBLE denseresult<Record, nat_t>
+    {
+        Record* record;
         bool success;
     };
 }

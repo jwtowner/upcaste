@@ -815,61 +815,6 @@ namespace up
 
     template <class K, class V, class H, class E>
     UPVISIBLE
-    int sparsemap_copy(sparsemap<K, V, H, E>& dst, sparsemap<K, V, H, E> const& src, allocator* record_alloc) {
-        if (!record_alloc) {
-            return sparse_badallocator;
-        }
-        else if (&dst == &src) {
-            return sparse_success;
-        }
-
-        slist_node* bucket = src.buckets(), * curr;
-        slist_node* const end_bucket = bucket + src.num_buckets();
-        sparserecord<K, V>* record;
-        sparseresult<K, V> result;
-
-        for ( ; bucket < end_bucket; ++bucket) {
-            for (curr = bucket->next; curr; curr = curr->next) {
-                record = ::up::slist_cast<sparserecord<K, V>*>(curr, &sparserecord<K, V>::node);
-                result = ::up::sparsemap_insert(dst, record_alloc, record->key, record->value);
-                if (!result.record) {
-                    return sparse_nomem;
-                }
-            }
-        }
-
-        return sparse_success;
-    }
-
-    template <class K, class V, class H, class E>
-    UPVISIBLE
-    int sparsemap_multi_copy(sparsemap<K, V, H, E>& dst, sparsemap<K, V, H, E> const& src, allocator* record_alloc) {
-        if (!record_alloc) {
-            return sparse_badallocator;
-        }
-        else if (&dst == &src) {
-            return sparse_success;
-        }
-
-        slist_node* bucket = src.buckets(), * curr;
-        slist_node* const end_bucket = bucket + src.num_buckets();
-        sparserecord<K, V>* record, * new_record;
-
-        for ( ; bucket < end_bucket; ++bucket) {
-            for (curr = bucket->next; curr; curr = curr->next) {
-                record = ::up::slist_cast<sparserecord<K, V>*>(curr, &sparserecord<K, V>::node);
-                new_record = ::up::sparsemap_multi_insert(dst, record_alloc, record->key, record->value);
-                if (!new_record) {
-                    return sparse_nomem;
-                }
-            }
-        }
-
-        return sparse_success;
-    }
-
-    template <class K, class V, class H, class E>
-    UPVISIBLE
     void sparsemap_move(sparsemap<K, V, H, E>& dst, sparsemap<K, V, H, E>& src) {
         if (&dst == &src) {
             return;

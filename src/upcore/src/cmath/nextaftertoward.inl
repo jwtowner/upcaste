@@ -29,8 +29,8 @@ namespace up { namespace math
 {
     LIBUPCOREAPI
     REAL NAME(REAL x, LONGREAL y) noexcept {
-        REAL s, t;
-        int e;
+        REAL significand, adjustment;
+        int exponent;
 
         if (!isfinite(x)) {
             errno = EINVAL;
@@ -50,17 +50,17 @@ namespace up { namespace math
                 return REAL_HUGE_VAL;
             }
 
-            s = frexp(x, &e);
-            if (s == -REAL_HALF) {
-                --e;
+            significand = frexp(x, &exponent);
+            if (significand == -REAL_HALF) {
+                --exponent;
             }
 
-            t = ldexp(REAL_ONE, e - REAL_MANT_DIG);
-            if (t == REAL_ZERO) {
-                t = REAL_MIN;
+            adjustment = ldexp(REAL_ONE, exponent - REAL_MANT_DIG);
+            if (adjustment == REAL_ZERO) {
+                adjustment = REAL_MIN;
             }
 
-            return s + t;
+            return significand + adjustment;
         }
         else {
             if (x <= -REAL_MAX) {
@@ -68,17 +68,17 @@ namespace up { namespace math
                 return -REAL_HUGE_VAL;
             }
 
-            s = frexp(x, &e);
-            if (s == REAL_HALF) {
-                --e;
+            significand = frexp(x, &exponent);
+            if (significand == REAL_HALF) {
+                --exponent;
             }
 
-            t = ldexp(REAL_ONE, e - REAL_MANT_DIG);
-            if (t == REAL_ZERO) {
-                t = REAL_MIN;
+            adjustment = ldexp(REAL_ONE, exponent - REAL_MANT_DIG);
+            if (adjustment == REAL_ZERO) {
+                adjustment = REAL_MIN;
             }
 
-            return s - t;
+            return significand - adjustment;
         }
     }
 }}

@@ -246,7 +246,8 @@ namespace densemap
             require(retval == up::dense_success);
         }
 
-        require(up::densemap_validate(map) && (up::densemap_num_buckets(map) >= 10000));
+        require(up::densemap_validate(map));
+        require(up::densemap_num_buckets(map) >= 10000);
 
         for (i = 1; i < 10000; i += 2) {
             count = up::densemap_erase(map, i);

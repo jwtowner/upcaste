@@ -87,11 +87,11 @@ namespace up
         return true;
     }
 
-    template <class K, class V>
+    template <class Key, class Value>
     UPVISIBLE
     ssize_t densemap_memory_footprint(size_t capacity) noexcept {
-        size_t const pad_size = sizeof(K) + sizeof(V);
-        size_t const node_size = sizeof(size_t) + pad_size;
+        constexpr size_t pad_size = sizeof(Key) + sizeof(Value);
+        constexpr size_t node_size = sizeof(size_t) + pad_size;
 
         if (!capacity) {
             return 0;
@@ -216,14 +216,13 @@ namespace up
             }
 
             hashcodes = static_cast<size_t*>(ptr);
+            ::up::uninitialized_fill_n(hashcodes, capacity2, dense_vacant);
             
             ::up::align_advance(sizeof(size_t) * capacity2, &ptr, &space);
             keys = static_cast<K const*>(::up::align(alignof(K), sizeof(K) * capacity2, &ptr, &space));
             
             ::up::align_advance(sizeof(K) * capacity2, &ptr, &space);
             values = static_cast<V*>(::up::align(alignof(V), sizeof(V) * capacity2, &ptr, &space));
-
-            ::up::uninitialized_fill_n(hashcodes, capacity2, dense_vacant);
         }
         
         map.keys_and_hasher.first(keys);
@@ -234,7 +233,6 @@ namespace up
         map.capacity = capacity2;
         map.used = 0;
         map.size = 0;
-
         return dense_success;
     }
 
@@ -245,7 +243,7 @@ namespace up
             return dense_badallocator;
         }
 
-        K const* const keys = const_cast<K*>(map.keys());
+        K const* const keys = map.keys();
         V* const values = map.values();
         size_t* const hashcodes = map.hashcodes;
         size_t const capacity = map.capacity;
@@ -335,8 +333,8 @@ namespace up
 
     template <class K, class V, class H, class E, class Key>
     inline UPHIDDENINLINE
-    denserecord<K, V> densemap_find(densemap<K, V, H, E> const& map, Key const& k) {
-        return ::up::densemap_find(map, k, map.hasher(), map.equals());
+    denserecord<K, V> densemap_find(densemap<K, V, H, E> const& map, Key const& key) {
+        return ::up::densemap_find(map, key, map.hasher(), map.equals());
     }
 
     template <class K, class V, class H, class E>
@@ -347,7 +345,7 @@ namespace up
         }
 
         size_t const index = record.key_ptr - map.keys();
-        if (index >= map.capacity) {
+        if ((index >= map.capacity) || (map.hashcodes[index] >= dense_deleted)) {
             return 0;
         }
 
@@ -367,7 +365,8 @@ namespace up
 
     template <class K, class V, class H, class E, class Key>
     inline UPHIDDENINLINE
-    size_t densemap_erase(densemap<K, V, H, E>& map, Key const& key) {
+    typename enable_if<!is_same<denserecord<K, V>, Key>::value && !is_same<denserecord<K, V> const, Key>::value, size_t>::type
+    densemap_erase(densemap<K, V, H, E>& map, Key const& key) {
         return ::up::densemap_erase(map, key, map.hasher(), map.equals());
     }
 
@@ -409,11 +408,10 @@ namespace up
         return ::up::densemap_multi_erase(map, key, map.hasher(), map.equals());
     }
 
-    template <class K, class V, class H, class E>
+    template <class K, class V, class H, class E, class Key>
     UPVISIBLE
-    denseresult<K, V> densemap_prepare(densemap<K, V, H, E>& map, K const& key) {
+    denseresult<K, V> densemap_prepare(densemap<K, V, H, E>& map, Key const& key) {
         denseresult<K, V> result = { { nullptr, nullptr }, false };
-
         if (map.size >= map.capacity) {
             return result;
         }
@@ -509,9 +507,9 @@ namespace up
         return result;
     }
 
-    template <class K, class V, class H, class E>
+    template <class K, class V, class H, class E, class Key>
     UPVISIBLE
-    denserecord<K, V> densemap_multi_prepare(densemap<K, V, H, E>& map, K const& key) {
+    denserecord<K, V> densemap_multi_prepare(densemap<K, V, H, E>& map, Key const& key) {
         denserecord<K, V> result;
         if (map.size >= map.capacity) {
             result.key_ptr = nullptr;
@@ -650,58 +648,6 @@ namespace up
         }
 
         return dense_success;
-    }
-
-    template <class K, class V, class H, class E>
-    UPVISIBLE
-    void densemap_copy(densemap<K, V, H, E>& dst, densemap<K, V, H, E> const& src) {
-        if (&dst == &src) {
-            return;
-        }
-
-        K const* const keys = src.keys();
-        V* const values = src.values();
-        size_t const* const hashcodes = src.hashcodes;
-        size_t index, remaining = src.size;
-        denseresult<K, V> result;
-
-        if (remaining) {
-            for (index = 0; ; ++index) {
-                if (hashcodes[index] < dense_deleted) {
-                    result = ::up::densemap_insert(dst, keys[index], values[index]);
-                    --remaining;
-                    if (!result.record.key_ptr || !remaining) {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    template <class K, class V, class H, class E>
-    UPVISIBLE
-    void densemap_multi_copy(densemap<K, V, H, E>& dst, densemap<K, V, H, E>& src) {
-        if (&dst == &src) {
-            return;
-        }
-
-        K const* const keys = src.keys();
-        V* const values = src.values();
-        size_t const* const hashcodes = src.hashcodes;
-        size_t index, remaining = src.size;
-        denserecord<K, V> record;
-
-        if (remaining) {
-            for (index = 0; ; ++index) {
-                if (hashcodes[index] < dense_deleted) {
-                    record = ::up::densemap_multi_insert(dst, keys[index], values[index]);
-                    --remaining;
-                    if (!record.key_ptr || !remaining) {
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     template <class K, class V, class H, class E>

@@ -487,22 +487,40 @@ namespace up { namespace math
     }
 
     inline UPALWAYSINLINE int4 isordered(float4 const v1, float4 const v2) noexcept {
+#if UP_COMPILER == UP_COMPILER_GCC
+        int4 result = _mm_castps_si128(v1);
+        __asm__ __volatile__ ("cmpordps %1, %0" : "+x" (result) : "x" (v2));
+        return result;
+#else
         return _mm_castps_si128(_mm_cmpord_ps(v1, v2));
+#endif
     }
 
     inline UPALWAYSINLINE int4 isunordered(float4 const v1, float4 const v2) noexcept {
+#if UP_COMPILER == UP_COMPILER_GCC
+        int4 result = _mm_castps_si128(v1);
+        __asm__ __volatile__ ("cmpunordps %1, %0" : "+x" (result) : "x" (v2));
+        return result;
+#else
         return _mm_castps_si128(_mm_cmpunord_ps(v1, v2));
+#endif
     }
 
     inline UPALWAYSINLINE int4 isinf(float4 const v) noexcept {
         float4 t = _mm_andnot_ps(uniform<float4>::negative_zero, v);
         return _mm_castps_si128(_mm_cmpeq_ps(t, uniform<float4>::infinity));
     }
-
+    
     inline UPALWAYSINLINE int4 isnan(float4 const v) noexcept {
+#if UP_COMPILER == UP_COMPILER_GCC
+        int4 result = _mm_castps_si128(v);
+        __asm__ __volatile__ ("cmpunordps %0, %0" : "+x" (result));
+        return result;
+#else
         return _mm_castps_si128(_mm_cmpunord_ps(v, v));
+#endif
     }
-
+    
     inline UPALWAYSINLINE int4 signbit(float4 const v) noexcept {
         int4 t = _mm_and_si128(_mm_castps_si128(v), as<int4>(uniform<float4>::negative_zero));
         return _mm_cmpeq_epi32(t, as<int4>(uniform<float4>::negative_zero));

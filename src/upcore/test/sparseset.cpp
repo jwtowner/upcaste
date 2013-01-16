@@ -62,7 +62,7 @@ namespace sparseset
     }
 
     UP_TEST_CASE(construct_destruct) {
-        up::allocator* const alloc = ::up::malloc_allocator::instance();
+        up::allocator* const alloc = up::malloc_allocator::instance();
         int_float_set set;
         int retval;
 
@@ -94,7 +94,7 @@ namespace sparseset
     }
 
     UP_TEST_CASE(insert_and_find) {
-        up::allocator* const alloc = ::up::malloc_allocator::instance();
+        up::allocator* const alloc = up::malloc_allocator::instance();
         up::sparseresult<int_float_pair> result;
         int_float_set set;
         int_float_pair* record;
@@ -135,126 +135,140 @@ namespace sparseset
         require(up::sparseset_memory_footprint(set) == 0);
     }
     
-    /*
     UP_TEST_CASE(insert_erase) {
-        up::allocator* const alloc = ::up::malloc_allocator::instance();
-        up::sparsemap<int, float, int_hash, int_equals> map;
-        up::sparserecord<int, float>* record;
-        up::sparseresult<int, float> result;
+        up::allocator* const alloc = up::malloc_allocator::instance();
+        up::sparseresult<int_float_pair> result;
+        int_float_set set;
+        int_float_pair* record;
         size_t count;
         int retval, i;
 
-        retval = up::sparsemap_construct(map, alloc, 256);
+        retval = up::sparseset_construct(set, alloc, 32);
         require(retval == up::sparse_success);
-        require(up::sparsemap_validate(map) && (up::sparsemap_num_buckets(map) == 256));
+        require(up::sparseset_validate(set));
+        require((up::sparseset_num_buckets(set) == 32));
 
         for (i = 0; i < 10000; ++i) {
-            result = up::sparsemap_insert(map, alloc, i, i * 2.0f);
+            result = up::sparseset_insert(set, alloc, int_float_pair(i, i * 2.0f));
             require(result.success && result.record);
         }
 
+        require(up::sparseset_validate(set));
+        require(up::sparseset_size(set) == 10000);
+
         for (i = 1; i < 10000; i += 2) {
-            count = up::sparsemap_erase(map, alloc, i);
+            count = up::sparseset_erase(set, alloc, i);
             require(count == 1);
         }
 
-        require(up::sparsemap_validate(map) && (up::sparsemap_size(map) == 5000));
+        require(up::sparseset_validate(set));
+        require(up::sparseset_size(set) == 5000);
 
         for (i = 0; i < 10000; i += 2) {
-            record = up::sparsemap_find(map, i);
+            record = up::sparseset_find(set, i);
             require(record && (record->key == i) && (record->value == (i * 2.0f)));
-            count = up::sparsemap_erase(map, alloc, record);
+            count = up::sparseset_erase(set, alloc, record);
             require(count == 1);
         }
 
-        require(up::sparsemap_validate(map) && (up::sparsemap_size(map) == 0));
+        require(up::sparseset_validate(set));
+        require(up::sparseset_size(set) == 0);
 
         for (i = 0; i < 10000; ++i) {
-            record = up::sparsemap_find(map, i);
+            record = up::sparseset_find(set, i);
             require(!record);
         }
 
-        retval = up::sparsemap_destruct(map, alloc, alloc);
+        retval = up::sparseset_destruct(set, alloc, alloc);
         require(retval == up::sparse_success);
     }
     
     UP_TEST_CASE(multi_insert_erase) {
         up::allocator* const alloc = ::up::malloc_allocator::instance();
-        up::sparsemap<int, float, int_hash, int_equals> map;
-        up::sparserecord<int, float>* record;
+        int_float_set set;
+        int_float_pair* record;
         size_t count;
         int retval, i;
 
-        retval = up::sparsemap_construct(map, alloc, 256);
+        retval = up::sparseset_construct(set, alloc, 128);
         require(retval == up::sparse_success);
-        require(up::sparsemap_validate(map) && (up::sparsemap_num_buckets(map) == 256));
+        require(up::sparseset_validate(set));
+        require(up::sparseset_num_buckets(set) == 128);
 
         for (i = 0; i < 25600; ++i) {
-            record = up::sparsemap_multi_insert(map, alloc, i & 255, i * 2.0f);
+            record = up::sparseset_multi_insert(set, alloc, int_float_pair(i & 255, i * 2.0f));
             require(record && (record->value == (i * 2.0f)));
         }
 
+        require(up::sparseset_validate(set));
+        require(up::sparseset_size(set) == 25600);
+
         for (i = 0; i < 256; ++i) {
-            count = up::sparsemap_erase(map, alloc, i);
+            count = up::sparseset_erase(set, alloc, i);
             require(count == 1);
         }
 
-        require(up::sparsemap_validate(map) && (up::sparsemap_size(map) == (25600 - 256)));
+        require(up::sparseset_validate(set));
+        require(up::sparseset_size(set) == (25600 - 256));
 
         for (i = 0; i < 256; ++i) {
-            record = up::sparsemap_find(map, i);
+            record = up::sparseset_find(set, i);
             require(record && (record->key == i));
-            count = up::sparsemap_multi_erase(map, alloc, i);
+            count = up::sparseset_multi_erase(set, alloc, i);
             require(count == ((25600 / 256) - 1));
         }
 
-        require(up::sparsemap_validate(map) && (up::sparsemap_size(map) == 0));
+        require(up::sparseset_validate(set));
+        require(up::sparseset_size(set) == 0);
 
         for (i = 0; i < 256; ++i) {
-            record = up::sparsemap_find(map, i);
+            record = up::sparseset_find(set, i);
             require(!record);
         }
 
-        retval = up::sparsemap_destruct(map, alloc, alloc);
+        retval = up::sparseset_destruct(set, alloc, alloc);
         require(retval == up::sparse_success);
     }
 
     UP_TEST_CASE(grow_and_shrink) {
         up::allocator* const alloc = ::up::malloc_allocator::instance();
-        up::sparsemap<int, float, int_hash, int_equals> map;
+        up::sparseresult<int_float_pair> result;
+        int_float_set set;
+        int_float_pair* record;
         size_t count;
         int retval, i;
-        float value;
 
-        up::sparsemap_construct(map);
-        require(up::sparsemap_validate(map) && (up::sparsemap_num_buckets(map) == 0));
+        up::sparseset_construct(set);
+        require(up::sparseset_validate(set));
+        require(up::sparseset_num_buckets(set) == 0);
 
         for (i = 0; i < 10000; ++i) {
-            if (up::sparsemap_is_overloaded(map, 8.0)) {
-                retval = up::sparsemap_grow(map, alloc);
+            if (up::sparseset_is_overloaded(set, 8.0)) {
+                retval = up::sparseset_grow(set, alloc);
                 require(retval == up::sparse_success);
             }
 
-            retval = up::sparsemap_set(map, alloc, i, i * 2.0f);
-            require(retval == up::sparse_success);
+            result = up::sparseset_insert(set, alloc, int_float_pair(i, i * 2.0f));
+            require(result.success && result.record);
         }
 
-        require(up::sparsemap_validate(map) && (up::sparsemap_num_buckets(map) >= 1250));
+        require(up::sparseset_validate(set));
+        require(up::sparseset_num_buckets(set) >= 1250);
 
         for (i = 1; i < 10000; i += 2) {
-            count = up::sparsemap_erase(map, alloc, i);
+            count = up::sparseset_erase(set, alloc, i);
             require(count == 1);
         }
 
-        up::sparsemap_shrink_to_fit(map, alloc);
-        require(up::sparsemap_validate(map));
+        up::sparseset_shrink_to_fit(set, alloc);
+        require(up::sparseset_validate(set));
 
         for (i = 0; i < 10000; i += 2) {
-            value = up::sparsemap_get(map, i, -2.0f);
-            require(value == (i * 2.0f));
+            record = up::sparseset_find(set, i);
+            require(record && (record->value == (i * 2.0f)));
         }
 
-        retval = up::sparsemap_destruct(map, alloc, alloc);
+        retval = up::sparseset_destruct(set, alloc, alloc);
         require(retval == up::sparse_success);
-    }*/
+    }
 }

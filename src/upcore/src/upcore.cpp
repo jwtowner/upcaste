@@ -53,6 +53,7 @@
 #include <up/cwchar.hpp>
 #include <up/cwctype.hpp>
 #include <up/densemap.hpp>
+#include <up/denseset.hpp>
 #include <up/filesystem.hpp>
 #include <up/hash.hpp>
 #include <up/limits.hpp>

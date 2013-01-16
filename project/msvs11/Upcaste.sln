@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "up", "up", "{3E386A38-5F3F-
 		..\..\include\upcore\up\cwchar.hpp = ..\..\include\upcore\up\cwchar.hpp
 		..\..\include\upcore\up\cwctype.hpp = ..\..\include\upcore\up\cwctype.hpp
 		..\..\include\upcore\up\densemap.hpp = ..\..\include\upcore\up\densemap.hpp
+		..\..\include\upcore\up\denseset.hpp = ..\..\include\upcore\up\denseset.hpp
 		..\..\include\upcore\up\filesystem.hpp = ..\..\include\upcore\up\filesystem.hpp
 		..\..\include\upcore\up\hash.hpp = ..\..\include\upcore\up\hash.hpp
 		..\..\include\upcore\up\ieee754.hpp = ..\..\include\upcore\up\ieee754.hpp
