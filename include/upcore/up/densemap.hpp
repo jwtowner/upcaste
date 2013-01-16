@@ -96,7 +96,9 @@ namespace up
         if (!capacity) {
             return 0;
         }
-        else if (((capacity & (capacity - 1)) != 0) || (capacity > (SIZE_MAX / node_size))) {
+        else if ( ((capacity & (capacity - 1)) != 0)
+            || (capacity > (SIZE_MAX / node_size))
+        ) {
             return -1;
         }
 
@@ -262,9 +264,9 @@ namespace up
         }
 
         if (capacity) {
-            size_t const pad_size = sizeof(K) + sizeof(V);
-            size_t const node_size = sizeof(size_t) + pad_size;
-            size_t const buffer_size = ((capacity > 32) ? (node_size *capacity) : (node_size * 32)) + pad_size;
+            constexpr size_t pad_size = sizeof(K) + sizeof(V);
+            constexpr size_t node_size = sizeof(size_t) + pad_size;
+            size_t const buffer_size = (node_size * capacity) + pad_size;
             ::up::deallocate(alloc, hashcodes, buffer_size);
             map.keys_and_hasher.first(nullptr);
             map.values_and_equals.first(nullptr);

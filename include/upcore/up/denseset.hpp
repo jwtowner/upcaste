@@ -86,22 +86,23 @@ namespace up
     template <class Record>
     UPVISIBLE
     ssize_t denseset_memory_footprint(size_t capacity) noexcept {
-        constexpr size_t pad_size = sizeof(Record);
-        constexpr size_t node_size = sizeof(size_t) + pad_size;
+        constexpr size_t node_size = sizeof(size_t) + sizeof(Record);
 
         if (!capacity) {
             return 0;
         }
-        else if (((capacity & (capacity - 1)) != 0) || (capacity > (SIZE_MAX / node_size))) {
+        else if ( ((capacity & (capacity - 1)) != 0)
+            || (capacity > (SIZE_MAX / node_size))
+        ) {
             return -1;
         }
 
         size_t const total_size = node_size * capacity;
-        if (addition_overflow(total_size, pad_size)) {
+        if (addition_overflow(total_size, sizeof(Record))) {
             return -1;
         }
 
-        return static_cast<ssize_t>(total_size + pad_size);
+        return static_cast<ssize_t>(total_size + sizeof(Record));
     }
 
     template <class R, class H, class E>
@@ -247,9 +248,7 @@ namespace up
         }
 
         if (capacity) {
-            size_t const pad_size = sizeof(R);
-            size_t const node_size = sizeof(size_t) + pad_size;
-            size_t const buffer_size = ((capacity > 32) ? (node_size *capacity) : (node_size * 32)) + pad_size;
+            size_t const buffer_size = ((sizeof(size_t) + sizeof(R)) * capacity) + sizeof(R);
             ::up::deallocate(alloc, hashcodes, buffer_size);
             set.records_and_functors.first(nullptr);
             set.hashcodes = nullptr;
@@ -329,7 +328,7 @@ namespace up
 
         --set.size;
         set.hashcodes[index] = dense_deleted;
-        record->~R();
+        ::up::destruct(record);
         return 1;
     }
 

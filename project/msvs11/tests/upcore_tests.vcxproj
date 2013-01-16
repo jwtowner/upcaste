@@ -343,6 +343,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\upcore\test\denseset.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\test\hashmap.cpp" />
+    <ClCompile Include="..\..\..\src\upcore\test\hashset.cpp" />
     <ClCompile Include="..\..\..\src\uptest\driver\console_driver.cpp" />
     <ClCompile Include="..\..\..\src\upcore\test\atomic.cpp">
       <AssemblerListingLocation>$(IntDir)test\%(FileName).asm</AssemblerListingLocation>

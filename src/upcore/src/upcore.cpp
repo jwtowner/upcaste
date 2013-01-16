@@ -56,6 +56,8 @@
 #include <up/denseset.hpp>
 #include <up/filesystem.hpp>
 #include <up/hash.hpp>
+#include <up/hashmap.hpp>
+#include <up/hashset.hpp>
 #include <up/limits.hpp>
 #include <up/list.hpp>
 #include <up/log.hpp>

@@ -114,5 +114,11 @@
     <ClCompile Include="..\..\..\src\upcore\test\denseset.cpp">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\hashmap.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\hashset.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
