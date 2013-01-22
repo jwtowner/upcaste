@@ -2,12 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{3eb9dc76-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{e990b45e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\windows">
+      <UniqueIdentifier>{e9919054-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\upsystem\src\GetPreferredCpuDevices.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upsystem\src\windows\system.cpp">
+      <Filter>src\windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

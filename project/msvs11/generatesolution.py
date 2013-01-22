@@ -31,12 +31,22 @@ project_groups = {
 #       <3rd party dependency> = name of third-party dependencies to link against
 
 projects = {
+    'glew': (LIBRARY_PROJECT, 'glew', ['src'], []),
     'upcore': (LIBRARY_PROJECT, 'upcore', ['gen', 'src'], []),
-    'upsystem': (LIBRARY_PROJECT, 'upsystem', ['src'], ['upcore']),
+    'upsystem': (LIBRARY_PROJECT, 'upsystem', ['src'], ['glew', 'upcore']),
     'uptest': (LIBRARY_PROJECT, 'uptest', ['src'], ['upcore']),
     'upcore_tests': (TEST_PROJECT, 'upcore', ['test'], ['upcore', 'uptest']),
     'upcore_bench': (BENCHMARK_PROJECT, 'upcore', ['bench'], ['upcore', 'uptest']),
     'upsystem_bench': (BENCHMARK_PROJECT, 'upsystem', ['bench'], ['upcore', 'upsystem', 'uptest']),
+    }
+
+# Extra dependencies for applicable projects, each dependecy delimited by a semi-colon.
+#
+# <project name> : (<include directories>, <library dependencies>)
+
+project_dependencies = {
+    'glew': ('', 'OpenGL32.lib;'),
+    'upsystem': ('opencl', 'OpenCL.lib;winmm.lib;')
     }
 
 # Common directory paths.
@@ -48,7 +58,7 @@ solution_dir = os.path.join(project_dir, 'msvs11')
 
 # Files and directories found under directories with the following
 # names are added to projects but are ignored for compilation.
-common_ignore_dirs = ['gcc', 'macosx', 'ios', 'posix']
+common_ignore_dirs = ['clang', 'gcc', 'macosx', 'ios', 'posix']
 
 # Orthogonal variant types for each project configuration.
 architectures = ['Win32', 'x64']
@@ -89,19 +99,50 @@ def get_project_include_dirs(name, info):
     dirs = ''
     for dependency in info[3]:
         if len(dirs) > 0:
-            dirs = dirs + ';'
-        dirs = dirs + '$(UpcasteRootDir)include\\' + dependency
-        if dependency == 'upsystem':
-            dirs = dirs + ';$(UpcasteRootDir)include\\opencl'
-    if name == 'upsystem':
-        dirs = dirs + ';$(UpcasteRootDir)include\\opencl'
+            dirs += ';'
+        dirs += '$(UpcasteRootDir)include\\' + dependency
+        if dependency in project_dependencies:
+            dirs += ';$(UpcasteRootDir)include\\' + project_dependencies[dependency][0]
     if info[0] == LIBRARY_PROJECT:
         local_dir = '$(UpcasteRootDir)include\\' + name
         if len(dirs) > 0:
             dirs = local_dir + ';' + dirs
         else:
             dirs = local_dir
+    if name in project_dependencies:
+        dirs += ';$(UpcasteRootDir)include\\' + project_dependencies[name][0]
     return dirs
+
+def get_project_libs(name, info):
+    libs = ''
+    for dependency in info[3]:
+        if projects[dependency][0] == LIBRARY_PROJECT:
+            libs += dependency + '.lib;'
+        if dependency in project_dependencies:
+            libs += project_dependencies[dependency][1]
+    if name in project_dependencies:
+        libs += project_dependencies[name][1]
+    return libs
+
+def get_project_defs(name, info):
+    def_files = dict()
+    vcxproj_dir = os.path.join(solution_dir, project_groups[info[0]])
+    project_src_root_dir = os.path.join(src_root_dir, info[1])
+    for src_dir in info[2]:
+        src_dir = os.path.join(project_src_root_dir, src_dir)
+        for item in os.listdir(src_dir):
+            itempath = os.path.join(src_dir, item)
+            if os.path.isfile(itempath) and not os.path.islink(itempath):
+                root, ext = os.path.splitext(itempath)
+                if (ext == '.def'):
+                    relinputfilepath = ntpath.normpath(os.path.relpath(itempath, vcxproj_dir))
+                    _, def_tag = os.path.splitext(root.lower())
+                    if def_tag == '.x64':
+                        def_files['x64'] = relinputfilepath
+                    elif def_tag == '.x86':
+                        def_files['Win32'] = relinputfilepath
+    return def_files
+
 
 ###---==============================================================---
 ###                 MSVS2010 PROJECT FILE GENERATION
@@ -201,23 +242,9 @@ def build_project_propertysheet_imports(output, project_info):
             output.write('  </ImportGroup>\n')
 
 def build_project_item_definition_groups(output, project_name, project_info):
-    # Definition files in src base directory are considered for use with linking
-    definition_files = dict()
-    vcxproj_dir = os.path.join(solution_dir, project_groups[project_info[0]])
-    project_src_root_dir = os.path.join(src_root_dir, project_info[1])
-    for src_dir in project_info[2]:
-        src_dir = os.path.join(project_src_root_dir, src_dir)
-        for item in os.listdir(src_dir):
-            itempath = os.path.join(src_dir, item)
-            if os.path.isfile(itempath) and not os.path.islink(itempath):
-                root, ext = os.path.splitext(itempath)
-                if (ext == '.def'):
-                    relinputfilepath = ntpath.normpath(os.path.relpath(itempath, vcxproj_dir))
-                    _, def_tag = os.path.splitext(root.lower())
-                    if def_tag == '.x64':
-                        definition_files['x64'] = relinputfilepath
-                    elif def_tag == '.x86':
-                        definition_files['Win32'] = relinputfilepath
+    # Determine additional dependency information
+    lib_files = get_project_libs(project_name, project_info)
+    def_files = get_project_defs(project_name, project_info)
 
     # Build item definition groups for each linkage type (static, shared)
     for linkage in library_linkage:
@@ -226,32 +253,22 @@ def build_project_item_definition_groups(output, project_name, project_info):
             output.write('    <ClCompile>\n')
             output.write('      <AdditionalIncludeDirectories>{0}</AdditionalIncludeDirectories>\n'.format(get_project_include_dirs(project_name, project_info)))
             output.write('      <PrecompiledHeader />\n')
+            preproc = ''
             if (linkage == 'Shared') and (project_info[0] == LIBRARY_PROJECT):
-                export_symbols_macro = 'LIB' + project_name.replace('_', '').upper() + '_EXPORT_SYMBOLS'
-                output.write('      <PreprocessorDefinitions>{0};%(PreprocessorDefinitions)</PreprocessorDefinitions>\n'.format(export_symbols_macro))
+                preproc = 'LIB' + project_name.replace('_', '').upper() + '_EXPORT_SYMBOLS'
+            if len(preproc) > 0:
+                output.write('      <PreprocessorDefinitions>{0};%(PreprocessorDefinitions)</PreprocessorDefinitions>\n'.format(preproc))
             output.write('    </ClCompile>\n')
-            if (project_info[0] == LIBRARY_PROJECT) and linkage == 'Static':
+            if ((project_info[0] == LIBRARY_PROJECT) and (linkage == 'Static')) or ((len(lib_files) == 0) and (len(def_files) == 0)):
                 output.write('    <Link />\n')
             else:
-                dependencies = ''
-                for dependency in project_info[3]:
-                    dependency_info = projects[dependency]
-                    if dependency_info[0] == LIBRARY_PROJECT:
-                        dependencies = dependencies + dependency + '.lib;'
-                    if dependency == 'upsystem':
-                        dependencies = dependencies + 'OpenCL.lib;'
-                if project_name == 'upsystem':
-                    dependencies = dependencies + 'OpenCL.lib;'
-                if (len(dependencies) > 0) or (len(definition_files) > 0):
-                    output.write('    <Link>\n')
-                    if len(dependencies) > 0:
-                            output.write('      <AdditionalDependencies>{0}%(AdditionalDependencies)</AdditionalDependencies>\n'.format(dependencies))
-                    if len(definition_files) > 0:
-                        for (platform, filepath) in definition_files.iteritems():
-                            output.write('      <ModuleDefinitionFile Condition=\"\'$(Platform)\'==\'{0}\'\">{1}</ModuleDefinitionFile>'.format(platform, filepath))
-                    output.write('    </Link>\n')
-                else:
-                    output.write('    <Link />\n')
+                output.write('    <Link>\n')
+                if len(lib_files) > 0:
+                        output.write('      <AdditionalDependencies>{0}%(AdditionalDependencies)</AdditionalDependencies>\n'.format(lib_files))
+                if len(def_files) > 0:
+                    for (platform, filepath) in def_files.iteritems():
+                        output.write('      <ModuleDefinitionFile Condition=\"\'$(Platform)\'==\'{0}\'\">{1}</ModuleDefinitionFile>'.format(platform, filepath))
+                output.write('    </Link>\n')
             # cludge to insert prebuild step in upsystem project so that OpenCL libraries are copied to the respective bin/lib folders
             if project_name == 'upsystem':
                 output.write('    <PreBuildEvent>\n')

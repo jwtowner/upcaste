@@ -22,25 +22,44 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/prolog.hpp>
+#include <up/sexp.hpp>
+#include <up/climits.hpp>
 
-#ifndef UP_HAS_POSIX_STPCPY
-
-#include <up/cstring.hpp>
-#include <up/cassert.hpp>
-
-#if UP_COMPILER == UP_COMPILER_MSVC
-#   pragma warning(disable:4706) // assignment within conditional expression
-#endif
-
-namespace up
+namespace up { namespace sexp
 {
-    LIBUPCOREAPI UPNONNULL(1,2)
-    char* stpcpy(char* UPRESTRICT s1, const char* UPRESTRICT s2) noexcept {
-        assert(s1 && s2);
-        for ( ; (*s1 = *s2); ++s1, ++s2) ;
-        return s1;
-    }
-}
+    LIBUPCOREAPI
+    int parser_expect_category(parser* UPRESTRICT par, unsigned int category, token* UPRESTRICT tok) noexcept {
+        int retval = parser_read(par, tok);
+        switch (retval) {
+        case sexp_success:
+            if (tok->category == category) {
+                break;
+            }
+            retval = sexp_nomatch;
+            // fallthrough
 
-#endif
+        case sexp_badsyntax:
+            parser_error(
+                par,
+                parser_message(par, message_expected),
+                parser_category_message(par, category),
+                static_cast<int>((tok->length <= INT_MAX) ? tok->length : INT_MAX),
+                tok->text
+            );
+            break;
+
+        case sexp_eof:
+            parser_error(
+                par,
+                parser_message(par, message_expected_eof),
+                parser_category_message(par, category)
+            );
+            break;
+
+        default:
+            break;
+        }
+
+        return retval;
+    }
+}}

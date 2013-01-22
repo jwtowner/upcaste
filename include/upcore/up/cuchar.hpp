@@ -366,6 +366,9 @@ namespace up
     char16_t* u16sncat(char16_t* UPRESTRICT s1, char16_t const* UPRESTRICT s2, size_t n) noexcept;
     
     extern LIBUPCOREAPI
+    char16_t* u16sncpy(char16_t* UPRESTRICT s1, char16_t const* UPRESTRICT s2, size_t n) noexcept;
+
+    extern LIBUPCOREAPI
     size_t u16snlen(char16_t const* s, size_t n) noexcept;
     
     extern LIBUPCOREAPI
@@ -403,11 +406,6 @@ namespace up
     inline UPALWAYSINLINE
     int u16sncmp(char16_t const* s1, char16_t const* s2, size_t n) noexcept {
         return u16memcmp(s1, s2, n);
-    }
-    
-    inline UPALWAYSINLINE
-    char16_t* u16sncpy(char16_t* UPRESTRICT s1, char16_t const* UPRESTRICT s2, size_t n) noexcept {
-        return u16memcpy(s1, s2, n);
     }
     
     inline UPALWAYSINLINE
@@ -545,6 +543,9 @@ namespace up
     char32_t* u32sncat(char32_t* UPRESTRICT s1, char32_t const* UPRESTRICT s2, size_t n) noexcept;
     
     extern LIBUPCOREAPI
+    char32_t* u32sncpy(char32_t* UPRESTRICT s1, char32_t const* UPRESTRICT s2, size_t n) noexcept;
+
+    extern LIBUPCOREAPI
     size_t u32snlen(char32_t const* s, size_t n) noexcept;
     
     extern LIBUPCOREAPI
@@ -582,11 +583,6 @@ namespace up
     inline UPALWAYSINLINE
     int u32sncmp(char32_t const* s1, char32_t const* s2, size_t n) noexcept {
         return u32memcmp(s1, s2, n);
-    }
-
-    inline UPALWAYSINLINE
-    char32_t* u32sncpy(char32_t* UPRESTRICT s1, char32_t const* UPRESTRICT s2, size_t n) noexcept {
-        return u32memcpy(s1, s2, n);
     }
 
     inline UPALWAYSINLINE

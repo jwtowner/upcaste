@@ -1,173 +1,173 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="gen">
-      <UniqueIdentifier>{402f23ea-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb04c42e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{40329426-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb08c768-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\atomic">
-      <UniqueIdentifier>{4039784a-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb107206-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\atomic\msvc">
-      <UniqueIdentifier>{403b74ce-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb129d2e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\atomic\posix">
-      <UniqueIdentifier>{403bf246-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb1320dc-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\atomic\windows">
-      <UniqueIdentifier>{403cb046-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb13f19c-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cerrno">
-      <UniqueIdentifier>{403d6e3c-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb14bae6-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cerrno\windows">
-      <UniqueIdentifier>{403e1cb0-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb15834a-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cfenv">
-      <UniqueIdentifier>{403f92f2-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb1730a0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cfenv\msvc">
-      <UniqueIdentifier>{40403bf8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb17f04e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cfloat">
-      <UniqueIdentifier>{4047e718-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb205a5e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cfloat\msvc">
-      <UniqueIdentifier>{404892a8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb210d64-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cinttypes">
-      <UniqueIdentifier>{40494d38-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb21f7ba-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\clocale">
-      <UniqueIdentifier>{404a9e40-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb2382c4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\clocale\msvc">
-      <UniqueIdentifier>{404b4a70-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb243926-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cmath">
-      <UniqueIdentifier>{404e52c4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb274896-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstdio">
-      <UniqueIdentifier>{4055278e-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb2efff0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstdio\posix">
-      <UniqueIdentifier>{405b65d6-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb35c646-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstdlib">
-      <UniqueIdentifier>{405c622e-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb36e814-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstdlib\msvc">
-      <UniqueIdentifier>{40613b6e-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb3c3b02-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstdlib\posix">
-      <UniqueIdentifier>{40623384-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb3d3e30-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstring">
-      <UniqueIdentifier>{4062f288-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb3e0324-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstring\gcc">
-      <UniqueIdentifier>{406ac6c0-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb469df4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cstring\msvc">
-      <UniqueIdentifier>{406b83a8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb47763e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cthreads">
-      <UniqueIdentifier>{406c4248-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb485446-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cthreads\posix">
-      <UniqueIdentifier>{406d23ca-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb495a6c-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cthreads\windows">
-      <UniqueIdentifier>{406e1e2e-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb4a6f74-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ctime">
-      <UniqueIdentifier>{406edae4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb4b3396-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ctime\macosx">
-      <UniqueIdentifier>{40703448-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb4c93d0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ctime\windows">
-      <UniqueIdentifier>{40712dd0-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb4da9e6-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cuchar">
-      <UniqueIdentifier>{40728194-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb4f00c0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cuctype">
-      <UniqueIdentifier>{408700ce-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb6572c4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cuctype\posix">
-      <UniqueIdentifier>{4087eca0-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb666abc-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cuctype\windows">
-      <UniqueIdentifier>{4088a5e6-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb673f8c-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\cwchar">
-      <UniqueIdentifier>{40896940-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb6814c0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem">
-      <UniqueIdentifier>{408fa904-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb6eef16-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\filepath">
-      <UniqueIdentifier>{4090f4e4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb706bac-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\posix">
-      <UniqueIdentifier>{40951c54-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb74fbc2-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\posix\operations">
-      <UniqueIdentifier>{40979470-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb77aa3e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\posix\woperations">
-      <UniqueIdentifier>{409d9438-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb7e454c-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\wfilepath">
-      <UniqueIdentifier>{40a38e06-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb84cc96-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\windows">
-      <UniqueIdentifier>{40a7b792-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb897840-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\windows\operations">
-      <UniqueIdentifier>{40a971f4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb8b6498-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\filesystem\windows\woperations">
-      <UniqueIdentifier>{40af62bc-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb92109a-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\hash">
-      <UniqueIdentifier>{40b5681a-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb98cd36-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\list">
-      <UniqueIdentifier>{40b64cc6-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb99bc14-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\math">
-      <UniqueIdentifier>{40b76174-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb9aec9c-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\page">
-      <UniqueIdentifier>{40b8438c-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb9be3f4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\page\posix">
-      <UniqueIdentifier>{40b95bc8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb9d1db4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\page\windows">
-      <UniqueIdentifier>{40ba196e-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb9df716-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\random">
-      <UniqueIdentifier>{40bad6ba-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb9ec790-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\region">
-      <UniqueIdentifier>{40bb820e-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eb9f73fc-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\sexp">
-      <UniqueIdentifier>{40c32ff4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{eba7c548-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\sexp\posix">
-      <UniqueIdentifier>{40cd501a-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{ebb5d552-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\sexp\windows">
-      <UniqueIdentifier>{40ce1446-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{ebb69456-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\slist">
-      <UniqueIdentifier>{40ced084-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{ebb76480-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1611,6 +1611,18 @@
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_error.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_expect_category.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_expect_string.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_expect_symbol.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_expect_type.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_load_memory.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
@@ -1620,6 +1632,12 @@
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek_category.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek_string.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek_symbol.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_peek_type.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
@@ -1627,6 +1645,12 @@
       <Filter>src\sexp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read_category.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read_string.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read_symbol.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_read_type.cpp">
@@ -1653,9 +1677,6 @@
     <ClCompile Include="..\..\..\src\upcore\src\sexp\parser_warning.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
-    <None Include="..\..\..\src\upcore\src\sexp\sexp_internal.hpp">
-      <Filter>src\sexp</Filter>
-    </None>
     <ClCompile Include="..\..\..\src\upcore\src\sexp\token_parse_double.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
@@ -1725,6 +1746,15 @@
     <ClCompile Include="..\..\..\src\upcore\src\sexp\token_to_uint8.cpp">
       <Filter>src\sexp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_unescape.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_unescaped_equals.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\sexp\token_unescaped_length.cpp">
+      <Filter>src\sexp</Filter>
+    </ClCompile>
     <None Include="..\..\..\src\upcore\src\sexp\posix\parser_load_file.cpp">
       <Filter>src\sexp\posix</Filter>
     </None>
@@ -1733,6 +1763,14 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\slist\slist_validate.cpp">
       <Filter>src\slist</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sncpy.cpp">
+      <Filter>src\cuchar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sncpy.cpp">
+      <Filter>src\cuchar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="driver">
-      <UniqueIdentifier>{3e95d5d8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{e96718ce-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test">
-      <UniqueIdentifier>{3e95d9d4-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{e9671db0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\filesystem">
-      <UniqueIdentifier>{3e9ad0d8-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{e96cd03e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\math">
-      <UniqueIdentifier>{3e9cbace-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{e96ed7e4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\sexp">
-      <UniqueIdentifier>{3e9dee26-5f3f-11e2-a615-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{e9701d2a-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +55,15 @@
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\densemap.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\denseset.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\hashmap.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\hashset.cpp">
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\ieee754.cpp">
@@ -110,15 +119,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.token.cpp">
       <Filter>test\sexp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\denseset.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\hashmap.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\hashset.cpp">
-      <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

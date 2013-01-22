@@ -144,6 +144,8 @@
 // compiler compatability macros
 //
 
+#ifdef __cplusplus
+
 #ifndef UP_NO_CONSTEXPR
 #   define UPCONSTEXPR constexpr
 #else
@@ -228,6 +230,8 @@ namespace up { namespace detail
 #   ifndef static_assert
 #       define static_assert UPSTATIC_ASSERT
 #   endif
+#endif
+
 #endif
 
 //

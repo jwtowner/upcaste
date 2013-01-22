@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3e7aac86-5f3f-11e2-a615-000c2978b81b}</ProjectGuid>
+    <ProjectGuid>{e9462e16-610f-11e2-a95a-000c2978b81b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>upsystem_bench</RootNamespace>
     <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>
@@ -257,7 +257,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Release'">
@@ -266,7 +266,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Silver'">
@@ -275,7 +275,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Gold'">
@@ -284,7 +284,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Platinum'">
@@ -293,7 +293,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Debug'">
@@ -302,7 +302,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Release'">
@@ -311,7 +311,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Silver'">
@@ -320,7 +320,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Gold'">
@@ -329,7 +329,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Platinum'">
@@ -338,7 +338,7 @@
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>upcore.lib;upsystem.lib;OpenCL.lib;winmm.lib;uptest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

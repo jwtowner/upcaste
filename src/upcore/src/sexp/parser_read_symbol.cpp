@@ -22,25 +22,34 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/prolog.hpp>
+#include <up/sexp.hpp>
 
-#ifndef UP_HAS_POSIX_STPCPY
-
-#include <up/cstring.hpp>
-#include <up/cassert.hpp>
-
-#if UP_COMPILER == UP_COMPILER_MSVC
-#   pragma warning(disable:4706) // assignment within conditional expression
-#endif
-
-namespace up
+namespace up { namespace sexp
 {
-    LIBUPCOREAPI UPNONNULL(1,2)
-    char* stpcpy(char* UPRESTRICT s1, const char* UPRESTRICT s2) noexcept {
-        assert(s1 && s2);
-        for ( ; (*s1 = *s2); ++s1, ++s2) ;
-        return s1;
-    }
-}
+    LIBUPCOREAPI
+    int parser_read_symbol(parser* UPRESTRICT par, char const* UPRESTRICT str, token* UPRESTRICT tok) noexcept {
+        int retval;
 
-#endif
+        // read next token
+        retval = parser_read(par, tok);
+        if (retval < sexp_badsyntax) {
+            return retval;
+        }
+ 
+        // compare unescaped token text to string
+        if (tok->category == category_symbol) {
+            retval = token_unescaped_equals(tok, str);
+            if (retval == sexp_success) {
+                return retval;
+            }
+        }
+
+        // error occurred, unread the token
+        retval = parser_unread(par, tok);
+        if (retval != sexp_success) {
+            return retval;
+        }
+
+        return sexp_nomatch;
+    }
+}}

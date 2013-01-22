@@ -12,8 +12,6 @@
 - Finish implementing transcedental functions for vector math library.
 - Revamp the generic C++ port of the vector math library, and get it working again.
 - Add ARM NEON port of the vector math library.
-- Add denseset container data type and functions, counterpart to the densemap type.
-- Add a denseindex data type, which is like densemap but uses unique integer keys--values might be integer offsets into an array.
 - Add perfect hashing library which can auto-generate an optimized C++ hashing function source file for a given key set.
 - Add Clang/LLVM compiler support.
 - Improve the benchmarking code in uptest to output more useful metrics, and get rid of the useless ones like the iteration/size count--maybe make it customizable via a format string or flags.

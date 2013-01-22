@@ -44,6 +44,7 @@ namespace up
     struct UPVISIBLE hashtraits
     {
         static_assert(is_unsigned<Key>::value, "Key parameter must be an unsigned integer type");
+        
         typedef Key key_type;
         static constexpr Key vacant = static_cast<Key>(~0);
         static constexpr Key deleted = vacant - 1;
@@ -53,6 +54,14 @@ namespace up
             return (hashcode >= deleted) ? (hashcode + 2) : hashcode;
         }
     };
+
+#ifdef UP_NO_CONSTEXPR
+    template <class Key>
+    constexpr Key hashtraits<Key>::vacant;
+
+    template <class Key>
+    constexpr Key hashtraits<Key>::deleted;
+#endif
 
     template <class Key, class Value = nat_t>
     struct UPVISIBLE hashrecord

@@ -22,11 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/prolog.hpp>
-
-#ifndef UP_HAS_POSIX_STPCPY
-
-#include <up/cstring.hpp>
+#include <up/cuchar.hpp>
 #include <up/cassert.hpp>
 
 #if UP_COMPILER == UP_COMPILER_MSVC
@@ -35,12 +31,12 @@
 
 namespace up
 {
-    LIBUPCOREAPI UPNONNULL(1,2)
-    char* stpcpy(char* UPRESTRICT s1, const char* UPRESTRICT s2) noexcept {
-        assert(s1 && s2);
-        for ( ; (*s1 = *s2); ++s1, ++s2) ;
-        return s1;
+    LIBUPCOREAPI
+    char32_t* u32sncpy(char32_t* UPRESTRICT s1, char32_t const* UPRESTRICT s2, size_t n) noexcept {
+        assert((s1 && s2) || !n);
+        char32_t* retval = s1;
+        for ( ; n && (*s1 = *s2); --n, ++s1, ++s2) ;
+        u32memset(s1, 0, n);
+        return retval;
     }
 }
-
-#endif

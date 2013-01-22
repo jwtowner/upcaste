@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3e7aadc6-5f3f-11e2-a615-000c2978b81b}</ProjectGuid>
+    <ProjectGuid>{e9463000-610f-11e2-a95a-000c2978b81b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>upsystem</RootNamespace>
     <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>
@@ -253,12 +253,12 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Debug'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <PreprocessorDefinitions>LIBUPSYSTEM_EXPORT_SYMBOLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew.lib;OpenGL32.lib;upcore.lib;OpenCL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
         <Command>copy $(UpcasteRootDir)depend\bin\$(UpcastePlatform)\OpenCL.dll $(OutDir)OpenCL.dll
@@ -268,12 +268,12 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Release'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <PreprocessorDefinitions>LIBUPSYSTEM_EXPORT_SYMBOLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew.lib;OpenGL32.lib;upcore.lib;OpenCL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
         <Command>copy $(UpcasteRootDir)depend\bin\$(UpcastePlatform)\OpenCL.dll $(OutDir)OpenCL.dll
@@ -283,12 +283,12 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Silver'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <PreprocessorDefinitions>LIBUPSYSTEM_EXPORT_SYMBOLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew.lib;OpenGL32.lib;upcore.lib;OpenCL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
         <Command>copy $(UpcasteRootDir)depend\bin\$(UpcastePlatform)\OpenCL.dll $(OutDir)OpenCL.dll
@@ -298,12 +298,12 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Gold'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <PreprocessorDefinitions>LIBUPSYSTEM_EXPORT_SYMBOLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew.lib;OpenGL32.lib;upcore.lib;OpenCL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
         <Command>copy $(UpcasteRootDir)depend\bin\$(UpcastePlatform)\OpenCL.dll $(OutDir)OpenCL.dll
@@ -313,12 +313,12 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared-Platinum'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
       <PreprocessorDefinitions>LIBUPSYSTEM_EXPORT_SYMBOLS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>upcore.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew.lib;OpenGL32.lib;upcore.lib;OpenCL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
         <Command>copy $(UpcasteRootDir)depend\bin\$(UpcastePlatform)\OpenCL.dll $(OutDir)OpenCL.dll
@@ -328,7 +328,7 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Debug'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
     </ClCompile>
     <Link />
@@ -340,7 +340,7 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Release'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
     </ClCompile>
     <Link />
@@ -352,7 +352,7 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Silver'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
     </ClCompile>
     <Link />
@@ -364,7 +364,7 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Gold'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
     </ClCompile>
     <Link />
@@ -376,7 +376,7 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static-Platinum'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(UpcasteRootDir)include\upsystem;$(UpcasteRootDir)include\glew;$(UpcasteRootDir)include\;$(UpcasteRootDir)include\upcore;$(UpcasteRootDir)include\opencl</AdditionalIncludeDirectories>
       <PrecompiledHeader />
     </ClCompile>
     <Link />
@@ -390,6 +390,10 @@ copy $(UpcasteRootDir)depend\lib\$(UpcastePlatform)\OpenCL.lib $(UpcasteRootDir)
     <ClCompile Include="..\..\..\src\upsystem\src\GetPreferredCpuDevices.cpp" >
         <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
         <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upsystem\src\windows\system.cpp" >
+        <AssemblerListingLocation>$(IntDir)src\windows\%(FileName).asm</AssemblerListingLocation>
+        <ObjectFileName>$(IntDir)src\windows\</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

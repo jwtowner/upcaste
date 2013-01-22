@@ -21,10 +21,11 @@ Upcaste is provided under the MIT License:
 > TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-The included [OpenCL header files](http://www.khronos.org/registry/cl/) are
+The included [OpenGL](http://www.khronos.org/registry/gl/) and
+[OpenCL](http://www.khronos.org/registry/cl/) header files are
 licensed as follows:
 
-> Copyright (c) 2011 The Khronos Group Inc.
+> Copyright (c) 2007-2012 The Khronos Group Inc.
 >
 > Permission is hereby granted, free of charge, to any person obtaining a
 > copy of this software and/or associated documentation files (the
@@ -86,3 +87,33 @@ are licensed as follows:
 >
 > OpenCL is a trademark of Apple Inc. used under license by Khronos.  
 
+The included [OpenGL Extension Wrangler Library](http://glew.sourceforge.net/)
+source files are licensed under the BSD License:
+
+> Copyright (C) 2002-2008, Milan Ikits <milan ikits[]ieee org>
+> Copyright (C) 2002-2008, Marcelo E. Magallon <mmagallo[]debian org>
+> Copyright (C) 2002, Lev Povalahev
+> All rights reserved.
+> 
+> Redistribution and use in source and binary forms, with or without 
+> modification, are permitted provided that the following conditions are met:
+> 
+> * Redistributions of source code must retain the above copyright notice, 
+>   this list of conditions and the following disclaimer.
+> * Redistributions in binary form must reproduce the above copyright notice, 
+>   this list of conditions and the following disclaimer in the documentation 
+>   and/or other materials provided with the distribution.
+> * The name of the author may be used to endorse or promote products 
+>   derived from this software without specific prior written permission.
+>
+> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+> AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+> IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+> ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
+> LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+> CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+> SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+> INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+> CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+> ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+> THE POSSIBILITY OF SUCH DAMAGE.

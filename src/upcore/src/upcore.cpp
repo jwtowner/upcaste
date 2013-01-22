@@ -67,6 +67,7 @@
 #include <up/prolog.hpp>
 #include <up/random.hpp>
 #include <up/region.hpp>
+#include <up/sexp.hpp>
 #include <up/slist.hpp>
 #include <up/sparsemap.hpp>
 #include <up/sparseset.hpp>

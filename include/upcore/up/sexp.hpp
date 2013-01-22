@@ -42,20 +42,6 @@ namespace up { namespace sexp
     constexpr int sexp_overflow = -8;
     constexpr int sexp_underflow = -9;
 
-    constexpr unsigned int list_parenthesis             = 0;
-    constexpr unsigned int list_bracket                 = 1;
-    constexpr unsigned int list_brace                   = 2;
-
-    constexpr unsigned int exactness_unspecified        = 0;
-    constexpr unsigned int exactness_exact              = 1;
-    constexpr unsigned int exactness_inexact            = 2;
-
-    constexpr unsigned int precision_unspecified        = 0;
-    constexpr unsigned int precision_half               = 1;
-    constexpr unsigned int precision_single             = 2;
-    constexpr unsigned int precision_double             = 3;
-    constexpr unsigned int precision_extended           = 4;
-
     constexpr unsigned int category_none                = 0x0000;
     constexpr unsigned int category_infix               = 0x0001;
     constexpr unsigned int category_prefix              = 0x0002;
@@ -100,15 +86,31 @@ namespace up { namespace sexp
     constexpr unsigned int token_bytevector_open        = 0x001D; // #u8( | #u8[ | #u8{
     constexpr unsigned int token_invalid_syntax         = 0x001E; // #<invalid>
     constexpr unsigned int token_invalid_character      = 0x001F; // #\\<invalid>
-    constexpr unsigned int token_invalid_number         = 0x0020; // #([eEiI]|[bBoOdDxX])<invalid>
-    constexpr unsigned int token_invalid_exactness      = 0x0021; // #[bBoOdDxX]#<invalid>
-    constexpr unsigned int token_invalid_radix          = 0x0022; // #[eEiI]#<invalid>
-    constexpr unsigned int token_unclosed_block_comment = 0x0023; // #| ...
-    constexpr unsigned int token_unclosed_identifier    = 0x0024; // | ...
-    constexpr unsigned int token_unclosed_raw_string    = 0x0025; // #@<tag>\n ...
-    constexpr unsigned int token_unclosed_string        = 0x0026; // \" ...
-    constexpr unsigned int token_unmatched_list_close   = 0x0027; // ) | ] | }
-    constexpr unsigned int token_mismatched_list_close  = 0x0028; // ) | ] | }
+    constexpr unsigned int token_invalid_string         = 0x0020; // "\<invalid>"
+    constexpr unsigned int token_invalid_identifier     = 0x0021; // |\<invalid>;|
+    constexpr unsigned int token_invalid_number         = 0x0022; // #([eEiI]|[bBoOdDxX])<invalid>
+    constexpr unsigned int token_invalid_exactness      = 0x0023; // #[bBoOdDxX]#<invalid>
+    constexpr unsigned int token_invalid_radix          = 0x0024; // #[eEiI]#<invalid>
+    constexpr unsigned int token_unclosed_block_comment = 0x0025; // #| ...
+    constexpr unsigned int token_unclosed_identifier    = 0x0026; // | ...
+    constexpr unsigned int token_unclosed_raw_string    = 0x0027; // #@<tag>\n ...
+    constexpr unsigned int token_unclosed_string        = 0x0028; // \" ...
+    constexpr unsigned int token_unmatched_list_close   = 0x0029; // ) | ] | }
+    constexpr unsigned int token_mismatched_list_close  = 0x002A; // ) | ] | }
+
+    constexpr unsigned int list_parenthesis             = 0;
+    constexpr unsigned int list_bracket                 = 1;
+    constexpr unsigned int list_brace                   = 2;
+
+    constexpr unsigned int exactness_unspecified        = 0;
+    constexpr unsigned int exactness_exact              = 1;
+    constexpr unsigned int exactness_inexact            = 2;
+    
+    constexpr unsigned int precision_unspecified        = 0;
+    constexpr unsigned int precision_half               = 1;
+    constexpr unsigned int precision_single             = 2;
+    constexpr unsigned int precision_double             = 3;
+    constexpr unsigned int precision_extended           = 4;
 
     struct LIBUPCOREAPI token_number_info
     {
@@ -131,6 +133,7 @@ namespace up { namespace sexp
         union {
             bool bool_value;
             uint_least32_t char_value;
+            uint_least32_t escape_difference;
             unsigned int list_type;
             token_number_info number_info;
             token_raw_info raw_info;
@@ -210,6 +213,15 @@ namespace up { namespace sexp
     extern LIBUPCOREAPI
     int token_to_bool(token const* UPRESTRICT tok, bool* UPRESTRICT result) noexcept;
 
+    extern LIBUPCOREAPI
+    int token_unescape(token const* UPRESTRICT tok, char* UPRESTRICT dst, size_t dst_length) noexcept;
+
+    extern LIBUPCOREAPI
+    int token_unescaped_equals(token const* tok, char const* str) noexcept;
+
+    extern LIBUPCOREAPI
+    int token_unescaped_length(token const* UPRESTRICT tok, size_t* UPRESTRICT result) noexcept;
+
     struct LIBUPCOREAPI lexer
     {
         char const* first;
@@ -240,6 +252,29 @@ namespace up { namespace sexp
         return lex->cursor == lex->last;
     }
 
+    enum message
+    {
+        message_expected,
+        message_expected_eof,
+        message_expected_string,
+        message_expected_string_eof,
+        message_expected_symbol,
+        message_expected_symbol_eof
+    };
+
+    struct LIBUPCOREAPI parser_messages
+    {
+        char const* categories[11];
+        char const* tokens[43];
+        char const* lists[3];
+        char const* exactness[3];
+        char const* precision[5];
+        char const* messages[6];
+    };
+
+    extern LIBUPCOREAPI
+    parser_messages const default_parser_messages;
+
     typedef void (*parser_error_handler)(char const* file, uintmax_t line, uintmax_t column, char const* message);
 
 #ifdef UP_ARCHITECTURE_64BIT
@@ -262,6 +297,7 @@ namespace up { namespace sexp
         slist_node unread_stack;
         uintmax_t prev_column;
         uintmax_t prev_line;
+        parser_messages const* messages;
         parser_error_handler error_handler;
         parser_error_handler warning_handler;
         uintmax_t error_count;
@@ -272,6 +308,7 @@ namespace up { namespace sexp
         char* buffer;
         size_t buffer_length;
         bool buffer_allocated:1;
+        bool messages_allocated:1;
         bool loaded:1;
         bool error_brace_tokens:1;
         bool error_bracket_tokens:1;
@@ -331,10 +368,10 @@ namespace up { namespace sexp
     int parser_peek_type(parser* UPRESTRICT par, unsigned int type, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
-    int parser_peek_string(parser* UPRESTRICT par, char const* s, token* UPRESTRICT token) noexcept;
+    int parser_peek_string(parser* UPRESTRICT par, char const* UPRESTRICT str, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
-    int parser_peek_symbol(parser* UPRESTRICT par, char const* id, token* UPRESTRICT token) noexcept;
+    int parser_peek_symbol(parser* UPRESTRICT par, char const* UPRESTRICT id, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
     int parser_read_category(parser* UPRESTRICT par, unsigned int category, token* UPRESTRICT token) noexcept;
@@ -343,10 +380,10 @@ namespace up { namespace sexp
     int parser_read_type(parser* UPRESTRICT par, unsigned int type, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
-    int parser_read_string(parser* UPRESTRICT par, char const* str, token* UPRESTRICT token) noexcept;
+    int parser_read_string(parser* UPRESTRICT par, char const* UPRESTRICT str, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
-    int parser_read_symbol(parser* UPRESTRICT par, char const* id, token* UPRESTRICT token) noexcept;
+    int parser_read_symbol(parser* UPRESTRICT par, char const* UPRESTRICT id, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
     int parser_expect_category(parser* UPRESTRICT par, unsigned int category, token* UPRESTRICT token) noexcept;
@@ -355,10 +392,10 @@ namespace up { namespace sexp
     int parser_expect_type(parser* UPRESTRICT par, unsigned int type, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
-    int parser_expect_string(parser* UPRESTRICT par, char const* str, token* UPRESTRICT token) noexcept;
+    int parser_expect_string(parser* UPRESTRICT par, char const* UPRESTRICT str, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
-    int parser_expect_symbol(parser* UPRESTRICT par, char const* id, token* UPRESTRICT token) noexcept;
+    int parser_expect_symbol(parser* UPRESTRICT par, char const* UPRESTRICT id, token* UPRESTRICT token) noexcept;
 
     extern LIBUPCOREAPI
     int parser_skip_end(parser* UPRESTRICT par) noexcept;
@@ -404,6 +441,21 @@ namespace up { namespace sexp
     inline UPALWAYSINLINE
     bool parser_is_eof(parser const* par) noexcept {
         return lexer_is_eof(&par->lex);
+    }
+
+    inline UPALWAYSINLINE
+    char const* parser_category_message(parser const* par, unsigned int category) noexcept {
+        return par->messages->categories[(category <= category_error) ? category : 0];
+    }
+
+    inline UPALWAYSINLINE
+    char const* parser_type_message(parser const* par, unsigned int token) noexcept {
+        return par->messages->tokens[(token <= token_mismatched_list_close) ? token : 0];
+    }
+
+    inline UPALWAYSINLINE
+    char const* parser_message(parser const* par, message msg) noexcept {
+        return par->messages->messages[msg];
     }
 }}
 

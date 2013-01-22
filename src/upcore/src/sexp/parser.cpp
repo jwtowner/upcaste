@@ -30,6 +30,91 @@
 namespace up { namespace sexp
 {
     LIBUPCOREAPI
+    parser_messages const default_parser_messages =
+    {
+        {
+            "none",
+            "infix",
+            "prefix",
+            "comment",
+            "label",
+            "number",
+            "symbol",
+            "string",
+            "close",
+            "open",
+            "error"
+        },
+        {
+            "none",
+            "dot",
+            "quote",
+            "quasiquote",
+            "unquote",
+            "unquote-splicing",
+            "syntax",
+            "quasisyntax",
+            "unsyntax",
+            "unsyntax-splicing",
+            "datum comment",
+            "block comment",
+            "line comment",
+            "label",
+            "label",
+            "boolean",
+            "character",
+            "integer",
+            "rational",
+            "real",
+            "complex",
+            "identifier",
+            "escaped identifier",
+            "string",
+            "raw string",
+            "list closing",
+            "list opening",
+            "vector opening",
+            "bytevector opening",
+            "invalid syntax",
+            "invalid character",
+            "invalid number",
+            "invalid exactness",
+            "invalid radix",
+            "unclosed block comment",
+            "unclosed identifier",
+            "unclosed raw string",
+            "unclosed string",
+            "unmatched list closing",
+            "mismatched list closing"
+        },
+        {
+            "parenthesis",
+            "bracket",
+            "brace"
+        },
+        {
+            "unspecified",
+            "exact",
+            "inexact"
+        },
+        {
+            "unspecified",
+            "half",
+            "single",
+            "double",
+            "extended"
+        },
+        {
+            "expected a %s, but found '%.*s'",
+            "expected a %s, but reached end of file",
+            "expected a string matching \"%s\", but found '%.*s'",
+            "expected a string matching \"%s\", but reached end of file",
+            "expected identifier '%s', but found '%.*s'",
+            "expected identifier '%s', but reached end of file"
+        }
+    };
+
+    LIBUPCOREAPI
     int parser_construct(parser* UPRESTRICT par, allocator* UPRESTRICT alloc) noexcept {
         if (!par) {
             return sexp_badarg;
@@ -44,6 +129,7 @@ namespace up { namespace sexp
         slist_init(&par->unread_stack);
         par->prev_column = 0;
         par->prev_line = 0;
+        par->messages = &default_parser_messages;
         par->error_handler = &parser_default_error_handler;
         par->warning_handler = &parser_default_warning_handler;
         par->error_count = 0;
@@ -54,6 +140,7 @@ namespace up { namespace sexp
         par->buffer = nullptr;
         par->buffer_length = 0;
         par->buffer_allocated = false;
+        par->messages_allocated = false;
         par->loaded = false;
         par->error_brace_tokens = false;
         par->error_bracket_tokens = false;
@@ -92,6 +179,12 @@ namespace up { namespace sexp
         }
 
         par->loaded = false;
+
+        if (par->messages_allocated) {
+            alloc->deallocate(const_cast<parser_messages*>(par->messages), sizeof(parser_messages));
+            par->messages_allocated = false;
+        }
+
         return sexp_success;
     }
 
