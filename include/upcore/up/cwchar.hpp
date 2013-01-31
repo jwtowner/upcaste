@@ -64,6 +64,17 @@ namespace up
     using ::wmempcpy;
 #endif
 
+#ifndef UP_MEMHASH_DEFINED
+#define UP_MEMHASH_DEFINED
+    extern "C" LIBUPCOREAPI UPPURE UPNONNULL(1)
+    uint_least64_t UPCDECL memhash(void const* key, size_t n, uint_least64_t seed = 0) noexcept;
+#endif
+
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t wmemhash(wchar_t const* key, size_t n, uint_least64_t seed = 0) noexcept {
+        return memhash(key, n * sizeof(wchar_t), seed);
+    }
+
     using ::mbstate_t;
     using ::wint_t;
     using ::btowc;
@@ -224,6 +235,16 @@ namespace up
 
 namespace up
 {
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t wcshash(wchar_t const* s, uint_least64_t seed = 0) noexcept {
+        return memhash(s, wcslen(s) * sizeof(wchar_t), seed);
+    }
+
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t wcsnhash(wchar_t const* s, size_t n, uint_least64_t seed = 0) noexcept {
+        return memhash(s, n * sizeof(wchar_t), seed);
+    }
+
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT
     wchar_t* wcsndup(wchar_t const* s, size_t n, allocator* alloc) noexcept;
 
@@ -352,36 +373,6 @@ namespace up
 
     extern LIBUPCOREAPI UPPURE UPNONNULL(1,2)
     size_t wcsnrcspn(wchar_t const* s, wchar_t const* reject, size_t n) noexcept;
-
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least32_t wcshash32(wchar_t const* s) noexcept;
-    
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least32_t wcsnhash32(wchar_t const* s, size_t n) noexcept;
-
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least64_t wcshash64(wchar_t const* s) noexcept;
-    
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least64_t wcsnhash64(wchar_t const* s, size_t n) noexcept;
-
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
-    size_t wcshash(wchar_t const* s) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return wcshash32(s);
-#else
-        return wcshash64(s);
-#endif
-    }
-    
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
-    size_t wcsnhash(wchar_t const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return wcsnhash32(s, n);
-#else
-        return wcsnhash64(s, n);
-#endif
-    }
 }
 
 #endif

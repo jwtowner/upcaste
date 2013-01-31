@@ -26,25 +26,9 @@
 #define UP_CSTDLIB_HPP
 
 #include <up/allocator.hpp>
+#include <up/climits.hpp>
 #include <up/cstdint.hpp>
 #include <stdlib.h>
-
-#if (UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC)
-#   include <up/detail/cstdlib_msvc.inl>
-#else
-#   if !defined(malloca) && defined(UP_HAS_STDC_ALLOCA)
-#       include <up/detail/malloca_alloca.inl>
-#   elif !defined(malloca)
-#       include <up/detail/malloca_malloc.inl>
-#   endif
-#   if defined(UP_HAS_STDC_ALIGNED_ALLOC)
-#       include <up/detail/aligned_alloc_c11.inl>
-#   elif defined(UP_HAS_POSIX_MEMALIGN)
-#       include <up/detail/aligned_alloc_posix.inl>
-#   else
-#       include <up/detail/aligned_alloc_generic.inl>
-#   endif
-#endif
 
 #undef abs
 #undef min
@@ -52,6 +36,61 @@
 
 namespace up
 {
+    using ::abs;
+    using ::labs;
+    using ::llabs;
+    using ::div_t;
+    using ::ldiv_t;
+    using ::lldiv_t;
+    using ::div;
+    using ::ldiv;
+    using ::lldiv;
+    using ::rand;
+    using ::srand;
+    using ::bsearch;
+    using ::qsort;
+    using ::malloc;
+    using ::calloc;
+    using ::realloc;
+    using ::free;
+    using ::abort;
+    using ::atexit;
+    using ::exit;
+    using ::getenv;
+#ifdef UP_HAS_STDC_WCHAR
+    using ::mblen;
+    using ::mbtowc;
+    using ::mbstowcs;
+    using ::wctomb;
+    using ::wcstombs;
+#endif
+
+    inline UPALWAYSINLINE UPNONNULLALL
+    int syscmd(char const* cmd) noexcept {
+        return ::system(cmd);
+    }
+
+#ifndef UP_HAS_STDC_QUICK_EXIT
+    extern LIBUPCOREAPI UPNONNULL(1)
+    void at_quick_exit(void (UPCDECL * func)()) noexcept;
+    
+    extern LIBUPCOREAPI UPNORETURN
+    void quick_exit(int status) noexcept;
+#else
+    using ::at_quick_exit;
+    using ::quick_exit;
+#endif
+
+#ifndef UP_HAS_STDC_UNSAFE_EXIT
+    extern LIBUPCOREAPI UPNORETURN
+    void force_exit(int status) noexcept;
+#else
+    inline UPALWAYSINLINE UPNORETURN
+    void force_exit(int status) noexcept {
+        ::_Exit(status);
+    }
+#endif
+
 #ifndef UP_HAS_STDC_STRTOF
     extern LIBUPCOREAPI UPNONNULL(1) UPWARNRESULT
     float strtof(char const* UPRESTRICT str, char** UPRESTRICT endptr) noexcept;
@@ -113,7 +152,7 @@ namespace up
 
     inline UPALWAYSINLINE UPNONNULL(1) UPWARNRESULT
     long fast_strtol(char const* UPRESTRICT str, char** UPRESTRICT endptr, int base) noexcept {
-#if (LONG_MAX <= INT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
+#if LONG_MAX <= INT_LEAST32_MAX
         return fast_strtoi32(str, endptr, base);
 #else
         return fast_strtoi64(str, endptr, base);
@@ -122,7 +161,7 @@ namespace up
 
     inline UPALWAYSINLINE UPNONNULL(1) UPWARNRESULT
     unsigned long fast_strtoul(char const* UPRESTRICT str, char** UPRESTRICT endptr, int base) noexcept {
-#if (ULONG_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
+#if ULONG_MAX <= UINT_LEAST32_MAX
         return fast_strtou32(str, endptr, base);
 #else
         return fast_strtou64(str, endptr, base);
@@ -139,11 +178,89 @@ namespace up
         return fast_strtou64(str, endptr, base);
     }
 
-    using ::malloc;
-    using ::calloc;
-    using ::realloc;
-    using ::free;
+#if UP_BYTE_ORDER == UP_LITTLE_ENDIAN
+    struct LIBUPCOREAPI mul_t
+    {
+        int low;
+        int high;
+    };
 
+    struct LIBUPCOREAPI lmul_t
+    {
+        long low;
+        long high;
+    };
+
+    struct LIBUPCOREAPI llmul_t
+    {
+        long long low;
+        long long high;
+    };
+
+    struct LIBUPCOREAPI umul_t
+    {
+        unsigned int low;
+        unsigned int high;
+    };
+
+    struct LIBUPCOREAPI ulmul_t
+    {
+        unsigned long low;
+        unsigned long high;
+    };
+
+    struct LIBUPCOREAPI ullmul_t
+    {
+        unsigned long long low;
+        unsigned long long high;
+    };
+#else
+    struct LIBUPCOREAPI mul_t
+    {
+        int high;
+        int low;
+    };
+
+    struct LIBUPCOREAPI lmul_t
+    {
+        long high;
+        long low;
+    };
+
+    struct LIBUPCOREAPI llmul_t
+    {
+        long long high;
+        long long low;
+    };
+
+    struct LIBUPCOREAPI umul_t
+    {
+        unsigned int high;
+        unsigned int low;
+    };
+
+    struct LIBUPCOREAPI ulmul_t
+    {
+        unsigned long high;
+        unsigned long low;
+    };
+
+    struct LIBUPCOREAPI ullmul_t
+    {
+        unsigned long long high;
+        unsigned long long low;
+    };
+#endif
+}
+
+#if UP_COMPILER == UP_COMPILER_GCC
+#   include <up/detail/cstdlib_gcc.inl>
+#elif UP_COMPILER == UP_COMPILER_MSVC
+#   include <up/detail/cstdlib_msvc.inl>
+#endif
+
+namespace up
+{
     class LIBUPCOREAPI malloc_allocator : public allocator
     {
     public:
@@ -174,57 +291,50 @@ namespace up
         size_t alignment_;
     };
 
-    using ::abort;
-    using ::atexit;
-    using ::exit;
+#if UP_STDC_EXTENSIONS != UP_STDC_EXTENSIONS_MSVC
+    inline UPALWAYSINLINE UPPURE long abs(long x) noexcept { return labs(x); }
+    inline UPALWAYSINLINE UPPURE long long abs(long long x) noexcept { return llabs(x); }
+    inline UPALWAYSINLINE UPPURE ldiv_t div(long x, long y) noexcept { return ldiv(x, y); }
+    inline UPALWAYSINLINE UPPURE lldiv_t div(long long x, long long y) noexcept { return lldiv(x, y); }
+#endif
+    inline UPALWAYSINLINE UPPURE lmul_t mul(long x, long y) noexcept { return lmul(x, y); }
+    inline UPALWAYSINLINE UPPURE ulmul_t umul(unsigned long x, unsigned long y) noexcept { return ulmul(x, y); }
+    inline UPALWAYSINLINE UPPURE llmul_t mul(long long x, long long y) noexcept { return llmul(x, y); }
+    inline UPALWAYSINLINE UPPURE ullmul_t umul(unsigned long long x, unsigned long long y) noexcept { return ullmul(x, y); }
 
-#ifndef UP_HAS_STDC_QUICK_EXIT
-    extern LIBUPCOREAPI UPNONNULL(1)
-    void at_quick_exit(void (UPCDECL * func)()) noexcept;
-    
-    extern LIBUPCOREAPI UPNORETURN
-    void quick_exit(int status) noexcept;
-#else
-    using ::at_quick_exit;
-    using ::quick_exit;
+#if INT_LEAST32_MAX == INT_MAX
+    typedef div_t i32div_t;
+    typedef mul_t i32mul_t;
+    typedef umul_t u32mul_t;
+#elif INT_LEAST32_MAX == LONG_MAX
+    typedef ldiv_t i32div_t;
+    typedef lmul_t i32mul_t;
+    typedef ulmul_t u32mul_t;
+#elif INT_LEAST32_MAX == LLONG_MAX
+    typedef lldiv_t i32div_t;
+    typedef llmul_t i32mul_t;
+    typedef ullmul_t u32mul_t;
 #endif
 
-#ifndef UP_HAS_STDC_UNSAFE_EXIT
-    extern LIBUPCOREAPI UPNORETURN
-    void force_exit(int status) noexcept;
-#else
-    inline UPALWAYSINLINE UPNORETURN
-    void force_exit(int status) noexcept {
-        ::_Exit(status);
-    }
+    inline UPALWAYSINLINE UPPURE int_least32_t i32abs(int_least32_t x) noexcept { return abs(x); }
+    inline UPALWAYSINLINE UPPURE i32div_t i32div(int_least32_t x, int_least32_t y) noexcept { return div(x, y); }
+    inline UPALWAYSINLINE UPPURE i32mul_t i32mul(int_least32_t x, int_least32_t y) noexcept { return mul(x, y); }
+    inline UPALWAYSINLINE UPPURE u32mul_t u32mul(uint_least32_t x, uint_least32_t y) noexcept { return umul(x, y); }
+
+#if INT_LEAST64_MAX == LONG_MAX
+    typedef ldiv_t i64div_t;
+    typedef lmul_t i64mul_t;
+    typedef ulmul_t u64mul_t;
+#elif INT_LEAST64_MAX == LLONG_MAX
+    typedef lldiv_t i64div_t;
+    typedef llmul_t i64mul_t;
+    typedef ullmul_t u64mul_t;
 #endif
 
-    inline UPALWAYSINLINE UPNONNULLALL
-    int syscmd(char const* cmd) noexcept {
-        return ::system(cmd);
-    }
-
-    using ::getenv;
-    using ::rand;
-    using ::srand;
-    using ::bsearch;
-    using ::qsort;
-    using ::abs;
-    using ::labs;
-    using ::llabs;
-    using ::div_t;
-    using ::ldiv_t;
-    using ::lldiv_t;
-    using ::div;
-    using ::ldiv;
-    using ::lldiv;
-#ifdef UP_HAS_STDC_WCHAR
-    using ::mblen;
-    using ::mbtowc;
-    using ::mbstowcs;
-    using ::wctomb;
-    using ::wcstombs;
-#endif
+    inline UPALWAYSINLINE UPPURE int_least64_t i64abs(int_least64_t x) noexcept { return abs(x); }
+    inline UPALWAYSINLINE UPPURE i64div_t i64div(int_least64_t x, int_least64_t y) noexcept { return div(x, y); }
+    inline UPALWAYSINLINE UPPURE i64mul_t i64mul(int_least64_t x, int_least64_t y) noexcept { return mul(x, y); }
+    inline UPALWAYSINLINE UPPURE u64mul_t u64mul(uint_least64_t x, uint_least64_t y) noexcept { return umul(x, y); }
 }
 
 #endif

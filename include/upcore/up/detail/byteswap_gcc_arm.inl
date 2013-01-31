@@ -32,7 +32,7 @@
 namespace up
 {
     inline UPALWAYSINLINE UPPURE
-    int16_t byteswap_int16(int16_t x) noexcept {
+    int16_t i16byteswap(int16_t x) noexcept {
 #if (UP_COMPILER == UP_COMPILER_GCC) && (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ ( "rev16 %0, %0" : "+r" (x) );
         return x;
@@ -44,7 +44,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint16_t byteswap_uint16(uint16_t x) noexcept {
+    uint16_t u16byteswap(uint16_t x) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ ( "rev16 %0, %0" : "+r" (x) );
 #else
@@ -54,7 +54,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    int32_t byteswap_int32(int32_t x) noexcept {
+    int32_t i32byteswap(int32_t x) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ ( "rev %0, %0" : "+r" (x) );
         return x;
@@ -66,7 +66,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint32_t byteswap_uint32(uint32_t x) noexcept {
+    uint32_t u32byteswap(uint32_t x) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ ( "rev %0, %0" : "+r" (x) );
 #else
@@ -76,7 +76,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    int64_t byteswap_int64(int64_t x) noexcept {
+    int64_t i64byteswap(int64_t x) noexcept {
         union { uint32_t u32[2]; int64_t u64; } r;
         r.u32[0] = static_cast<uint32_t>(x >> 32);
         r.u32[1] = static_cast<uint32_t>(x);
@@ -86,7 +86,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint64_t byteswap_uint64(uint64_t x) noexcept {
+    uint64_t u64byteswap(uint64_t x) noexcept {
         union { uint32_t u32[2]; uint64_t u64; } r;
         r.u32[0] = static_cast<uint32_t>(x >> 32);
         r.u32[1] = static_cast<uint32_t>(x);
@@ -96,7 +96,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    int16_t byteswap_int16(int16_t x, bool c) noexcept {
+    int16_t i16byteswap(int16_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
@@ -117,7 +117,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint16_t byteswap_uint16(uint16_t x, bool c) noexcept {
+    uint16_t u16byteswap(uint16_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
@@ -135,7 +135,7 @@ namespace up
     }
  
      inline UPALWAYSINLINE UPPURE
-     int32_t byteswap_int32(int32_t x, bool c) noexcept {
+     int32_t i32byteswap(int32_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
@@ -155,7 +155,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint32_t byteswap_uint32(uint32_t x, bool c) noexcept {
+    uint32_t u32byteswap(uint32_t x, bool c) noexcept {
 #if (UP_ARCHITECTURE_ARM_VERSION >= 6)
         __asm__ (
             "teq %1, #0\n\t"
@@ -173,15 +173,14 @@ namespace up
     }
         
     inline UPALWAYSINLINE UPPURE
-    int64_t byteswap_int64(int64_t x, bool c) noexcept {
-        return c ? byteswap_int64(x) : x;
+    int64_t i64byteswap(int64_t x, bool c) noexcept {
+        return c ? i64byteswap(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint64_t byteswap_uint64(uint64_t x, bool c) noexcept {
-        return c ? byteswap_uint64(x) : x;
+    uint64_t u64byteswap(uint64_t x, bool c) noexcept {
+        return c ? u64byteswap(x) : x;
     }
 }
 
 #endif
-

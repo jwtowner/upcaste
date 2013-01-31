@@ -25,37 +25,7 @@
 #ifndef UP_SYSTEM_HPP
 #define UP_SYSTEM_HPP
 
-#ifdef __APPLE__
-#   include <OpenCL/cl.h>
-#   include <OpenCL/cl_ext.h>
-#else
-#   include <CL/cl.h>
-#   include <CL/cl_ext.h>
-#endif
-
-#include <up/cfloat.hpp>
-#include <up/cstddef.hpp>
-#include <up/cstdint.hpp>
-
-#ifdef UP_LINKAGE_SHARED
-#   ifdef LIBUPSYSTEM_EXPORT_SYMBOLS
-#       define LIBUPSYSTEMAPI UPEXPORT
-#       define LIBUPSYSTEMEXTERN UPEXPORTEXTERN
-#       define LIBUPSYSTEMEXCEPTAPI UPEXPORTEXCEPT
-#   else
-#       define LIBUPSYSTEMAPI UPIMPORT
-#       define LIBUPSYSTEMEXTERN UPIMPORTEXTERN
-#       define LIBUPSYSTEMEXCEPTAPI UPIMPORTEXCEPT
-#   endif
-#else
-#   define LIBUPSYSTEMAPI
-#   define LIBUPSYSTEMEXTERN extern
-#   define LIBUPSYSTEMEXCEPTAPI
-#endif
-
-#if defined(UP_NO_EXTERN_TEMPLATES) && !defined(LIBUPSYSTEM_NO_EXTERN_TEMPLATES)
-#   define LIBUPSYSTEM_NO_EXTERN_TEMPLATES
-#endif
+#include <up/system/systemfwd.hpp>
 
 namespace up { namespace system
 {

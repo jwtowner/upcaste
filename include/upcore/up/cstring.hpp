@@ -80,6 +80,12 @@ namespace up
     extern LIBUPCOREAPI UPNONNULL(1,2)
     void* memset_pattern32(void* UPRESTRICT s, void const* UPRESTRICT p, size_t n) noexcept;
     
+#ifndef UP_MEMHASH_DEFINED
+#define UP_MEMHASH_DEFINED
+    extern "C" LIBUPCOREAPI UPPURE UPNONNULL(1)
+    uint_least64_t UPCDECL memhash(void const* key, size_t n, uint_least64_t seed = 0) noexcept;
+#endif
+
     using ::strcat;
     using ::strchr;
     using ::strcmp;
@@ -149,6 +155,16 @@ namespace up
 
 namespace up
 {
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t strhash(char const* s, uint_least64_t seed = 0) noexcept {
+        return memhash(s, strlen(s), seed);
+    }
+
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t strnhash(char const* s, size_t n, uint_least64_t seed = 0) noexcept {
+        return memhash(s, n, seed);
+    }
+
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT
     char* strndup(char const* UPRESTRICT s, size_t n, allocator* UPRESTRICT alloc) noexcept;
    
@@ -277,36 +293,6 @@ namespace up
 
     extern LIBUPCOREAPI UPPURE UPNONNULL(1,2)
     size_t strnrcspn(char const* s, char const* reject, size_t n) noexcept;
-
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least32_t strhash32(char const* s) noexcept;
-    
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least32_t strnhash32(char const* s, size_t n) noexcept;
-
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least64_t strhash64(char const* s) noexcept;
-    
-    extern LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least64_t strnhash64(char const* s, size_t n) noexcept;
-
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
-    size_t strhash(char const* s) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return strhash32(s);
-#else
-        return strhash64(s);
-#endif
-    }
-
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
-    size_t strnhash(char const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return strnhash32(s, n);
-#else
-        return strnhash64(s, n);
-#endif
-    }
 
     extern LIBUPCOREAPI UPPURE UPNONNULL(1,2)
     int fast_strcasecmp(char const* s1, char const* s2) noexcept;

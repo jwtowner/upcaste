@@ -236,35 +236,15 @@ namespace up
     char const* u8sstr(char const* s1, char const* s2) noexcept {
         return strstr(s1, s2);
     }
-    
-    inline UPALWAYSINLINE
-    uint_least32_t u8shash32(char const* s) noexcept {
-        return strhash32(s);
-    }
-    
-    inline UPALWAYSINLINE
-    uint_least32_t u8snhash32(char const* s, size_t n) noexcept {
-        return strnhash32(s, n);
-    }
 
-    inline UPALWAYSINLINE
-    uint_least64_t u8shash64(char const* s) noexcept {
-        return strhash64(s);
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t u8shash(char const* s, uint_least64_t seed = 0) noexcept {
+        return memhash(s, strlen(s), seed);
     }
     
-    inline UPALWAYSINLINE
-    uint_least64_t u8snhash64(char const* s, size_t n) noexcept {
-        return strnhash64(s, n);
-    }
-
-    inline UPALWAYSINLINE
-    size_t u8shash(char const* s) noexcept {
-        return strhash(s);
-    }
-    
-    inline UPALWAYSINLINE
-    size_t u8snhash(char const* s, size_t n) noexcept {
-        return strnhash(s, n);
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t u8snhash(char const* s, size_t n, uint_least64_t seed = 0) noexcept {
+        return memhash(s, n, seed);
     }
 
     //
@@ -386,18 +366,6 @@ namespace up
     extern LIBUPCOREAPI
     char16_t* u16stok(char16_t* UPRESTRICT s, char16_t const* UPRESTRICT delim, char16_t** UPRESTRICT state) noexcept;
     
-    extern LIBUPCOREAPI
-    uint_least32_t u16shash32(char16_t const* s) noexcept;
-    
-    extern LIBUPCOREAPI
-    uint_least32_t u16snhash32(char16_t const* s, size_t n) noexcept;
-    
-    extern LIBUPCOREAPI
-    uint_least64_t u16shash64(char16_t const* s) noexcept;
-    
-    extern LIBUPCOREAPI
-    uint_least64_t u16snhash64(char16_t const* s, size_t n) noexcept;
-
     inline UPALWAYSINLINE
     char16_t* u16schr(char16_t* s, char32_t c) noexcept {
         return const_cast<char16_t*>(u16schr(const_cast<char16_t const*>(s), c));
@@ -423,22 +391,14 @@ namespace up
         return const_cast<char16_t*>(u16sstr(const_cast<char16_t const*>(s1), s2));
     }
 
-    inline UPALWAYSINLINE
-    size_t u16shash(char16_t const* s) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return u16shash32(s);
-#else
-        return u16shash64(s);
-#endif
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t u16shash(char16_t const* s, uint_least64_t seed = 0) noexcept {
+        return memhash(s, u16slen(s) * sizeof(char16_t), seed);
     }
-
-    inline UPALWAYSINLINE
-    size_t u16snhash(char16_t const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return u16snhash32(s, n);
-#else
-        return u16snhash64(s, n);
-#endif
+    
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t u16snhash(char16_t const* s, size_t n, uint_least64_t seed = 0) noexcept {
+        return memhash(s, n * sizeof(char16_t), seed);
     }
 
     //
@@ -563,18 +523,6 @@ namespace up
     extern LIBUPCOREAPI
     char32_t* u32stok(char32_t* UPRESTRICT s, char32_t const* UPRESTRICT delim, char32_t** UPRESTRICT state) noexcept;
     
-    extern LIBUPCOREAPI
-    uint_least32_t u32shash32(char32_t const* s) noexcept;
-    
-    extern LIBUPCOREAPI
-    uint_least32_t u32snhash32(char32_t const* s, size_t n) noexcept;
-    
-    extern LIBUPCOREAPI
-    uint_least64_t u32shash64(char32_t const* s) noexcept;
-    
-    extern LIBUPCOREAPI
-    uint_least64_t u32snhash64(char32_t const* s, size_t n) noexcept;
-    
     inline UPALWAYSINLINE
     char32_t* u32schr(char32_t* s, char32_t c) noexcept {
         return const_cast<char32_t*>(u32schr(const_cast<char32_t const*>(s), c));
@@ -600,22 +548,14 @@ namespace up
         return const_cast<char32_t*>(u32sstr(const_cast<char32_t const*>(s1), s2));
     }
     
-    inline UPALWAYSINLINE
-    size_t u32shash(char32_t const* s) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return u32shash32(s);
-#else
-        return u32shash64(s);
-#endif
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t u32shash(char32_t const* s, uint_least64_t seed = 0) noexcept {
+        return memhash(s, u32slen(s) * sizeof(char32_t), seed);
     }
-
-    inline UPALWAYSINLINE
-    size_t u32snhash(char32_t const* s, size_t n) noexcept {
-#if (SIZE_MAX <= UINT_LEAST32_MAX) && !defined(UP_LONG_PTR_64)
-        return u32snhash32(s, n);
-#else
-        return u32snhash64(s, n);
-#endif
+    
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1)
+    uint_least64_t u32snhash(char32_t const* s, size_t n, uint_least64_t seed = 0) noexcept {
+        return memhash(s, n * sizeof(char32_t), seed);
     }
 }
 

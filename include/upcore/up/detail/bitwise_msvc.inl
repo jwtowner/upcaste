@@ -8,7 +8,7 @@
 //  without limitation the rights to use, copy, modify, merge, publish,
 //  distribute, sublicense, and/or sell copies of the Software, and to
 //  permit persons to whom the Software is furnished to do so, subject to
-//  the following conditions:
+//  the following cs:
 //
 //  The above copyright notice and this permission notice shall be
 //  included in all copies or substantial portions of the Software.
@@ -26,11 +26,68 @@
 #define UP_DETAIL_BITWISE_MSVC_INL
 
 #ifndef UP_BITWISE_HPP
-#   error "Do not include this file directly! Instead include <up/bitwise.hpp>"
+#   error "Do not include this file directly. Instead include <up/bitwise.hpp>"
 #endif
 
 namespace up
 {
+    inline UPALWAYSINLINE UPPURE
+    unsigned int rotl(unsigned int x, int s) noexcept {
+        return _rotl(x, s);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long lrotl(unsigned long x, int s) noexcept {
+        return _lrotl(x, s);
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long llrotl(unsigned long long x, int s) noexcept {
+        return _rotl64(x, s);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned int rotr(unsigned int x, int s) noexcept {
+        return _rotr(x, s);
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long lrotr(unsigned long x, int s) noexcept {
+        return _lrotr(x, s);
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long llrotr(unsigned long long x, int s) noexcept {
+        return _rotr64(x, s);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned int lzcount(unsigned int x) noexcept {
+        unsigned long result;
+        _BitScanReverse(&result, static_cast<unsigned long>(x));
+        return 31 - static_cast<unsigned int>(result);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long llzcount(unsigned long x) noexcept {
+        unsigned long result;
+        _BitScanReverse(&result, x);
+        return 31 - result;
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long lllzcount(unsigned long long x) noexcept {
+        unsigned long result;
+#ifdef UP_ARCHITECTURE_64BIT
+        _BitScanReverse64(&result, x);
+#else
+        if (!_BitScanReverse(&result, static_cast<unsigned long>((x >> 32 & ULONG_MAX)))) {
+            _BitScanReverse(&result, static_cast<unsigned long>(x & ULONG_MAX));
+        }
+#endif
+        return 63 - result;
+    }
+
     inline UPALWAYSINLINE UPPURE
     unsigned int tzcount(unsigned int x) noexcept {
         unsigned long result;
@@ -39,14 +96,14 @@ namespace up
     }
     
     inline UPALWAYSINLINE UPPURE
-    unsigned long tzcount(unsigned long x) noexcept {
+    unsigned long ltzcount(unsigned long x) noexcept {
         unsigned long result;
         _BitScanForward(&result, x);
         return result;
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long long tzcount(unsigned long long x) noexcept {
+    unsigned long long lltzcount(unsigned long long x) noexcept {
 #ifdef UP_ARCHITECTURE_64BIT
         unsigned long result;
         _BitScanForward64(&result, x);
@@ -58,33 +115,6 @@ namespace up
         }
         return result;
 #endif
-    }
-
-    inline UPALWAYSINLINE UPPURE
-    unsigned int lzcount(unsigned int x) noexcept {
-        unsigned long result;
-        _BitScanReverse(&result, static_cast<unsigned long>(x));
-        return 31 - static_cast<unsigned int>(result);
-    }
-
-    inline UPALWAYSINLINE UPPURE
-    unsigned long lzcount(unsigned long x) noexcept {
-        unsigned long result;
-        _BitScanReverse(&result, x);
-        return 31 - result;
-    }
-
-    inline UPALWAYSINLINE UPPURE
-    unsigned long long lzcount(unsigned long long x) noexcept {
-        unsigned long result;
-#   ifdef UP_ARCHITECTURE_64BIT
-        _BitScanReverse64(&result, x);
-#   else
-        if (!_BitScanReverse(&result, static_cast<unsigned long>((x >> 32 & ULONG_MAX)))) {
-            _BitScanReverse(&result, static_cast<unsigned long>(x & ULONG_MAX));
-        }
-#   endif
-        return 63 - result;
     }
 
     inline UPALWAYSINLINE UPPURE
@@ -100,7 +130,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long popcount(unsigned long x) noexcept {
+    unsigned long lpopcount(unsigned long x) noexcept {
 #ifdef UP_SIMD_SSE_4_2
         return static_cast<unsigned long>(__popcnt(static_cast<unsigned int>(x)));
 #else
@@ -112,7 +142,7 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long long popcount(unsigned long long x) noexcept {
+    unsigned long long llpopcount(unsigned long long x) noexcept {
 #ifdef UP_SIMD_SSE_4_2
         return __popcnt64(x);
 #else

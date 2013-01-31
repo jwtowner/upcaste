@@ -81,18 +81,18 @@ Build {
 			Inherit = CommonGCC,
 			DefaultOnHost = "linux",
             Env = { CXXOPTS = { "-D_GNU_SOURCE" } },
-			Tools = { "gcc" },
+			Tools = { "gcc", "gas" },
 		},
 		Config {
 			Name = "ios-gcc",
 			Inherit = CommonGCC,
-			Tools = { "gcc-osx" },
+			Tools = { "gcc-osx", "gas" },
 		},
 		Config {
-			Name = "macosx-gcc",
+			Name = "osx-gcc",
 			Inherit = CommonGCC,
 			DefaultOnHost = "macosx",
-			Tools = { "gcc-osx" },
+			Tools = { "gcc-osx", "gas" },
 		},
 		Config {
 			Name = "win32-msvc",
@@ -118,18 +118,18 @@ Build {
 	},
 	DefaultSubVariant = "static",
 	Units = function()
-		local function CXXSourceGlob(dir)
+		local function SourceGlob(dir)
 			return FGlob {
                 Dir = dir,
-                Extensions = { ".cpp" },
+                Extensions = { ".c", ".cpp", ".s" },
                 Filters = {
                     { Pattern = "/gcc/"; Config = "*-gcc-*" },
         			{ Pattern = "/msvc/"; Config = "*-mscv-*" },
         			{ Pattern = "/linux/"; Config = "linux-*" },
-        			{ Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
+        			{ Pattern = "/darwin/"; Config = { "osx-*", "ios-*" } },
         			{ Pattern = "/ios/"; Config = "ios-*" },
-        			{ Pattern = "/macosx/"; Config = "macosx-*" },
-        			{ Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
+        			{ Pattern = "/macosx/"; Config = "osx-*" },
+        			{ Pattern = "/posix/"; Config = { "linux-*", "osx-*" } },
         			{ Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
                 }
             }
@@ -138,7 +138,7 @@ Build {
 		local upcore = StaticLibrary {
 			Name = "upcore",
 			Env = { CPPPATH = { "include/upcore" }, },
-			Sources = { CXXSourceGlob "src/upcore/src" },
+			Sources = { SourceGlob "src/upcore/src" },
 		}
 
 		local uptest = StaticLibrary {
@@ -147,7 +147,7 @@ Build {
                 CPPPATH = { "include/upcore", "include/uptest" },
                 CXXOPTS = { "-fexceptions", "-frtti" },
             },
-			Sources = { CXXSourceGlob "src/uptest/src" },
+			Sources = { SourceGlob "src/uptest/src" },
 		}
 
 		local upcore_tests = Program {
@@ -157,7 +157,7 @@ Build {
 				CPPPATH = { "include/upcore", "include/uptest" },
 				LIBS = { "c", "stdc++", "pthread", "rt" },
 			},
-			Sources = { "src/uptest/driver/console_driver.cpp", CXXSourceGlob "src/upcore/test" },
+			Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/test" },
 		}
 		
 		local upcore_bench = Program {
@@ -167,7 +167,7 @@ Build {
 				CPPPATH = { "include/upcore", "include/uptest" },
 				LIBS = { "c", "stdc++", "pthread", "rt" },
 			},
-			Sources = { "src/uptest/driver/console_driver.cpp", CXXSourceGlob "src/upcore/bench" },
+			Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/bench" },
 		}
 
 		Default(upcore_tests)

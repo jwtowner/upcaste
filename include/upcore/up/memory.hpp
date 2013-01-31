@@ -48,7 +48,7 @@ namespace up { namespace detail
 
     public:
 
-        UPDEFAULTCTOR(compressed_pair_wrapper);
+        UPALWAYSINLINE compressed_pair_wrapper() : u1(), u2() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x, int = 0) : u1(x) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : u1(::up::move(x)) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y, int* = 0) : u2(y) { }
@@ -72,7 +72,7 @@ namespace up { namespace detail
             
     public:
 
-        UPDEFAULTCTOR(compressed_pair_wrapper);
+        UPALWAYSINLINE compressed_pair_wrapper() : U2(), u1() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x, int = 0) : u1(x) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : u1(x) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y, int* = 0) : U2(y) { }
@@ -96,7 +96,7 @@ namespace up { namespace detail
 
     public:
 
-        UPDEFAULTCTOR(compressed_pair_wrapper);
+        UPALWAYSINLINE compressed_pair_wrapper() : U1(), u2() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x, int = 0) : U1(x) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : U1(::up::move(x)) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y, int* = 0) : u2(y) { }
@@ -118,7 +118,7 @@ namespace up { namespace detail
     {
     public:
 
-        UPDEFAULTCTOR(compressed_pair_wrapper);
+        UPALWAYSINLINE compressed_pair_wrapper() : U1(), U2() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x) : U1(x) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y) : U2(y) { }
@@ -140,7 +140,7 @@ namespace up { namespace detail
     {
     public:
 
-        UPALWAYSINLINE compressed_pair_wrapper() { ::new(static_cast<U2*>(this)) U2; }
+        UPALWAYSINLINE compressed_pair_wrapper() : U1() { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x) : U1(x) { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : U1(x) { ::new(static_cast<U2*>(this)) U2(y); }

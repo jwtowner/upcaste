@@ -99,12 +99,8 @@ namespace up
     inline UPALWAYSINLINE UPNONNULL(1,2) size_t tcsxfrm_l(tchar_t* UPRESTRICT s1, tchar_t const* UPRESTRICT s2, size_t n, locale_t l) noexcept { return strxfrm_l(s1, s2, n, l); }
 #endif
 
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1) size_t tcshash(tchar_t const* s) noexcept { return strhash(s); }   
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1) size_t tcsnhash(tchar_t const* s, size_t n) noexcept { return strnhash(s, n); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1) uint_least32_t tcshash32(tchar_t const* s) noexcept { return strhash32(s); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1) uint_least32_t tcsnhash32(tchar_t const* s, size_t n) noexcept { return strnhash32(s, n); }
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1) uint_least64_t tcshash64(tchar_t const* s) noexcept { return strhash64(s); }   
-    inline UPALWAYSINLINE UPPURE UPNONNULL(1) uint_least64_t tcsnhash64(tchar_t const* s, size_t n) noexcept { return strnhash64(s, n); }
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) uint_least64_t tcshash(tchar_t const* s, uint_least64_t seed = 0) noexcept { return strhash(s, seed); }   
+    inline UPALWAYSINLINE UPPURE UPNONNULL(1) uint_least64_t tcsnhash(tchar_t const* s, size_t n, uint_least64_t seed = 0) noexcept { return strnhash(s, n, seed); }
 
     inline UPALWAYSINLINE UPPURE UPNONNULL(1) tchar_t const* tcscchr(tchar_t const* s, tint_t c) noexcept { return strcchr(s, c); }
     inline UPALWAYSINLINE UPPURE UPNONNULL(1) tchar_t* tcscchr(tchar_t* s, tint_t c) noexcept { return strcchr(s, c); }

@@ -26,11 +26,12 @@
 
 #ifndef UP_HAS_STDC_FENV
 
-#include <up/bitwise.hpp>
 #include <up/atomic.hpp>
+#include <up/bitwise.hpp>
 #include <up/cfenv.hpp>
 #include <up/cfloat.hpp>
 #include <up/csignal.hpp>
+#include <up/cstdlib.hpp>
 #include <up/test.hpp>
 
 #if UP_PLATFORM == UP_PLATFORM_WINDOWS
@@ -118,7 +119,7 @@ namespace cfenv
             raise_and_test_exception(FE_INEXACT | FE_OVERFLOW, 2);
             raise_and_test_exception(FE_DIVBYZERO | FE_UNDERFLOW, 2);
             raise_and_test_exception(FE_INVALID | FE_INEXACT | FE_DIVBYZERO, 3);
-            raise_and_test_exception(FE_ALL_EXCEPT, up::logceil2((unsigned int)FE_ALL_EXCEPT));
+            raise_and_test_exception(FE_ALL_EXCEPT, up::ceillog2((unsigned int)FE_ALL_EXCEPT));
 
             // make sure we're in default clear state
             test_exception(FE_ALL_EXCEPT, 0);

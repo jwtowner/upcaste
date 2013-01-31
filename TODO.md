@@ -6,7 +6,6 @@
 - Optimize and test the s-expression parser/lexer more thoroughly.
 - Implement `memccpy`, `stpcpy`, `stpncpy`, and better implement `mempcpy`.
 - Implement `wmemccpy`, `wcpcpy`, `wcpncpy`, and better implement `wmempcpy`.
-- Implement `c16rtomb`, `c32rtomb`, `mbrtoc16`, and `mbrtoc32` functions in cuchar.hpp.
 - Implement filesystem `copy` and `copy_directory` functions.
 - Test filesystem more thoroughly on Windows.
 - Finish implementing transcedental functions for vector math library.
@@ -17,6 +16,5 @@
 - Improve the benchmarking code in uptest to output more useful metrics, and get rid of the useless ones like the iteration/size count--maybe make it customizable via a format string or flags.
 - Add a command line arguments parsing library to upcore.
 - Make sure function attributes in `cuchar.hpp` match the ones in `cstring.hpp`.
-- Fix u16sncpy and u32sncpy.
 - Audit Windows implementation of thread-local locales for memory leaks and proper use of LC_GLOBAL_LOCALE.
 

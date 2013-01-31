@@ -83,7 +83,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{e946337a-610f-11e2-a95a-000c2978b81b}</ProjectGuid>
+    <ProjectGuid>{60d2e118-6ade-11e2-be0d-000c2978b81b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>upcore</RootNamespace>
     <VCTargetsPath>$(VCTargetsPath11)</VCTargetsPath>
@@ -369,8 +369,6 @@
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sncpy.cpp" />
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sncpy.cpp" />
     <ClCompile Include="..\..\..\src\upcore\src\log.cpp">
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
@@ -387,6 +385,7 @@
       <AssemblerListingLocation>$(IntDir)src\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\</ObjectFileName>
     </ClCompile>
+    <None Include="..\..\..\src\upcore\src\cstring\gcc\memhash.x64.s" />
     <None Include="..\..\..\src\upcore\src\upcore.x64.def" />
     <None Include="..\..\..\src\upcore\src\upcore.x86.def" />
     <ClCompile Include="..\..\..\src\upcore\src\atomic\atomic_extern_templates.cpp">
@@ -436,7 +435,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\feclearexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -450,7 +449,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fedisableexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -464,7 +463,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\feenableexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -478,7 +477,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fegetenv.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -492,7 +491,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fegetexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -506,7 +505,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fegetexceptflag.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -520,7 +519,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fegetround.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -534,7 +533,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\feholdexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -549,7 +548,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\feraiseexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -563,7 +562,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fesetenv.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -577,7 +576,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fesetexceptflag.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -591,7 +590,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fesetround.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -605,7 +604,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\fetestexcept.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -619,7 +618,7 @@ ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)sr
     <CustomBuild Include="..\..\..\src\upcore\src\cfenv\msvc\feupdateenv.x86.asm">
       <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
 IF NOT EXIST "$(IntDir)src\cfenv\msvc\" MKDIR "$(IntDir)src\cfenv\msvc\"
-ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(IntDir)src\cfenv\msvc\%(FileName).obj" "%(FullPath)"</Command>
       <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cfenv\msvc\%(FileName).obj;%(Outputs)</Outputs>
       <FileType>Document</FileType>
     </CustomBuild>
@@ -954,6 +953,14 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\memhash32.cpp">
+      <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\src\cstring\memhash64.cpp">
+      <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstring\memrchr.cpp">
       <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
@@ -978,14 +985,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstring\strhash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstring\strhash64.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstring\strncchr.cpp">
       <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
@@ -999,14 +998,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cstring\strndup.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnhash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cstring\strnhash64.cpp">
       <AssemblerListingLocation>$(IntDir)src\cstring\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
     </ClCompile>
@@ -1067,6 +1058,20 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <ObjectFileName>$(IntDir)src\cstring\</ObjectFileName>
     </ClCompile>
     <None Include="..\..\..\src\upcore\src\cstring\gcc\memset_pattern_sse2.cpp" />
+    <CustomBuild Include="..\..\..\src\upcore\src\cstring\msvc\memhash.x64.asm">
+      <Command Condition="'$(Platform)'=='x64'">@ECHO OFF
+IF NOT EXIST "$(IntDir)src\cstring\msvc\" MKDIR "$(IntDir)src\cstring\msvc\"
+ML64 /c /W3 /WX /Sa "/Fl$(IntDir)src\cstring\msvc\%(FileName).lst" "/Fo$(IntDir)src\cstring\msvc\%(FileName).obj" "%(FullPath)"</Command>
+      <Outputs Condition="'$(Platform)'=='x64'">$(IntDir)src\cstring\msvc\%(FileName).obj;%(Outputs)</Outputs>
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\upcore\src\cstring\msvc\memhash.x86.asm">
+      <Command Condition="'$(Platform)'=='Win32'">@ECHO OFF
+IF NOT EXIST "$(IntDir)src\cstring\msvc\" MKDIR "$(IntDir)src\cstring\msvc\"
+ML /c /W3 /WX /Sa /safeseh "/Fl$(IntDir)src\cstring\msvc\%(FileName).lst" "/Fo$(IntDir)src\cstring\msvc\%(FileName).obj" "%(FullPath)"</Command>
+      <Outputs Condition="'$(Platform)'=='Win32'">$(IntDir)src\cstring\msvc\%(FileName).obj;%(Outputs)</Outputs>
+      <FileType>Document</FileType>
+    </CustomBuild>
     <ClCompile Include="..\..\..\src\upcore\src\cstring\msvc\memset_pattern_sse2.cpp">
       <AssemblerListingLocation>$(IntDir)src\cstring\msvc\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cstring\msvc\</ObjectFileName>
@@ -1164,14 +1169,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16shash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16shash64.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
@@ -1184,11 +1181,7 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snhash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16snhash64.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u16sncpy.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -1292,14 +1285,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32shash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32shash64.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32slen.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
@@ -1308,11 +1293,7 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snhash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32snhash64.cpp">
+    <ClCompile Include="..\..\..\src\upcore\src\cuchar\u32sncpy.cpp">
       <AssemblerListingLocation>$(IntDir)src\cuchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cuchar\</ObjectFileName>
     </ClCompile>
@@ -1477,14 +1458,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcshash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcshash64.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsncchr.cpp">
       <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
@@ -1498,14 +1471,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
       <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsndup.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnhash32.cpp">
-      <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\cwchar\wcsnhash64.cpp">
       <AssemblerListingLocation>$(IntDir)src\cwchar\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\cwchar\</ObjectFileName>
     </ClCompile>
@@ -1893,14 +1858,6 @@ ML /c /W3 /WX /safeseh /Sa "/Fl$(IntDir)src\cfenv\msvc\%(FileName).lst" "/Fo$(In
     <ClCompile Include="..\..\..\src\upcore\src\filesystem\windows\woperations\user_directory_path.cpp">
       <AssemblerListingLocation>$(IntDir)src\filesystem\windows\woperations\%(FileName).asm</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)src\filesystem\windows\woperations\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\hash\hash32_accumulate.cpp">
-      <AssemblerListingLocation>$(IntDir)src\hash\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\hash\</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\src\hash\hash64_accumulate.cpp">
-      <AssemblerListingLocation>$(IntDir)src\hash\%(FileName).asm</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)src\hash\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\src\list\list_sort_tree_recursive.cpp">
       <AssemblerListingLocation>$(IntDir)src\list\%(FileName).asm</AssemblerListingLocation>

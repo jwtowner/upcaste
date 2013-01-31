@@ -27,6 +27,7 @@
 #ifndef UP_HAS_STDCXX_ATOMIC
 
 #include <up/atomic.hpp>
+#include <up/climits.hpp>
 #include <up/cstdint.hpp>
 
 namespace up { namespace detail
@@ -52,7 +53,7 @@ namespace up { namespace detail
     LIBUPCOREAPI
     atomic_flag* atomic_storage_spin_lock(void const volatile* storage_ptr) noexcept {
         uintptr_t key = reinterpret_cast<uintptr_t>(storage_ptr);
-#if (UINTPTR_MAX > 0xFFFFFFFF) || defined(UP_LONG_PTR_64)
+#if UINTPTR_MAX > 0xFFFFFFFF
         key ^= key >> 7;
         key ^= key << 19;
         key ^= key >> 17;

@@ -22,19 +22,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/prolog.hpp>
+#include <Windows.h>
 
-#ifdef UP_HAS_STDC_WCHAR
-
-#include <up/cwchar.hpp>
-#include <up/hash.hpp>
-
-namespace up
-{
-    LIBUPCOREAPI UPPURE UPNONNULL(1)
-    uint_least64_t wcsnhash64(wchar_t const* s, size_t n) noexcept {
-        return hash64_finalize(hash64_accumulate(hashseed64, s, n * sizeof(wchar_t)));
-    }
+int CALLBACK wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int) {
+    return 0;
 }
-
-#endif

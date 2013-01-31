@@ -107,7 +107,6 @@
 //
 // C++98 feature detection
 //
-#undef UP_LONG_PTR_64
 #ifndef _CPPUNWIND
 #   define UP_NO_EXCEPTIONS
 #endif

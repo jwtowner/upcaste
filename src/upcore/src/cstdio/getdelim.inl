@@ -52,7 +52,8 @@ namespace up
 #endif
 
         do {
-            for (work = work_buffer; work < &work_buffer[work_length]; ++work) {
+            work = work_buffer;
+            while (work < &work_buffer[work_length]) {
 #if UP_STDC_EXTENSIONS == UP_STDC_EXTENSIONS_MSVC
                 ch = UPCONCATENATE(_, UPCONCATENATE(CHAR_GET, _nolock))(stream);
 #else
@@ -73,7 +74,7 @@ namespace up
                 }
             }
 
-            work_read = &work_buffer[work_length] - work;
+            work_read = work - work_buffer;
             new_length = length + work_read;
             if (UPUNLIKELY(new_length > (SSIZE_MAX / sizeof(CHAR)))) {
                 errno = EOVERFLOW;

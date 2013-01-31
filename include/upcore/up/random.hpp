@@ -26,6 +26,7 @@
 #define UP_RANDOM_HPP
 
 #include <up/bitwise.hpp>
+#include <up/cstdlib.hpp>
 #include <up/limits.hpp>
 #include <up/utility.hpp>
 
@@ -52,7 +53,7 @@ namespace up
     RealType generate_canonical(Engine& engine) {
         constexpr uintmax_t iR = (uintmax_t)Engine::result_range + (uintmax_t)1;
         constexpr size_t max_logR = numeric_limits<typename Engine::result_type>::digits;
-        constexpr size_t logR = (iR > 0) ? static_logfloor2<uintmax_t, iR>::value : max_logR;
+        constexpr size_t logR = (iR > 0) ? static_floorlog2<uintmax_t, iR>::value : max_logR;
         constexpr size_t digits = numeric_limits<RealType>::digits;
         constexpr size_t b = (digits < bits) ? digits : bits;
         constexpr size_t k = (b / logR) + (b % logR != 0) + (b == 0);
@@ -118,7 +119,7 @@ namespace up { namespace detail
         typedef typename Engine::result_type EngineType;
         typedef typename common_type<EngineType, UIntType>::type WorkType;
         static constexpr WorkType engine_range = static_cast<WorkType>(Engine::result_range) + 1;
-        static constexpr size_t engine_bits = static_logfloor2<WorkType, engine_range>::value;
+        static constexpr size_t engine_bits = static_floorlog2<WorkType, engine_range>::value;
         static constexpr size_t engine_max_bits = numeric_limits<EngineType>::digits;
         static constexpr size_t work_max_bits = numeric_limits<WorkType>::digits;
         static constexpr size_t max_bucket_count = (sizeof(WorkType) + (sizeof(EngineType) - 1)) / sizeof(EngineType);
@@ -136,7 +137,7 @@ namespace up { namespace detail
         uniform_int_generator(Engine& engine_, WorkType work_range_)
         : engine(engine_),
         work_range(work_range_),
-        work_bits((work_range_ > 0) ? static_cast<size_t>(::up::logceil2(work_range_)) : work_max_bits),
+        work_bits((work_range_ > 0) ? static_cast<size_t>(::up::ceillog2(work_range_)) : work_max_bits),
         bucket_count((work_bits + (engine_bits - 1)) / engine_bits),
         bucket_bits(work_bits / bucket_count) {
         }

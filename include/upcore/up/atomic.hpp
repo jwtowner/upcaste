@@ -25,6 +25,7 @@
 #ifndef UP_ATOMIC_HPP
 #define UP_ATOMIC_HPP
 
+#include <up/climits.hpp>
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
 
@@ -33,58 +34,5 @@
 #else
 #   include <up/detail/atomic_generic.inl>
 #endif
-
-#ifndef ATOMIC_COUNT_INIT
-#   define ATOMIC_COUNT_INIT ATOMIC_VAR_INIT(0)
-#endif
-
-namespace up
-{
-    typedef atomic_int_least32_t atomic_count32;
-    typedef atomic_int_least64_t atomic_count64;
-#ifdef UP_ARCHITECTURE_32BIT
-    typedef atomic_count32 atomic_count;
-#else
-    typedef atomic_count64 atomic_count;
-#endif
-
-    inline UPALWAYSINLINE UPNONNULLALL
-    int_least32_t atomic_count_load(atomic_count32 const volatile* count) noexcept {
-        return atomic_load_explicit(count, memory_order_acquire);
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL
-    void atomic_count_retain(atomic_count32 volatile* count) noexcept {
-        atomic_fetch_add_explicit(count, 1, memory_order_relaxed);
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL
-    bool atomic_count_release(atomic_count32 volatile* count) noexcept {
-        if (atomic_fetch_add_explicit(count, -1, memory_order_release) != 1) {
-            return false;
-        }
-        atomic_thread_fence(memory_order_acquire);
-        return true;
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL
-    int_least64_t atomic_count_load(atomic_count64 const volatile* count) noexcept {
-        return atomic_load_explicit(count, memory_order_acquire);
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL
-    void atomic_count_retain(atomic_count64 volatile* count) noexcept {
-        atomic_fetch_add_explicit(count, 1, memory_order_relaxed);
-    }
-
-    inline UPALWAYSINLINE UPNONNULLALL
-    bool atomic_count_release(atomic_count64 volatile* count) noexcept {
-        if (atomic_fetch_add_explicit(count, -1, memory_order_release) != 1) {
-            return false;
-        }
-        atomic_thread_fence(memory_order_acquire);
-        return true;
-    }
-}
 
 #endif

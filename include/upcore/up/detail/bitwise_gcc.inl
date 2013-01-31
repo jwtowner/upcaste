@@ -8,7 +8,7 @@
 //  without limitation the rights to use, copy, modify, merge, publish,
 //  distribute, sublicense, and/or sell copies of the Software, and to
 //  permit persons to whom the Software is furnished to do so, subject to
-//  the following conditions:
+//  the following cs:
 //
 //  The above copyright notice and this permission notice shall be
 //  included in all copies or substantial portions of the Software.
@@ -26,24 +26,39 @@
 #define UP_DETAIL_BITWISE_GCC_INL
 
 #ifndef UP_BITWISE_HPP
-#   error "Do not include this file directly! Instead include <up/bitwise.hpp>"
+#   error "Do not include this file directly. Instead include <up/bitwise.hpp>"
 #endif
 
 namespace up
 {
     inline UPALWAYSINLINE UPPURE
-    unsigned int tzcount(unsigned int x) noexcept {
-        return __builtin_ctz(x);
-    }
-    
-    inline UPALWAYSINLINE UPPURE
-    unsigned long tzcount(unsigned long x) noexcept {
-        return __builtin_ctzl(x);
+    unsigned int rotl(unsigned int x, int s) noexcept {
+        return (x << s) | (x >> ((sizeof(x) * CHAR_BIT) - s));
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long long tzcount(unsigned long long x) noexcept {
-        return __builtin_ctzll(x);
+    unsigned long lrotl(unsigned long x, int s) noexcept {
+        return (x << s) | (x >> ((sizeof(x) * CHAR_BIT) - s));
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long llrotl(unsigned long long x, int s) noexcept {
+        return (x << s) | (x >> ((sizeof(x) * CHAR_BIT) - s));
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned int rotr(unsigned int x, int s) noexcept {
+        return (x >> s) | (x << ((sizeof(x) * CHAR_BIT) - s));
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long lrotr(unsigned long x, int s) noexcept {
+        return (x >> s) | (x << ((sizeof(x) * CHAR_BIT) - s));
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long llrotr(unsigned long long x, int s) noexcept {
+        return (x >> s) | (x << ((sizeof(x) * CHAR_BIT) - s));
     }
 
     inline UPALWAYSINLINE UPPURE
@@ -52,13 +67,28 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long lzcount(unsigned long x) noexcept {
+    unsigned long llzcount(unsigned long x) noexcept {
         return __builtin_clzl(x);
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long long lzcount(unsigned long long x) noexcept {
+    unsigned long long lllzcount(unsigned long long x) noexcept {
         return __builtin_clzll(x);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned int tzcount(unsigned int x) noexcept {
+        return __builtin_ctz(x);
+    }
+    
+    inline UPALWAYSINLINE UPPURE
+    unsigned long ltzcount(unsigned long x) noexcept {
+        return __builtin_ctzl(x);
+    }
+
+    inline UPALWAYSINLINE UPPURE
+    unsigned long long lltzcount(unsigned long long x) noexcept {
+        return __builtin_ctzll(x);
     }
 
     inline UPALWAYSINLINE UPPURE
@@ -67,12 +97,12 @@ namespace up
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long popcount(unsigned long x) noexcept {
+    unsigned long lpopcount(unsigned long x) noexcept {
         return __builtin_popcountl(x);
     }
 
     inline UPALWAYSINLINE UPPURE
-    unsigned long long popcount(unsigned long long x) noexcept {
+    unsigned long long llpopcount(unsigned long long x) noexcept {
         return __builtin_popcountll(x);
     }
 }

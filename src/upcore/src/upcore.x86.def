@@ -43,3 +43,4 @@ fesetround
 feraiseexcept
 fetestexcept
 feupdateenv
+memhash

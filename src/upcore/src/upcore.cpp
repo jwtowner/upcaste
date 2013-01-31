@@ -24,7 +24,6 @@
 
 #include <up/allocator.hpp>
 #include <up/atomic.hpp>
-#include <up/bitwise.hpp>
 #include <up/byteswap.hpp>
 #include <up/cassert.hpp>
 #include <up/cctype.hpp>
@@ -55,7 +54,6 @@
 #include <up/densemap.hpp>
 #include <up/denseset.hpp>
 #include <up/filesystem.hpp>
-#include <up/hash.hpp>
 #include <up/hashmap.hpp>
 #include <up/hashset.hpp>
 #include <up/limits.hpp>

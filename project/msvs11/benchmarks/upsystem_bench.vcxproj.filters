@@ -2,10 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="driver">
-      <UniqueIdentifier>{e98896fc-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{61109300-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="bench">
-      <UniqueIdentifier>{e9889b66-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{6110965c-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

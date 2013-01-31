@@ -22,11 +22,11 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/cstdlib.hpp>
+#include <up/bitwise.hpp>
 #include <up/cstdalign.hpp>
+#include <up/cstdlib.hpp>
 #include <up/cstring.hpp>
 #include <up/cerrno.hpp>
-#include <up/bitwise.hpp>
 
 namespace up
 {

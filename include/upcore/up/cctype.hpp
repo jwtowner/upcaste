@@ -67,7 +67,7 @@ namespace up
     
     inline UPALWAYSINLINE UPPURE
     int fast_isspace(int c) noexcept {
-        return (c == ' ') || ((((unsigned int)c) - ((unsigned int)'\t')) <= ((unsigned int)('\t' - '\r')));
+        return (c == ' ') | ((((unsigned int)c) - ((unsigned int)'\t')) <= ((unsigned int)('\r' - '\t')));
     }
     
     inline UPALWAYSINLINE UPPURE

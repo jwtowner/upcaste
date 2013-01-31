@@ -22,7 +22,6 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/bitwise.hpp>
 #include <up/memory.hpp>
 #include <up/page.hpp>
 #include <up/random.hpp>

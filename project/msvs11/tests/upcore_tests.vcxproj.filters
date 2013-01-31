@@ -1,20 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="driver">
-      <UniqueIdentifier>{e96718ce-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{60eff2c6-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test">
-      <UniqueIdentifier>{e9671db0-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{60eff636-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\cstring">
+      <UniqueIdentifier>{60f51c6a-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\filesystem">
-      <UniqueIdentifier>{e96cd03e-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{60f5fe5a-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\math">
-      <UniqueIdentifier>{e96ed7e4-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{60f7bb96-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
     <Filter Include="test\sexp">
-      <UniqueIdentifier>{e9701d2a-610f-11e2-a95a-000c2978b81b}</UniqueIdentifier>
+      <UniqueIdentifier>{60f8d120-6ade-11e2-be0d-000c2978b81b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,9 +25,6 @@
       <Filter>driver</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\atomic.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp">
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\cctype.cpp">
@@ -46,9 +46,6 @@
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\cstdlib.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\upcore\test\cstring.cpp">
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\cwchar.cpp">
@@ -83,6 +80,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\sparseset.cpp">
       <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cstring\cstring.basic.cpp">
+      <Filter>test\cstring</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\cstring\cstring.hash.cpp">
+      <Filter>test\cstring</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\filesystem\filesystem.filepath.posix.cpp">
       <Filter>test\filesystem</Filter>
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\upcore\test\sexp\sexp.token.cpp">
       <Filter>test\sexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\upcore\test\bitwise.cpp">
+      <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -22,13 +22,24 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <up/cuchar.hpp>
-#include <up/hash.hpp>
+#include <up/cstring.hpp>
+#include <up/test.hpp>
 
-namespace up
+namespace cstring_basic
 {
-    LIBUPCOREAPI
-    uint_least32_t u32snhash32(char32_t const* s, size_t n) noexcept {
-        return hash32_finalize(hash32_accumulate(hashseed32, s, n * sizeof(char32_t)));
+    UP_TEST_CASE(strcasecmp) {
+        require(!up::strcasecmp("", ""));
+        require(!up::strcasecmp("awesome", "awesome"));
+        require(!up::strcasecmp("awesome", "AWESOME"));
+        require(!up::strcasecmp("aWeSoME", "AwEsOme"));
+        require(0 != up::strcasecmp("@aWeSoME[", "`AwEsOme{"));
+    }
+
+    UP_TEST_CASE(fast_strcasecmp) {
+        require(!up::fast_strcasecmp("", ""));
+        require(!up::fast_strcasecmp("awesome", "awesome"));
+        require(!up::fast_strcasecmp("awesome", "AWESOME"));
+        require(!up::fast_strcasecmp("aWeSoME", "AwEsOme"));
+        require(0 != up::fast_strcasecmp("@aWeSoME[", "`AwEsOme{"));
     }
 }

@@ -114,11 +114,6 @@
 #ifndef __GXX_RTTI
 #   define UP_NO_RTTI
 #endif
-#if defined(__LP64__) || defined(_LP64)
-#   define UP_LONG_PTR_64
-#else
-#   undef UP_LONG_PTR_64
-#endif
 #ifndef __WCHAR_TYPE__
 #   define UP_NO_NATIVE_WCHAR_T
 #endif

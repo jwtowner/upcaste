@@ -138,9 +138,9 @@ namespace up { namespace detail
         static constexpr size_t s4 = s3 | (s3 >> 4);
         static constexpr size_t s5 = s4 | (s4 >> 8);
         static constexpr size_t s6 = s5 | (s5 >> 16);
-#if (SIZE_MAX == 0xFFFFFFFFu) && !defined(UP_LONG_PTR_64)
+#if SIZE_MAX == 0xFFFFFFFF
         static constexpr size_t value = s6 + 1;
-#elif (SIZE_MAX == 0xFFFFFFFFFFFFFFFFull) || defined(UP_LONG_PTR_64)
+#elif SIZE_MAX == 0xFFFFFFFFFFFFFFFFull
         static constexpr size_t s7 = s6 | (s6 >> 32);
         static constexpr size_t value = s7 + 1;
 #else

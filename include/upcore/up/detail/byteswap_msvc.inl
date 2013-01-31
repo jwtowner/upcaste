@@ -32,66 +32,66 @@
 namespace up
 {
     inline UPALWAYSINLINE UPPURE
-    int16_t byteswap_int16(int16_t x) noexcept {
-        uint16_t result = ::_byteswap_ushort(reinterpret_cast<uint16_t&>(x));
+    int16_t i16byteswap(int16_t x) noexcept {
+        uint16_t result = _byteswap_ushort(reinterpret_cast<uint16_t&>(x));
         return reinterpret_cast<int16_t&>(result);
     }
 
     inline UPALWAYSINLINE UPPURE 
-    uint16_t byteswap_uint16(uint16_t x) noexcept {
-        return ::_byteswap_ushort(x);
+    uint16_t u16byteswap(uint16_t x) noexcept {
+        return _byteswap_ushort(x);
     }
 
     inline UPALWAYSINLINE UPPURE
-    int32_t byteswap_int32(int32_t x) noexcept {
-        uint32_t result = ::_byteswap_ulong(reinterpret_cast<uint32_t&>(x));
+    int32_t i32byteswap(int32_t x) noexcept {
+        uint32_t result = _byteswap_ulong(reinterpret_cast<uint32_t&>(x));
         return reinterpret_cast<int32_t&>(result);
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint32_t byteswap_uint32(uint32_t x) noexcept {
-        return ::_byteswap_ulong(x);
+    uint32_t u32byteswap(uint32_t x) noexcept {
+        return _byteswap_ulong(x);
     }
 
     inline UPALWAYSINLINE UPPURE
-    int64_t byteswap_int64(int64_t x) noexcept {
-        uint64_t result = ::_byteswap_uint64(reinterpret_cast<uint64_t&>(x));
+    int64_t i64byteswap(int64_t x) noexcept {
+        uint64_t result = _byteswap_uint64(reinterpret_cast<uint64_t&>(x));
         return reinterpret_cast<int64_t&>(result);
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint64_t byteswap_uint64(uint64_t x) noexcept {
-        return ::_byteswap_uint64(x);
+    uint64_t u64byteswap(uint64_t x) noexcept {
+        return _byteswap_uint64(x);
     }
 
     inline UPALWAYSINLINE UPPURE
-    int16_t byteswap_int16(int16_t x, bool c) noexcept {
-        return c ? byteswap_int16(x) : x;
+    int16_t i16byteswap(int16_t x, bool c) noexcept {
+        return c ? i16byteswap(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint16_t byteswap_uint16(uint16_t x, bool c) noexcept {
-        return c ? byteswap_uint16(x) : x;
+    uint16_t u16byteswap(uint16_t x, bool c) noexcept {
+        return c ? u16byteswap(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    int32_t byteswap_int32(int32_t x, bool c) noexcept {
-        return c ? byteswap_int32(x) : x;
+    int32_t i32byteswap(int32_t x, bool c) noexcept {
+        return c ? i32byteswap(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint32_t byteswap_uint32(uint32_t x, bool c) noexcept {
-        return c ? byteswap_uint32(x) : x;
+    uint32_t u32byteswap(uint32_t x, bool c) noexcept {
+        return c ? u32byteswap(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    int64_t byteswap_int64(int64_t x, bool c) noexcept {
-        return c ? byteswap_int64(x) : x;
+    int64_t i64byteswap(int64_t x, bool c) noexcept {
+        return c ? i64byteswap(x) : x;
     }
 
     inline UPALWAYSINLINE UPPURE
-    uint64_t byteswap_uint64(uint64_t x, bool c) noexcept {
-        return c ? byteswap_uint64(x) : x;
+    uint64_t u64byteswap(uint64_t x, bool c) noexcept {
+        return c ? u64byteswap(x) : x;
     }
 }
 

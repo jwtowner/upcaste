@@ -12,11 +12,13 @@ import uuid
 LIBRARY_PROJECT = 0
 TEST_PROJECT = 1
 BENCHMARK_PROJECT = 2
+SAMPLE_PROJECT = 3
 
 project_groups = {
     BENCHMARK_PROJECT: 'benchmarks',
     LIBRARY_PROJECT: 'libraries',
-    TEST_PROJECT: 'tests'
+    SAMPLE_PROJECT: 'samples',
+    TEST_PROJECT: 'tests',
     }
 
 # List of projects to generate within the solution. Format for each entry is:
@@ -38,6 +40,7 @@ projects = {
     'upcore_tests': (TEST_PROJECT, 'upcore', ['test'], ['upcore', 'uptest']),
     'upcore_bench': (BENCHMARK_PROJECT, 'upcore', ['bench'], ['upcore', 'uptest']),
     'upsystem_bench': (BENCHMARK_PROJECT, 'upsystem', ['bench'], ['upcore', 'upsystem', 'uptest']),
+    'raycast': (SAMPLE_PROJECT, 'raycast', ['data', 'src'], ['glew', 'upcore', 'upsystem'])
     }
 
 # Extra dependencies for applicable projects, each dependecy delimited by a semi-colon.
@@ -53,6 +56,7 @@ project_dependencies = {
 top_dir = os.path.abspath(os.path.join(os.pardir, os.pardir))
 include_dir = os.path.join(top_dir, 'include')
 project_dir = os.path.join(top_dir, 'project')
+sample_root_dir = os.path.join(top_dir, 'sample')
 src_root_dir = os.path.join(top_dir, 'src')
 solution_dir = os.path.join(project_dir, 'msvs11')
 
@@ -124,10 +128,16 @@ def get_project_libs(name, info):
         libs += project_dependencies[name][1]
     return libs
 
+def get_source_root_dir(info):
+    if info[0] == SAMPLE_PROJECT:
+        return os.path.join(sample_root_dir, info[1])
+    else:
+        return os.path.join(src_root_dir, info[1])
+
 def get_project_defs(name, info):
     def_files = dict()
     vcxproj_dir = os.path.join(solution_dir, project_groups[info[0]])
-    project_src_root_dir = os.path.join(src_root_dir, info[1])
+    project_src_root_dir = get_source_root_dir(info)
     for src_dir in info[2]:
         src_dir = os.path.join(project_src_root_dir, src_dir)
         for item in os.listdir(src_dir):
@@ -233,7 +243,9 @@ def build_project_propertysheet_imports(output, project_info):
             output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Configuration.{0}.props" />\n'.format(config))
             output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Linkage.{0}.props\" />\n'.format(linkage))
             output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Platform.$(Platform).props\" />\n')
-            if (project_info[0] == BENCHMARK_PROJECT) or (project_info[0] == TEST_PROJECT):
+            if (project_info[0] == SAMPLE_PROJECT):
+                output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Target.Application.props\" />\n')
+            elif (project_info[0] == BENCHMARK_PROJECT) or (project_info[0] == TEST_PROJECT):
                 output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Target.Console.props\" />\n')
             elif (project_info[0] == LIBRARY_PROJECT) and (linkage == 'Shared'):
                 output.write('    <Import Project=\"$(SolutionDir)\\Upcaste.Cpp.Target.DynamicLibrary.props\" />\n')
@@ -284,7 +296,7 @@ def build_project_items(output, project_info):
     if (project_info[0] == TEST_PROJECT) or (project_info[0] == BENCHMARK_PROJECT):
         output.write('    <ClCompile Include=\"..\\..\\..\\src\\uptest\\driver\\console_driver.cpp\" />\n')
     vcxproj_dir = os.path.join(solution_dir, project_groups[project_info[0]])
-    project_src_root_dir = os.path.join(src_root_dir, project_info[1])
+    project_src_root_dir = get_source_root_dir(project_info)
     for src_dir in project_info[2]:
         build_project_items_recursive(output, os.path.join(project_src_root_dir, src_dir), vcxproj_dir, project_src_root_dir, False)
     output.write('  </ItemGroup>\n')
@@ -316,7 +328,7 @@ def build_project_items_recursive(output, dirpath, vcxproj_dir, project_src_root
                     asm_platform = 'x64'
                 elif asm_tag == '.x86':
                     asm_ml = 'ML'
-                    asm_options = '/c /W3 /WX /safeseh /Sa'
+                    asm_options = '/c /W3 /WX /Sa /safeseh'
                     asm_platform = 'Win32'
                 if asm_platform != None:
                     # generate custom build step
@@ -338,7 +350,7 @@ def build_project_directory_filters(output, project_info):
         output.write('    <Filter Include=\"driver\">\n')
         output.write('      <UniqueIdentifier>{{{0}}}</UniqueIdentifier>\n'.format(uuid.uuid1()))
         output.write('    </Filter>\n')
-    root_dir = os.path.join(src_root_dir, project_info[1])
+    root_dir = get_source_root_dir(project_info)
     for src_dir in project_info[2]:
         build_project_directory_filters_recursive(output, os.path.join(root_dir, src_dir), root_dir)
     output.write('  </ItemGroup>\n')
@@ -357,7 +369,7 @@ def build_project_file_filters(output, project_info):
         output.write('      <Filter>driver</Filter>\n')
         output.write('    </ClCompile>\n')
     vcxproj_dir = os.path.join(solution_dir, project_groups[project_info[0]])
-    root_dir = os.path.join(src_root_dir, project_info[1])
+    root_dir = get_source_root_dir(project_info)
     for src_dir in project_info[2]:
         build_project_file_filters_recursive(output, os.path.join(root_dir, src_dir), root_dir, vcxproj_dir, False)
     output.write('  </ItemGroup>\n')

@@ -66,35 +66,35 @@ namespace bitwise
         }
     }
 
-    UP_TEST_CASE(logceil2) {
-        require(up::logceil2(0u) == 0u);
-        require(up::logceil2(1u) == 0u);
-        require(up::logceil2(2u) == 1u);
-        require(up::logceil2(3u) == 2u);
-        require(up::logceil2(4u) == 2u);
-        require(up::logceil2(5u) == 3u);
-        require(up::logceil2(6u) == 3u);
-        require(up::logceil2(7u) == 3u);
-        require(up::logceil2(8u) == 3u);
+    UP_TEST_CASE(ceillog2) {
+        require(up::ceillog2(0u) == 0u);
+        require(up::ceillog2(1u) == 0u);
+        require(up::ceillog2(2u) == 1u);
+        require(up::ceillog2(3u) == 2u);
+        require(up::ceillog2(4u) == 2u);
+        require(up::ceillog2(5u) == 3u);
+        require(up::ceillog2(6u) == 3u);
+        require(up::ceillog2(7u) == 3u);
+        require(up::ceillog2(8u) == 3u);
 
         for (unsigned int i = 2; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
-            require(up::logceil2((1u << i) - 1) == i);
+            require(up::ceillog2((1u << i) - 1) == i);
         }
     }
 
-    UP_TEST_CASE(logfloor2) {
-        require(up::logfloor2(0u) == 0u);
-        require(up::logfloor2(1u) == 0u);
-        require(up::logfloor2(2u) == 1u);
-        require(up::logfloor2(3u) == 1u);
-        require(up::logfloor2(4u) == 2u);
-        require(up::logfloor2(5u) == 2u);
-        require(up::logfloor2(6u) == 2u);
-        require(up::logfloor2(7u) == 2u);
-        require(up::logfloor2(8u) == 3u);
+    UP_TEST_CASE(floorlog2) {
+        require(up::floorlog2(0u) == 0u);
+        require(up::floorlog2(1u) == 0u);
+        require(up::floorlog2(2u) == 1u);
+        require(up::floorlog2(3u) == 1u);
+        require(up::floorlog2(4u) == 2u);
+        require(up::floorlog2(5u) == 2u);
+        require(up::floorlog2(6u) == 2u);
+        require(up::floorlog2(7u) == 2u);
+        require(up::floorlog2(8u) == 3u);
 
         for (unsigned int i = 2; i < (sizeof(unsigned int) * CHAR_BIT); ++i) {
-            require(up::logfloor2((1u << i) - 1) == (i - 1));
+            require(up::floorlog2((1u << i) - 1) == (i - 1));
         }
     }
 
