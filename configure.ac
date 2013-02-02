@@ -26,7 +26,7 @@
 
 AC_INIT([Upcaste Performance Libraries],[0.1],[jessetowner@lavabit.com],[upcaste],[http://github.com/upcaste/upcaste])
 AC_PREREQ([2.67])
-AC_CANONICAL_TARGET
+AC_CANONICAL_HOST
 AC_CONFIG_HEADERS([include/upcore/up/prolog/target.hpp:project/tundra/target.hpp.in])
 AC_LANG([C++])
 
@@ -78,7 +78,7 @@ AS_IF([test "x$have_gzip" != "xyes"],
 
 AC_ARG_ENABLE(
     [local-packages],
-    [AS_HELP_STRING([--enable-local-packages],[Build and use certain third-party packages locally for Hurricane.
+    [AS_HELP_STRING([--enable-local-packages],[Build and use certain third-party packages locally for Upcaste.
         By default, the configuration process will rely on dependencies
         being already installed on the system. By enabling this option, the
         configuration process will download, build and link against private
