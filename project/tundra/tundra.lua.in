@@ -27,150 +27,197 @@
 local GlobExtension = require("tundra.syntax.glob")
 
 local CommonCC = {
-	ReplaceEnv = {
-		OBJECTROOT = "build",
-		CPPDEFS_SILVER = "",
-		CPPDEFS_GOLD = "",
-		CPPDEFS_PLATINUM = "",
-		CCOPTS_SILVER = "",
-		CCOPTS_GOLD = "",
-		CCOPTS_RELEASE = "",
-		CXXOPTS_SILVER = "",
-		CXXOPTS_GOLD = "",
-		CXXOPTS_PLATINUM = "",
-	},
-	Env = {
-		CPPPATH = { ".", "dependency/usr/include" },
-		CPPDEFS = {
-			{ "_DEBUG", "UP_DEBUG"; Config = "*-*-debug-*" },
-			{ "NDEBUG", "UP_RELEASE"; Config = "*-*-release-*" },
-			{ "NDEBUG", "UP_SILVER"; Config = "*-*-silver-*" },
-			{ "NDEBUG", "UP_GOLD"; Config = "*-*-gold-*" },
-			{ "NDEBUG", "UP_PLATINUM"; Config = "*-*-platinum-*" },
-			{ "UP_LINKAGE_STATIC"; Config = "*-*-*-static" },
-			{ "UP_LINKAGE_SHARED"; Config = "*-*-*-shared" },
-			{ "UP_NO_PROLOG_TARGET_HEADER"; Config = "*-msvc-*-*" }
-		},
-	},
+    ReplaceEnv = {
+        OBJECTROOT = "build",
+        CPPDEFS_SILVER = "",
+        CPPDEFS_GOLD = "",
+        CPPDEFS_PLATINUM = "",
+        CCOPTS_SILVER = "",
+        CCOPTS_GOLD = "",
+        CCOPTS_RELEASE = "",
+        CXXOPTS_SILVER = "",
+        CXXOPTS_GOLD = "",
+        CXXOPTS_PLATINUM = "",
+    },
+    Env = {
+        CPPPATH = { "." },
+        CPPDEFS = {
+            { "_DEBUG", "UP_DEBUG"; Config = "*-*-debug-*" },
+            { "NDEBUG", "UP_RELEASE"; Config = "*-*-release-*" },
+            { "NDEBUG", "UP_SILVER"; Config = "*-*-silver-*" },
+            { "NDEBUG", "UP_GOLD"; Config = "*-*-gold-*" },
+            { "NDEBUG", "UP_PLATINUM"; Config = "*-*-platinum-*" },
+            { "UP_LINKAGE_STATIC"; Config = "*-*-*-static" },
+            { "UP_LINKAGE_SHARED"; Config = "*-*-*-shared" },
+            { "UP_NO_PROLOG_TARGET_HEADER"; Config = "*-msvc-*-*" }
+        },
+    },
 }
 
 local CommonGCC = {
-	Inherit = CommonCC,
-	Env = {
-		CXXOPTS = {
-			{ "-g"; Config = "*-*-debug-*" },
-			{ "-Wa,-a=$(@).s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
-			{ "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
-			"-std=gnu++0x", "-Wall", "-Wextra", "-Werror",
-			"-fabi-version=6", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
-			{ "-fpic"; Config = "*-*-*-shared" },
-			{ "-fexceptions", "-frtti"; Config = { "*-*-debug-*", "*-*-release-*", "*-*-gold-*" } },
-			{ "-fno-exceptions", "-fno-rtti"; Config = { "*-*-silver-*", "*-*-platinum-*" } },
-			{ "-fomit-frame-pointer", "-s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
-		},
-		PROGOPTS = {
+    Inherit = CommonCC,
+    Env = {
+        CXXOPTS = {
+            { "-g"; Config = "*-*-debug-*" },
+            { "-Wa,-a=$(@).s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+            { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
+            "-std=gnu++0x", "-Wall", "-Wextra", "-Werror",
+            "-fabi-version=6", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+            { "-fpic"; Config = "*-*-*-shared" },
+            { "-fexceptions", "-frtti"; Config = { "*-*-debug-*", "*-*-release-*", "*-*-gold-*" } },
+            { "-fno-exceptions", "-fno-rtti"; Config = { "*-*-silver-*", "*-*-platinum-*" } },
+            { "-fomit-frame-pointer", "-s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+        },
+        PROGOPTS = {
             "-fabi-version=6",
         }
-	},
+    },
 }
 
 Build {
+    EngineOptions = {
+        FileHashSize = 14791,
+        RelationHashSize = 29789,
+        UseDagCaching = 1,
+    },
     Configs = {
-		Config {
-			Name = "linux-gcc",
-			Inherit = CommonGCC,
-			DefaultOnHost = "linux",
+        Config {
+            Name = "linux-gcc",
+            Inherit = CommonGCC,
+            DefaultOnHost = "linux",
             Env = { CXXOPTS = { "-D_GNU_SOURCE" } },
-			Tools = { "gcc", "gas" },
-		},
-		Config {
-			Name = "ios-gcc",
-			Inherit = CommonGCC,
-			Tools = { "gcc-osx", "gas" },
-		},
-		Config {
-			Name = "osx-gcc",
-			Inherit = CommonGCC,
-			DefaultOnHost = "macosx",
-			Tools = { "gcc-osx", "gas" },
-		},
-		Config {
-			Name = "win32-msvc",
-			DefaultOnHost = "windows",
-			Tools = { "msvc"; TargetArch = "x86" },
-		},
-		Config {
-			Name = "win64-msvc",
-			Tools = { "msvc"; TargetArch = "x64" },
-		},
-	},
-	Variants = {
-		{ Name = "debug" },
-		{ Name = "release" },
-		{ Name = "silver" },
-		{ Name = "gold" },
-		{ Name = "platinum" },
-	},
-	DefaultVariant = "debug",
-	SubVariants = {
-		{ Name = "static" },
-		{ Name = "shared" },
-	},
-	DefaultSubVariant = "static",
-	Units = function()
-		local function SourceGlob(dir)
-			return FGlob {
+            Tools = { "gcc", "gas" },
+        },
+        Config {
+            Name = "ios-gcc",
+            Inherit = CommonGCC,
+            Tools = { "gcc-osx", "gas" },
+        },
+        Config {
+            Name = "osx-gcc",
+            Inherit = CommonGCC,
+            DefaultOnHost = "macosx",
+            Tools = { "gcc-osx", "gas" },
+        },
+        Config {
+            Name = "win32-msvc",
+            DefaultOnHost = "windows",
+            Tools = { "msvc"; TargetArch = "x86" },
+        },
+        Config {
+            Name = "win64-msvc",
+            Tools = { "msvc"; TargetArch = "x64" },
+        },
+    },
+    Variants = {
+        { Name = "debug" },
+        { Name = "release" },
+        { Name = "silver" },
+        { Name = "gold" },
+        { Name = "platinum" },
+    },
+    DefaultVariant = "debug",
+    SubVariants = {
+        "static",
+        "shared",
+    },
+    DefaultSubVariant = "static",
+    Units = function()
+        -- Copies the given table
+        local function CopyTable(t)
+            local r = {}
+            for k,v in pairs(t) do
+                r[k] = v
+            end
+            return r
+        end
+
+        -- Gets additional CXXOPTS depending given unit configuration
+        local function GetCxxOptions(arg)
+            local result = { }
+            if arg.ForceExceptions then
+                table.insert(result, { "-fexceptions", "-frtti"; Config = "*-gcc-*" })
+            end
+            return result
+        end
+
+        -- Recursively globs for source files relevant to current build-id
+        local function SourceGlob(dir)
+            return FGlob {
                 Dir = dir,
                 Extensions = { ".c", ".cpp", ".s" },
                 Filters = {
                     { Pattern = "/gcc/"; Config = "*-gcc-*" },
-        			{ Pattern = "/msvc/"; Config = "*-mscv-*" },
-        			{ Pattern = "/linux/"; Config = "linux-*" },
-        			{ Pattern = "/darwin/"; Config = { "osx-*", "ios-*" } },
-        			{ Pattern = "/ios/"; Config = "ios-*" },
-        			{ Pattern = "/macosx/"; Config = "osx-*" },
-        			{ Pattern = "/posix/"; Config = { "linux-*", "osx-*" } },
-        			{ Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
+                    { Pattern = "/msvc/"; Config = "*-mscv-*" },
+                    { Pattern = "/linux/"; Config = "linux-*" },
+                    { Pattern = "/darwin/"; Config = { "osx-*", "ios-*" } },
+                    { Pattern = "/ios/"; Config = "ios-*" },
+                    { Pattern = "/macosx/"; Config = "osx-*" },
+                    { Pattern = "/posix/"; Config = { "linux-*", "osx-*" } },
+                    { Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
                 }
             }
-		end
+        end
 
-		local upcore = StaticLibrary {
-			Name = "upcore",
-			Env = { CPPPATH = { "include/upcore" }, },
-			Sources = { SourceGlob "src/upcore/src" },
-		}
+        -- Wrapper for generating shared & static library units
+        local function Library(arg)
+            setmetatable(arg, {__index = { Depends = {}, ForceExceptions = false }})
 
-		local uptest = StaticLibrary {
-			Name = "uptest",
-			Env = {
-                CPPPATH = { "include/upcore", "include/uptest" },
-                CXXOPTS = { "-fexceptions", "-frtti" },
+            local result = {}
+
+            local data = {
+                Depends = arg.Depends,
+                Defines = { { "LIB" .. string.upper(arg.Name) .. "_EXPORT_SYMBOLS"; Config = "*-*-*-shared" }, },
+                Env = { CXXOPTS = GetCxxOptions(arg), },
+                Includes = { "include/" .. arg.Name },
+                Propagate = { Includes = { "include/" .. arg.Name }, },
+                Sources = { SourceGlob("src/" .. arg.Name .. "/src") },
+            }
+            
+            local shared_data = CopyTable(data)
+            shared_data.Name = arg.Name
+            shared_data.Config = "*-*-*-shared"
+            result[1] = SharedLibrary(shared_data)
+
+            local static_data = CopyTable(data)
+            static_data.Name = arg.Name .. "-static"
+            static_data.Target = "$(OBJECTROOT)/$(BUILD_ID)/$(LIBPREFIX)" .. arg.Name .. "$(LIBSUFFIX)"
+            static_data.Config = "*-*-*-static"
+            result[2] = StaticLibrary(static_data)
+
+            return result
+        end
+
+        --
+        -- Unit definitions
+        --
+
+        local standard = ExternalLibrary {
+            Name = "standard",
+            Propagate = {
+                Libs = {
+                    { "c", "stdc++", "pthread", "rt"; Config = "linux-*" },
+                },
             },
-			Sources = { SourceGlob "src/uptest/src" },
-		}
+        }
 
-		local upcore_tests = Program {
-			Name = "upcore_tests",
-			Depends = { uptest, upcore },
-			Env = {
-				CPPPATH = { "include/upcore", "include/uptest" },
-				LIBS = { "c", "stdc++", "pthread", "rt" },
-			},
-			Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/test" },
-		}
-		
-		local upcore_bench = Program {
-			Name = "upcore_bench",
-			Depends = { uptest, upcore },
-			Env = {
-				CPPPATH = { "include/upcore", "include/uptest" },
-				LIBS = { "c", "stdc++", "pthread", "rt" },
-			},
-			Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/bench" },
-		}
+        local upcore = Library { Name = "upcore", Depends = { standard } }
+        local uptest = Library { Name = "uptest", Depends = { upcore, standard }, ForceExceptions = true }
+ 
+        local upcore_tests = Program {
+            Name = "upcore_tests",
+            Depends = { uptest, upcore, standard },
+            Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/test" },
+        }
 
-		Default(upcore_tests)
-	end,
+        local upcore_bench = Program {
+            Name = "upcore_bench",
+            Depends = { uptest, upcore, standard },
+            Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/bench" },
+        }
+
+        Default(upcore_tests)
+        Default(upcore_bench)
+    end,
 }
 

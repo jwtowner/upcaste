@@ -29,7 +29,7 @@
 
 namespace up { namespace sexp
 {
-    LIBUPCOREAPI
+    extern LIBUPCOREAPI
     parser_messages const default_parser_messages =
     {
         {

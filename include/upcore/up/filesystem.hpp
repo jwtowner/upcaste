@@ -120,8 +120,6 @@ namespace up { namespace filesystem
             return type == status_symlink;
         }
     };
-
-    typedef bool (UPCDECL *remove_callback)(char const*, status_info const*);
 }}
 
 namespace up { namespace filesystem { namespace posix
@@ -382,7 +380,7 @@ namespace up { namespace filesystem
     extern LIBUPCOREAPI int equivalent(char const* UPRESTRICT p1, char const* UPRESTRICT p2) noexcept;
     extern LIBUPCOREAPI int exists(char const* UPRESTRICT p, bool* UPRESTRICT result) noexcept;
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT char* read_symlink(char const* p) noexcept;
-    extern LIBUPCOREAPI int remove_all(char const* p, remove_callback callback = nullptr) noexcept;
+    extern LIBUPCOREAPI uintmax_t remove_all(char const* p) noexcept;
     extern LIBUPCOREAPI int resize(char const* p, uintmax_t new_size) noexcept;
     extern LIBUPCOREAPI int space(char const* UPRESTRICT p, space_info* UPRESTRICT info) noexcept;
     extern LIBUPCOREAPI int status(char const* UPRESTRICT p, status_info* UPRESTRICT info) noexcept;
@@ -403,7 +401,7 @@ namespace up { namespace filesystem
     extern LIBUPCOREAPI int equivalent(wchar_t const* UPRESTRICT p1, wchar_t const* UPRESTRICT p2) noexcept;
     extern LIBUPCOREAPI int exists(wchar_t const* UPRESTRICT p, bool* UPRESTRICT result) noexcept;
     extern LIBUPCOREAPI UPALLOC UPWARNRESULT wchar_t* read_symlink(wchar_t const* p) noexcept;
-    extern LIBUPCOREAPI int remove_all(wchar_t const* p, remove_callback callback = nullptr) noexcept;
+    extern LIBUPCOREAPI uintmax_t remove_all(wchar_t const* p) noexcept;
     extern LIBUPCOREAPI int resize(wchar_t const* p, uintmax_t new_size) noexcept;
     extern LIBUPCOREAPI int space(wchar_t const* UPRESTRICT p, space_info* UPRESTRICT info) noexcept;
     extern LIBUPCOREAPI int status(wchar_t const* UPRESTRICT p, status_info* UPRESTRICT info) noexcept;

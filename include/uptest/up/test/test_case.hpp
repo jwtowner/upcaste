@@ -36,20 +36,20 @@ namespace up { namespace test
         virtual ~test_case();
         virtual unsigned int test_count(test_filter& filter) const;
         virtual test_result const& run(test_listener& listener, test_filter& filter);
-        char const* file_name() const noexcept;
-        long line_number() const noexcept;
-        bool expects_assertion() const noexcept;
-        bool expects_error() const noexcept;
-        unsigned int iterations() const noexcept;
+        UPHIDDENINLINE char const* file_name() const noexcept;
+        UPHIDDENINLINE long line_number() const noexcept;
+        UPHIDDENINLINE bool expects_assertion() const noexcept;
+        UPHIDDENINLINE bool expects_error() const noexcept;
+        UPHIDDENINLINE unsigned int iterations() const noexcept;
 
     protected:
 
         test_case(char const* name, char const* file, long line);
         void add_category(char const* category);
-        void exceptions_enabled(bool enabled) noexcept;
-        void expects_assertion(bool value) noexcept;
-        void expects_error(bool value) noexcept;
-        void iterations(unsigned int count) noexcept;
+        UPHIDDENINLINE void exceptions_enabled(bool enabled) noexcept;
+        UPHIDDENINLINE void expects_assertion(bool value) noexcept;
+        UPHIDDENINLINE void expects_error(bool value) noexcept;
+        UPHIDDENINLINE void iterations(unsigned int count) noexcept;
         virtual void do_run() = 0;
 
     private:

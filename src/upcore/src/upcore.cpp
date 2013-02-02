@@ -75,7 +75,7 @@
 
 extern "C"
 {
-    LIBUPCOREAPI UPUSED
+    extern LIBUPCOREAPI UPUSED
     char const* const _Upcaste_Upcore_Copyright_ = "Upcaste Performance Libraries. Copyright (C) 2012-2013 Jesse W. Towner";
 #if UP_COMPILER == UP_COMPILER_MSVC
 #   ifndef UP_LINKAGE_SHARED
@@ -83,3 +83,4 @@ extern "C"
 #   endif
 #endif
 }
+

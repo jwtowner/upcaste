@@ -26,5 +26,6 @@
 
 namespace up
 {
-    LIBUPCOREAPI nat_t const nat = { };
+    extern LIBUPCOREAPI
+    nat_t const nat = { };
 }
