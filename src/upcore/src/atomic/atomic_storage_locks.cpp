@@ -40,6 +40,12 @@ namespace up { namespace detail
         {
             atomic_flag flag;
             char cache_line_pad[UP_MAX_CACHE_LINE_SIZE - sizeof(atomic_flag)];
+#if !defined(UP_NO_DEFAULTED_FUNCTIONS) && !defined(UP_NO_DELETED_FUNCTIONS) && !defined(UP_NO_CONSTEXPR)
+            storage_spin_lock() = default;
+            storage_spin_lock(storage_spin_lock const&) = delete;
+            storage_spin_lock& operator=(storage_spin_lock const&) = delete;
+            storage_spin_lock& operator=(storage_spin_lock const&) volatile = delete;
+#endif
         };
 
 #if UP_COMPILER == UP_COMPILER_GCC

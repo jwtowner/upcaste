@@ -35,8 +35,8 @@
 namespace up { namespace math
 {
 
-    uniform_constant<int4, int32_t> const uniform<int4>::max = { 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF };
-    uniform_constant<int4, int32_t> const uniform<int4>::min = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
+    uniform_constant<int4, int32_t> const uniform<int4>::max = { INT32_MAX, INT32_MAX, INT32_MAX, INT32_MAX };
+    uniform_constant<int4, int32_t> const uniform<int4>::min = { INT32_MIN, INT32_MIN, INT32_MIN, INT32_MIN };
     uniform_constant<int4, int32_t> const uniform<int4>::zero = { 0, 0, 0, 0 };
     uniform_constant<int4, int32_t> const uniform<int4>::one = { 1, 1, 1, 1 };
     uniform_constant<int4, int32_t> const uniform<int4>::one_xy = { 1, 1, 0, 0 };
@@ -58,7 +58,7 @@ namespace up { namespace math
     uniform_constant<int4, int32_t> const uniform<int4>::rotate_max = { 32, 32, 32, 32 };
 #endif
 
-    uniform_constant<uint4, uint32_t> const uniform<uint4>::max = { 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu, 0xFFFFFFFFu };
+    uniform_constant<uint4, uint32_t> const uniform<uint4>::max = { UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX };
     uniform_constant<uint4, uint32_t> const uniform<uint4>::zero = { 0u, 0u, 0u, 0u };
     uniform_constant<uint4, uint32_t> const uniform<uint4>::one = { 1u, 1u, 1u, 1u };
     uniform_constant<uint4, uint32_t> const uniform<uint4>::one_xy = { 1u, 1u, 0u, 0u };

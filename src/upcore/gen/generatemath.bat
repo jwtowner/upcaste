@@ -1,2 +1,2 @@
 @echo off
-python generatemath.py
+python3 generatemath.py

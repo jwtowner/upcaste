@@ -125,6 +125,6 @@ s{%- for i in range(0, n) -%}{{['0','1','2','3','4','5','6','7','8','9','a','b',
 {%- set nofraction={'float':'0x4B000000u', 'double':'0x4160000000000000ull'} %}
 {%- set bitmask={'int':'0xFFFFFFFFu', 'uint':'0xFFFFFFFFu', 'long':'0xFFFFFFFFFFFFFFFFull', 'ulong':'0xFFFFFFFFFFFFFFFFull', 'float':'0xFFFFFFFFu', 'double':'0xFFFFFFFFFFFFFFFFull'} %}
 {%- set zeromask={'int':'0x00000000u', 'uint':'0x00000000u', 'long':'0x0000000000000000ull', 'ulong':'0x0000000000000000ull', 'float':'0x00000000u', 'double':'0x0000000000000000ull'} %}
-{%- set maxconstants={'int':'0x7FFFFFFF', 'uint':'0xFFFFFFFFu', 'long':'0x7FFFFFFFFFFFFFFFll', 'ulong':'0xFFFFFFFFFFFFFFFFull'} %}
-{%- set minconstants={'int':'0x80000000', 'uint':'0x00000000u', 'long':'0x8000000000000000ll', 'ulong':'0x0000000000000000ull'} %}
+{%- set maxconstants={'int':'INT32_MAX', 'uint':'UINT32_MAX', 'long':'INT64_MAX', 'ulong':'UINT64_MAX'} %}
+{%- set minconstants={'int':'INT32_MIN', 'uint':'0x00000000u', 'long':'INT64_MIN', 'ulong':'0x0000000000000000ull'} %}
 {%- set rotatemax={'char':'8', 'uchar':'8', 'short':'16', 'ushort':'16', 'int':'32', 'uint':'32', 'long':'64', 'ulong':'64'} %}

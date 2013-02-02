@@ -726,7 +726,7 @@ namespace up
     } \
     template <class T> \
     inline UPALWAYSINLINE \
-    T atomic_load(atomic<T> const Volatile* a) noexcept noexcept { \
+    T atomic_load(atomic<T> const Volatile* a) noexcept { \
         return a->load(memory_order_seq_cst); \
     } \
     template <class T> \

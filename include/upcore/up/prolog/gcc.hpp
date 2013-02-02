@@ -148,7 +148,7 @@
 #   define UP_TT_IS_STANDARD_LAYOUT(T) __is_standard_layout(T)
 #   define UP_TT_IS_TRIVIAL(T) __is_trivial(T)
 #endif
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 6))
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 7))
 #   define UP_TT_IS_CONVERTIBLE_TO(T, U) __is_convertible_to(T, U)
 #endif
 
@@ -158,7 +158,9 @@
 #if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 4))
 #   define UP_DETAIL_STDC_FENV_ACCESS_ON \
         _Pragma("GCC push_options") \
-        _Pragma("GCC optimize(\"-fsignaling-nans -frounding-math\")")
+        _Pragma("GCC optimize(\"-fno-fast-math\")") \
+        _Pragma("GCC optimize(\"-fsignaling-nans\")") \
+        _Pragma("GCC optimize(\"-frounding-math\")")
 #   define UP_DETAIL_STDC_FENV_ACCESS_OFF \
         _Pragma("GCC pop_options")
 #elif (__GNUC__ == 4) && (__GNUC_MINOR__ == 4)

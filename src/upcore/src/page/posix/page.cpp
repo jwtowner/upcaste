@@ -35,7 +35,7 @@ namespace up
 {
     namespace
     {
-        UPALWAYSINLINE
+        inline UPALWAYSINLINE
         int get_protection_flags(unsigned int flags) noexcept {
             int prot = PROT_NONE;
 
@@ -54,7 +54,7 @@ namespace up
             return prot;    
         }
 
-        UPALWAYSINLINE
+        inline UPALWAYSINLINE
         int page_size_compare(void const* p1, void const* p2) noexcept {
             return (*static_cast<size_t const*>(p1)) < (*static_cast<size_t const*>(p2));
         }

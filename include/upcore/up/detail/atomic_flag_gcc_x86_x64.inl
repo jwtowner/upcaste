@@ -79,9 +79,9 @@ namespace up
     struct LIBUPCOREAPI atomic_flag
     {
         char state;
-#if !defined(UP_NO_DEFAULTED_FUNCTIONS) && !defined(UP_NO_DELETED_FUNCTIONS) \
-    && !defined(UP_NO_INITIALIZER_LISTS) && !defined(UP_NO_CONSTEXPR)
-        atomic_flag() = default;
+#if !defined(UP_NO_DEFAULTED_FUNCTIONS) && !defined(UP_NO_DELETED_FUNCTIONS) && !defined(UP_NO_CONSTEXPR)
+        UPALWAYSINLINE atomic_flag() = default;
+        UPALWAYSINLINE constexpr atomic_flag(char value) noexcept : state(value) { }
         atomic_flag(atomic_flag const&) = delete;
         atomic_flag operator=(atomic_flag const&) = delete;
         atomic_flag operator=(atomic_flag const&) volatile = delete;

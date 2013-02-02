@@ -144,7 +144,8 @@ namespace up { namespace detail
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x) : U1(x) { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : U1(x) { ::new(static_cast<U2*>(this)) U2(y); }
-        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U1(::up::forward<U1>(x)) { ::new(static_cast<U2*>(this)) U2(::up::forward<U2>(y)); }
+        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y)
+            : U1(::up::forward<U1>(x)) { ::new(static_cast<U2*>(this)) U2(::up::forward<U2>(y)); }
         UPALWAYSINLINE ~compressed_pair_wrapper() { static_cast<U2*>(this)->~U2(); }
         UPALWAYSINLINE U1& first() { return *static_cast<U1*>(this); }
         UPALWAYSINLINE U1 const& first() const { return *static_cast<U1 const*>(this); }
@@ -277,12 +278,14 @@ namespace up
 
 namespace up { namespace detail
 {
-    template <class Iterator> struct iterator_value_type { typedef typename Iterator::value_type type; };
-    template <class T> struct iterator_value_type<T*> { typedef typename remove_cv<T>::type type; };
-    template <class T> struct is_destroyable : integral_constant<bool, !is_trivially_destructible<T>::value && !is_void<T>::value> { };
+    template <class T> struct is_destroyable
+        : integral_constant<bool, !is_trivially_destructible<T>::value && !is_void<T>::value> { };
+    
     template <class T, class R> struct enable_if_destroyable : enable_if<is_destroyable<T>::value, R> { };
     template <class T, class R> struct enable_if_not_destroyable : enable_if<!is_destroyable<T>::value, R> { };
-
+    template <class Iterator> struct iterator_value_type { typedef typename Iterator::value_type type; };
+    template <class T> struct iterator_value_type<T*> { typedef typename remove_cv<T>::type type; };
+ 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
     void destruct(ForwardIterator, false_type) noexcept {
@@ -290,8 +293,9 @@ namespace up { namespace detail
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    void destruct(ForwardIterator position, true_type) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
+    void destruct(ForwardIterator position, true_type)
+    UPNOEXCEPT(is_nothrow_destructible<typename iterator_value_type<ForwardIterator>::type>::value) {
+        typedef typename iterator_value_type<ForwardIterator>::type value_type;
         position->~value_type();
     }
 
@@ -303,8 +307,9 @@ namespace up { namespace detail
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    ForwardIterator destruct(ForwardIterator first, ForwardIterator last, true_type) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
+    ForwardIterator destruct(ForwardIterator first, ForwardIterator last, true_type)
+    UPNOEXCEPT(is_nothrow_destructible<typename iterator_value_type<ForwardIterator>::type>::value) {
+        typedef typename iterator_value_type<ForwardIterator>::type value_type;
         for ( ; first != last; ++first) {
             first->~value_type();
         }
@@ -319,8 +324,9 @@ namespace up { namespace detail
 
     template <class ForwardIterator, class Size>
     inline UPALWAYSINLINE
-    ForwardIterator destruct_n(ForwardIterator first, Size n, true_type) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
+    ForwardIterator destruct_n(ForwardIterator first, Size n, true_type)
+    UPNOEXCEPT(is_nothrow_destructible<typename iterator_value_type<ForwardIterator>::type>::value) {
+        typedef typename iterator_value_type<ForwardIterator>::type value_type;
         for ( ; n > 0; ++first, --n) {
             first->~value_type();
         }
@@ -345,7 +351,8 @@ namespace up
     template <class ForwardIterator>
     inline UPALWAYSINLINE
     void construct(ForwardIterator location) {
-        ::new(::up::addressof(*location)) typename detail::iterator_value_type<ForwardIterator>::type;
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
+        ::new(::up::addressof(*location)) value_type;
     }
 
 #ifndef UP_NO_VARIADIC_TEMPLATES
@@ -353,7 +360,8 @@ namespace up
     template <class ForwardIterator, class... Args>
     inline UPALWAYSINLINE
     void construct(ForwardIterator location, Args&&... args) {
-        ::new(::up::addressof(*location)) typename detail::iterator_value_type<ForwardIterator>::type(::up::forward<Args>(args)...);
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
+        ::new(::up::addressof(*location)) value_type(::up::forward<Args>(args)...);
     }
 
 #else
@@ -415,21 +423,24 @@ namespace up
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    void destruct(ForwardIterator location) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
+    void destruct(ForwardIterator location)
+    UPNOEXCEPT(is_nothrow_destructible<typename detail::iterator_value_type<ForwardIterator>::type>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         ::up::detail::destruct(location, detail::is_destroyable<value_type>());
     }
 
     template <class ForwardIterator>
     inline UPALWAYSINLINE
-    ForwardIterator destruct(ForwardIterator first, ForwardIterator last) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
+    ForwardIterator destruct(ForwardIterator first, ForwardIterator last)
+    UPNOEXCEPT(is_nothrow_destructible<typename detail::iterator_value_type<ForwardIterator>::type>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         return ::up::detail::destruct(first, last, detail::is_destroyable<value_type>());
     }
 
     template <class ForwardIterator, class Size>
     inline UPALWAYSINLINE
-    ForwardIterator destruct_n(ForwardIterator first, Size n) UPNOEXCEPT(is_nothrow_destructible<T>::value) {
+    ForwardIterator destruct_n(ForwardIterator first, Size n)
+    UPNOEXCEPT(is_nothrow_destructible<typename detail::iterator_value_type<ForwardIterator>::type>::value) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         return ::up::detail::destruct_n(first, n, detail::is_destroyable<value_type>());
     }
@@ -451,7 +462,8 @@ namespace up { namespace detail
     };
 
     template <class OutputIterator>
-    struct is_contiguously_constructible : integral_constant<bool, is_contiguously_constructible_impl<OutputIterator>::result::value> { };
+    struct is_contiguously_constructible
+        : integral_constant<bool, is_contiguously_constructible_impl<OutputIterator>::result::value> { };
 
     template <class InputIterator, class OutputIterator>
     struct is_contiguously_copyable_impl
@@ -471,7 +483,8 @@ namespace up { namespace detail
     };
 
     template <class InputIterator, class OutputIterator>
-    struct is_contiguously_copyable : integral_constant<bool, is_contiguously_copyable_impl<InputIterator, OutputIterator>::result::value> { };
+    struct is_contiguously_copyable
+        : integral_constant<bool, is_contiguously_copyable_impl<InputIterator, OutputIterator>::result::value> { };
 
     template <class OutputIterator, class InputType>
     struct is_contiguously_fillable_impl
@@ -488,7 +501,8 @@ namespace up { namespace detail
     };
 
     template <class OutputIterator, class InputType>
-    struct is_contiguously_fillable : integral_constant<bool, is_contiguously_fillable_impl<OutputIterator, InputType>::result::value> { };
+    struct is_contiguously_fillable
+        : integral_constant<bool, is_contiguously_fillable_impl<OutputIterator, InputType>::result::value> { };
 
     template <class ContiguousIterator>
     inline UPALWAYSINLINE
@@ -850,7 +864,12 @@ namespace up
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         typedef integral_constant<size_t, sizeof(value_type)> value_size;
         typedef detail::is_contiguously_fillable<ForwardIterator, T> contiguously_fillable;
-        typedef integral_constant<bool, (contiguously_fillable::value && !(alignof(value_type) % sizeof(value_type)))> contiguously_fillable_and_aligned;
+        typedef integral_constant
+        <
+            bool,
+            (contiguously_fillable::value && !(alignof(value_type) % sizeof(value_type)))
+        >
+        contiguously_fillable_and_aligned;
         return ::up::detail::uninitialized_fill_n(first, n, value, contiguously_fillable_and_aligned(), value_size());
     }
     
@@ -1009,7 +1028,13 @@ namespace up
         if (!p) {
             return nullptr;
         }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4), ::up::forward<A5>(a5));
+        return ::new(p) T(
+            ::up::forward<A1>(a1),
+            ::up::forward<A2>(a2),
+            ::up::forward<A3>(a3),
+            ::up::forward<A4>(a4),
+            ::up::forward<A5>(a5)
+        );
     }
 
 #endif
@@ -1151,7 +1176,13 @@ namespace up
         if (!p) {
             return nullptr;
         }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4), ::up::forward<A5>(a5));
+        return ::new(p) T(
+            ::up::forward<A1>(a1),
+            ::up::forward<A2>(a2),
+            ::up::forward<A3>(a3),
+            ::up::forward<A4>(a4),
+            ::up::forward<A5>(a5)
+        );
     }
 
 #endif

@@ -305,19 +305,19 @@ namespace up { namespace detail
     all_unsigned_types;
         
     template <class T, class List>
-    struct sign_modification_search;
+    struct sign_search;
         
     template <class T, class Head>
-    struct sign_modification_search<T, type_list<Head, nat_t> >
+    struct sign_search<T, type_list<Head, nat_t> >
     {
         static_assert(sizeof(T) <= sizeof(Head), "no type found for type T");
         typedef Head type;
     };
         
     template <class T, class Head, class Tail>
-    struct sign_modification_search<T, type_list<Head, Tail> >
+    struct sign_search<T, type_list<Head, Tail> >
     {
-        typedef typename conditional<sizeof(T) <= sizeof(Head), Head, typename sign_modification_search<T, Tail>::type>::type type;
+        typedef typename conditional<sizeof(T) <= sizeof(Head), Head, typename sign_search<T, Tail>::type>::type type;
     };
 
     template <class T, bool = is_enum<T>::value || is_integral<T>::value>
@@ -326,7 +326,7 @@ namespace up { namespace detail
     template <class T>
     struct make_signed_impl<T, true>
     {
-        typedef typename sign_modification_search<T, all_signed_types>::type type;
+        typedef typename sign_search<T, all_signed_types>::type type;
     };
         
     template <> struct make_signed_impl<bool, true> { };
@@ -345,7 +345,7 @@ namespace up { namespace detail
     template <class T>
     struct make_unsigned_impl<T, true>
     {
-        typedef typename sign_modification_search<T, all_unsigned_types>::type type;
+        typedef typename sign_search<T, all_unsigned_types>::type type;
     };
                 
     template <> struct make_unsigned_impl<bool, true> { };
@@ -764,7 +764,12 @@ namespace up
 #else
     template <class T>
     struct UPVISIBLE is_polymorphic
-        : integral_constant<bool, detail::is_polymorphic_impl<typename remove_cv<typename remove_all_extents<T>::type>::type>::value> { };
+        : integral_constant
+        <
+            bool,
+            detail::is_polymorphic_impl<typename remove_cv<typename remove_all_extents<T>::type>::type>::value
+        >
+        { };
 #endif
 
     template <class T>
@@ -1033,7 +1038,7 @@ namespace up { namespace detail
     template <
         class T,
         class U,
-        bool = is_assignable<T, U>::value,
+        bool = is_assignable_impl<T, U>::result::value,
         bool = is_scalar<typename remove_reference<T>::type>::value
             && is_scalar<typename remove_reference<U>::type>::value
     >

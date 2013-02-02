@@ -36,7 +36,7 @@ namespace cstring_hash
 {
     namespace
     {
-        typedef uint64_t (* hashfunc_t)(void const*, size_t) noexcept;
+        typedef uint64_t (* hashfunc_t)(void const*, size_t);
 
         uint64_t memhash16(void const* p, size_t n) noexcept {
             return up::memhash(p, n, 0) & UINT16_MAX;

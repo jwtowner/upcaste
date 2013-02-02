@@ -30,7 +30,7 @@
 
 namespace up { namespace math
 {
-/*    extern LIBUPCOREAPI float4 acos(float4_cval_t v) noexcept;
+    /*extern LIBUPCOREAPI float4 acos(float4_cval_t v) noexcept;
     extern LIBUPCOREAPI float4 acosh(float4_cval_t v) noexcept;
     extern LIBUPCOREAPI float4 acospi(float4_cval_t v) noexcept;
     extern LIBUPCOREAPI float4 asin(float4_cval_t v) noexcept;
@@ -62,6 +62,5 @@ namespace up { namespace math
     extern LIBUPCOREAPI float4 sinpi(float4_cval_t v) noexcept;
     extern LIBUPCOREAPI float4 tan(float4_cval_t v) noexcept;
     extern LIBUPCOREAPI float4 tanh(float4_cval_t v) noexcept;
-    extern LIBUPCOREAPI float4 tanpi(float4_cval_t v) noexcept;
-    */
+    extern LIBUPCOREAPI float4 tanpi(float4_cval_t v) noexcept;*/
 }}

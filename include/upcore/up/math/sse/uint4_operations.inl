@@ -52,7 +52,7 @@ namespace up { namespace math { namespace detail
         }
 
         static UPALWAYSINLINE uint4 make(uint32_t x) noexcept {
-            union { int32_t s; float f; } u = { x };
+            union { int32_t s; float f; } u = { static_cast<int32_t>(x) };
             uint4 r = { _mm_castps_si128(_mm_set_ss(u.f)) }; return r;
         }
 
@@ -381,7 +381,7 @@ namespace up { namespace math
 #if defined(UP_SIMD_SSE_4_1)
         uint4 r = { _mm_insert_epi32(v.m, x, 0) }; return r;
 #else
-        union { int32_t i; float f; } c = { x };
+        union { int32_t i; float f; } c = { static_cast<int32_t>(x) };
         float4 t = _mm_set_ss(c.f);
         t = _mm_move_ss(_mm_castsi128_ps(v.m), t);
         uint4 u = { _mm_castps_si128(t) };
@@ -393,7 +393,7 @@ namespace up { namespace math
 #if defined(UP_SIMD_SSE_4_1)
         uint4 r = { _mm_insert_epi32(v.m, y, 1) }; return r;
 #else
-        union { int32_t i; float f; } c = { y };
+        union { int32_t i; float f; } c = { static_cast<int32_t>(y) };
         float4 t = _mm_set_ss(c.f);
         float4 r = _mm_castsi128_ps(v.m);
         r = _mm_shuffle_ps(r, r, _MM_SHUFFLE(3, 2, 0, 1));
@@ -408,7 +408,7 @@ namespace up { namespace math
 #if defined(UP_SIMD_SSE_4_1)
         uint4 r = { _mm_insert_epi32(v.m, z, 2) }; return r;
 #else
-        union { int32_t i; float f; } c = { z };
+        union { int32_t i; float f; } c = { static_cast<int32_t>(z) };
         float4 t = _mm_set_ss(c.f);
         float4 r = _mm_castsi128_ps(v.m);
         r = _mm_shuffle_ps(r, r, _MM_SHUFFLE(3, 0, 1, 2));
@@ -423,7 +423,7 @@ namespace up { namespace math
 #if defined(UP_SIMD_SSE_4_1)
         uint4 r = { _mm_insert_epi32(v.m, w, 3) }; return r;
 #else
-        union { int32_t i; float f; } c = { w };
+        union { int32_t i; float f; } c = { static_cast<int32_t>(w) };
         float4 t = _mm_set_ss(c.f);
         float4 r = _mm_castsi128_ps(v.m);
         r = _mm_shuffle_ps(r, r, _MM_SHUFFLE(0, 2, 1, 3));

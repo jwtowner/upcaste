@@ -35,7 +35,7 @@ namespace up { namespace test
 
     public:
             
-        virtual ~test_object() noexcept;
+        virtual ~test_object();
         UPHIDDEN bool ignore() const noexcept;
         UPHIDDEN char const* name() const noexcept;
         UPHIDDEN test_suite* parent() const noexcept;

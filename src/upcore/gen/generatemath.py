@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.1
+#!/usr/bin/env python3
 
 # Upcaste Performance Foundation
 # Copyright (C) 2012-2013 Jesse W. Towner
@@ -141,3 +141,4 @@ for element_type, dim in op_vector32_types:
 for element_type, cols, rows in op_matrix32_types:
     matrix_type = "{0}{1}x{2}".format(element_type, cols, rows)
     render_template("matrix_type.hpp.template", os.path.join(math_include_dir, matrix_type + ".hpp"), element_type=element_type, cols=cols, rows=rows)
+
