@@ -12,7 +12,6 @@
 - Revamp the generic C++ port of the vector math library, and get it working again.
 - Add ARM NEON port of the vector math library.
 - Add perfect hashing library which can auto-generate an optimized C++ hashing function source file for a given key set.
-- Add Clang/LLVM compiler support.
 - Improve the benchmarking code in uptest to output more useful metrics, and get rid of the useless ones like the iteration/size count--maybe make it customizable via a format string or flags.
 - Add a command line arguments parsing library to upcore.
 - Make sure function attributes in `cuchar.hpp` match the ones in `cstring.hpp`.

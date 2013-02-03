@@ -58,10 +58,11 @@ local CommonClang = {
     Inherit = CommonCC,
     Env = {
         CXXOPTS = {
+            { "--analyze"; Config = "*-*-*-analyze" },
             { "-g"; Config = "*-*-debug-*" },
             { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
-            "-std=gnu++11", "-Wall", "-Wextra", "-Werror",
-            "-fcolor-diagnostics", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+            "-std=gnu++11", "-Wall", "-Wextra", "-Werror", "-fcolor-diagnostics",
+            "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
             { "-fpic"; Config = "*-*-*-shared" },
             { "-fcxx-exceptions", "-fexceptions", "-frtti"; Config = { "*-*-debug-*", "*-*-release-*", "*-*-gold-*" } },
             { "-fno-cxx-exceptions", "-fno-exceptions", "-fno-rtti"; Config = { "*-*-silver-*", "*-*-platinum-*" } },
@@ -139,8 +140,9 @@ Build {
     },
     DefaultVariant = "debug",
     SubVariants = {
-        "static",
+        "analyze",
         "shared",
+        "static",
     },
     DefaultSubVariant = "static",
     Units = function()
@@ -167,48 +169,82 @@ Build {
         local function SourceGlob(dir)
             return FGlob {
                 Dir = dir,
-                Extensions = { ".c", ".cpp", ".s" },
+                Extensions = { ".c", ".cpp", ".s", ".asm" },
                 Filters = {
                     { Pattern = "/clang/"; Config = "*-clang-*-*" },
+                    { Pattern = "/gas/"; Config = { "*-clang-*-*", "*-gcc-*-*" } },
                     { Pattern = "/gcc/"; Config = "*-gcc-*-*" },
                     { Pattern = "/msvc/"; Config = "*-mscv-*-*" },
                     { Pattern = "/linux/"; Config = "linux-*" },
-                    { Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
                     { Pattern = "/ios/"; Config = "ios-*" },
                     { Pattern = "/macosx/"; Config = "macosx-*" },
+                    { Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
                     { Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
                     { Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
                 }
             }
         end
 
-        -- Wrapper for generating shared & static library units
-        local function Library(arg)
+        -- Wrapper for generating library units for current subvariant
+        local function UpcasteLibrary(arg)
             setmetatable(arg, {__index = { Depends = {}, ForceExceptions = false }})
 
             local result = {}
 
             local data = {
                 Depends = arg.Depends,
-                Defines = { { "LIB" .. string.upper(arg.Name) .. "_EXPORT_SYMBOLS"; Config = "*-*-*-shared" }, },
-                Env = { CXXOPTS = GetCxxOptions(arg), },
                 Includes = { "include/" .. arg.Name },
                 Propagate = { Includes = { "include/" .. arg.Name }, },
                 Sources = { SourceGlob("src/" .. arg.Name .. "/src") },
+                Env = { CXXOPTS = GetCxxOptions(arg), },
             }
             
+            local analyze_data = CopyTable(data)
+            analyze_data.Name = arg.Name .. "-analyze"
+            analyze_data.Config = "*-*-*-analyze"
+            result[1] = ObjGroup(analyze_data)
+
             local shared_data = CopyTable(data)
             shared_data.Name = arg.Name
             shared_data.Config = "*-*-*-shared"
-            result[1] = SharedLibrary(shared_data)
+            shared_data.Defines = { "LIB" .. string.upper(arg.Name) .. "_EXPORT_SYMBOLS" }
+            result[2] = SharedLibrary(shared_data)
 
             local static_data = CopyTable(data)
             static_data.Name = arg.Name .. "-static"
             static_data.Target = "$(OBJECTROOT)/$(BUILD_ID)/$(LIBPREFIX)" .. arg.Name .. "$(LIBSUFFIX)"
             static_data.Config = "*-*-*-static"
-            result[2] = StaticLibrary(static_data)
+            result[3] = StaticLibrary(static_data)
 
             return result
+        end
+
+        -- Wrapper for generating program units for current subvariant
+        local function UpcasteProgram(arg)
+            setmetatable(arg, {__index = { Depends = {}, ForceExceptions = false }})
+
+            local result = {}
+
+            local data = {
+                Depends = arg.Depends,
+                Sources = arg.Sources,
+                Env = { CXXOPTS = GetCxxOptions(arg), },
+            }
+            
+            local analyze_data = CopyTable(data)
+            analyze_data.Name = arg.Name .. "-analyze"
+            analyze_data.Config = "*-*-*-analyze"
+            result[1] = ObjGroup(analyze_data)
+
+            local program_data = CopyTable(data)
+            program_data.Name = arg.Name
+            program_data.Config = { "*-*-*-shared", "*-*-*-static" }
+            result[2] = Program(program_data)
+
+            return ExternalLibrary {
+                Name = arg.Name .. "-dependency-group",
+                Depends = result,
+            }
         end
 
         --
@@ -224,16 +260,16 @@ Build {
             },
         }
 
-        local upcore = Library { Name = "upcore", Depends = { standard } }
-        local uptest = Library { Name = "uptest", Depends = { upcore, standard }, ForceExceptions = true }
+        local upcore = UpcasteLibrary { Name = "upcore", Depends = { standard } }
+        local uptest = UpcasteLibrary { Name = "uptest", Depends = { upcore, standard }, ForceExceptions = true }
  
-        local upcore_tests = Program {
+        local upcore_tests = UpcasteProgram {
             Name = "upcore_tests",
             Depends = { uptest, upcore, standard },
             Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/test" },
         }
 
-        local upcore_bench = Program {
+        local upcore_bench = UpcasteProgram {
             Name = "upcore_bench",
             Depends = { uptest, upcore, standard },
             Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/bench" },
