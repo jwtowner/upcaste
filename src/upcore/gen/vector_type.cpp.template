@@ -5,7 +5,7 @@
 
 namespace up { namespace math
 {
-    extern LIBUPCOREAPI {{vector_type}} acos({{vector_param_type}} v) noexcept;
+    /*extern LIBUPCOREAPI {{vector_type}} acos({{vector_param_type}} v) noexcept;
     extern LIBUPCOREAPI {{vector_type}} acosh({{vector_param_type}} v) noexcept;
     extern LIBUPCOREAPI {{vector_type}} acospi({{vector_param_type}} v) noexcept;
     extern LIBUPCOREAPI {{vector_type}} asin({{vector_param_type}} v) noexcept;
@@ -37,5 +37,5 @@ namespace up { namespace math
     extern LIBUPCOREAPI {{vector_type}} sinpi({{vector_param_type}} v) noexcept;
     extern LIBUPCOREAPI {{vector_type}} tan({{vector_param_type}} v) noexcept;
     extern LIBUPCOREAPI {{vector_type}} tanh({{vector_param_type}} v) noexcept;
-    extern LIBUPCOREAPI {{vector_type}} tanpi({{vector_param_type}} v) noexcept;
+    extern LIBUPCOREAPI {{vector_type}} tanpi({{vector_param_type}} v) noexcept;*/
 }}

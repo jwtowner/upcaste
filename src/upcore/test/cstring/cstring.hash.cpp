@@ -280,6 +280,7 @@ namespace cstring_hash
     }
 
     UP_TEST_CASE(correlation) {
+        (void)do_correlation_test;
         /*for (size_t i = 4; i < 8; ++i) {
             do_correlation_test("memhash16", &memhash16, 16, i, 1000000);
             do_correlation_test("memhash32", &memhash32, 32, i, 1000000);

@@ -179,84 +179,37 @@ namespace up
     }
 
 #if UP_BYTE_ORDER == UP_LITTLE_ENDIAN
-    struct LIBUPCOREAPI mul_t
-    {
-        int low;
-        int high;
-    };
-
-    struct LIBUPCOREAPI lmul_t
-    {
-        long low;
-        long high;
-    };
-
-    struct LIBUPCOREAPI llmul_t
-    {
-        long long low;
-        long long high;
-    };
-
-    struct LIBUPCOREAPI umul_t
-    {
-        unsigned int low;
-        unsigned int high;
-    };
-
-    struct LIBUPCOREAPI ulmul_t
-    {
-        unsigned long low;
-        unsigned long high;
-    };
-
-    struct LIBUPCOREAPI ullmul_t
-    {
-        unsigned long long low;
-        unsigned long long high;
+#   define UP_DETAIL_DEFINE_MUL_T(Name, Type) \
+    struct LIBUPCOREAPI Name \
+    { \
+        Type low; \
+        Type high; \
     };
 #else
-    struct LIBUPCOREAPI mul_t
-    {
-        int high;
-        int low;
-    };
-
-    struct LIBUPCOREAPI lmul_t
-    {
-        long high;
-        long low;
-    };
-
-    struct LIBUPCOREAPI llmul_t
-    {
-        long long high;
-        long long low;
-    };
-
-    struct LIBUPCOREAPI umul_t
-    {
-        unsigned int high;
-        unsigned int low;
-    };
-
-    struct LIBUPCOREAPI ulmul_t
-    {
-        unsigned long high;
-        unsigned long low;
-    };
-
-    struct LIBUPCOREAPI ullmul_t
-    {
-        unsigned long long high;
-        unsigned long long low;
+#   define UP_DETAIL_DEFINE_MUL_T(Name, Type) \
+    struct LIBUPCOREAPI Name \
+    { \
+        Type high; \
+        Type low; \
     };
 #endif
+    UP_DETAIL_DEFINE_MUL_T(mul_t, int)
+    UP_DETAIL_DEFINE_MUL_T(lmul_t, long)
+    UP_DETAIL_DEFINE_MUL_T(llmul_t, long long)
+    UP_DETAIL_DEFINE_MUL_T(umul_t, unsigned int)
+    UP_DETAIL_DEFINE_MUL_T(ulmul_t, unsigned long)
+    UP_DETAIL_DEFINE_MUL_T(ullmul_t, unsigned long long)
+#   undef UP_DETAIL_DEFINE_MUL_T
 }
 
-#if UP_COMPILER == UP_COMPILER_GCC
+#if UP_COMPILER == UP_COMPILER_CLANG
+#   include <up/detail/cstdlib_clang.inl>
+#elif UP_COMPILER == UP_COMPILER_GCC
 #   include <up/detail/cstdlib_gcc.inl>
 #elif UP_COMPILER == UP_COMPILER_MSVC
 #   include <up/detail/cstdlib_msvc.inl>
+#else
+#   error "Compiler not currently supported!"
 #endif
 
 namespace up

@@ -22,162 +22,222 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#ifndef UP_PROLOG_GCC_HPP
-#define UP_PROLOG_GCC_HPP
+#ifndef UP_PROLOG_CLANG_HPP
+#define UP_PROLOG_CLANG_HPP
 
 //
 // versions check
 //
-#if (__GNUC__ == 4) && (__GNUC_MINOR__ < 2)
-    #error "GCC versions prior to 4.2 are not supported"
-#elif (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 8))
-    #warning "Untested GCC compiler version"
+#if (__clang_major__ <= 2)
+    #error "Clang versions prior to 3.0 are not supported!"
 #endif
 
-#define UP_COMPILER UP_COMPILER_GCC
+#define UP_COMPILER UP_COMPILER_CLANG
 
 //
 // C++11 feature detection
 //
-#if (__GNUC__ == 4)
-#   if (__GNUC_MINOR__ < 3) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define UP_NO_DECLTYPE
-#       define UP_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS
-#       define UP_NO_STATIC_ASSERT
-#   endif
-#   if (__GNUC_MINOR__ < 4) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define UP_NO_AUTO_DECLARATIONS
-#       define UP_NO_AUTO_MULTIDECLARATIONS
-#       define UP_NO_DEFAULTED_FUNCTIONS
-#       define UP_NO_DELETED_FUNCTIONS
-#       define UP_NO_INITIALIZER_LISTS
-#       define UP_NO_NATIVE_CHAR16_T
-#       define UP_NO_NATIVE_CHAR32_T
-#       define UP_NO_NESTED_EXCEPTION
-#       define UP_NO_RVALUE_REFERENCES
-#       define UP_NO_SCOPED_ENUMS
-#       define UP_NO_SFINAE_EXPR
-#       define UP_NO_VARIADIC_TEMPLATES
-#   endif
-#   if (__GNUC_MINOR__ < 5) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define UP_NO_ALIGNOF
-#       define UP_NO_EXPLICIT_CONVERSION_OPERATORS
-#       define UP_NO_LAMBDAS
-#       define UP_NO_RAW_LITERALS
-#       define UP_NO_UNICODE_LITERALS
-#   endif
-#   if (__GNUC_MINOR__ < 6) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define UP_NO_CONSTEXPR
-#       define UP_NO_NOEXCEPT
-#       define UP_NO_NULLPTR
-#       define UP_RANGE_BASED_FOR
-#   endif
-#   if (__GNUC_MINOR__ < 7) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define UP_NO_DELEGATING_CONSTRUCTORS
-#       define UP_NO_TEMPLATE_ALIASES
-#   endif
-#   if (__GNUC_MINOR__ < 8) || !defined(__GXX_EXPERIMENTAL_CXX0X__)
-#       define UP_NO_ALIGNAS
-#       define UP_NO_INHERITING_CONSTRUCTORS
-#       define UP_NO_THREAD_LOCAL
-#   endif
+#if !__has_feature(__cxx_auto_types__)
+#   define UP_NO_AUTO_DECLARATIONS
+#   define UP_NO_AUTO_MULTIDECLARATIONS
+#endif
+#if !__has_feature(__cxx_alias_templates__)
+#   define UP_NO_TEMPLATE_ALIASES
+#endif
+#if !__has_feature(__cxx_alignas__)
+#   define UP_NO_ALIGNAS
+#   define UP_NO_ALIGNOF
+#endif
+#if !__has_feature(__cxx_constexpr__)
+#   define UP_NO_CONSTEXPR
+#endif
+#if !__has_feature(__cxx_decltype__)
+#   define UP_NO_DECLTYPE
+#endif
+#if !__has_feature(__cxx_default_function_template_args__)
+#   define UP_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS
+#endif
+#if !__has_feature(__cxx_defaulted_functions__)
+#   define UP_NO_DEFAULTED_FUNCTIONS
+#endif
+#if !__has_feature(__cxx_delegating_constructors__)
+#   define UP_NO_DELEGATING_CONSTRUCTORS
+#endif
+#if !__has_feature(__cxx_deleted_functions__)
+#   define UP_NO_DELETED_FUNCTIONS
+#endif
+#if !__has_feature(__cxx_explicit_conversions__)
+#   define UP_NO_EXPLICIT_CONVERSION_OPERATORS
+#endif
+#if !__has_feature(__cxx_generalized_initializers__)
+#   define UP_NO_INITIALIZER_LISTS
+#endif
+#if !__has_feature(__cxx_inheriting_constructors__)
+#   define UP_NO_INHERITING_CONSTRUCTORS
+#endif
+#if !__has_feature(__cxx_lambdas__)
+#   define UP_NO_LAMBDAS
+#endif
+#if !__has_feature(__cxx_noexcept__)
+#   define UP_NO_NOEXCEPT
+#endif
+#if !__has_feature(__cxx_nullptr__)
+#   define UP_NO_NULLPTR
+#endif
+#if !__has_feature(__cxx_range_for__)
+#   define UP_NO_RANGE_BASED_FOR
+#endif
+#if !__has_feature(__cxx_raw_string_literals__)
+#   define UP_NO_RAW_LITERALS
+#endif
+#if !__has_feature(__cxx_reference_qualified_functions__)
 #   define UP_NO_REFERENCE_QUALIFIED_FUNCTIONS
-#   define UP_NO_TYPE_ALIASED_REINTERPRET_CAST
-#   ifdef UP_NO_ALIGNAS
-#       define alignas(expression) __attribute__((aligned(expression)))
-#   endif
-#   ifdef UP_NO_ALIGNOF
-#       define alignof __alignof__
-#   endif
-#   ifdef UP_NO_CONSTEXPR
-#       define constexpr const
-#   endif
-#   ifdef UP_NO_DECLTYPE
-#       define decltype __typeof__
-#   endif
-#   ifdef UP_NO_NOEXCEPT
-#       define noexcept
-#   endif
-#   ifdef UP_NO_THREAD_LOCAL
-#       if UP_BASESYSTEM == UP_BASESYSTEM_DARWIN
-#           define thread_local _Pragma( "error Platform does not support thread_local!" )
-#       else
-#           define thread_local __thread
-#       endif
-#   endif
+#endif
+#if !__has_feature(__cxx_rvalue_references__)
+#   define UP_NO_RVALUE_REFERENCES
+#endif
+#if !__has_feature(__cxx_access_control_sfinae__)
+#   define UP_NO_SFINAE_EXPR
+#endif
+#if !__has_feature(__cxx_static_assert__)
+#   define UP_NO_STATIC_ASSERT
+#endif
+#if !__has_feature(__cxx_strong_enums__)
+#   define UP_NO_SCOPED_ENUMS
+#endif
+#if !__has_feature(__cxx_thread_local__)
+#   define UP_NO_THREAD_LOCAL
+#endif
+#if !__has_feature(__cxx_unicode_literals__)
+#   define UP_NO_NATIVE_CHAR16_T
+#   define UP_NO_NATIVE_CHAR32_T
+#   define UP_NO_UNICODE_LITERALS
+#endif
+#if !__has_feature(__cxx_variadic_templates__)
+#   define UP_NO_VARIADIC_TEMPLATES
+#endif
+
+#ifdef UP_NO_ALIGNAS
+#   define alignas(expression) __attribute__((aligned(expression)))
+#endif
+#ifdef UP_NO_ALIGNOF
+#   define alignof __alignof__
+#endif
+#ifdef UP_NO_CONSTEXPR
+#   define constexpr const
+#endif
+#ifdef UP_NO_DECLTYPE
+#   define decltype __typeof__
+#endif
+#ifdef UP_NO_NOEXCEPT
+#   define noexcept
+#endif
+#ifdef UP_NO_THREAD_LOCAL
+#   define thread_local __thread
 #endif
 
 //
 // C++98 feature detection
 //
-#ifndef __EXCEPTIONS
+#if !__has_feature(__cxx_exceptions__)
 #   define UP_NO_EXCEPTIONS
 #endif
-#ifndef __GXX_RTTI
+#if !__has_feature(__cxx_rtti__)
 #   define UP_NO_RTTI
-#endif
-#ifndef __WCHAR_TYPE__
-#   define UP_NO_NATIVE_WCHAR_T
 #endif
 
 //
 // compiler type-traits
 //
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 2))
+#if !__has_extension(__has_trivial_constructor__)
 #   define UP_TT_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T) __has_trivial_constructor(T)
+#endif
+#if !__has_extension(__has_trivial_copy__)
 #   define UP_TT_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T) __has_trivial_copy(T)
+#endif
+#if !__has_extension(__has_trivial_assign__)
 #   define UP_TT_IS_TRIVIALLY_COPY_ASSIGNABLE(T) __has_trivial_assign(T)
+#endif
+#if !__has_extension(__has_trivial_copy__)
 #   define UP_TT_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T) __has_trivial_copy(T)
+#endif
+#if !__has_extension(__has_trivial_assign__)
 #   define UP_TT_IS_TRIVIALLY_MOVE_ASSIGNABLE(T) __has_trivial_assign(T)
+#endif
+#if !__has_extension(__has_trivial_destructor__)
 #   define UP_TT_IS_TRIVIALLY_DESTRUCTIBLE(T) __has_trivial_destructor(T)
+#endif
+#if !__has_extension(__has_nothrow_constructor__)
 #   define UP_TT_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T) __has_nothrow_constructor(T)
+#endif
+#if !__has_extension(__has_nothrow_copy__)
 #   define UP_TT_IS_NOTHROW_COPY_CONSTRUCTIBLE(T) __has_nothrow_copy(T)
+#endif
+#if !__has_extension(__has_nothrow_assign__)
 #   define UP_TT_IS_NOTHROW_COPY_ASSIGNABLE(T) __has_nothrow_assign(T)
+#endif
+#if !__has_extension(__has_nothrow_copy__)
 #   define UP_TT_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T) __has_nothrow_copy(T)
+#endif
+#if !__has_extension(__has_nothrow_assign__)
 #   define UP_TT_IS_NOTHROW_MOVE_ASSIGNABLE(T) __has_nothrow_assign(T)
+#endif
+#if !__has_extension(__has_virtual_destructor__)
 #   define UP_TT_HAS_VIRTUAL_DESTRUCTOR(T) __has_virtual_destructor(T)
+#endif
+#if !__has_extension(__is_abstract__)
 #   define UP_TT_IS_ABSTRACT(T) __is_abstract(T)
+#endif
+#if !__has_extension(__is_base_of__)
 #   define UP_TT_IS_BASE_OF(T,U) __is_base_of(T,U)
+#endif
+#if !__has_extension(__is_class__)
 #   define UP_TT_IS_CLASS(T) __is_class(T)
-#   define UP_TT_IS_EMPTY(T) __is_empty(T)
-#   define UP_TT_IS_ENUM(T) __is_enum(T)
-#   define UP_TT_IS_POD(T) __is_pod(T)
-#   define UP_TT_IS_POLYMORPHIC(T) __is_polymorphic(T)
-#   define UP_TT_IS_UNION(T) __is_union(T)
 #endif
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 5))
-#   define UP_TT_IS_LITERAL_TYPE(T) __is_literal_type(T)
-#   define UP_TT_IS_STANDARD_LAYOUT(T) __is_standard_layout(T)
-#   define UP_TT_IS_TRIVIAL(T) __is_trivial(T)
-#endif
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 7))
+#if !__has_extension(__is_convertible_to__)
 #   define UP_TT_IS_CONVERTIBLE_TO(T, U) __is_convertible_to(T, U)
+#endif
+#if !__has_extension(__is_empty__)
+#   define UP_TT_IS_EMPTY(T) __is_empty(T)
+#endif
+#if !__has_extension(__is_enum__)
+#   define UP_TT_IS_ENUM(T) __is_enum(T)
+#endif
+#if !__has_extension(__is_literal__)
+#   define UP_TT_IS_LITERAL_TYPE(T) __is_literal(T)
+#endif
+#if !__has_extension(__is_pod__)
+#   define UP_TT_IS_POD(T) __is_pod(T)
+#endif
+#if !__has_extension(__is_polymorphic__)
+#   define UP_TT_IS_POLYMORPHIC(T) __is_polymorphic(T)
+#endif
+#if !__has_extension(__is_standard_layout__)
+#   define UP_TT_IS_STANDARD_LAYOUT(T) __is_standard_layout(T)
+#endif
+#if !__has_extension(__is_union__)
+#   define UP_TT_IS_UNION(T) __is_union(T)
 #endif
 
 //
 // compiler language pragmas
 //
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 4))
-#   define UP_DETAIL_STDC_FENV_ACCESS_ON \
-        _Pragma("GCC push_options") \
-        _Pragma("GCC optimize(\"-fno-fast-math\")") \
-        _Pragma("GCC optimize(\"-fsignaling-nans\")") \
-        _Pragma("GCC optimize(\"-frounding-math\")")
-#   define UP_DETAIL_STDC_FENV_ACCESS_OFF \
-        _Pragma("GCC pop_options")
-#elif (__GNUC__ == 4) && (__GNUC_MINOR__ == 4)
-#   define UP_DETAIL_STDC_FENV_ACCESS_ON \
-        _Pragma("GCC push_options") \
-        _Pragma("GCC optimize(\"-fno-fast-math\")")
-#   define UP_DETAIL_STDC_FENV_ACCESS_OFF \
-        _Pragma("GCC pop_options")
+#if (__clang_major__ == 3) && (__clang_minor__ <= 2)
+#   define UP_DETAIL_STDC_FENV_ACCESS_ON
+#   define UP_DETAIL_STDC_FENV_ACCESS_OFF
+#   define UP_DETAIL_STDC_FP_CONTRACT_ON
+#   define UP_DETAIL_STDC_FP_CONTRACT_OFF
 #else
 #   define UP_DETAIL_STDC_FENV_ACCESS_ON
 #   define UP_DETAIL_STDC_FENV_ACCESS_OFF
+#   define UP_DETAIL_STDC_FP_CONTRACT_ON \
+        _Pragma("STDC FP_CONTRACT ON")
+#   define UP_DETAIL_STDC_FP_CONTRACT_OFF \
+        _Pragma("STDC FP_CONTRACT OFF")
 #endif
 
 #define UP_STDC_FENV_ACCESS(arg) UP_DETAIL_STDC_FENV_ACCESS_##arg
-#define UP_STDC_FP_CONTRACT(arg)
+#define UP_STDC_FP_CONTRACT(arg) UP_DETAIL_STDC_FP_CONTRACT_##arg
 
 //
 // compiler built-ins
@@ -202,11 +262,11 @@
 #define UPNONNULLALL __attribute__((__nonnull__))
 #define UPNONNULL(...) __attribute__((__nonnull__(__VA_ARGS__)))
 #define UPNORETURN __attribute__((__noreturn__))
-#define UPPRINTF(fmt, args) __attribute__((__format__(__gnu_printf__, fmt, args)))
+#define UPPRINTF(fmt, args) 
 #define UPPURE __attribute__((__pure__))
 #define UPRESTRICT __restrict__
-#define UPSCANF(fmt, args) __attribute__((__format__(__gnu_scanf__, fmt, args)))
-#define UPUSED __attribute__((__used__))
+#define UPSCANF(fmt, args)
+#define UPUSED
 #define UPWARNRESULT __attribute__((__warn_unused_result__))
 
 #ifndef UP_NO_NOEXCEPT
@@ -251,6 +311,12 @@
 #   define UPIMPORTEXTERN extern
 #   define UPEXPORTEXCEPT
 #   define UPIMPORTEXCEPT
+#endif
+
+#if UP_BASESYSTEM == UP_BASESYSTEM_LINUX
+#   define __extern_inline extern __inline __attribute((__gnu_inline__))
+#   define __extern_always_inline extern __always_inline __attribute((__gnu_inline__, __artificial__))
+    struct UPHIDDEN __float128 { unsigned char x[16]; };
 #endif
 
 #endif

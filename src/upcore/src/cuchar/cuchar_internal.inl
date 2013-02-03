@@ -155,7 +155,11 @@ namespace up { namespace detail
     extern unsigned char const u8_replacement_sequence[3];
     extern char16_t const u16_replacement_sequence[1];
 
+#if UP_COMPILER == UP_COMPILER_CLANG
+    extern int8_t const u8_sequence_length_table[256];
+#else
     extern alignas(UP_MAX_CACHE_LINE_SIZE) int8_t const u8_sequence_length_table[256];
+#endif
     extern uint_fast32_t const u8_offset_table[8];
     extern uint_fast32_t const u8_min_values[8];
 

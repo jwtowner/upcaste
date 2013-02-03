@@ -55,7 +55,7 @@ namespace up
 #define UP_DETAIL_NOT_VOLATILE
 #define UP_DETAIL_VOLATILE volatile
 
-#if (UP_COMPILER == UP_COMPILER_GCC)
+#if UP_COMPILER == UP_COMPILER_CLANG
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
 #       include <up/detail/atomic_fence_gcc_x86_x64.inl>
 #       include <up/detail/atomic_flag_gcc_x86_x64.inl>
@@ -63,7 +63,15 @@ namespace up
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
-#elif (UP_COMPILER == UP_COMPILER_MSVC)
+#elif UP_COMPILER == UP_COMPILER_GCC
+#   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
+#       include <up/detail/atomic_fence_gcc_x86_x64.inl>
+#       include <up/detail/atomic_flag_gcc_x86_x64.inl>
+#       include <up/detail/atomic_yield_gcc_x86_x64.inl>
+#   else
+#       error "Architecture not currently supported for atomic operations!"
+#   endif
+#elif UP_COMPILER == UP_COMPILER_MSVC
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
 #       include <up/detail/atomic_fence_msvc_x86_x64.inl>
 #       include <up/detail/atomic_flag_msvc_x86_x64.inl>
@@ -120,7 +128,7 @@ namespace up { namespace detail
 
     struct LIBUPCOREAPI atomic_int128_t
     {
-#if (UP_BYTE_ORDER == UP_LITTLE_ENDIAN)
+#if UP_BYTE_ORDER == UP_LITTLE_ENDIAN
         long long low;
         long long high;
 #else
@@ -237,8 +245,20 @@ namespace up { namespace detail
         typedef Value& reference;
         typedef typename conditional<is_scalar<Value>::value, Value, Value const&>::type const_reference;
         typedef typename conditional<is_pointer<Value>::value, ptrdiff_t, Value>::type operand_type;
-        typedef typename conditional<is_scalar<operand_type>::value, operand_type, operand_type const&>::type const_operand_reference;
-        typedef typename conditional<is_pointer<Value>::value && is_void<typename remove_pointer<Value>::type>::value, unsigned char*, Value>::type addition_lvalue_type;
+        typedef typename conditional
+        <
+            is_scalar<operand_type>::value,
+            operand_type,
+            operand_type const&
+        >
+        ::type const_operand_reference;
+        typedef typename conditional
+        <
+            is_pointer<Value>::value && is_void<typename remove_pointer<Value>::type>::value,
+            unsigned char*,
+            Value
+        >
+        ::type addition_lvalue_type;
         typedef typename conditional<is_pointer<Value>::value, uintptr_t, Value>::type bitwise_lvalue_type;
         static constexpr bool is_lock_free = false;
         UPDEFAULTNOEXCEPTCTOR(atomic_storage);
@@ -285,13 +305,19 @@ namespace up { namespace detail
 #undef UP_DETAIL_ATOMIC_STORAGE_DEFAULT_OPERATIONS
 }}
 
-#if (UP_COMPILER == UP_COMPILER_GCC)
+#if UP_COMPILER == UP_COMPILER_CLANG
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
 #       include <up/detail/atomic_storage_gcc_x86_x64.inl>
 #   else
 #       error "Architecture not currently supported for atomic operations!"
 #   endif
-#elif (UP_COMPILER == UP_COMPILER_MSVC)
+#elif UP_COMPILER == UP_COMPILER_GCC
+#   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
+#       include <up/detail/atomic_storage_gcc_x86_x64.inl>
+#   else
+#       error "Architecture not currently supported for atomic operations!"
+#   endif
+#elif UP_COMPILER == UP_COMPILER_MSVC
 #   if (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)
 #       include <up/detail/atomic_storage_msvc_x86_x64.inl>
 #   else
@@ -305,7 +331,9 @@ namespace up { namespace detail
 {
     inline UPALWAYSINLINE UPCONSTEXPR
     memory_order calculate_failure_order(memory_order order) noexcept {
-        return (order != memory_order_release) ? ((order != memory_order_acq_rel) ? order : memory_order_acquire) : memory_order_relaxed;
+        return (order != memory_order_release)
+            ? ((order != memory_order_acq_rel)
+                ? order : memory_order_acquire) : memory_order_relaxed;
     }
 
 #define UP_DETAIL_ATOMIC_BASE_OPERATIONS(Volatile) \
@@ -323,19 +351,41 @@ namespace up { namespace detail
         return this->storage_.load(memory_order_seq_cst); \
     } \
     UPALWAYSINLINE \
-    bool compare_exchange_strong(reference expected, const_reference desired, memory_order order = memory_order_seq_cst) Volatile noexcept { \
+    bool compare_exchange_strong( \
+        reference expected, \
+        const_reference desired, \
+        memory_order order = memory_order_seq_cst \
+    ) \
+    Volatile noexcept { \
         return this->storage_.compare_exchange_strong(expected, desired, order, ::up::detail::calculate_failure_order(order)); \
     } \
     UPALWAYSINLINE \
-    bool compare_exchange_strong(reference expected, const_reference desired, memory_order success_order, memory_order failure_order) Volatile noexcept { \
+    bool compare_exchange_strong( \
+        reference expected, \
+        const_reference desired, \
+        memory_order success_order, \
+        memory_order failure_order \
+    ) \
+    Volatile noexcept { \
         return this->storage_.compare_exchange_strong(expected, desired, success_order, failure_order); \
     } \
     UPALWAYSINLINE \
-    bool compare_exchange_weak(reference expected, const_reference desired, memory_order order = memory_order_seq_cst) Volatile noexcept { \
+    bool compare_exchange_weak( \
+        reference expected, \
+        const_reference desired, \
+        memory_order order = memory_order_seq_cst \
+    ) \
+    Volatile noexcept { \
         return this->storage_.compare_exchange_weak(expected, desired, order, ::up::detail::calculate_failure_order(order)); \
     } \
     UPALWAYSINLINE \
-    bool compare_exchange_weak(reference expected, const_reference desired, memory_order success_order, memory_order failure_order) Volatile noexcept { \
+    bool compare_exchange_weak( \
+        reference expected, \
+        const_reference desired, \
+        memory_order success_order, \
+        memory_order failure_order \
+    ) \
+    Volatile noexcept { \
         return this->storage_.compare_exchange_weak(expected, desired, success_order, failure_order); \
     } \
     UPALWAYSINLINE \
@@ -751,17 +801,35 @@ namespace up
     } \
     template <class T> \
     inline UPALWAYSINLINE \
-    bool atomic_compare_exchange_strong_explicit(atomic<T> Volatile* a, T* expected, T desired, memory_order success_order, memory_order failure_order) noexcept { \
+    bool atomic_compare_exchange_strong_explicit( \
+        atomic<T> Volatile* a, \
+        T* expected, T desired, \
+        memory_order success_order, \
+        memory_order failure_order \
+    ) \
+    noexcept { \
         return a->compare_exchange_strong(*expected, desired, success_order, failure_order); \
     } \
     template <class T> \
     inline UPALWAYSINLINE \
-    bool atomic_compare_exchange_weak(atomic<T> Volatile* a, T* expected, T desired) { \
+    bool atomic_compare_exchange_weak( \
+        atomic<T> Volatile* a, \
+        T* expected, \
+        T desired \
+    ) \
+    noexcept { \
         return a->compare_exchange_weak(*expected, desired, memory_order_seq_cst, memory_order_seq_cst); \
     } \
     template <class T> \
     inline UPALWAYSINLINE \
-    bool atomic_compare_exchange_weak_explicit(atomic<T> Volatile* a, T* expected, T desired, memory_order success_order, memory_order failure_order) noexcept { \
+    bool atomic_compare_exchange_weak_explicit( \
+        atomic<T> Volatile* a, \
+        T* expected, \
+        T desired, \
+        memory_order success_order, \
+        memory_order failure_order \
+    ) \
+    noexcept { \
         return a->compare_exchange_weak(*expected, desired, success_order, failure_order); \
     }
 

@@ -26,7 +26,9 @@
 #define UP_BYTESWAP_HPP
 
 #include <up/cstdint.hpp>
-#if UP_COMPILER == UP_COMPILER_GCC
+#if UP_COMPILER == UP_COMPILER_CLANG
+#   include <up/detail/byteswap_clang.inl>
+#elif UP_COMPILER == UP_COMPILER_GCC
 #   if UP_ARCHITECTURE == UP_ARCHITECTURE_ARM
 #       include <up/detail/byteswap_gcc_arm.inl>
 #   elif (UP_ARCHITECTURE == UP_ARCHITECTURE_X86) || (UP_ARCHITECTURE == UP_ARCHITECTURE_X64)

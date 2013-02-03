@@ -28,10 +28,14 @@
 #include <up/climits.hpp>
 #include <up/cstddef.hpp>
 #include <up/cstdint.hpp>
-#if UP_COMPILER == UP_COMPILER_GCC
+#if UP_COMPILER == UP_COMPILER_CLANG
+#   include <up/detail/bitwise_gcc.inl>
+#elif UP_COMPILER == UP_COMPILER_GCC
 #   include <up/detail/bitwise_gcc.inl>
 #elif UP_COMPILER == UP_COMPILER_MSVC
 #   include <up/detail/bitwise_msvc.inl>
+#else
+#   error "Compiler not currently supported!"
 #endif
 
 namespace up { namespace detail

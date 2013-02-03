@@ -48,7 +48,7 @@ namespace up { namespace detail
 #endif
         };
 
-#if UP_COMPILER == UP_COMPILER_GCC
+#if (UP_COMPILER == UP_COMPILER_CLANG) || (UP_COMPILER == UP_COMPILER_GCC)
         storage_spin_lock storage_locks[storage_lock_count] __attribute__((section(".bss")));
 #elif UP_COMPILER == UP_COMPILER_MSVC
 #       pragma bss_seg()

@@ -28,7 +28,9 @@
 
 #include <up/math/vectors.hpp>
 
-#if UP_COMPILER == UP_COMPILER_GCC
+#if UP_COMPILER == UP_COMPILER_CLANG
+#   pragma clang diagnostic ignored "-Wmissing-braces" 
+#elif UP_COMPILER == UP_COMPILER_GCC
 #   pragma GCC diagnostic ignored "-Wmissing-braces"
 #endif
 

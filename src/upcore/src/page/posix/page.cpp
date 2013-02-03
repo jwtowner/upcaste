@@ -54,11 +54,6 @@ namespace up
             return prot;    
         }
 
-        inline UPALWAYSINLINE
-        int page_size_compare(void const* p1, void const* p2) noexcept {
-            return (*static_cast<size_t const*>(p1)) < (*static_cast<size_t const*>(p2));
-        }
-
         int UPCDECL compare_sizes(void const* x, void const* y) noexcept {
             if (*static_cast<size_t const*>(x) < *static_cast<size_t const*>(y)) {
                 return -1;

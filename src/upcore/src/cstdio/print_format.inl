@@ -77,31 +77,8 @@ namespace up { namespace detail { namespace
         return work_tail;
     }
 
-    UPHIDDEN UPNONNULLALL
-    CHAR* format_default_grouped_digits(
-        CHAR* UPRESTRICT work_head,
-        CHAR* UPRESTRICT work_tail,
-        uintmax_t value
-    )
-    noexcept {
-        int separator = 3;
-        for (;;) {
-            assert(work_head < work_tail);
-            *(--work_tail) = static_cast<CHAR>(value % 10) + CHR('0');
-            value /= 10;
-            if (value == 0) {
-                break;
-            }
-            if (--separator == 0) {
-                assert(work_head < work_tail);
-                *(--work_tail) = CHR(',');
-                separator = 3;
-            }
-        }
-        return work_tail;
-    }
-
 #if defined(UP_HAS_STDC_LOCALE) && defined(USE_STDC_LOCALE)
+
     UPHIDDEN UPNONNULLALL
     CHAR* format_grouped_digits(
         CHAR* UPRESTRICT work_head,
@@ -159,6 +136,33 @@ namespace up { namespace detail { namespace
 
         return work_tail;
     }
+
+#else
+
+    UPHIDDEN UPNONNULLALL
+    CHAR* format_default_grouped_digits(
+        CHAR* UPRESTRICT work_head,
+        CHAR* UPRESTRICT work_tail,
+        uintmax_t value
+    )
+    noexcept {
+        int separator = 3;
+        for (;;) {
+            assert(work_head < work_tail);
+            *(--work_tail) = static_cast<CHAR>(value % 10) + CHR('0');
+            value /= 10;
+            if (value == 0) {
+                break;
+            }
+            if (--separator == 0) {
+                assert(work_head < work_tail);
+                *(--work_tail) = CHR(',');
+                separator = 3;
+            }
+        }
+        return work_tail;
+    }
+
 #endif
 
     UPHIDDEN UPNONNULLALL

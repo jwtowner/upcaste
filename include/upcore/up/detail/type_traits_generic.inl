@@ -473,7 +473,10 @@ namespace up
 
 namespace up { namespace detail
 {
-    template <class T> UPHIDDEN typename add_rvalue_reference<T>::type declval() noexcept;    
+    template <class T>
+    UPHIDDEN
+    typename conditional<is_fundamental<T>::value, T, typename add_rvalue_reference<T>::type>::type
+    declval() noexcept;    
 
 #ifndef UP_IS_BASE_OF
     template <class Base, class Derived>
@@ -677,7 +680,7 @@ namespace up { namespace detail
 
 #ifndef UP_TT_IS_EMPTY
     template <class T, bool = is_class<T>::value>
-    struct is_empty_impl<T, true>
+    struct is_empty_impl
     {
         class expected_type { double x; };
 
@@ -686,7 +689,7 @@ namespace up { namespace detail
             double x;
             actual_type();
             actual_type(actual_type const&);
-            actual_type& operator=actual_type(actual_type const&);
+            actual_type& operator=(actual_type const&);
         };
 
         static constexpr bool value = sizeof(actual_type) == sizeof(expected_type);
@@ -1691,15 +1694,26 @@ namespace up
     template <class T1, class T2 = T1, class T3 = T2, class T4 = T3, class T5 = T4, class T6 = T5, class T7 = T6, class T8 = T7>
     struct UPVISIBLE common_type
     {
-        typedef typename common_type<decltype(true ? ::up::detail::declval<T1>() : ::up::detail::declval<T2>()), T3, T4, T5, T6, T7, T8, T8>::type type;
+        typedef typename common_type
+        <
+            decltype(true ? ::up::detail::declval<T1>() : ::up::detail::declval<T2>()),
+            T3, T4, T5, T6, T7, T8, T8
+        >
+        ::type type;
     };
 #endif
     
     template <class T>
-    struct UPVISIBLE common_type<T> { typedef T type; };
+    struct UPVISIBLE common_type<T>
+    {
+        typedef T type;
+    };
     
     template <class T, class U>
-    struct UPVISIBLE common_type<T, U> { typedef decltype(true ? ::up::detail::declval<T>() : ::up::detail::declval<U>()) type; };
+    struct UPVISIBLE common_type<T, U>
+    {
+        typedef decltype(true ? ::up::detail::declval<T>() : ::up::detail::declval<U>()) type;
+    };
 
     template <class T>
     struct UPVISIBLE result_of

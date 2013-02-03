@@ -82,10 +82,14 @@
 #define LDBL_SQRT2      1.4142135623730950488016887242097l
 #define LDBL_1_SQRT2    7.0710678118654752440084436210485e-001l
 
-#if UP_COMPILER == UP_COMPILER_GCC
+#if UP_COMPILER == UP_COMPILER_CLANG
+#   include <up/detail/cfloat_gcc.inl>
+#elif UP_COMPILER == UP_COMPILER_GCC
 #   include <up/detail/cfloat_gcc.inl>
 #elif UP_COMPILER == UP_COMPILER_MSVC
 #   include <up/detail/cfloat_msvc.inl>
+#else
+#   error "Compiler not currently supported!"
 #endif
 
 #endif

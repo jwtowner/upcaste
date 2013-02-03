@@ -25,7 +25,6 @@
 #include <up/math/float4.hpp>
 #include <up/random.hpp>
 #include <up/test.hpp>
-#include <random>
 
 namespace math_float4
 {

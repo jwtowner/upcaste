@@ -55,13 +55,11 @@ namespace up
         }
     };
 
-#ifdef UP_NO_CONSTEXPR
     template <class Key>
     constexpr Key hashtraits<Key>::vacant;
 
     template <class Key>
     constexpr Key hashtraits<Key>::deleted;
-#endif
 
     template <class Key, class Value = nat_t>
     struct UPVISIBLE hashrecord

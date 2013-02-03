@@ -54,12 +54,28 @@ local CommonCC = {
     },
 }
 
-local CommonGCC = {
+local CommonClang = {
     Inherit = CommonCC,
     Env = {
         CXXOPTS = {
             { "-g"; Config = "*-*-debug-*" },
+            { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
+            "-std=gnu++11", "-Wall", "-Wextra", "-Werror",
+            "-fcolor-diagnostics", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+            { "-fpic"; Config = "*-*-*-shared" },
+            { "-fcxx-exceptions", "-fexceptions", "-frtti"; Config = { "*-*-debug-*", "*-*-release-*", "*-*-gold-*" } },
+            { "-fno-cxx-exceptions", "-fno-exceptions", "-fno-rtti"; Config = { "*-*-silver-*", "*-*-platinum-*" } },
+            { "-fomit-frame-pointer"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+        },
+    },
+}
+
+local CommonGCC = {
+    Inherit = CommonCC,
+    Env = {
+        CXXOPTS = {
             { "-Wa,-a=$(@).s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+            { "-g"; Config = "*-*-debug-*" },
             { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
             "-std=gnu++0x", "-Wall", "-Wextra", "-Werror",
             "-fabi-version=6", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
@@ -82,6 +98,11 @@ Build {
     },
     Configs = {
         Config {
+            Name = "linux-clang",
+            Inherit = CommonClang,
+            Tools = { "clang-osx", "gas" },
+        },
+        Config {
             Name = "linux-gcc",
             Inherit = CommonGCC,
             DefaultOnHost = "linux",
@@ -94,7 +115,7 @@ Build {
             Tools = { "gcc-osx", "gas" },
         },
         Config {
-            Name = "osx-gcc",
+            Name = "macosx-gcc",
             Inherit = CommonGCC,
             DefaultOnHost = "macosx",
             Tools = { "gcc-osx", "gas" },
@@ -136,6 +157,7 @@ Build {
         local function GetCxxOptions(arg)
             local result = { }
             if arg.ForceExceptions then
+                table.insert(result, { "-fcxx-exceptions", "-fexceptions", "-frtti"; Config = "*-clang-*" })
                 table.insert(result, { "-fexceptions", "-frtti"; Config = "*-gcc-*" })
             end
             return result
@@ -147,13 +169,14 @@ Build {
                 Dir = dir,
                 Extensions = { ".c", ".cpp", ".s" },
                 Filters = {
-                    { Pattern = "/gcc/"; Config = "*-gcc-*" },
-                    { Pattern = "/msvc/"; Config = "*-mscv-*" },
+                    { Pattern = "/clang/"; Config = "*-clang-*-*" },
+                    { Pattern = "/gcc/"; Config = "*-gcc-*-*" },
+                    { Pattern = "/msvc/"; Config = "*-mscv-*-*" },
                     { Pattern = "/linux/"; Config = "linux-*" },
-                    { Pattern = "/darwin/"; Config = { "osx-*", "ios-*" } },
+                    { Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
                     { Pattern = "/ios/"; Config = "ios-*" },
-                    { Pattern = "/macosx/"; Config = "osx-*" },
-                    { Pattern = "/posix/"; Config = { "linux-*", "osx-*" } },
+                    { Pattern = "/macosx/"; Config = "macosx-*" },
+                    { Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
                     { Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
                 }
             }
