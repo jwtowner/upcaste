@@ -338,10 +338,7 @@ Build {
             }
         end
 
-        --
         -- Unit definitions
-        --
-
         local standard = ExternalLibrary {
             Name = "standard",
             Propagate = {
@@ -355,19 +352,26 @@ Build {
         local uptest = UpcasteLibrary { Name = "uptest", Depends = { upcore, standard }, ForceExceptions = true }
  
         local upcore_tests = UpcasteProgram {
-            Name = "upcore_tests",
+            Name = "upcore-tests",
             Depends = { uptest, upcore, standard },
-            Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/test" },
+            Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob("src/upcore/test") },
         }
 
         local upcore_bench = UpcasteProgram {
-            Name = "upcore_bench",
+            Name = "upcore-bench",
             Depends = { uptest, upcore, standard },
-            Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob "src/upcore/bench" },
+            Sources = { "src/uptest/driver/console_driver.cpp", SourceGlob("src/upcore/bench") },
+        }
+
+        local upcaste_hash = UpcasteProgram {
+            Name = "upcaste-hash",
+            Depends = { upcore, standard },
+            Sources = SourceGlob("src/upcaste-hash/src")
         }
 
         Default(upcore_tests)
         Default(upcore_bench)
+        Default(upcaste_hash)
     end,
 }
 

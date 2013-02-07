@@ -29,7 +29,6 @@
 # http://locklessinc.com/articles/fast_hash/ 
 #
 
-
 .text
 .align 16, 0x90
 
@@ -42,8 +41,8 @@ mix1:
 mix2:
 .octa 0x2bb6863566c4e7612bb6863566c4e761
 
-.globl memhash
-.type memhash,@function
+.global memhash
+.type memhash, @function
 
 memhash:
     movl        4(%esp), %ecx                   # key
@@ -288,5 +287,5 @@ memhash:
     pxor        %xmm2, %xmm1
     jmp         2b
 
-.size memhash,.-memhash
+.size memhash, .-memhash
 

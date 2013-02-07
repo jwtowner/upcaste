@@ -30,13 +30,15 @@
 #
 
 .text
+
 .align 16, 0x90
 factor128:
 .octa 0xd6c573e9c613993d5a379ab38dc5a46b
-.globl memhash
-.type memhash, @function
 
+.global memhash
+.type memhash, @function
 memhash:
+
     movabs      $0x1591aefa5e7e5a17, %r8
     movq        %rsi, %xmm0
     movq        %rdx, %xmm1
@@ -143,4 +145,4 @@ memhash:
     pxor        %xmm1, %xmm0
     jmp         2b
 
-.size memhash,.-memhash
+.size memhash, .-memhash
