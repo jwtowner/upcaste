@@ -58,7 +58,7 @@ memhash:
     testb       $15, %cl
     jne         5f
 
-    # Aligned process 32-byte aligned chunks at a time, main-loop
+    # Aligned main loop, process 32-byte aligned chunks at a time
 
 .align 8, 0x90
 1:  paddq       (%ecx), %xmm1
@@ -73,14 +73,14 @@ memhash:
     jne         1b
     pxor        %xmm2, %xmm1
 
-    # Check if not extract 128 bits state and proceed to final mix, for remaining chunk
+    # Check for remaining chunk, otherwise extract 128 bits state and proceed to final mix
 
 2:  testb       $31, %dl
     jne         3f
     movhlps     %xmm1, %xmm2
     jmp         4f
 
-    # Hash up to 31-bytes in size, remaining chunk
+    # Hash remaining chunk, up to 31-bytes in size
 
 3:  testb       $16, %dl
     je          3f
@@ -257,7 +257,7 @@ memhash:
     paddq       %xmm5, %xmm2                    # hash2 = (hash2 * mix2) + upper_64bits(hash1 * mix1)
     pxor        %xmm2, %xmm1                    # hash1 = hash2 ^ lower_64bits(hash1 * mix1)
 
-    # Place 64-bit result in %edx:%eax and return.
+    # Place 64-bit result in %edx:%eax and return
 
     popl        %esi
     movd        %xmm1, %eax
@@ -266,7 +266,7 @@ memhash:
     movd        %xmm1, %edx
     ret
 
-    # Unaligned process 32-byte unaligned chunks at a time, main-loop
+    # Unaligned main-loop, process 32-byte unaligned chunks at a time
 
 .align 16, 0x90
 5:  movdqu      (%ecx), %xmm0
@@ -285,3 +285,4 @@ memhash:
     jmp         2b
 
 .size memhash,.-memhash
+
