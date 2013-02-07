@@ -24,8 +24,8 @@
 #
 #############################################################################
 
-LLDIRS = @dependency_target_directories@
-CLEANDIRS = $(ALLDIRS:%=clean-%)
+ALLDIRS=@dependency_target_directories@
+CLEANDIRS=$(ALLDIRS:%=clean-%)
 .PHONY: all alldeps $(ALLDIRS) clean cleandeps $(CLEANDIRS)
 
 ifeq ($(wildcard @dependency_usr_directory@),) 
@@ -39,8 +39,8 @@ endif
 alldeps: $(ALLDIRS)
 
 $(ALLDIRS):
-	$(MAKE) -j @build_cpu_count@ -C $@
-	$(MAKE) -j @build_cpu_count@ -C $@ install
+	$(MAKE) -j @BUILD_JOB_COUNT@ -C $@
+	$(MAKE) -j @BUILD_JOB_COUNT@ -C $@ install
 
 clean:
 	tundra --clean
@@ -49,5 +49,5 @@ cleandeps: $(CLEANDIRS)
 	rm -rf @dependency_usr_directory@
 
 $(CLEANDIRS):
-	$(MAKE) -j @build_cpu_count@ -C $(@:clean-%=%) clean
+	$(MAKE) -j @BUILD_JOB_COUNT@ -C $(@:clean-%=%) clean
 

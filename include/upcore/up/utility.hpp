@@ -29,7 +29,8 @@
 
 namespace up
 {
-#if (UP_COMPILER == UP_COMPILER_GCC) && (__GNUC__ == 4) && (__GNUC_MINOR__ <= 4)
+#ifndef UP_NO_RVALUE_REFERENCES
+#   if (UP_COMPILER == UP_COMPILER_GCC) && (__GNUC__ == 4) && (__GNUC_MINOR__ <= 4)
     namespace detail
     {
         template <class T> struct UPHIDDEN identity { typedef T type; };
@@ -46,7 +47,7 @@ namespace up
     typename remove_reference<T>::type&& move(T&& t) noexcept {
         return t;
     }
-#else
+#   else
     template <class T>
     inline UPALWAYSINLINE UPPURE
     T&& forward(typename remove_reference<T>::type& t) noexcept {
@@ -64,6 +65,19 @@ namespace up
     typename remove_reference<T>::type&& move(T&& t) noexcept {
         return static_cast<typename remove_reference<T>::type&&>(t);
     }
+#   endif
+#else
+    template <class T>
+    inline UPALWAYSINLINE UPPURE
+    T& forward(typename remove_reference<T>::type& t) noexcept {
+        return static_cast<T&>(t);
+    }
+
+    template <class T>
+    inline UPALWAYSINLINE UPPURE
+    typename remove_reference<T>::type& move(T& t) noexcept {
+        return static_cast<typename remove_reference<T>::type&>(t);
+    }
 #endif
 
     namespace detail
@@ -76,7 +90,11 @@ namespace up
                 !is_nothrow_move_constructible<T>::value
                 && is_copy_constructible<T>::value,
                 T const&,
+#ifndef UP_NO_RVALUE_REFERENCES
                 T&&
+#else
+                T&
+#endif
             >
             ::type type;
         };
@@ -90,7 +108,11 @@ namespace up
 
     template <class T>
     inline UPALWAYSINLINE UPPURE
+#ifndef UP_NO_RVALUE_REFERENCES
     typename decay<T>::type decay_copy(T&& v) noexcept {
+#else
+    typename decay<T>::type decay_copy(T& v) noexcept {
+#endif
         return ::up::forward<T>(v);
     }
 

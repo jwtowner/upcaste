@@ -50,19 +50,21 @@ namespace up { namespace detail
 
         UPALWAYSINLINE compressed_pair_wrapper() : u1(), u2() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x, int = 0) : u1(x) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : u1(::up::move(x)) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y, int* = 0) : u2(y) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y, int* = 0) : u2(::up::move(y)) { }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : u1(x), u2(y) { }
-        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : u1(::up::forward<U1>(x)), u2(::up::forward<U2>(y)) { }
         UPALWAYSINLINE U1& first() { return u1; }
         UPALWAYSINLINE U1 const& first() const { return u1; }
         UPALWAYSINLINE void first(U1 const& x) { u1 = x; }
-        UPALWAYSINLINE void first(U1&& x) { u1 = ::up::move(x); }
         UPALWAYSINLINE U2& second() { return u2; }
         UPALWAYSINLINE U2 const& second() const { return u2; }
         UPALWAYSINLINE void second(U2 const& x) { u2 = x; }
+#ifndef UP_NO_RVALUE_REFERENCES
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : u1(::up::move(x)) { }
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y, int* = 0) : u2(::up::move(y)) { }
+        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : u1(::up::forward<U1>(x)), u2(::up::forward<U2>(y)) { }
+        UPALWAYSINLINE void first(U1&& x) { u1 = ::up::move(x); }
         UPALWAYSINLINE void second(U2&& x) { u2 = ::up::move(x); }
+#endif
     };
 
     template <class U1, class U2, bool Same>
@@ -74,19 +76,21 @@ namespace up { namespace detail
 
         UPALWAYSINLINE compressed_pair_wrapper() : U2(), u1() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x, int = 0) : u1(x) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : u1(x) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y, int* = 0) : U2(y) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y, int* = 0) : U2(::up::move(y)) { }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : U2(y), u1(x) { }
-        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U2(::up::forward<U2>(y)), u1(::up::forward<U1>(x)) { }
         UPALWAYSINLINE U1& first() { return u1; }
         UPALWAYSINLINE U1 const& first() const { return u1; }
         UPALWAYSINLINE void first(U1 const& x) { u1 = x; }
-        UPALWAYSINLINE void first(U1&& x) { u1 = ::up::move(x); }
         UPALWAYSINLINE U2& second() { return *static_cast<U2*>(this); }
         UPALWAYSINLINE U2 const& second() const { return *static_cast<U2 const*>(this); }
         UPALWAYSINLINE void second(U2 const& x) { *static_cast<U2*>(this) = x; }
+#ifndef UP_NO_RVALUE_REFERENCES
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : u1(x) { }
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y, int* = 0) : U2(::up::move(y)) { }
+        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U2(::up::forward<U2>(y)), u1(::up::forward<U1>(x)) { }
+        UPALWAYSINLINE void first(U1&& x) { u1 = ::up::move(x); }
         UPALWAYSINLINE void second(U2&& x) { *static_cast<U2*>(this) = ::up::move(x); }
+#endif
     };
 
     template <class U1, class U2, bool Same>
@@ -98,19 +102,21 @@ namespace up { namespace detail
 
         UPALWAYSINLINE compressed_pair_wrapper() : U1(), u2() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x, int = 0) : U1(x) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : U1(::up::move(x)) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y, int* = 0) : u2(y) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y, int* = 0) : u2(::up::move(y)) { }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : U1(x), u2(y) { }
-        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U1(::up::forward<U1>(x)), u2(::up::forward<U2>(y)) { }
         UPALWAYSINLINE U1& first() { return *static_cast<U1*>(this); }
         UPALWAYSINLINE U1 const& first() const { return *static_cast<U1 const*>(this); }
         UPALWAYSINLINE void first(U1 const& x) { *static_cast<U1*>(this) = x; }
-        UPALWAYSINLINE void first(U1&& x) { *static_cast<U1*>(this) = ::up::move(x); }
         UPALWAYSINLINE U2& second() { return u2; }
         UPALWAYSINLINE U2 const& second() const { return u2; }
         UPALWAYSINLINE void second(U2 const& x) { u2 = x; }
+#ifndef UP_NO_RVALUE_REFERENCES
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x, int = 0) : U1(::up::move(x)) { }
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y, int* = 0) : u2(::up::move(y)) { }
+        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U1(::up::forward<U1>(x)), u2(::up::forward<U2>(y)) { }
+        UPALWAYSINLINE void first(U1&& x) { *static_cast<U1*>(this) = ::up::move(x); }
         UPALWAYSINLINE void second(U2&& x) { u2 = ::up::move(x); }
+#endif
     };
 
     template <class U1, class U2>
@@ -120,19 +126,21 @@ namespace up { namespace detail
 
         UPALWAYSINLINE compressed_pair_wrapper() : U1(), U2() { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x) : U1(x) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U2 const& y) : U2(y) { }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y) : U2(::up::move(y)) { }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : U1(x), U2(y) { }
-        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U1(::up::forward<U1>(x)), U2(::up::forward<U2>(y)) { }
         UPALWAYSINLINE U1& first() { return *static_cast<U1*>(this); }
         UPALWAYSINLINE U1 const& first() const { return *static_cast<U1 const*>(this); }
         UPALWAYSINLINE void first(U1 const& x) { *static_cast<U1*>(this) = x; }
-        UPALWAYSINLINE void first(U1&& x) { *static_cast<U1*>(this) = ::up::move(x); }
         UPALWAYSINLINE U2& second() { return *static_cast<U2*>(this); }
         UPALWAYSINLINE U2 const& second() const { return *static_cast<U2 const*>(this); }
         UPALWAYSINLINE void second(U2 const& x) { *static_cast<U2*>(this) = x; }
+#ifndef UP_NO_RVALUE_REFERENCES
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { }
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U2&& y) : U2(::up::move(y)) { }
+        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y) : U1(::up::forward<U1>(x)), U2(::up::forward<U2>(y)) { }
+        UPALWAYSINLINE void first(U1&& x) { *static_cast<U1*>(this) = ::up::move(x); }
         UPALWAYSINLINE void second(U2&& x) { *static_cast<U2*>(this) = ::up::move(x); }
+#endif
     };
 
     template <class U1, class U2>
@@ -142,19 +150,21 @@ namespace up { namespace detail
 
         UPALWAYSINLINE compressed_pair_wrapper() : U1() { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE explicit compressed_pair_wrapper(U1 const& x) : U1(x) { ::new(static_cast<U2*>(this)) U2; }
-        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { ::new(static_cast<U2*>(this)) U2; }
         UPALWAYSINLINE compressed_pair_wrapper(U1 const& x, U2 const& y) : U1(x) { ::new(static_cast<U2*>(this)) U2(y); }
-        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y)
-            : U1(::up::forward<U1>(x)) { ::new(static_cast<U2*>(this)) U2(::up::forward<U2>(y)); }
         UPALWAYSINLINE ~compressed_pair_wrapper() { static_cast<U2*>(this)->~U2(); }
         UPALWAYSINLINE U1& first() { return *static_cast<U1*>(this); }
         UPALWAYSINLINE U1 const& first() const { return *static_cast<U1 const*>(this); }
         UPALWAYSINLINE void first(U1 const& x) { *static_cast<U1*>(this) = x; }
-        UPALWAYSINLINE void first(U1&& x) { *static_cast<U1*>(this) = ::up::move(x); }
         UPALWAYSINLINE U2& second() { return *static_cast<U2*>(this); }
         UPALWAYSINLINE U2 const& second() const { return *static_cast<U2 const*>(this); }
         UPALWAYSINLINE void second(U2 const& x) { *static_cast<U2*>(this) = x; }
+#ifndef UP_NO_RVALUE_REFERENCES
+        UPALWAYSINLINE explicit compressed_pair_wrapper(U1&& x) : U1(::up::move(x)) { ::new(static_cast<U2*>(this)) U2; }
+        UPALWAYSINLINE compressed_pair_wrapper(U1&& x, U2&& y)
+            : U1(::up::forward<U1>(x)) { ::new(static_cast<U2*>(this)) U2(::up::forward<U2>(y)); }
+        UPALWAYSINLINE void first(U1&& x) { *static_cast<U1*>(this) = ::up::move(x); }
         UPALWAYSINLINE void second(U2&& x) { *static_cast<U2*>(this) = ::up::move(x); }
+#endif
     };
 }}
 
@@ -203,6 +213,8 @@ namespace up
             return *this;
         }
 
+#ifndef UP_NO_RVALUE_REFERENCES
+
         UPALWAYSINLINE
         explicit compressed_pair(T1&& x, int = 0)
         : detail::compressed_pair_wrapper<T1, T2>(::up::forward<T1>(x)) {
@@ -244,6 +256,8 @@ namespace up
             return *this;
         }
 
+#endif
+
         UPALWAYSINLINE
         void swap(compressed_pair& x) {
             ::up::iter_swap(&this->first(), &x.first());
@@ -253,7 +267,11 @@ namespace up
 
     template <class T1, class T2>
     inline UPALWAYSINLINE
+#ifndef UP_NO_RVALUE_REFERENCES
     compressed_pair<T1, T2> make_compressed_pair(T1&& x, T2&& y) {
+#else
+    compressed_pair<T1, T2> make_compressed_pair(T1 const& x, T2 const& y) {
+#endif    
         return compressed_pair<T1, T2>(::up::forward<T1>(x), ::up::forward<T2>(y));
     }
 
@@ -355,70 +373,69 @@ namespace up
         ::new(::up::addressof(*location)) value_type;
     }
 
-#ifndef UP_NO_VARIADIC_TEMPLATES
-
+#if !defined(UP_NO_VARIADIC_TEMPLATES) && !defined(UP_NO_RVALUE_REFERENCES)
     template <class ForwardIterator, class... Args>
     inline UPALWAYSINLINE
     void construct(ForwardIterator location, Args&&... args) {
         typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
         ::new(::up::addressof(*location)) value_type(::up::forward<Args>(args)...);
     }
-
 #else
-
-    template <class ForwardIterator, class A1>
-    inline UPALWAYSINLINE
-    void construct(ForwardIterator location, A1&& a1) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
-        ::new(::up::addressof(*location)) value_type(::up::forward<A1>(a1));
+#   define UP_DETAIL_DEFINE_CONSTRUCT(RVREF) \
+    template <class ForwardIterator, class A1> \
+    inline UPALWAYSINLINE \
+    void construct(ForwardIterator location, A1 RVREF a1) { \
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type; \
+        ::new(::up::addressof(*location)) value_type(::up::forward<A1>(a1)); \
+    } \
+    template <class ForwardIterator, class A1, class A2> \
+    inline UPALWAYSINLINE \
+    void construct(ForwardIterator location, A1 RVREF a1, A2 RVREF a2) { \
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type; \
+        ::new(::up::addressof(*location)) value_type( \
+            ::up::forward<A1>(a1), \
+            ::up::forward<A2>(a2) \
+        ); \
+    } \
+    template <class ForwardIterator, class A1, class A2, class A3> \
+    inline UPALWAYSINLINE \
+    void construct(ForwardIterator location, A1 RVREF a1, A2 RVREF a2, A3 RVREF a3) { \
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type; \
+        ::new(::up::addressof(*location)) value_type( \
+            ::up::forward<A1>(a1), \
+            ::up::forward<A2>(a2), \
+            ::up::forward<A3>(a3) \
+        ); \
+    } \
+    template <class ForwardIterator, class A1, class A2, class A3, class A4> \
+    inline UPALWAYSINLINE \
+    void construct(ForwardIterator location, A1 RVREF a1, A2 RVREF a2, A3 RVREF a3, A4 RVREF a4) { \
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type; \
+        ::new(::up::addressof(*location)) value_type( \
+            ::up::forward<A1>(a1), \
+            ::up::forward<A2>(a2), \
+            ::up::forward<A3>(a3), \
+            ::up::forward<A4>(a4) \
+        ); \
+    } \
+    template <class ForwardIterator, class A1, class A2, class A3, class A4, class A5> \
+    inline UPALWAYSINLINE \
+    void construct(ForwardIterator location, A1 RVREF a1, A2 RVREF a2, A3 RVREF a3, A4 RVREF a4, A5 RVREF a5) { \
+        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type; \
+        ::new(::up::addressof(*location)) value_type( \
+            ::up::forward<A1>(a1), \
+            ::up::forward<A2>(a2), \
+            ::up::forward<A3>(a3), \
+            ::up::forward<A4>(a4), \
+            ::up::forward<A5>(a5) \
+        ); \
     }
-
-    template <class ForwardIterator, class A1, class A2>
-    inline UPALWAYSINLINE
-    void construct(ForwardIterator location, A1&& a1, A2&& a2) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
-        ::new(::up::addressof(*location)) value_type(
-            ::up::forward<A1>(a1),
-            ::up::forward<A2>(a2)
-        );
-    }
-
-    template <class ForwardIterator, class A1, class A2, class A3>
-    inline UPALWAYSINLINE
-    void construct(ForwardIterator location, A1&& a1, A2&& a2, A3&& a3) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
-        ::new(::up::addressof(*location)) value_type(
-            ::up::forward<A1>(a1),
-            ::up::forward<A2>(a2),
-            ::up::forward<A3>(a3)
-        );
-    }
-
-    template <class ForwardIterator, class A1, class A2, class A3, class A4>
-    inline UPALWAYSINLINE
-    void construct(ForwardIterator location, A1&& a1, A2&& a2, A3&& a3, A4&& a4) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
-        ::new(::up::addressof(*location)) value_type(
-            ::up::forward<A1>(a1),
-            ::up::forward<A2>(a2),
-            ::up::forward<A3>(a3),
-            ::up::forward<A4>(a4)
-        );
-    }
-
-    template <class ForwardIterator, class A1, class A2, class A3, class A4, class A5>
-    inline UPALWAYSINLINE
-    void construct(ForwardIterator location, A1&& a1, A2&& a2, A3&& a3, A4&& a4, A5&& a5) {
-        typedef typename detail::iterator_value_type<ForwardIterator>::type value_type;
-        ::new(::up::addressof(*location)) value_type(
-            ::up::forward<A1>(a1),
-            ::up::forward<A2>(a2),
-            ::up::forward<A3>(a3),
-            ::up::forward<A4>(a4),
-            ::up::forward<A5>(a5)
-        );
-    }
-
+#   ifndef UP_NO_RVALUE_REFERENCES
+    UP_DETAIL_DEFINE_CONSTRUCT(&&)
+#   else
+    UP_DETAIL_DEFINE_CONSTRUCT(const&)
+#   endif
+#   undef UP_DETAIL_DEFINE_CONSTRUCT
 #endif
 
     template <class ForwardIterator>
@@ -967,8 +984,7 @@ namespace up
         return ::new(p) T;
     }
 
-#ifndef UP_NO_VARIADIC_TEMPLATES
-
+#if !defined(UP_NO_VARIADIC_TEMPLATES) && !defined(UP_NO_RVALUE_REFERENCES)
     template <class T, class Alloc, class... Args>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* allocate_construct(Alloc* a, Args&&... args) {
@@ -978,65 +994,65 @@ namespace up
         }
         return ::new(p) T(::up::forward<Args>(args)...);
     }
-
 #else
-
-    template <class T, class Alloc, class A1>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, A1&& a1) {
-        void* const p = a->allocate(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1));
+#   define UP_DETAIL_DEFINE_ALLOCATE_CONSTRUCT(RVREF) \
+    template <class T, class Alloc, class A1> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* allocate_construct(Alloc* a, A1 RVREF a1) { \
+        void* const p = a->allocate(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1)); \
+    } \
+    template <class T, class Alloc, class A1, class A2> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* allocate_construct(Alloc* a, A1 RVREF a1, A2 RVREF a2) { \
+        void* const p = a->allocate(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2)); \
+    } \
+    template <class T, class Alloc, class A1, class A2, class A3> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* allocate_construct(Alloc* a, A1 RVREF a1, A2 RVREF a2, A3 RVREF a3) { \
+        void* const p = a->allocate(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3)); \
+    } \
+    template <class T, class Alloc, class A1, class A2, class A3, class A4> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* allocate_construct(Alloc* a, A1 RVREF a1, A2 RVREF a2, A3 RVREF a3, A4 RVREF a4) { \
+        void* const p = a->allocate(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4)); \
+    } \
+    template <class T, class Alloc, class A1, class A2, class A3, class A4, class A5> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* allocate_construct(Alloc* a, A1 RVREF a1, A2 RVREF a2, A3 RVREF a3, A4 RVREF a4, A5 RVREF a5) { \
+        void* const p = a->allocate(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T( \
+            ::up::forward<A1>(a1), \
+            ::up::forward<A2>(a2), \
+            ::up::forward<A3>(a3), \
+            ::up::forward<A4>(a4), \
+            ::up::forward<A5>(a5) \
+        ); \
     }
-
-    template <class T, class Alloc, class A1, class A2>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, A1&& a1, A2&& a2) {
-        void* const p = a->allocate(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2));
-    }
-
-    template <class T, class Alloc, class A1, class A2, class A3>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, A1&& a1, A2&& a2, A3&& a3) {
-        void* const p = a->allocate(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3));
-    }
-
-    template <class T, class Alloc, class A1, class A2, class A3, class A4>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, A1&& a1, A2&& a2, A3&& a3, A4&& a4) {
-        void* const p = a->allocate(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4));
-    }
-
-    template <class T, class Alloc, class A1, class A2, class A3, class A4, class A5>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* allocate_construct(Alloc* a, A1&& a1, A2&& a2, A3&& a3, A4&& a4, A5&& a5) {
-        void* const p = a->allocate(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(
-            ::up::forward<A1>(a1),
-            ::up::forward<A2>(a2),
-            ::up::forward<A3>(a3),
-            ::up::forward<A4>(a4),
-            ::up::forward<A5>(a5)
-        );
-    }
-
+#   ifndef UP_NO_RVALUE_REFERENCES
+    UP_DETAIL_DEFINE_ALLOCATE_CONSTRUCT(&&)
+#   else
+    UP_DETAIL_DEFINE_ALLOCATE_CONSTRUCT(const&)
+#   endif
+#   undef UP_DETAIL_DEFINE_ALLOCATE_CONSTRUCT
 #endif
 
     template <class Alloc, class T>
@@ -1115,8 +1131,7 @@ namespace up
         return ::new(p) T;
     }
 
-#ifndef UP_NO_VARIADIC_TEMPLATES
-
+#if !defined(UP_NO_VARIADIC_TEMPLATES) && !defined(UP_NO_RVALUE_REFERENCES)
     template <class T, class... Args>
     inline UPALWAYSINLINE UPALLOC UPWARNRESULT
     T* malloc_construct(Args&&... args) {
@@ -1126,65 +1141,65 @@ namespace up
         }
         return ::new(p) T(::up::forward<Args>(args)...);
     }
-
 #else
-
-    template <class T, class A1>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(A1&& a1) {
-        void* const p  = ::up::malloc(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1));
+#   define UP_DETAIL_DEFINE_MALLOC_CONSTRUCT(RVREF) \
+    template <class T, class A1> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* malloc_construct(A1 RVREF a1) { \
+        void* const p  = ::up::malloc(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1)); \
+    } \
+    template <class T, class A1, class A2> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* malloc_construct(A1 RVREF a1, A2 RVREF a2) { \
+        void* const p = ::up::malloc(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2)); \
+    } \
+    template <class T, class A1, class A2, class A3> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* malloc_construct(A1 RVREF a1, A2 RVREF a2, A3 RVREF a3) { \
+        void* const p = ::up::malloc(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3)); \
+    } \
+    template <class T, class A1, class A2, class A3, class A4> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* malloc_construct(A1 RVREF a1, A2 RVREF a2, A3 RVREF a3, A4 RVREF a4) { \
+        void* const p = ::up::malloc(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4)); \
+    } \
+    template <class T, class A1, class A2, class A3, class A4, class A5> \
+    inline UPALWAYSINLINE UPALLOC UPWARNRESULT \
+    T* malloc_construct(A1 RVREF a1, A2 RVREF a2, A3 RVREF a3, A4 RVREF a4, A5 RVREF a5) { \
+        void* const p = ::up::malloc(sizeof(T)); \
+        if (!p) { \
+            return nullptr; \
+        } \
+        return ::new(p) T( \
+            ::up::forward<A1>(a1), \
+            ::up::forward<A2>(a2), \
+            ::up::forward<A3>(a3), \
+            ::up::forward<A4>(a4), \
+            ::up::forward<A5>(a5) \
+        ); \
     }
-
-    template <class T, class A1, class A2>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(A1&& a1, A2&& a2) {
-        void* const p = ::up::malloc(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2));
-    }
-
-    template <class T, class A1, class A2, class A3>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(A1&& a1, A2&& a2, A3&& a3) {
-        void* const p = ::up::malloc(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3));
-    }
-
-    template <class T, class A1, class A2, class A3, class A4>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(A1&& a1, A2&& a2, A3&& a3, A4&& a4) {
-        void* const p = ::up::malloc(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(::up::forward<A1>(a1), ::up::forward<A2>(a2), ::up::forward<A3>(a3), ::up::forward<A4>(a4));
-    }
-
-    template <class T, class A1, class A2, class A3, class A4, class A5>
-    inline UPALWAYSINLINE UPALLOC UPWARNRESULT
-    T* malloc_construct(A1&& a1, A2&& a2, A3&& a3, A4&& a4, A5&& a5) {
-        void* const p = ::up::malloc(sizeof(T));
-        if (!p) {
-            return nullptr;
-        }
-        return ::new(p) T(
-            ::up::forward<A1>(a1),
-            ::up::forward<A2>(a2),
-            ::up::forward<A3>(a3),
-            ::up::forward<A4>(a4),
-            ::up::forward<A5>(a5)
-        );
-    }
-
+#   ifndef UP_NO_RVALUE_REFERENCES
+    UP_DETAIL_DEFINE_MALLOC_CONSTRUCT(&&)
+#   else
+    UP_DETAIL_DEFINE_MALLOC_CONSTRUCT(const&)
+#   endif
+#   undef UP_DETAIL_DEFINE_MALLOC_CONSTRUCT
 #endif
 
     template <class T>

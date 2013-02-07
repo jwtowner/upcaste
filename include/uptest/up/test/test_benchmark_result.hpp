@@ -40,8 +40,10 @@ namespace up { namespace test
         UPHIDDEN test_benchmark_result(char const* category, unsigned int complexity, unsigned int iterations) noexcept;
         UPHIDDEN test_benchmark_result(test_benchmark_result const& x) noexcept;
         UPHIDDEN test_benchmark_result& operator=(test_benchmark_result const& x) noexcept;
+#ifndef UP_NO_RVALUE_REFERENCES
         UPHIDDEN test_benchmark_result(test_benchmark_result&& x) noexcept;
         UPHIDDEN test_benchmark_result& operator=(test_benchmark_result&& x) noexcept;
+#endif
         UPHIDDEN ~test_benchmark_result();
         UPHIDDEN char const* category() const noexcept;
         UPHIDDEN unsigned int complexity() const noexcept;
@@ -88,7 +90,9 @@ namespace up { namespace test
         }
         return *this;
     }
-    
+
+#ifndef UP_NO_RVALUE_REFERENCES
+
     inline UPHIDDENINLINE
     test_benchmark_result::test_benchmark_result(test_benchmark_result&& x) noexcept
     : category_(x.category_),
@@ -112,7 +116,9 @@ namespace up { namespace test
         }
         return *this;
     }
-    
+
+#endif
+
     inline UPHIDDENINLINE
     test_benchmark_result::~test_benchmark_result() {
         free(category_);

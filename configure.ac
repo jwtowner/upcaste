@@ -24,29 +24,41 @@
 #
 #############################################################################
 
-AC_INIT([Upcaste Performance Libraries],[0.1],[jessetowner@lavabit.com],[upcaste],[http://github.com/upcaste/upcaste])
 AC_PREREQ([2.67])
+AC_INIT([Upcaste Performance Libraries],[0.1],[jessetowner@lavabit.com],[upcaste],[http://github.com/upcaste/upcaste])
+AC_CONFIG_MACRO_DIR([project/m4])
 AC_CANONICAL_HOST
-AC_LANG([C++])
 AC_USE_SYSTEM_EXTENSIONS
+AC_LANG([C++])
 
-#############################################################################
-# Programs
-#############################################################################
-
+AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_CXX_C_O
 AC_PROG_GREP
+AC_PROG_EGREP
 AC_PROG_MKDIR_P
-PKG_PROG_PKG_CONFIG
+AX_COUNT_CPUS
+AX_GCC_VERSION
 
+AX_COMPARE_VERSION(
+    [$GCC_VERSION],[ge],[4.7],
+    [GCC_STDC_MODE="-std=gnu11"
+     GCC_STDCXX_MODE="-std=gnu++11"],
+    [AX_COMPARE_VERSION(
+        [$GCC_VERSION],[ge],[4.3],
+        [GCC_STDC_MODE="-std=gnu99"
+         GCC_STDCXX_MODE="-std=gnu++0x"],
+        [GCC_STDC_MODE="-std=gnu99"
+         GCC_STDCXX_MODE="-std=gnu++98"])])
+
+PKG_PROG_PKG_CONFIG
 AC_CHECK_PROG(have_bzip2, bzip2, yes, no)
 AC_CHECK_PROG(have_gzip, gzip, yes, no)
 AC_CHECK_PROG(have_tar, tar, yes, no)
-AC_CHECK_PROG(have_wget, wget, yes, no)
 AC_CHECK_PROG(have_tundra, tundra, yes, no)
+AC_CHECK_PROG(have_wget, wget, yes, no)
 
 AS_IF([test "x$have_tundra" != "xyes"],
     [AC_MSG_ERROR([The Tundra Build Processor is required to build Upcaste.
@@ -1243,13 +1255,6 @@ UP_WARN_IF_MISSING_DEPENDENCY([$have_opencl], [OpenCL 1.1])
 
 AC_MSG_NOTICE([------ Generating Output ------])
 
-AS_CASE(
-    [$build_os],
-    [*linux*],
-    [build_cpu_count=`$GREP processor /proc/cpuinfo | wc -l`],
-    [build_cpu_count="1"]
-)
-
 default_config_i686_linux_gnu_clang=false
 default_config_x86_64_linux_gnu_clang=false
 default_config_i686_linux_gnu_gcc=false
@@ -1263,7 +1268,9 @@ AS_CASE(
     [default_config_x86_64_linux_gnu_gcc=true],
 )
 
-AC_SUBST([build_cpu_count])
+AC_SUBST([GCC_STDC_MODE])
+AC_SUBST([GCC_STDCXX_MODE])
+AC_SUBST([BUILD_JOB_COUNT],[$((CPU_COUNT*2))])
 AC_SUBST([default_config_i686_linux_gnu_clang])
 AC_SUBST([default_config_x86_64_linux_gnu_clang])
 AC_SUBST([default_config_i686_linux_gnu_gcc])

@@ -178,15 +178,10 @@ namespace up
     
     template <class T> struct UPVISIBLE is_lvalue_reference : false_type { };
     template <class T> struct UPVISIBLE is_lvalue_reference<T&> : true_type { };
-#ifdef UP_NO_RVALUE_REFERENCES
-    template <class T> struct UPVISIBLE is_lvalue_reference<rvref<T>&> : false_type { };
-#endif
 
     template <class T> struct UPVISIBLE is_rvalue_reference : false_type { };
 #ifndef UP_NO_RVALUE_REFERENCES
     template <class T> struct UPVISIBLE is_rvalue_reference<T&&> : true_type { };
-#else
-    template <class T> struct UPVISIBLE is_rvalue_reference<rvref<T>&> : true_type { };
 #endif
 
     template <class T> struct UPVISIBLE is_enum : integral_constant<bool, detail::is_enum_impl<T>::value> { };
@@ -880,7 +875,7 @@ namespace up { namespace detail
             static is_not_constructible_t sfinae(...) noexcept;
         };
             
-        typedef integral_constant<bool, (sizeof(tester<T>::sfinae<T,A1,A2,A3,A4>(0)) == sizeof(is_constructible_t))> result;
+        typedef integral_constant<bool, (sizeof(tester<T>::template sfinae<T,A1,A2,A3,A4>(0)) == sizeof(is_constructible_t))> result;
     };
 
     template <class T>
@@ -904,7 +899,7 @@ namespace up { namespace detail
             static is_not_constructible_t sfinae(...) noexcept;
         };
 
-        typedef integral_constant<bool, (sizeof(tester<T>::sfinae<T>(0)) == sizeof(is_constructible_t))> result;
+        typedef integral_constant<bool, (sizeof(tester<T>::template sfinae<T>(0)) == sizeof(is_constructible_t))> result;
     };
 
     template <class T, class A1 >
@@ -928,7 +923,7 @@ namespace up { namespace detail
             static is_not_constructible_t sfinae(...) noexcept;
         };
             
-        typedef integral_constant<bool, (sizeof(tester<T>::sfinae<T,A1>(0)) == sizeof(is_constructible_t))> result;
+        typedef integral_constant<bool, (sizeof(tester<T>::template sfinae<T,A1>(0)) == sizeof(is_constructible_t))> result;
     };
 
     template <class T, class A1, class A2 >
@@ -950,7 +945,7 @@ namespace up { namespace detail
             static is_not_constructible_t sfinae(...) noexcept;
         };
 
-        typedef integral_constant<bool, (sizeof(tester<T>::sfinae<T,A1,A2>(0)) == sizeof(is_constructible_t))> result;
+        typedef integral_constant<bool, (sizeof(tester<T>::template sfinae<T,A1,A2>(0)) == sizeof(is_constructible_t))> result;
     };
 
     template <class T, class A1, class A2, class A3>
@@ -963,7 +958,7 @@ namespace up { namespace detail
             static is_constructible_t sfinae(
                 decltype((U(::up::detail::declval<B1>(),
                             ::up::detail::declval<B2>(),
-                            ::up::detail::declval<B3>()))*)) noexcept;
+                            ::up::detail::declval<B3>())))*) noexcept;
 
             template <class U, class B1, class B2, class B3>
             static is_not_constructible_t sfinae(...) noexcept;
@@ -976,7 +971,7 @@ namespace up { namespace detail
             static is_not_constructible_t sfinae(...) noexcept;
         };
             
-        typedef integral_constant<bool, (sizeof(tester<T>::sfinae<T,A1,A2,A3>(0)) == sizeof(is_constructible_t))> result;
+        typedef integral_constant<bool, (sizeof(tester<T>::template sfinae<T,A1,A2,A3>(0)) == sizeof(is_constructible_t))> result;
     };
         
     template <class A, size_t N>
@@ -1201,11 +1196,9 @@ namespace up
     struct UPVISIBLE is_nothrow_copy_constructible
         : is_nothrow_constructible<T, typename add_lvalue_reference<typename add_const<T>::type>::type> { };
     
-#ifndef UP_NO_RVALUE_REFERENCES
     template <class T>
     struct UPVISIBLE is_nothrow_move_constructible
         : is_nothrow_constructible<T, typename add_rvalue_reference<T>::type> { };
-#endif
 
 #ifndef UP_NO_NOEXCEPT
     template <class T, class U>

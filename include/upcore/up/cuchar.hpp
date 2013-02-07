@@ -31,29 +31,30 @@
 #endif
 #ifdef UP_HAS_STDC_UCHAR
 #   include <uchar.h>
+#else
+#   ifdef UP_NO_NATIVE_CHAR16_T
+    typedef uint_least16_t char16_t;
+#   endif
+#   ifdef UP_NO_NATIVE_CHAR32_T
+    typedef uint_least32_t char32_t;
+#   endif
 #endif
 
 namespace up
 {
-#ifdef UP_HAS_STDC_UCHAR
 #ifdef UP_NO_NATIVE_CHAR16_T
     using ::char16_t;
 #endif
 #ifdef UP_NO_NATIVE_CHAR32_T
     using ::char32_t;
 #endif
+#ifdef UP_HAS_STDC_UCHAR
     using ::mbstate_t;
     using ::c16rtomb;
     using ::c32rtomb;
     using ::mbrtoc16;
     using ::mbrtoc32;
 #else
-#ifdef UP_NO_NATIVE_CHAR16_T
-    typedef uint_least16_t char16_t;
-#endif
-#ifdef UP_NO_NATIVE_CHAR32_T
-    typedef uint_least32_t char32_t;
-#endif
     extern LIBUPCOREAPI
     size_t c16rtomb(char* UPRESTRICT s, char16_t c16, mbstate_t* UPRESTRICT ps) noexcept;
     
