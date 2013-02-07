@@ -43,6 +43,11 @@ int main(int argc, char** argv) {
         }
 
         if (arg[0] == '-') {
+            if (arg[1] == '\0') {
+                up::fputs("fatal error: invalid option. terminating...\n", stderr);
+                up::exit(EXIT_FAILURE);
+            }
+
             if (arg[1] == '-') {
                 if (!up::strcmp(&arg[2], "help")) {
                     option_help = true;
@@ -60,11 +65,6 @@ int main(int argc, char** argv) {
                 continue;
             }
             
-            if (arg[1] == '\0') {
-                up::fputs("fatal error: invalid option. aborting...\n", stderr);
-                up::exit(EXIT_FAILURE);
-            }
-
             for (size_t j = 1; arg[j] != '\0'; ++j) {
                 if (arg[j] == 'h') {
                     option_help = true;
@@ -117,12 +117,12 @@ int main(int argc, char** argv) {
     }
 
     if (option_verbose) {
-        up::fprintf(stderr, "hashing keys passed on command line...\n");
+        up::fputs("hashing keys passed on command line...\n", stderr);
     }
 
     for (size_t i = 0; i < strings_size; ++i) {
         if (option_verbose) {
-            up::fprintf(stderr, "[%" PRIuMAX "] hashing \"%s\"\n", static_cast<uintmax_t>(i + 1), strings[i]);
+            up::fprintf(stderr, "[%" PRIuMAX "] hashing \"%s\" ...\n", static_cast<uintmax_t>(i + 1), strings[i]);
         }
 
         uint_least64_t hashcode = up::strhash(strings[i]);
@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
     }
 
     if (option_verbose) {
-        up::fprintf(stderr, "done.\n");
+        up::fputs("done.\n", stderr);
     }
 
     return 0;
