@@ -62,7 +62,7 @@ solution_dir = os.path.join(project_dir, 'msvs11')
 
 # Files and directories found under directories with the following
 # names are added to projects but are ignored for compilation.
-common_ignore_dirs = ['clang', 'gcc', 'macosx', 'ios', 'posix']
+common_ignore_dirs = ['clang', 'gas', 'gcc', 'linux', 'macosx', 'ios', 'posix']
 
 # Orthogonal variant types for each project configuration.
 architectures = ['Win32', 'x64']

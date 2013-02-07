@@ -61,6 +61,15 @@ local CommonClang = {
             { "--analyze"; Config = "*-*-*-analyze" },
             { "-g"; Config = "*-*-debug-*" },
             { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
+            "-std=gnu99", "-Wall", "-Wextra", "-Werror", "-fcolor-diagnostics",
+            "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+            { "-fpic"; Config = "*-*-*-shared" },
+            { "-fomit-frame-pointer"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+        },
+        CXXOPTS = {
+            { "--analyze"; Config = "*-*-*-analyze" },
+            { "-g"; Config = "*-*-debug-*" },
+            { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
             "-std=gnu++11", "-Wall", "-Wextra", "-Werror", "-fcolor-diagnostics",
             "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
             { "-fpic"; Config = "*-*-*-shared" },
@@ -74,22 +83,139 @@ local CommonClang = {
 local CommonGCC = {
     Inherit = CommonCC,
     Env = {
+        CCOPTS = {
+            { "-Wa,-a=$(@).s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+            { "-g"; Config = "*-*-debug-*" },
+            { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
+            "-std=gnu99", "-Wall", "-Wextra", "-Werror",
+            "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+            { "-fpic"; Config = "*-*-*-shared" },
+            { "-fomit-frame-pointer", "-s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
+        },
         CXXOPTS = {
             { "-Wa,-a=$(@).s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
             { "-g"; Config = "*-*-debug-*" },
             { "-O2"; Config = { "*-*-release-*", "*-*-silver-*", "*-*-gold-*", "*-*-platinum-*" } },
             "-std=gnu++0x", "-Wall", "-Wextra", "-Werror",
-            "-fabi-version=6", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
+            "-fabi-version=0", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-ffast-math",
             { "-fpic"; Config = "*-*-*-shared" },
             { "-fexceptions", "-frtti"; Config = { "*-*-debug-*", "*-*-release-*", "*-*-gold-*" } },
             { "-fno-exceptions", "-fno-rtti"; Config = { "*-*-silver-*", "*-*-platinum-*" } },
             { "-fomit-frame-pointer", "-s"; Config = { "*-*-gold-*", "*-*-platinum-*" } },
         },
         PROGOPTS = {
-            "-fabi-version=6",
+            "-fabi-version=0",
         }
     },
 }
+
+local Gas_i686_Configs = { }
+local Gas_x86_64_Configs = { }
+local GlibcConfigs = { }
+local LinuxConfigs = { }
+local WindowsConfigs = { }
+
+local GenerateConfig_ParentConfig = {
+    clang = CommonClang,
+    gcc = CommonGCC,
+    msvc = CommonCC,
+}
+
+local function CopyTable(t)
+    local r = {}
+    for k,v in pairs(t) do
+        r[k] = v
+    end
+    return r
+end
+
+local function MultiArchConfig(arg)
+    local platform_name = arg.Arch
+    local operating_system_name = arg.System
+    if arg.Kernel and arg.Kernel ~= arg.System then
+        platform_name = platform_name .. "_" .. arg.Kernel
+        operating_system_name = arg.Kernel .. "-" .. arg.System
+    end
+    platform_name = platform_name .. "_" .. arg.System
+
+    local config_name = platform_name .. '-' .. arg.Toolset 
+    local config_mask = config_name .. "-*"    
+    if arg.System == 'gnu' then
+        GlibcConfigs[#GlibcConfigs + 1] = config_mask
+    end
+    if arg.Kernel == 'linux' then
+        LinuxConfigs[#LinuxConfigs + 1] = config_mask
+    end
+    if arg.System == 'windows' then
+        WindowsConfigs[#WindowsConfigs + 1] = config_mask
+    end
+    if arg.Toolset == "clang" or arg.Toolset == "gcc" then
+        if arg.Arch == "i686" then
+            Gas_i686_Configs[#Gas_i686_Configs + 1] = config_mask
+        elseif arg.Arch == "x86_64" then
+            Gas_x86_64_Configs[#Gas_x86_64_Configs + 1] = config_mask
+        end
+    end
+
+    local toolset
+    local assembler_options = { }
+    local compiler_options = { }
+    local linker_options = { }
+    if arg.Toolset == "clang" then
+        toolset = { "clang-osx", "gas" }
+        if arg.Arch == "i686" then
+            assembler_options = { "--32" }
+            compiler_options = { "-m32", "-march=prescott", "-mtune=generic", "-msse", "-msse2", "-msse3" }
+            linker_options = CopyTable(compiler_options)
+        elseif arg.Arch == "x86_64" then
+            assembler_options = { "--64" }
+            compiler_options = { "-m64", "-mtune=generic", "-msse3" }
+            linker_options = CopyTable(compiler_options)
+        end
+    elseif arg.Toolset == "gcc" then
+        toolset = { "gcc", "gas" }
+        if arg.Arch == "i686" then
+            assembler_options = { "--32" }
+            compiler_options = { "-m32", "-march=prescott", "-mtune=generic", "-msse", "-msse2", "-msse3", "-mfpmath=sse" }
+            linker_options = CopyTable(compiler_options)
+        elseif arg.Arch == "x86_64" then
+            assembler_options = { "--64" }
+            compiler_options = { "-m64", "-mtune=generic", "-msse3" }
+            linker_options = CopyTable(compiler_options)
+        end
+    elseif arg.Toolset == "msvc" then
+        if arg.Arch == "i686" then
+            toolset = { "msvc"; TargetArch = "x86" }
+        else
+            toolset = { "msvc"; TargetArch = "x64" }
+        end
+    end
+
+    local default_on_host = nil
+    if arg.Default and arg.Kernel then
+        default_on_host = arg.Kernel
+    elseif arg.Default then
+        default_on_host = arg.System
+    end
+
+    return Config {
+        Name = platform_name .. '-' .. arg.Toolset,
+        Tools = toolset,
+        DefaultOnHost = default_on_host,
+        Inherit = GenerateConfig_ParentConfig[arg.Toolset],
+        Env = {
+            ARCH = arg.Arch,
+            SYSTEM = arg.System,
+            USERLAND = arg.System,
+            CPPDEFS = { { "_GNU_SOURCE" ; Config = GlibcConfigs }, },
+            ASMOPTS = { assembler_options },
+            CCOPTS = { compiler_options },
+            CXXOPTS = { compiler_options },
+            PROGOPTS = { linker_options },
+            SHLIBOPTS = { linker_options },
+        }
+    }
+end
 
 Build {
     EngineOptions = {
@@ -98,38 +224,12 @@ Build {
         UseDagCaching = 1,
     },
     Configs = {
-        Config {
-            Name = "linux-clang",
-            Inherit = CommonClang,
-            Tools = { "clang-osx", "gas" },
-        },
-        Config {
-            Name = "linux-gcc",
-            Inherit = CommonGCC,
-            DefaultOnHost = "linux",
-            Env = { CXXOPTS = { "-D_GNU_SOURCE" } },
-            Tools = { "gcc", "gas" },
-        },
-        Config {
-            Name = "ios-gcc",
-            Inherit = CommonGCC,
-            Tools = { "gcc-osx", "gas" },
-        },
-        Config {
-            Name = "macosx-gcc",
-            Inherit = CommonGCC,
-            DefaultOnHost = "macosx",
-            Tools = { "gcc-osx", "gas" },
-        },
-        Config {
-            Name = "win32-msvc",
-            DefaultOnHost = "windows",
-            Tools = { "msvc"; TargetArch = "x86" },
-        },
-        Config {
-            Name = "win64-msvc",
-            Tools = { "msvc"; TargetArch = "x64" },
-        },
+        MultiArchConfig { Arch = "i686", Kernel = "linux", System = "gnu", Toolset = "clang", Default = @default_config_i686_linux_gnu_clang@ },
+        MultiArchConfig { Arch = "x86_64", Kernel = "linux", System = "gnu", Toolset = "clang", Default = @default_config_x86_64_linux_gnu_clang@ },
+        MultiArchConfig { Arch = "i686", Kernel = "linux", System = "gnu", Toolset = "gcc", Default = @default_config_i686_linux_gnu_gcc@ },
+        MultiArchConfig { Arch = "x86_64", Kernel = "linux", System = "gnu", Toolset = "gcc", Default = @default_config_x86_64_linux_gnu_gcc@ },
+        MultiArchConfig { Arch = "i686", System = "windows", Toolset = "msvc", Default = true },
+        MultiArchConfig { Arch = "x86_64", System = "windows", Toolset = "msvc", Default = false },
     },
     Variants = {
         { Name = "debug" },
@@ -146,15 +246,6 @@ Build {
     },
     DefaultSubVariant = "static",
     Units = function()
-        -- Copies the given table
-        local function CopyTable(t)
-            local r = {}
-            for k,v in pairs(t) do
-                r[k] = v
-            end
-            return r
-        end
-
         -- Gets additional CXXOPTS depending given unit configuration
         local function GetCxxOptions(arg)
             local result = { }
@@ -171,16 +262,16 @@ Build {
                 Dir = dir,
                 Extensions = { ".c", ".cpp", ".s", ".asm" },
                 Filters = {
+                    { Pattern = "/gas/i686/"; Config = Gas_i686_Configs },
+                    { Pattern = "/gas/x86_64/"; Config = Gas_x86_64_Configs },
                     { Pattern = "/clang/"; Config = "*-clang-*-*" },
-                    { Pattern = "/gas/"; Config = { "*-clang-*-*", "*-gcc-*-*" } },
                     { Pattern = "/gcc/"; Config = "*-gcc-*-*" },
                     { Pattern = "/msvc/"; Config = "*-mscv-*-*" },
-                    { Pattern = "/linux/"; Config = "linux-*" },
-                    { Pattern = "/ios/"; Config = "ios-*" },
-                    { Pattern = "/macosx/"; Config = "macosx-*" },
-                    { Pattern = "/darwin/"; Config = { "macosx-*", "ios-*" } },
-                    { Pattern = "/posix/"; Config = { "linux-*", "macosx-*" } },
-                    { Pattern = "/windows/"; Config = { "win32-*", "win64-*" } },
+                    { Pattern = "/linux/"; Config = LinuxConfigs },
+                    { Pattern = "/ios/"; Config = "ignore" },
+                    { Pattern = "/macosx/"; Config = "ignore" },
+                    { Pattern = "/posix/"; Config = LinuxConfigs },
+                    { Pattern = "/windows/"; Config = WindowsConfigs },
                 }
             }
         end
@@ -255,7 +346,7 @@ Build {
             Name = "standard",
             Propagate = {
                 Libs = {
-                    { "c", "stdc++", "pthread", "rt"; Config = "linux-*" },
+                    { "c", "pthread", "rt", "stdc++"; Config = LinuxConfigs },
                 },
             },
         }

@@ -33,7 +33,7 @@
 .align 16, 0x90
 factor128:
 .octa 0xd6c573e9c613993d5a379ab38dc5a46b
-.global memhash
+.globl memhash
 .type memhash, @function
 
 memhash:
@@ -143,4 +143,4 @@ memhash:
     pxor        %xmm1, %xmm0
     jmp         2b
 
-.size memhash, .-memhash
+.size memhash,.-memhash

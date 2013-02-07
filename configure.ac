@@ -27,33 +27,20 @@
 AC_INIT([Upcaste Performance Libraries],[0.1],[jessetowner@lavabit.com],[upcaste],[http://github.com/upcaste/upcaste])
 AC_PREREQ([2.67])
 AC_CANONICAL_HOST
-AC_CONFIG_HEADERS([include/upcore/up/prolog/target.hpp:project/tundra/target.hpp.in])
 AC_LANG([C++])
+AC_USE_SYSTEM_EXTENSIONS
 
 #############################################################################
-# General
+# Programs
 #############################################################################
 
+AC_PROG_CC
+AC_PROG_CC_C_O
 AC_PROG_CXX
-
-AS_CASE(
-    [$build_os],
-    [*linux*],
-    [build_cpu_count=`grep processor /proc/cpuinfo | wc -l`],
-    [build_cpu_count="1"]
-)
-
-#############################################################################
-# Dependencies
-#############################################################################
-
-dependency_warnings=""
-dependency_target_directories=""
-dependency_root_directory="dependency"
-dependency_download_directory="${dependency_root_directory}/download"
-dependency_patch_directory="${dependency_root_directory}/patch"
-dependency_src_directory="${dependency_root_directory}/src"
-dependency_usr_directory="${dependency_root_directory}/usr"
+AC_PROG_CXX_C_O
+AC_PROG_GREP
+AC_PROG_MKDIR_P
+PKG_PROG_PKG_CONFIG
 
 AC_CHECK_PROG(have_bzip2, bzip2, yes, no)
 AC_CHECK_PROG(have_gzip, gzip, yes, no)
@@ -62,7 +49,8 @@ AC_CHECK_PROG(have_wget, wget, yes, no)
 AC_CHECK_PROG(have_tundra, tundra, yes, no)
 
 AS_IF([test "x$have_tundra" != "xyes"],
-    [AC_MSG_ERROR([The Tundra Build Processor 1.2 or later is required to build Upcaste. You can fetch the sources from: https://github.com/deplinenoise/tundra])])
+    [AC_MSG_ERROR([The Tundra Build Processor is required to build Upcaste.
+    You can fetch the sources from: https://github.com/deplinenoise/tundra])])
 
 AS_IF([test "x$have_wget" != "xyes"],
     [AC_MSG_ERROR([Please install wget so that third-party dependencies may be downloaded.])])
@@ -76,9 +64,23 @@ AS_IF([test "x$have_bzip2" != "xyes"],
 AS_IF([test "x$have_gzip" != "xyes"],
     [AC_MSG_ERROR([Please install gzip so that third-party dependencies may be decompressed.])])
 
+#############################################################################
+# Dependencies
+#############################################################################
+
+dependency_warnings=""
+dependency_target_directories=""
+dependency_root_directory="dependency"
+dependency_download_directory="${dependency_root_directory}/download"
+dependency_patch_directory="${dependency_root_directory}/patch"
+dependency_src_directory="${dependency_root_directory}/src"
+dependency_usr_directory="${dependency_root_directory}/usr"
+
 AC_ARG_ENABLE(
     [local-packages],
-    [AS_HELP_STRING([--enable-local-packages],[Build and use certain third-party packages locally for Upcaste.
+    [AS_HELP_STRING(
+        [--enable-local-packages],
+        [Build and use certain third-party packages locally for Upcaste.
         By default, the configuration process will rely on dependencies
         being already installed on the system. By enabling this option, the
         configuration process will download, build and link against private
@@ -126,19 +128,15 @@ AC_DEFUN(
 
 AC_DEFUN(
     [UP_WARN_IF_MISSING_DEPENDENCY],
-    [[
-        if test "x$1" != "xyes" ; then
-            dependency_warnings="${dependency_warnings}\nconfigure warning: $2 is unavailable. Dependent targets will not be built!"
-        fi
-    ]])
+    [[if test "x$1" != "xyes" ; then
+        dependency_warnings="${dependency_warnings}\nconfigure warning: $2 is unavailable. Dependent targets will not be built!"
+    fi]])
 
 AC_DEFUN(
     [UP_SHOW_DEPENDENCY_WARNINGS],
-    [[
-        if test -n "${dependency_warnings}" ; then
-            echo -e "${dependency_warnings}\n"
-        fi
-    ]])
+    [[if test -n "${dependency_warnings}" ; then
+        echo -e "${dependency_warnings}\n"
+    fi]])
 
 #############################################################################
 # Standard C/C++ Library Headers
@@ -1243,9 +1241,36 @@ UP_WARN_IF_MISSING_DEPENDENCY([$have_opencl], [OpenCL 1.1])
 # Output
 #############################################################################
 
+AC_MSG_NOTICE([------ Generating Output ------])
+
+AS_CASE(
+    [$build_os],
+    [*linux*],
+    [build_cpu_count=`$GREP processor /proc/cpuinfo | wc -l`],
+    [build_cpu_count="1"]
+)
+
+default_config_i686_linux_gnu_clang=false
+default_config_x86_64_linux_gnu_clang=false
+default_config_i686_linux_gnu_gcc=false
+default_config_x86_64_linux_gnu_gcc=false
+
+AS_CASE(
+    [$host],
+    [i[34567]86-*-linux-gnu],
+    [default_config_i686_linux_gnu_gcc=true],
+    [x86_64-*-linux-gnu],
+    [default_config_x86_64_linux_gnu_gcc=true],
+)
+
 AC_SUBST([build_cpu_count])
+AC_SUBST([default_config_i686_linux_gnu_clang])
+AC_SUBST([default_config_x86_64_linux_gnu_clang])
+AC_SUBST([default_config_i686_linux_gnu_gcc])
+AC_SUBST([default_config_x86_64_linux_gnu_gcc])
 AC_SUBST([dependency_usr_directory])
 AC_SUBST([dependency_target_directories])
+AC_CONFIG_HEADERS([include/upcore/up/prolog/target.hpp:project/tundra/target.hpp.in])
 AC_CONFIG_FILES([Makefile:project/tundra/Makefile.in tundra.lua:project/tundra/tundra.lua.in])
 AC_OUTPUT
 
