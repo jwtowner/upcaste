@@ -318,7 +318,7 @@ def build_project_items_recursive(output, dirpath, vcxproj_dir, project_src_root
                 output.write('        <ObjectFileName>$(IntDir){0}</ObjectFileName>\n'.format(reloutputpath))
                 output.write('    </ClCompile>\n')
                 continue
-            elif (ext == '.asm') or (ext == '.masm'):
+            elif ext == '.asm':
                 # MASM assembly file, get the tag in the filename to determine target platform
                 asm_platform = None
                 _, asm_tag = os.path.splitext(root.lower())
