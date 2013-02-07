@@ -23,7 +23,7 @@
 #
 
 #
-# uint64_t memhash(void const* p, size_t n, uint64_t seed);
+# uint64_t memhash(void const* key, size_t n, uint64_t seed);
 #
 # Based off of the fast byteswap hash function by Steven Fuerst.
 # http://locklessinc.com/articles/fast_hash/ 

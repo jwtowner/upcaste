@@ -23,8 +23,12 @@
 #
 
 #
-# uint64_t memhash(void const* p, size_t n, uint64_t seed);
+# uint64_t memhash(void const* key, size_t n, uint64_t seed);
 #
+# Based off of the fast byteswap hash function by Steven Fuerst.
+# http://locklessinc.com/articles/fast_hash/ 
+#
+
 
 .text
 .align 16, 0x90
@@ -118,21 +122,21 @@ memhash:
 
 4:  # Iteration #0
 
-    pshufd      $0b010110001, %xmm6, %xmm3
+    pshufd      $0b10110001, %xmm6, %xmm3
     punpckldq   %xmm1, %xmm1
     pmuludq     %xmm1, %xmm3                    # [H|G|F|E] = [hash1.high * mix1.high | hash1.low * mix1.high]
     punpckldq   %xmm2, %xmm2
     pmuludq     %xmm6, %xmm1                    # [D|C|B|A] = [hash1.high * mix1.low | hash1.low * mix1.low]
     movd        %xmm3, %ecx
-    pshufd      $0b011100001, %xmm1, %xmm1
-    pshufd      $0b011100001, %xmm3, %xmm3
+    pshufd      $0b11100001, %xmm1, %xmm1
+    pshufd      $0b11100001, %xmm3, %xmm3
     movd        %xmm1, %edx
     movd        %xmm3, %esi
-    pshufd      $0b011010010, %xmm1, %xmm1
-    pshufd      $0b001110010, %xmm3, %xmm3
+    pshufd      $0b11010010, %xmm1, %xmm1
+    pshufd      $0b01110010, %xmm3, %xmm3
     movd        %xmm1, %eax
     xor         %edi, %edi
-    pshufd      $0b000100111, %xmm1, %xmm1
+    pshufd      $0b00100111, %xmm1, %xmm1
     add         %eax, %edx                      # X = B + C
     movd        %xmm1, %eax
     adc         $0, %eax                        # Y = D + carry
@@ -146,7 +150,7 @@ memhash:
     adc         $0, %edi                        # Z = Z + carry
     movd        %xmm3, %esi
     add         %edx, %eax                      # Y = Y + G
-    pshufd      $0b010101111, %xmm7, %xmm3
+    pshufd      $0b10101111, %xmm7, %xmm3
     adc         %esi, %edi                      # Z = Z + H + carry
     movd        %eax, %xmm5                     # [0|0|0|Y]
     movd        %edi, %xmm4                     # [0|0|0|Z]
@@ -165,21 +169,21 @@ memhash:
 
     # Iteration #1
 
-    pshufd      $0b010110001, %xmm6, %xmm3
+    pshufd      $0b10110001, %xmm6, %xmm3
     punpckldq   %xmm1, %xmm1
     pmuludq     %xmm1, %xmm3                    # [H|G|F|E] = [hash1.high * mix1.high | hash1.low * mix1.high]
     punpckldq   %xmm2, %xmm2
     pmuludq     %xmm6, %xmm1                    # [D|C|B|A] = [hash1.high * mix1.low | hash1.low * mix1.low]
     movd        %xmm3, %ecx
-    pshufd      $0b011100001, %xmm1, %xmm1
-    pshufd      $0b011100001, %xmm3, %xmm3
+    pshufd      $0b11100001, %xmm1, %xmm1
+    pshufd      $0b11100001, %xmm3, %xmm3
     movd        %xmm1, %edx
     movd        %xmm3, %esi
-    pshufd      $0b011010010, %xmm1, %xmm1
-    pshufd      $0b001110010, %xmm3, %xmm3
+    pshufd      $0b11010010, %xmm1, %xmm1
+    pshufd      $0b01110010, %xmm3, %xmm3
     movd        %xmm1, %eax
     xor         %edi, %edi
-    pshufd      $0b000100111, %xmm1, %xmm1
+    pshufd      $0b00100111, %xmm1, %xmm1
     add         %eax, %edx                      # X = B + C
     movd        %xmm1, %eax
     adc         $0, %eax                        # Y = D + carry
@@ -193,7 +197,7 @@ memhash:
     adc         $0, %edi                        # Z = Z + carry
     movd        %xmm3, %esi
     add         %edx, %eax                      # Y = Y + G
-    pshufd      $0b010101111, %xmm7, %xmm3
+    pshufd      $0b10101111, %xmm7, %xmm3
     adc         %esi, %edi                      # Z = Z + H + carry
     movd        %eax, %xmm5                     # [0|0|0|Y]
     movd        %edi, %xmm4                     # [0|0|0|Z]
@@ -212,21 +216,21 @@ memhash:
 
     # Iteration #2
 
-    pshufd      $0b010110001, %xmm6, %xmm3
+    pshufd      $0b10110001, %xmm6, %xmm3
     punpckldq   %xmm1, %xmm1
     pmuludq     %xmm1, %xmm3                    # [H|G|F|E] = [hash1.high * mix1.high | hash1.low * mix1.high]
     punpckldq   %xmm2, %xmm2
     pmuludq     %xmm6, %xmm1                    # [D|C|B|A] = [hash1.high * mix1.low | hash1.low * mix1.low]
     movd        %xmm3, %ecx
-    pshufd      $0b011100001, %xmm1, %xmm1
-    pshufd      $0b011100001, %xmm3, %xmm3
+    pshufd      $0b11100001, %xmm1, %xmm1
+    pshufd      $0b11100001, %xmm3, %xmm3
     movd        %xmm1, %edx
     movd        %xmm3, %esi
-    pshufd      $0b011010010, %xmm1, %xmm1
-    pshufd      $0b001110010, %xmm3, %xmm3
+    pshufd      $0b11010010, %xmm1, %xmm1
+    pshufd      $0b01110010, %xmm3, %xmm3
     movd        %xmm1, %eax
     xor         %edi, %edi
-    pshufd      $0b000100111, %xmm1, %xmm1
+    pshufd      $0b00100111, %xmm1, %xmm1
     add         %eax, %edx                      # X = B + C
     movd        %xmm1, %eax
     adc         $0, %eax                        # Y = D + carry
@@ -240,7 +244,7 @@ memhash:
     adc         $0, %edi                        # Z = Z + carry
     movd        %xmm3, %esi
     add         %edx, %eax                      # Y = Y + G
-    pshufd      $0b010101111, %xmm7, %xmm3
+    pshufd      $0b10101111, %xmm7, %xmm3
     adc         %esi, %edi                      # Z = Z + H + carry
     movd        %eax, %xmm5                     # [0|0|0|Y]
     movd        %edi, %xmm4                     # [0|0|0|Z]
@@ -261,7 +265,7 @@ memhash:
 
     popl        %esi
     movd        %xmm1, %eax
-    pshufd      $0b011100001, %xmm1, %xmm1
+    pshufd      $0b11100001, %xmm1, %xmm1
     popl        %edi
     movd        %xmm1, %edx
     ret
