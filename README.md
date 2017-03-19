@@ -1,3 +1,5 @@
+(This project has been abandoned as I have shifted my focus to other responsibilities. Upcaste was a testbed to explore various ideas in software portability abstraction layer design. Things have changed a lot in past 4-5 years and there are many new options available. If I were to take a stab at this again, I'd simplify things greatly by targetting only C++17 & POSIX.1-2008, and for Windows a transparent compatability layer would be created around the Universal CRT header files.)
+
 # Upcaste
 ------------ -------------- --------------
 #### *Performance Libraries*
